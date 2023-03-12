@@ -1,12 +1,10 @@
 # is23-AM19
 
-for example in this way:
-
-members
-
-Rossi Mario .... @polim.it
-Bianchi. .....
-
+memebers:
+  Matteo Briscini: matteo.briscini@mail.polimi.it
+  Luca Castelli: luca6.castelli@mail.polimi.it
+  Davide Arcaini: davide.arcaini@mail.polimi.it
+  Riccardo Caprioglio: riccardo.caprioglio@mail.polimi.it
 
 # Development State
 
