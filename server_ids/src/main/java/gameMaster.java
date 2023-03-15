@@ -2,7 +2,7 @@ public class gameMaster {
     private static int playerNum = 0;
     private static char[][] validPosArray;
     private static int currentPlayer = 0;
-    private static player [] playerArray = new player[];
+    private static player [] playerArray;
     private static groupTarget [] groupTargetArray = new groupTarget[2];
     public gameMaster(){ //costructor
     }

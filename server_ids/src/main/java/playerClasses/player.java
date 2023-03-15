@@ -1,4 +1,4 @@
-package org.example.playerClasses;
+package playerClasses;
 
 public class player {
 
