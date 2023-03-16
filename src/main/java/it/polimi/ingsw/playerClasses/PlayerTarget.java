@@ -1,4 +1,4 @@
 package it.polimi.ingsw.playerClasses;
 
-public class PlayerClasses {
+public class PlayerTarget {
 }

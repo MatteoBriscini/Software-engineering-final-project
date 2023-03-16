@@ -1,18 +1,31 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.playerClasses.*;
+import it.polimi.ingsw.GroupTargets.*;
+
+import com.google.gson.Gson;    //import for json
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 public class GameMaster {
 
     private static int playerNum = 0;
-    private static char[][] validPosArray;
+    private static boolean activeGame = false;
+    private static char[][] validPosArray; //valid position to set card in main board
+
     private static int currentPlayer = 0;
-    private static player [] playerArray;
-    private static groupTarget [] groupTargetArray = new groupTarget[2];
+    private static Player [] playerArray;
+    private static MainBoard mainBoard = new MainBoard();
+    private static GroupTarget [] groupTargetArray;
     public GameMaster(){ //costructor
     }
 
     //############################# start game method
-    public static void addPlayer(){  //new player join the game
-
+    public static void addPlayer(String playerId){  //new player join the game
+        if (playerNum<4 && activeGame == false) {
+            //playerArray[playerNum] = new Player(playerId);
+            playerNum += 1;
+        }
+        if (playerNum == 4 && activeGame == false) startGame();  //if the game is full the game will start auto
     }
     public static void startGame(){  //start game
 
@@ -41,7 +54,7 @@ public class GameMaster {
     }
 
     //main board usage
-    private static void fullBoard(){        //full main board
-
+    private static void fillBoard(){        //full main board
+       // mainBoard.fillBoard(validPosArray); //fill or refill the main board
     }
 }

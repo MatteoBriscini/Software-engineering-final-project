@@ -1,5 +1,6 @@
 package it.polimi.ingsw.playerClasses;
 
+
 public class Player {
 
     //Attributes
@@ -7,17 +8,15 @@ public class Player {
     private String playerID;
     private int pointSum;
     //private int pointArray;
-    private playerBoard board;
-    private playerTarget personalTarget;
+    private PlayerBoard board;
+    private PlayerTarget personalTarget;
 
 
     //Constructor
 
-    public player(String playerID, playerBoard board, playerTarget personalTarget){
+    public Player(String playerID){
 
         this.playerID = playerID;
-        this.board = board;
-        this.personalTarget = personalTarget;
         pointSum = 0;
 
     }
