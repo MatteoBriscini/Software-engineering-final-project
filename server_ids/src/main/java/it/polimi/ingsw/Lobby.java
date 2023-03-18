@@ -12,6 +12,8 @@ public class Lobby {
         this.gameStarted = false;
     }
 
+
+
     // Method to add a player to the lobby
     public void addPlayer(Player player) {
         if (!gameStarted && !players.contains(player)) { // can only add players if game has not started and player is not already in the lobby
@@ -24,15 +26,20 @@ public class Lobby {
     }
 
     // Method to remove a player from the lobby
-    public void removePlayer(Player player) {
-        if (!gameStarted && players.contains(player)) { // can only remove players if game has not started and player is in the lobby
-            players.remove(player);
-            if (player.equals(creator)) { // if the creator leaves, assign the power to create to the next player who joined
-                if (!players.isEmpty()) {
-                    creator = players.get(0);
-                    creator.setPowerToCreateGame(true);
-                } else {
-                    creator = null;
+    public void removePlayer(int playerId) {
+        if (!gameStarted) { // can only remove players if game has not started
+            for (Player player : players) {
+                if (player.getId() == playerId) {
+                    players.remove(player);
+                    if (player.equals(creator)) { // if the creator leaves, assign the power to create to the next player who joined
+                        if (!players.isEmpty()) {
+                            creator = players.get(0);
+                            creator.setPowerToCreateGame(true);
+                        } else {
+                            creator = null;
+                        }
+                    }
+                    break;
                 }
             }
         }
@@ -59,7 +66,7 @@ public class Lobby {
         // Create a lobby
         Lobby lobby = new Lobby();
 
-        // Create some players
+        // still need to understand how made other players join with and without invitation, so I create them atm
         Player alice = new Player(1, "Alice", false);
         Player bob = new Player(2, "Bob", false);
         Player charlie = new Player(3, "Charlie", false);
