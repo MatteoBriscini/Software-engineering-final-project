@@ -1,7 +1,5 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.GroupTargets.GT1;
-import it.polimi.ingsw.playerClasses.*;
 /**
  * Hello world!
  *
