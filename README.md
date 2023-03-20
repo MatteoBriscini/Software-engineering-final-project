@@ -10,6 +10,15 @@ Members: <br>
 
 | Functionality          | State          | Current         | Comment             |
 |------------------------|----------------|-----------------|---------------------|
-| class: DifferentTarget | :green_circle: | Matteo Briscini | implements & tested |
-| class: EqualTarget     | :green_circle: | Matteo Briscini | implements & tested |
-| class: NElementTarget  | :green_circle: | Matteo Briscini | implements & tested |
+| class: DifferentTarget | :green_circle: | Matteo Briscini | implemented && tested |
+| class: EqualTarget     | :green_circle: | Matteo Briscini | implemented && tested |
+| class: NElementTarget  | :green_circle: | Matteo Briscini | implemented && tested |
+| class: CornersTarget   | :yellow_circle:| Luca Castelli   | not tested yet      |
+| class: EightEqualsTarget | :yellow_circle:| Luca Castelli   | not tested yet  |
+| class: NColorsColumsTarget | :yellow_circle: | Luca Castelli   | not tested yet  |
+| class : NColorsRowsTarget | :yellow_circle: | Luca Castelli   | not tested yet  |
+| class : GroupTarget | :yellow_circle: | Luca Castelli   | not tested yet  |
+| class : StairsPattern | :yellow_circle: | Luca Castelli   | not tested yet  |
+| class : DifferentColomnsTarget | :yellow_circle: | Matteo Briscini   | not tested yet  |
+| class : DifferentRowsTarget | :yellow_circle: | Matteo Briscini   | not tested yet  |
+| class : DiagonAlleyTarget | :yellow_circle: | Matteo Briscini   | not tested yet  |
