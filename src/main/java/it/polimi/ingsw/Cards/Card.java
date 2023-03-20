@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Cards;
 
-public class Card {
+public class Card{
     private CardColor color;
     private int sketch;
 
@@ -18,6 +18,7 @@ public class Card {
         return this.sketch;
     }
 
+    @Override
     public int hashCode(){  //make possible to insert card in hashset
         switch (color){
             case BLUE:return 1;
@@ -29,8 +30,13 @@ public class Card {
             default: return 0; //default == empty
         }
     }
-
-    public boolean equals (Card other){ //make possible to insert card in hashset
+    @Override
+    public boolean equals (Object obj){ //make possible to insert card in hashset
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Card other = (Card) obj;
         return this.getColor() == other.getColor();
     }
 }
