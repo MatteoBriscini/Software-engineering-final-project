@@ -1,8 +1,8 @@
 package it.polimi.ingsw.PlayerClasses;
 
 
-import it.polimi.ingsw.Cards.Card;
-import it.polimi.ingsw.Cards.CardColor;
+import it.polimi.ingsw.Cards.*;
+import static it.polimi.ingsw.Cards.CardColor.EMPTY;
 
 public class PlayerBoard {
 
@@ -15,12 +15,18 @@ public class PlayerBoard {
     //Constructor
 
     public PlayerBoard(){
-        board = new Card[6][5];
-        for (int i = 0; i < 6; i++){
-            for (int j = 0; j < 5; j++){
-                board[i][j] = new Card(CardColor.EMPTY, 0);
+        board = new Card[5][6];
+        for (int i = 0; i < 5; i++){
+            for (int j = 0; j < 6; j++){
+                board[i][j] = new Card(EMPTY, 0);
             }
         }
+    }
+
+    //Get Methods
+
+    public static Card[][] getBoard() {
+        return board;
     }
 
 
@@ -30,7 +36,7 @@ public class PlayerBoard {
 
         int i = 5, j = 0;
 
-        while(board[i][column] == null){
+        while(board[i][column].getColor().equals(EMPTY)){
             i--;
         }
 
