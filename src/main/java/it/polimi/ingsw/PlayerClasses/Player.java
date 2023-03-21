@@ -36,7 +36,9 @@ public class Player {
 
     }
 
-
+    public void addCard(int column, Card[] cards){
+        board.addCard(column, cards);
+    }
     //Set Methods
 
     public void setBoard(PlayerBoard board) {
