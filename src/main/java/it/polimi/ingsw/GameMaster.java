@@ -1,6 +1,6 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.playerClasses.*;
+import it.polimi.ingsw.PlayerClasses.*;
 import it.polimi.ingsw.GroupTargets.*;
 
 import com.google.gson.Gson;    //import for json

@@ -17,8 +17,5 @@ public abstract class GroupTarget {
         this.nPlayer = nPlayer;
     }
 
-    public abstract boolean check(Card[][] board);  //verify if a player reach a target (abstract method)
-
-
     //public abstract void check();
 }

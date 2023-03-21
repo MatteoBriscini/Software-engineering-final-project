@@ -36,14 +36,16 @@ public class PlayerBoard {
 
         int i = 5, j = 0;
 
-        while(board[i][column].getColor().equals(EMPTY)){
+
+
+        while(board[column][i].getColor().equals(EMPTY)){
             i--;
         }
 
         while(cards[j] != null && j < 3){
 
             i++;
-            board[i][column] = cards[j];
+            board[column][i] = cards[j];
             j++;
 
         }
