@@ -5,9 +5,9 @@ public class Card{
     private int sketch;
 
 
-    public Card(CardColor color,int sketch){
+    public Card(CardColor color){
         this.color=color;
-        this.sketch=sketch;
+        this.sketch=(int)Math.random()*3;
     }
 
     public CardColor getColor(){
