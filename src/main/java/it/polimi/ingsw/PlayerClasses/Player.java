@@ -36,7 +36,7 @@ public class Player {
 
     }
 
-    public void addCard(int column, Card[] cards){
+    public void addCard(int column, Card[] cards) throws NoSpaceException {
         board.addCard(column, cards);
     }
     //Set Methods
@@ -46,12 +46,12 @@ public class Player {
     }
 
 
-    private void setPlayerTarget(int targetNumber) throws FileNotFoundException {  //eccezzione se file non trovato
-        String path = "src/main/json/UserSimple.json";   //dichiaro il path
-        FileReader fileJson = new FileReader(path);      //file eseguibile
+    private void setPlayerTarget(int targetNumber) throws FileNotFoundException {  //exception file not found
+        String path = "src/main/YetToDecide.json";   //file path
+        FileReader fileJson = new FileReader(path);      //file executable
 
         Gson gson = new Gson();
-        PlayerTarget[] targets = gson.fromJson(fileJson, PlayerTarget[].class);       //chiamo il costruttore su array di user passando i paramentri nel json
+        PlayerTarget[] targets = gson.fromJson(fileJson, PlayerTarget[].class);       //Call constructor on PlayerTarget array by passing the json file attributes
 
         this.personalTarget = targets[targetNumber];
     }
@@ -74,6 +74,10 @@ public class Player {
         this.pointSum += pointSum;
     }
 
+    public void checkPlayerTarget(){
+        int result = personalTarget.checkTarget(board);
+        updatePointSum(result);
+    }
 
     //get points for spots
     public void checkSpots(){
@@ -87,9 +91,13 @@ public class Player {
                     //assign points for the spots
                     switch(elementCombo){
                         case 3: this.updatePointSum(2);
+                        break;
                         case 4: this.updatePointSum(3);
+                        break;
                         case 5: this.updatePointSum(5);
+                        break;
                         case 6: this.updatePointSum(8);
+                        break;
                     }
                     elementCombo = 0;
 
