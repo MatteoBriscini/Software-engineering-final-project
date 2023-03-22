@@ -32,6 +32,12 @@ public class PlayerBoard {
 
     //Methods
 
+    /**
+     * @param column index of column for the player board
+     * @param cards array of Card objects
+     * @return true if player board is full, false in all other cases
+     * @throws NoSpaceException if the selected column is full or there is not enough space for the selected number of cards
+     */
     public boolean addCard (int column, Card[] cards) throws NoSpaceException{
 
         int i = 5, j = 0, flag = 0;
@@ -50,7 +56,7 @@ public class PlayerBoard {
             i--;
         }
 
-        while(cards[j] != null && j < 3){
+        while(j < cards.length){
 
             i++;
             if(i > 5){ throw new NoSpaceException("Full column"); }
