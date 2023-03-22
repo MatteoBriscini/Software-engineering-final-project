@@ -47,7 +47,7 @@ public class PlayerBoard {
             i--;
         }
 
-        if(i != 0) i++;
+        if(!board[column][i].getColor().equals(EMPTY)) i++;
 
         while(j < cards.length){
 

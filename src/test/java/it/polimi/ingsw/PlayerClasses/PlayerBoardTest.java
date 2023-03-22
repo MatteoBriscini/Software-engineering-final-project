@@ -7,6 +7,14 @@ import static it.polimi.ingsw.Cards.CardColor.*;
 
 public class PlayerBoardTest extends TestCase {
 
+
+    int i, j;
+    Card[] cards = new Card[3];
+    Card[][] board;
+    PlayerBoard playerBoard = new PlayerBoard();
+    boolean val = false;
+
+
     public void testPlayerBoard(){
 
         System.out.println("Test 1 start");
@@ -37,11 +45,7 @@ public class PlayerBoardTest extends TestCase {
 
     public void testAddCard() {
 
-        int i, j;
-        Card[] cards = new Card[3];
-        Card[][] board = new Card[5][6];
-        PlayerBoard playerBoard = new PlayerBoard();
-        boolean val = false;
+
 
         cards[0] = new Card(PINK);
         cards[1] = new Card(BLUE);
@@ -61,7 +65,7 @@ public class PlayerBoardTest extends TestCase {
 
         for(i = 0; i < 3; i++){
             try {
-                playerBoard.addCard(1, cards);
+                val = playerBoard.addCard(1, cards);
 
             } catch (NoSpaceException e) {
                 System.out.println("TOO MANY CARDS");
@@ -71,6 +75,8 @@ public class PlayerBoardTest extends TestCase {
         for (j = 5; j >=  0; j--){
             System.out.println(board[1][j].getColor());
         }
+
+        System.out.println(val);
 
         for(j = 2; j < 5; j++){
             for(i = 0; i < 2; i++){
@@ -84,6 +90,43 @@ public class PlayerBoardTest extends TestCase {
         }
 
         System.out.println(val);
+
+        cards[2] = new Card(EMPTY);
+
+        for (i = 0; i < 5; i++){
+            for (j = 0; j < 6; j++){
+                board[i][j] = new Card(EMPTY);
+            }
+        }
+
+        for(i = 0; i < 2; i++){
+            try {
+                playerBoard.addCard(0, cards);
+
+            } catch (NoSpaceException e) {
+                System.out.println("TOO MANY CARDS");
+            }
+        }
+        board = playerBoard.getBoard();
+        for (i = 5; i >=  0; i--){
+            System.out.println(board[0][i].getColor());
+        }
+
+        cards[1] = new Card(EMPTY);
+
+        for(i = 0; i < 3; i++){
+            try {
+                playerBoard.addCard(1, cards);
+
+            } catch (NoSpaceException e) {
+                System.out.println("TOO MANY CARDS");
+            }
+        }
+        board = playerBoard.getBoard();
+        for (i = 5; i >=  0; i--){
+            System.out.println(board[1][i].getColor());
+        }
+
 
     }
 }
