@@ -52,7 +52,7 @@ public class PlayerBoard {
             return true;
         }
 
-        while(board[column][i].getColor().equals(EMPTY) && i >= 0){
+        while(board[column][i].getColor().equals(EMPTY) && i > 0){
             i--;
         }
         i++;
