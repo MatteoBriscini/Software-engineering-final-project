@@ -112,6 +112,19 @@ public class PlayerBoardTest extends TestCase {
             System.out.println(board[0][i].getColor());
         }
 
+        for(i = 0; i < 3; i++){
+            try {
+                playerBoard.addCard(2, cards);
+
+            } catch (NoSpaceException e) {
+                System.out.println("TOO MANY CARDS");
+            }
+        }
+        board = playerBoard.getBoard();
+        for (i = 5; i >=  0; i--){
+            System.out.println(board[2][i].getColor());
+        }
+
         cards[1] = new Card(EMPTY);
 
         for(i = 0; i < 3; i++){
