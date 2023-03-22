@@ -55,13 +55,14 @@ public class PlayerBoard {
         while(board[column][i].getColor().equals(EMPTY) && i > 0){
             i--;
         }
+        i++;
 
         while(j < cards.length){
 
-            i++;
             if(i > 5){ throw new NoSpaceException("Full column"); }
             board[column][i] = cards[j];
             j++;
+            i++;
 
         }
 
