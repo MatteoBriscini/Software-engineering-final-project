@@ -40,22 +40,14 @@ public class PlayerBoard {
      */
     public boolean addCard (int column, Card[] cards) throws NoSpaceException{
 
-        int i = 5, j = 0, flag = 0;
+        int i = 5, j = 0;
+        boolean flag = false;
 
-        for(int k = 0; k < 5; k++){
-            if(board[k][i].getColor().equals(EMPTY)){
-                flag = 1;
-            }
-        }
-
-        if(flag != 1){
-            return true;
-        }
-
-        while(board[column][i].getColor().equals(EMPTY) && i > 0){
+        while(board[column][i].getColor().equals(EMPTY) && i != 0){
             i--;
         }
-        i++;
+
+        if(i != 0) i++;
 
         while(j < cards.length){
 
@@ -66,7 +58,12 @@ public class PlayerBoard {
 
         }
 
-        return false;
+        for(int k = 0; k < 5; k++){
+            if(board[k][5].getColor().equals(EMPTY)){
+                flag = true;
+            }
+        }
+        return !flag;
 
     }
 
