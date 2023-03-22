@@ -59,7 +59,7 @@ public class PlayerBoard {
         while(j < cards.length){
 
             i++;
-            if(i > 5){ throw new NoSpaceException("Full column"); }
+            if(i > 6){ throw new NoSpaceException("Full column"); }
             board[column][i] = cards[j];
             j++;
 
