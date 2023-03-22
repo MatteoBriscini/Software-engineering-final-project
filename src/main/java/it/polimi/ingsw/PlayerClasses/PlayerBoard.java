@@ -42,7 +42,7 @@ public class PlayerBoard {
 
         int i = 5, j = 0, flag = 0;
 
-        for(int k = 0; k < 4; k++){
+        for(int k = 0; k < 5; k++){
             if(board[k][i].getColor().equals(EMPTY)){
                 flag = 1;
             }
@@ -52,7 +52,7 @@ public class PlayerBoard {
             return true;
         }
 
-        while(board[column][i].getColor().equals(EMPTY) && i > 0){
+        while(board[column][i].getColor().equals(EMPTY) && i >= 0){
             i--;
         }
         i++;
