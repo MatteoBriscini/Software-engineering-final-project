@@ -21,9 +21,9 @@ public class PlayerTest extends TestCase {
         assert (sum == 0);
 
         //test case 2 (check if spots are correctly identified)
-        tmp[0]= new Card(BLUE, 2);
-        tmp[1]= new Card(BLUE,1);
-        tmp[2]=new Card(BLUE, 3);
+        tmp[0]= new Card(BLUE);
+        tmp[1]= new Card(BLUE);
+        tmp[2]=new Card(BLUE);
         System.out.println("end test");
     }
 

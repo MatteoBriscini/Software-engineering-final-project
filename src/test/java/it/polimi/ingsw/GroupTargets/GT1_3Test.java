@@ -2,6 +2,7 @@ package it.polimi.ingsw.GroupTargets;
 
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Cards.CardColor;
+import it.polimi.ingsw.PlayerClasses.NoSpaceException;
 import it.polimi.ingsw.PlayerClasses.PlayerBoard;
 import junit.framework.TestCase;
 
@@ -27,12 +28,14 @@ public class GT1_3Test extends TestCase {
         }
 
         //test case 2 (board full blue, have to return false)
-        tmp [0] = new Card (BLUE, 0);
-        tmp [1] = new Card (BLUE, 0);
-        tmp [2] = new Card (BLUE, 0);
-
-
-        playerBoard.addCard(0, tmp);
+        tmp [0] = new Card (BLUE);
+        tmp [1] = new Card (BLUE);
+        tmp [2] = new Card (BLUE);
+        try {
+            playerBoard.addCard(0, tmp);
+        } catch (NoSpaceException e) {
+            System.out.println("TOO MUCH CARDS");
+        }
 
 
 
