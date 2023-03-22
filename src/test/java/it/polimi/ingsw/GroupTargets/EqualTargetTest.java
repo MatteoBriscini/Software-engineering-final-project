@@ -13,32 +13,32 @@ public class EqualTargetTest extends TestCase {
         System.out.println("START TEST \n");
 
         //test case 1 (all empty)
-        Cards[0] = new Card(EMPTY, 0);
-        Cards[1] = new Card(EMPTY, 1);
-        Cards[2] = new Card(EMPTY, 2);
+        Cards[0] = new Card(EMPTY);
+        Cards[1] = new Card(EMPTY);
+        Cards[2] = new Card(EMPTY);
 
         boolean check = testIObj.allEqual(Cards);
         assert (check == false);
 
         //test case 2 (all equal but with an empty)
         check = true;
-        Cards[0] = new Card(YELLOW, 0);
-        Cards[1] = new Card(YELLOW, 1);
-        Cards[2] = new Card(EMPTY, 2);
+        Cards[0] = new Card(YELLOW);
+        Cards[1] = new Card(YELLOW);
+        Cards[2] = new Card(EMPTY);
         check = testIObj.allEqual(Cards);
         assert (check == false);
 
         //test case 3 (all equal)
-        Cards[0] = new Card(YELLOW, 0);
-        Cards[1] = new Card(YELLOW, 1);
-        Cards[2] = new Card(YELLOW, 2);
+        Cards[0] = new Card(YELLOW);
+        Cards[1] = new Card(YELLOW);
+        Cards[2] = new Card(YELLOW);
         check = testIObj.allEqual(Cards);
         assert (check == true);
 
         //test case 4 (not all equal)
-        Cards[0] = new Card(YELLOW, 0);
-        Cards[1] = new Card(YELLOW, 1);
-        Cards[2] = new Card(GREEN, 2);
+        Cards[0] = new Card(YELLOW);
+        Cards[1] = new Card(YELLOW);
+        Cards[2] = new Card(GREEN);
         check = testIObj.allEqual(Cards);
         assert (check == false);
 

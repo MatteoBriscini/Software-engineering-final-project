@@ -14,59 +14,59 @@ public class NElementCheckTest extends TestCase {
         System.out.println("START TEST \n");
 
         //test case 1 (all empty)
-        Cards[0] = new Card(EMPTY, 0);
-        Cards[1] = new Card(EMPTY, 1);
-        Cards[2] = new Card(EMPTY, 2);
-        Cards[3] = new Card(EMPTY, 1);
-        Cards[4] = new Card(EMPTY, 2);
+        Cards[0] = new Card(EMPTY);
+        Cards[1] = new Card(EMPTY);
+        Cards[2] = new Card(EMPTY);
+        Cards[3] = new Card(EMPTY);
+        Cards[4] = new Card(EMPTY);
         boolean check = testIObj.nColorsCheck(Cards, min, max);
         assert (check == false);
 
         //test case 2 (possible true but with an empty)
         check = true;
-        Cards[0] = new Card(YELLOW, 0);
-        Cards[1] = new Card(YELLOW, 1);
-        Cards[2] = new Card(EMPTY, 2);
-        Cards[3] = new Card(YELLOW, 1);
-        Cards[4] = new Card(GREEN, 2);
+        Cards[0] = new Card(YELLOW);
+        Cards[1] = new Card(YELLOW);
+        Cards[2] = new Card(EMPTY);
+        Cards[3] = new Card(YELLOW);
+        Cards[4] = new Card(GREEN);
         check = testIObj.nColorsCheck(Cards, min, max);
         assert (check == false);
 
         //test case 3 (valid combination for true)
-        Cards[0] = new Card(YELLOW, 0);
-        Cards[1] = new Card(YELLOW, 1);
-        Cards[2] = new Card(GREEN, 2);
-        Cards[3] = new Card(YELLOW, 1);
-        Cards[4] = new Card(GREEN, 2);
+        Cards[0] = new Card(YELLOW);
+        Cards[1] = new Card(YELLOW);
+        Cards[2] = new Card(GREEN);
+        Cards[3] = new Card(YELLOW);
+        Cards[4] = new Card(GREEN);
         check = testIObj.nColorsCheck(Cards, min, max);
         assert (check == true);
 
         //test case 4 (valid combination for true)
         check = false;
-        Cards[0] = new Card(YELLOW, 0);
-        Cards[1] = new Card(WHITE, 1);
-        Cards[2] = new Card(GREEN, 2);
-        Cards[3] = new Card(YELLOW, 1);
-        Cards[4] = new Card(GREEN, 2);
+        Cards[0] = new Card(YELLOW);
+        Cards[1] = new Card(WHITE);
+        Cards[2] = new Card(GREEN);
+        Cards[3] = new Card(YELLOW);
+        Cards[4] = new Card(GREEN);
         check = testIObj.nColorsCheck(Cards, min, max);
         assert (check == true);
 
         //test case 5 (too much different color)
-        Cards[0] = new Card(PINK, 0);
-        Cards[1] = new Card(WHITE, 1);
-        Cards[2] = new Card(GREEN, 2);
-        Cards[3] = new Card(YELLOW, 1);
-        Cards[4] = new Card(GREEN, 2);
+        Cards[0] = new Card(PINK);
+        Cards[1] = new Card(WHITE);
+        Cards[2] = new Card(GREEN);
+        Cards[3] = new Card(YELLOW);
+        Cards[4] = new Card(GREEN);
         check = testIObj.nColorsCheck(Cards, min, max);
         assert (check == false);
 
         //test case 5 (too less different color)
         check = true;
-        Cards[0] = new Card(YELLOW, 0);
-        Cards[1] = new Card(YELLOW, 1);
-        Cards[2] = new Card(YELLOW, 2);
-        Cards[3] = new Card(YELLOW, 1);
-        Cards[4] = new Card(YELLOW, 2);
+        Cards[0] = new Card(YELLOW);
+        Cards[1] = new Card(YELLOW);
+        Cards[2] = new Card(YELLOW);
+        Cards[3] = new Card(YELLOW);
+        Cards[4] = new Card(YELLOW);
         check = testIObj.nColorsCheck(Cards, min, max);
         assert (check == false);
 
