@@ -1,6 +1,7 @@
 package it.polimi.ingsw.PlayerClasses;
 
 import it.polimi.ingsw.Cards.Card;
+import it.polimi.ingsw.Exceptions.NoSpaceException;
 import junit.framework.TestCase;
 
 import static it.polimi.ingsw.Cards.CardColor.*;

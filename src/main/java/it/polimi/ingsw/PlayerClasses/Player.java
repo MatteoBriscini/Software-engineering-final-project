@@ -3,6 +3,7 @@ package it.polimi.ingsw.PlayerClasses;
 
 import com.google.gson.Gson;
 import it.polimi.ingsw.Cards.Card;
+import it.polimi.ingsw.Exceptions.NoSpaceException;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;

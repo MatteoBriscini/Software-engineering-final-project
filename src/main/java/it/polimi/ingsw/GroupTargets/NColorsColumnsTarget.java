@@ -2,7 +2,7 @@ package it.polimi.ingsw.GroupTargets;
 
 import it.polimi.ingsw.Cards.Card;
 
-public class NColorsColumnsTarget extends NElementCheck{
+public class NColorsColumnsTarget extends NElementsCheck {
 
     public boolean check(Card[][] board){
         int tot=0;

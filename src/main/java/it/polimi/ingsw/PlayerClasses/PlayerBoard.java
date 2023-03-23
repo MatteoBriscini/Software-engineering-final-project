@@ -2,6 +2,8 @@ package it.polimi.ingsw.PlayerClasses;
 
 
 import it.polimi.ingsw.Cards.*;
+import it.polimi.ingsw.Exceptions.NoSpaceException;
+
 import static it.polimi.ingsw.Cards.CardColor.EMPTY;
 
 public class PlayerBoard {

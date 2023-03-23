@@ -5,7 +5,7 @@ import it.polimi.ingsw.Cards.Card;
 import static it.polimi.ingsw.Cards.CardColor.*;
 
 //this class is used to check that there are 8 cards having the same color on the player's board
-public class EightEqualTarget extends GroupTarget{
+public class EightEqualTarget extends CommonGoal {
 
     public boolean check(Card[][] board){
         int[] color=new int[6]; //this array is used to count the occurrences of each color (the order is the same of the enum in CardColor)
