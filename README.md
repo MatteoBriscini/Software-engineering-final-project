@@ -25,4 +25,4 @@ Members: <br>
 | class : CrossTarget            | :yellow_circle: | Matteo Briscini   | not tested yet  |
 | class : PairCheckTarget        | :yellow_circle: | Matteo Briscini   | not tested yet  |
 | class : QuadrupleCheckTarget   | :yellow_circle: | Matteo Briscini   | not tested yet  |
-| class : Player                 | :yellow_circle: | Davide Arcaini  | partially implemented |
+| class : Player                 | :yellow_circle: | Davide Arcaini  | partially implemented && tested |
