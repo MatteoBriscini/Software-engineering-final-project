@@ -47,7 +47,7 @@ public class PlayerTest extends TestCase {
         System.out.println("START TEST \n");
         int i,j;
 
-        //test case 1 (check in initial case if sum = 0 )
+        //test case 1 (check in initial case if sum = 0 ), all spots
         player.checkSpots();
         int sum;
         sum = player.getPointSum();
@@ -264,7 +264,7 @@ public class PlayerTest extends TestCase {
             System.out.println("too much cards0");
         }
 
-
+        //print library
         board=playerBoard.getBoard();
         for(int y=5;y>=0;y--){
             System.out.println(board[0][y].getColor().toString()+" "+board[1][y].getColor().toString()+" "+board[2][y].getColor().toString()+" "+board[3][y].getColor().toString()+" "+board[4][y].getColor().toString()+" ");
@@ -285,7 +285,7 @@ public class PlayerTest extends TestCase {
     //
     //
     //
-    //test case 2 (check in initial case if sum = 20, all spots of 3)
+    //test case 3 (check in initial case if sum = 26, all possible spots variation)
     //
     //
     //
@@ -296,7 +296,7 @@ public class PlayerTest extends TestCase {
         System.out.println("START TEST 3\n");
         int i, j;
 
-        //test case 3 (check in initial case if sum = 20 )
+        //test case 3 (check in initial case if sum = 26 )
         player.checkSpots();
         int sum;
         sum = player.getPointSum();
@@ -395,7 +395,7 @@ public class PlayerTest extends TestCase {
             System.out.println("too much cards10");
         }
 
-
+        //print library
         board=playerBoard.getBoard();
         for(int y=5;y>=0;y--){
             System.out.println(board[0][y].getColor().toString()+" "+board[1][y].getColor().toString()+" "+board[2][y].getColor().toString()+" "+board[3][y].getColor().toString()+" "+board[4][y].getColor().toString()+" ");
