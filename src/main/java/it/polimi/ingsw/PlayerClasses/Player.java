@@ -21,7 +21,7 @@ public class Player {
     //private int pointArray;
     private static PlayerBoard board;
     private static PlayerTarget personalTarget;
-    private boolean alreadyUsed[][]= new boolean[5][6];
+    private boolean alreadyUsed1[][]= new boolean[5][6];
     private int elementCombo;
 
 
@@ -85,7 +85,7 @@ public class Player {
         int i,j;
         for (i=0; i<4;i++){
             for (j=0; j<5; j++){
-                if (allEqual(new Card[]{tmpBoard[i][j], tmpBoard[i+1][j]}) || allEqual(new Card[]{tmpBoard[i][j], tmpBoard[i][j+1]})) {
+                if (!alreadyUsed1[i][j] && (allEqual(new Card[]{tmpBoard[i][j], tmpBoard[i+1][j]}) || allEqual(new Card[]{tmpBoard[i][j], tmpBoard[i][j+1]}))) {
                     this.used(tmpBoard, i, j);
 
                     //assign points for the spots
@@ -118,12 +118,12 @@ public class Player {
 
     //iteration for adjacency
     private void used (Card[][] board,int i,int j){
-        alreadyUsed[i][j] = true;
+        alreadyUsed1[i][j] = true;
         elementCombo += 1;
-        if (i>0 && allEqual(new Card[]{board[i][j], board[i-1][j]})) this.used(board, i-1, j);
-        if (j>0 && allEqual(new Card[]{board[i][j], board[i][j-1]})) this.used(board, i, j-1);
-        if (i+1<5 && allEqual(new Card[]{board[i][j], board[i+1][j]})) this.used(board, i+1, j);
-        if (j+1<4 && allEqual(new Card[]{board[i][j], board[i][j+1]})) this.used(board, i, j+1);
+        if (i>0 && i<5 && !alreadyUsed1[i-1][j] && allEqual(new Card[]{board[i][j], board[i-1][j]})) this.used(board, i-1, j);
+        if (j>0 && j<6 && !alreadyUsed1[i][j-1] && allEqual(new Card[]{board[i][j], board[i][j-1]})) this.used(board, i, j-1);
+        if (i+1<5 && !alreadyUsed1[i+1][j] &&  allEqual(new Card[]{board[i][j], board[i+1][j]})) this.used(board, i+1, j);
+        if (j+1<6 && !alreadyUsed1[i][j+1] && allEqual(new Card[]{board[i][j], board[i][j+1]})) this.used(board, i, j+1);
     }
 
 
