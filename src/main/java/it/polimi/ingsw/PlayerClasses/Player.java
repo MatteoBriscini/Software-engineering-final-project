@@ -17,7 +17,7 @@ public class Player {
     //Attributes
 
     private static String playerID;
-    private static int pointSum;
+    private int pointSum;
     //private int pointArray;
     private static PlayerBoard board;
     private static PlayerTarget personalTarget;
@@ -64,14 +64,16 @@ public class Player {
     }
 
     public int getPointSum() {
-        return pointSum;
+        return this.pointSum;
     }
 
 
     //Other Methods
 
     public void updatePointSum(int pointSum) {
+
         this.pointSum += pointSum;
+        System.out.println(pointSum);
     }
 
     public void checkPlayerTarget(){
@@ -83,22 +85,27 @@ public class Player {
     public void checkSpots(){
         Card[][] tmpBoard = board.getBoard();
         int i,j;
-        for (i=0; i<4;i++){
-            for (j=0; j<5; j++){
-                if (!alreadyUsed1[i][j] && (allEqual(new Card[]{tmpBoard[i][j], tmpBoard[i+1][j]}) || allEqual(new Card[]{tmpBoard[i][j], tmpBoard[i][j+1]}))) {
+        for (i=0; i<5;i++){
+            for (j=0; j<6; j++){
+                if (!alreadyUsed1[i][j] && (i+1 < 5 && (allEqual(new Card[]{tmpBoard[i][j], tmpBoard[i+1][j]})) || (j+1<6 && allEqual(new Card[]{tmpBoard[i][j], tmpBoard[i][j+1]})))) {
                     this.used(tmpBoard, i, j);
-
                     //assign points for the spots
                     switch(elementCombo){
-                        case 3: this.updatePointSum(2);
-                        break;
-                        case 4: this.updatePointSum(3);
-                        break;
-                        case 5: this.updatePointSum(5);
-                        break;
-                        case 6: this.updatePointSum(8);
-                        break;
+                        case 3:
+                            this.updatePointSum(2);
+                            break;
+                        case 4:
+                            this.updatePointSum(3);
+                            break;
+                        case 5:
+                            this.updatePointSum(5);
+                            break;
                     }
+
+                    if (elementCombo >= 6){        //assign points for exception spots bigger than 6 cards
+                        this.updatePointSum(8);
+                    }
+
                     elementCombo = 0;
 
                 }
