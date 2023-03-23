@@ -7,16 +7,17 @@ import java.io.FileNotFoundException;
 import com.google.gson.Gson;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 
-public class GT2_7_11 extends EqualTarget{
+public class OneColorPatternGoals extends EqualTarget{
 
     private String url;
     private Position[][] p;
 
-    ArrayList<Card> cards = new ArrayList<>();
+    private Card[] cardArray;
 
-    GT2_7_11(int n) { //n is the number of the goal (possible value 2,7,11)
+    ArrayList<Card> cards = new ArrayList<>();;
+
+    OneColorPatternGoals(int n) { //n is the number of the goal (possible value 2,7,11)
         switch (n) {
             case 2:
                 this.url = "src/main/json/goal/CrossGoal.json";
@@ -44,10 +45,12 @@ public class GT2_7_11 extends EqualTarget{
     public boolean check(Card[][] board){
         //the json file has an array with the position we have to verify, in this two for we create an array list with the card in "interesting"position
         for (Position[] array : p){
+            cards.clear();
             for (Position pos : array){
                 cards.add(board[pos.getX()][pos.getY()]);
             }
-            Card[] cardArray = cards.toArray(new Card[0]); //copy the element of the array list in array
+            cardArray = new Card[cards.size()];
+            cardArray = cards.toArray(new Card[0]); //copy the element of the array list in array
             if (this.allEqual(cardArray))return true;   //call all equall with the array just created
         }
         return false;
