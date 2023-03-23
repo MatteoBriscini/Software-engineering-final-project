@@ -4,7 +4,7 @@ import it.polimi.ingsw.Cards.Card;
 
 import static it.polimi.ingsw.Cards.CardColor.EMPTY;
 
-public class StairsPatternTarget extends GroupTarget{
+public class StairsPatternTarget extends CommonGoal {
 
     public boolean check(Card[][] board){
         int x=0;

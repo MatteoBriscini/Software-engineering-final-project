@@ -22,7 +22,7 @@ Members: <br>
 | class : DifferentColomnsTarget                         | :yellow_circle: | Matteo Briscini                 | not tested yet  |
 | class : DifferentRowsTarget                            | :yellow_circle: | Matteo Briscini                 | not tested yet  |
 | DiagonAlleyGoal <br> <b>class</b>: OneColorPatternGoal | :green_circle:  | Matteo Briscini                 | implemented && tested  |
-| class : CrossTarget                                    | :yellow_circle: | Matteo Briscini                 | not tested yet  |
+| CrossTarget   <br> <b>class</b>: OneColorPatternGoal   | :ygreen_circle: | Matteo Briscini                 | implemented && tested  |
 | CouplesGoal <br> <b>class</b>: CouplesAndPokersGoals   | :green_circle: | Matteo Briscini                 | implemented && tested   |
 | PokerGoal <br> <b>class</b>: CouplesAndPokersGoals     | :green_circle:  | Matteo Briscini                 | implemented && tested  |
 | class : Player                                         | :yellow_circle: | Davide Arcaini                  | partially implemented && tested |

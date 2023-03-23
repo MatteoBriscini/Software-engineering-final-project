@@ -2,6 +2,7 @@ package it.polimi.ingsw.PlayerClasses;
 
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Cards.CardColor;
+import it.polimi.ingsw.Exceptions.NoSpaceException;
 import junit.framework.TestCase;
 
 import static it.polimi.ingsw.Cards.CardColor.*;
@@ -28,6 +29,7 @@ public class PlayerTest extends TestCase {
 
     //testing addCard
     public void testAddCard(){
+        player = new Player("player");
         System.out.println("START TEST ADDCARD \n");
 
         tmp[0]= new Card(BLUE);
@@ -44,6 +46,7 @@ public class PlayerTest extends TestCase {
     }
 
     public void testCheckSpots() {
+        player = new Player("player");
         System.out.println("START TEST \n");
         int i,j;
 
@@ -162,6 +165,7 @@ public class PlayerTest extends TestCase {
     //
     //
     public void testCheckSpots2() {
+        player = new Player("player");
         System.out.println("START TEST 2\n");
         int i, j;
 
@@ -293,6 +297,7 @@ public class PlayerTest extends TestCase {
 
 
     public void testCheckSpots3() {
+        player = new Player("player");
         System.out.println("START TEST 3\n");
         int i, j;
 
@@ -417,7 +422,7 @@ public class PlayerTest extends TestCase {
     //check with empty board (test 4) or with a full board with a single color (test 5)
 
     public void testCheckSpots4(){
-
+        player = new Player("player");
         System.out.println("START TEST 4\n");
         int i, j;
 
@@ -444,7 +449,7 @@ public class PlayerTest extends TestCase {
     }
 
     public void testCheckSpots5(){
-
+        player = new Player("player");
         System.out.println("START TEST 5\n");
         int i, j;
 

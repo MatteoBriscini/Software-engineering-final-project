@@ -7,8 +7,15 @@ import junit.framework.TestCase;
 import static it.polimi.ingsw.Cards.CardColor.*;
 
 public class DifferentTargetTest extends TestCase {
+    /**
+     * parameters
+     */
     private final DifferentTarget testIObj = new DifferentTarget();
     private final Card[] Cards = new Card[3];
+
+    /**
+     * actual test
+     */
     public void testDifferent() {
         System.out.println("START TEST \n");
 

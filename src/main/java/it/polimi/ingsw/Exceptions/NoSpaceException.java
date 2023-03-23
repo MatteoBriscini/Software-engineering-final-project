@@ -1,4 +1,4 @@
-package it.polimi.ingsw.PlayerClasses;
+package it.polimi.ingsw.Exceptions;
 
 public class NoSpaceException extends Exception{
     public NoSpaceException(String message){

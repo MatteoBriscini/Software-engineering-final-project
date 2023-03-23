@@ -5,11 +5,16 @@ import junit.framework.TestCase;
 
 import static it.polimi.ingsw.Cards.CardColor.*;
 
-public class NElementCheckTest extends TestCase {
-    private final int min = 2;
-    private final int max = 3;
-    private final NElementCheck testIObj = new NElementCheck();
+public class NElementsCheckTest extends TestCase {
+    /**
+     * parameters
+     */
+    private final NElementsCheck testIObj = new NElementsCheck();
     private final Card[] Cards = new Card[5];
+
+    /**
+     * actual test
+     */
     public void testNColorsCheck() {
         System.out.println("START TEST \n");
 
@@ -19,6 +24,8 @@ public class NElementCheckTest extends TestCase {
         Cards[2] = new Card(EMPTY);
         Cards[3] = new Card(EMPTY);
         Cards[4] = new Card(EMPTY);
+        int min = 2;
+        int max = 3;
         boolean check = testIObj.nColorsCheck(Cards, min, max);
         assert (check == false);
 

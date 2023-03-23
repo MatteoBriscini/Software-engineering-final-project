@@ -1,12 +1,6 @@
 package it.polimi.ingsw.GroupTargets;
 
-import it.polimi.ingsw.Cards.Card;
-import it.polimi.ingsw.Cards.CardColor;
-
-import java.util.Arrays;
-import java.util.HashSet;
-
-public abstract class GroupTarget {
+public abstract class CommonGoal {
     private int nPlayer;
 
     public int getnPlayer() {
