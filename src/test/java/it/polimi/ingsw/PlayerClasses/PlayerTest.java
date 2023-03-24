@@ -13,10 +13,8 @@ public class PlayerTest extends TestCase {
     private PlayerBoard playerBoard;
 
     private Card[] tmpC = new Card[30];
-    private CardColor[] tmpcol1 = {};
-    private CardColor[] tmpcol2 = {};
-    private CardColor[] tmpcol3 = {};
-    Card[][] board= new Card[5][6];
+
+    Card[][] board= new Card[4][5]; //library copy for the print used to check if the fill was correct
 
     //testing addCard
     public void testAddCard(){
