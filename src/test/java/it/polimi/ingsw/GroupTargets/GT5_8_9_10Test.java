@@ -3,7 +3,7 @@ package it.polimi.ingsw.GroupTargets;
 import com.sun.org.apache.xpath.internal.WhitespaceStrippingElementMatcher;
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Cards.CardColor;
-import it.polimi.ingsw.PlayerClasses.NoSpaceException;
+import it.polimi.ingsw.Exceptions.NoSpaceException;
 import it.polimi.ingsw.PlayerClasses.PlayerBoard;
 import junit.framework.TestCase;
 
