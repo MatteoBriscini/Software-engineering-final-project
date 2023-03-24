@@ -1,12 +1,13 @@
 package it.polimi.ingsw.GroupTargets;
 
 import it.polimi.ingsw.Cards.Card;
+import it.polimi.ingsw.Exceptions.CostructorExeception;
 
 /**
  * this class checks the common goals number 5, 8, 9 and 10
  * [following the order of the italian rulebook, reading from top to down, from the left to the right]
  */
-public class GT5_8_9_10 extends NElementsCheck{
+public class RainbowRowsAndColumnsGoals extends NElementsCheck{
     private int n,min,max,tot;
 
     /**
@@ -15,7 +16,7 @@ public class GT5_8_9_10 extends NElementsCheck{
      * @param max is the maximum number of different colours required from the goal
      * @param tot is the number of rows or columns that must fulfill the requirement of the number of colors
      */
-    public GT5_8_9_10(int n, int min, int max, int tot){
+    public RainbowRowsAndColumnsGoals(int n, int min, int max, int tot){
         this.n = n;
         this.min = min;
         this.max = max;

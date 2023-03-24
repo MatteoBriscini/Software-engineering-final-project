@@ -1,6 +1,5 @@
 package it.polimi.ingsw.GroupTargets;
 
-import com.sun.org.apache.xpath.internal.WhitespaceStrippingElementMatcher;
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Cards.CardColor;
 import it.polimi.ingsw.Exceptions.NoSpaceException;
@@ -9,11 +8,11 @@ import junit.framework.TestCase;
 
 import static it.polimi.ingsw.Cards.CardColor.*;
 
-public class GT5_8_9_10Test extends TestCase {
-    private GT5_8_9_10 test5 = new GT5_8_9_10(6,1,3, 4);
-    private GT5_8_9_10 test8 = new GT5_8_9_10(5,1,3, 3);
-    private GT5_8_9_10 test9 = new GT5_8_9_10(6,5,5, 2);
-    private GT5_8_9_10 test10 = new GT5_8_9_10(5,6,6, 2);
+public class RainbowRowsAndColumnsGoalsTest extends TestCase {
+    private RainbowRowsAndColumnsGoals test5 = new RainbowRowsAndColumnsGoals(6,1,3, 4);
+    private RainbowRowsAndColumnsGoals test8 = new RainbowRowsAndColumnsGoals(5,1,3, 3);
+    private RainbowRowsAndColumnsGoals test9 = new RainbowRowsAndColumnsGoals(6,5,5, 2);
+    private RainbowRowsAndColumnsGoals test10 = new RainbowRowsAndColumnsGoals(5,6,6, 2);
 
     private PlayerBoard playerBoard;
 
