@@ -6,11 +6,13 @@ import it.polimi.ingsw.JsonSupportClasses.Position;
 
 import java.io.FileNotFoundException;
 import com.google.gson.Gson;
+import it.polimi.ingsw.SupportClasses.NColorGroup;
+
 import java.io.FileReader;
 import java.util.ArrayList;
 
 
-public class OneColorPatternGoals extends EqualTarget{
+public class OneColorPatternGoals extends CommonGoal{
 
     /**
      * parameters
@@ -18,6 +20,7 @@ public class OneColorPatternGoals extends EqualTarget{
     private final String url;
     private Position[][] p;
 
+    private final NColorGroup equal = new NColorGroup();
     ArrayList<Card> cards = new ArrayList<>();
 
     /**
@@ -72,7 +75,7 @@ public class OneColorPatternGoals extends EqualTarget{
                 cards.add(board[pos.getX()][pos.getY()]);
             }
             Card[] cardArray = cards.toArray(new Card[0]); //copy the element of the array list in array
-            if (this.allEqual(cardArray))return true;   //call all equal with the array just created
+            if (equal.nColorsCheck(cardArray, 1, 1))return true;   //call all equal with the array just created
         }
         return false;
     }

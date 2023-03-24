@@ -16,16 +16,7 @@ public class PlayerTest extends TestCase {
     private CardColor[] tmpcol1 = {};
     private CardColor[] tmpcol2 = {};
     private CardColor[] tmpcol3 = {};
-    Card[][] board= new Card[6][5];
-
-
-    public PlayerBoard getPlayerBoard() {
-        return playerBoard;
-    }
-
-
-
-
+    Card[][] board= new Card[5][6];
 
     //testing addCard
     public void testAddCard(){

@@ -65,7 +65,7 @@ public class OneColorPatternGoalsTest extends TestCase {
         val = test.check(playerBoard.getBoard());
         assert (!val);
 
-        //check initial state (diagonAlley pattern)
+        //check initial state (cross pattern)
         test = new OneColorPatternGoals(11);
         val = test.check(playerBoard.getBoard());
         assert (!val);

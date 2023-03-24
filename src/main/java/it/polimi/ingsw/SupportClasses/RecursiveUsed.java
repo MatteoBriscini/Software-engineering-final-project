@@ -1,7 +1,6 @@
 package it.polimi.ingsw.SupportClasses;
 
 import it.polimi.ingsw.Cards.Card;
-import it.polimi.ingsw.GroupTargets.EqualTarget;
 
 /**
  * support class to avoid duplicate code line
@@ -10,7 +9,7 @@ public class RecursiveUsed {
     /**
      * parameters
      */
-    private EqualTarget allEqual = new EqualTarget();
+    private final NColorGroup equal = new NColorGroup();
     private boolean[][] alreadyUsed;
 
     private int elementCombo;
@@ -40,13 +39,13 @@ public class RecursiveUsed {
     private void recursiveUsed (Card[][] board, int i, int j){
         alreadyUsed[i][j] = true;
         this.elementCombo += 1;
-        if (i>0 && i<5 && !alreadyUsed[i-1][j] && allEqual.allEqual(new Card[]{board[i][j], board[i-1][j]}))
+        if (i>0 && i<5 && !alreadyUsed[i-1][j] && equal.nColorsCheck(new Card[]{board[i][j], board[i-1][j]},1,1))
             this.recursiveUsed (board, i-1, j);
-        if (j>0 && j<6 && !alreadyUsed[i][j-1] && allEqual.allEqual(new Card[]{board[i][j], board[i][j-1]}))
+        if (j>0 && j<6 && !alreadyUsed[i][j-1] && equal.nColorsCheck(new Card[]{board[i][j], board[i][j-1]},1 ,1))
             this.recursiveUsed (board, i, j-1);
-        if (i+1<5 && !alreadyUsed[i+1][j] &&  allEqual.allEqual(new Card[]{board[i][j], board[i+1][j]}))
+        if (i+1<5 && !alreadyUsed[i+1][j] &&  equal.nColorsCheck(new Card[]{board[i][j], board[i+1][j]}, 1,1))
             this.recursiveUsed (board, i+1, j);
-        if (j+1<6 && !alreadyUsed[i][j+1] && allEqual.allEqual(new Card[]{board[i][j], board[i][j+1]}))
+        if (j+1<6 && !alreadyUsed[i][j+1] && equal.nColorsCheck(new Card[]{board[i][j], board[i][j+1]},1,1))
             this.recursiveUsed (board, i, j+1);
     }
 }

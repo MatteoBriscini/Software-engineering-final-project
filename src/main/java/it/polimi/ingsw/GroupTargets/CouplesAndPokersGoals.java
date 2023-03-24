@@ -2,10 +2,11 @@ package it.polimi.ingsw.GroupTargets;
 
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Exceptions.CostructorExeception;
+import it.polimi.ingsw.SupportClasses.NColorGroup;
 import it.polimi.ingsw.SupportClasses.RecursiveUsed;
 import it.polimi.ingsw.SupportClasses.RecursiveUsedSupport;
 
-public class CouplesAndPokersGoals extends EqualTarget{
+public class CouplesAndPokersGoals extends CommonGoal{
 
     /**
      * parameters
@@ -13,7 +14,7 @@ public class CouplesAndPokersGoals extends EqualTarget{
     private boolean[][] alreadyUsed = new boolean[5][6];
     private int validCombo = 0;  //amount of valid row
     private int elementCombo = 0;  //amount of element in a single combo
-
+    private final NColorGroup equal = new NColorGroup();
     private final RecursiveUsed recursiveUsed = new RecursiveUsed();
 
     private final int n, mGroups;
@@ -43,12 +44,11 @@ public class CouplesAndPokersGoals extends EqualTarget{
         int i,j;
         for (i=0; i<5; i++){
             for (j=0; j<6; j++){
-                if (!alreadyUsed[i][j] &&( i+1<5 && (allEqual(new Card[]{board[i][j], board[i+1][j]})) || j+1<6 && (allEqual(new Card[]{board[i][j], board[i][j+1]})))) { //search for first pair
-                    RecursiveUsedSupport used = recursiveUsed.used(board, i, j, alreadyUsed, elementCombo);     //call method to save just used position
+                if (!alreadyUsed[i][j] &&( i+1<5 && (equal.nColorsCheck(new Card[]{board[i][j], board[i+1][j]}, 1, 1)) || j+1<6 && (equal.nColorsCheck(new Card[]{board[i][j], board[i][j+1]},1, 1)))) { //search for first pair
+                    RecursiveUsedSupport used = recursiveUsed.used(board, i, j, alreadyUsed, 0);     //call method to save just used position
                     alreadyUsed = used.getAlreadyUsed();
                     elementCombo = used.getElementCombo();
                     if (elementCombo >= n) validCombo += 1;
-                    elementCombo = 0;
                 }
             }
         }

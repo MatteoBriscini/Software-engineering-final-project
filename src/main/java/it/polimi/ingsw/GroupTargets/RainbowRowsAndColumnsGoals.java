@@ -2,13 +2,15 @@ package it.polimi.ingsw.GroupTargets;
 
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Exceptions.CostructorExeception;
+import it.polimi.ingsw.SupportClasses.NColorGroup;
 
 /**
  * this class checks the common goals number 5, 8, 9 and 10
  * [following the order of the italian rulebook, reading from top to down, from the left to the right]
  */
-public class RainbowRowsAndColumnsGoals extends NElementsCheck{
+public class RainbowRowsAndColumnsGoals extends CommonGoal{
     private int n,min,max,tot;
+    private final NColorGroup nColor = new NColorGroup();
 
     /**
      * @param n is the number of Cards required from the goal
@@ -33,7 +35,7 @@ public class RainbowRowsAndColumnsGoals extends NElementsCheck{
         /** the rows are made by 5 Cards, while the columns is made by 6 Cards.
          ** depending on the value of n, this loop checks how many rows or columns fulfill the requirements of the goal*/
         for(int i=0;i<n;i++) {
-            if((n==6 && (this.nColorsCheck(new Card[]{board[0][i], board[1][i], board[2][i], board[3][i], board[4][i]}, min, max))) || (n==5 && (this.nColorsCheck(new Card[]{board[i][0], board[i][1], board[i][2], board[i][3], board[i][4], board[i][5]}, min, max)))) {
+            if((n==6 && (nColor.nColorsCheck(new Card[]{board[0][i], board[1][i], board[2][i], board[3][i], board[4][i]}, min, max))) || (n==5 && (nColor.nColorsCheck(new Card[]{board[i][0], board[i][1], board[i][2], board[i][3], board[i][4], board[i][5]}, min, max)))) {
                 {
                     tmptot--;
                 }
