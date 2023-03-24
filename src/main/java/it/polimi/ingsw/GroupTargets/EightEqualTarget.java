@@ -11,6 +11,7 @@ public class EightEqualTarget extends CommonGoal {
         int[] color=new int[6]; //this array is used to count the occurrences of each color (the order is the same of the enum in CardColor)
         int x=0;
         int y=0;
+        int i=0;
         while(true){
             if(board[x][y].getColor().equals(EMPTY)){ //if the cell is empty, the cells above it are empty too
                 if(x<4){ //if the method hasn't checked the last column, it checks the next one
@@ -22,36 +23,27 @@ public class EightEqualTarget extends CommonGoal {
             else{
                 switch(board[x][y].getColor()){ //this switch-case is used to count the occurrence of the card's color, it does return TRUE if the current occurrence is the eighth one
                     case BLUE: {
-                        color[0]++;
-                        if(color[0]==8)
-                            return true;
+                        i=0;
                     }
                     case GREEN: {
-                        color[1]++;
-                        if(color[1]==8)
-                            return true;
+                        i=1;
                     }
                     case LIGHTBLUE: {
-                        color[2]++;
-                        if(color[2]==8)
-                            return true;
+                        i=2;
                     }
                     case PINK: {
-                        color[3]++;
-                        if(color[3]==8)
-                            return true;
+                        i=3;
                     }
                     case WHITE: {
-                        color[4]++;
-                        if(color[4]==8)
-                            return true;
+                        i=4;
                     }
                     case YELLOW: {
-                        color[5]++;
-                        if(color[5]==8)
-                            return true;
+                        i=5;
                     }
                 }
+                color[i]++;
+                if(color[i]==8)
+                    return true;
                 if(y<5) //if the method hasn't checked all the rows of the curren column, it has to check the next row, otherwise it has to check the next column from the bottom
                     y++;
                 else

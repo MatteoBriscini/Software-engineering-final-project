@@ -1,9 +1,11 @@
 package it.polimi.ingsw.Cards;
 
+/**
+ * this class is used to represent the cards
+ */
 public class Card{
     private CardColor color;
     private int sketch;
-
 
     public Card(CardColor color){
         this.color=color;

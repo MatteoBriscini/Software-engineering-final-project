@@ -1,5 +1,8 @@
 package it.polimi.ingsw.Cards;
 
+/**
+ * this enumeration contains all the possible colors of the cards, plus EMPTY that represents a card that is not present
+ */
 public enum CardColor {
     BLUE,
     GREEN,
@@ -7,5 +10,6 @@ public enum CardColor {
     PINK,
     WHITE,
     YELLOW,
+
     EMPTY
 }
