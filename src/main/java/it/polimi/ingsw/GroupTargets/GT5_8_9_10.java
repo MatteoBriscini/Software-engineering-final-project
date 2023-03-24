@@ -2,8 +2,6 @@ package it.polimi.ingsw.GroupTargets;
 
 import it.polimi.ingsw.Cards.Card;
 
-import java.sql.SQLOutput;
-
 /**
  * this class checks the common goals number 5, 8, 9 and 10
  * [following the order of the italian rulebook, reading from top to down, from the left to the right]

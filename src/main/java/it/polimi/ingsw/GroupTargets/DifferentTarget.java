@@ -12,10 +12,8 @@ public class DifferentTarget extends CommonGoal {
      * @return boolean true if there aren't two (or more) card of the same color in the array
      */
     public boolean different(Card[] cards) {
+        Card emptyCard = new Card(EMPTY);
         HashSet<Card> hs = new HashSet<>(Arrays.asList(cards));          //create hash set with same element of the array
-        for (Card c : hs){                                              //verify there are no empty card
-            if (c.getColor().equals(EMPTY)) {return false;}
-        }
-        return (hs.size() == cards.length);                             //if hs and cards has same lenght => all element are different
+        return hs.size() == cards.length && !hs.contains(emptyCard);     //if hs and cards has same lenght => all element are different
     }
 }

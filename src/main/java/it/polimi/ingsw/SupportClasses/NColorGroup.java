@@ -1,18 +1,13 @@
-package it.polimi.ingsw.GroupTargets;
+package it.polimi.ingsw.SupportClasses;
 
-import it.polimi.ingsw.Cards.*;
-import static it.polimi.ingsw.Cards.CardColor.EMPTY;
+import it.polimi.ingsw.Cards.Card;
 
 import java.util.Arrays;
 import java.util.HashSet;
 
-public class NElementsCheck extends CommonGoal {
-    /**
-     * @param cards array of cards to compare
-     * @param min min of group the method have to fine in the groups
-     * @param max max of group the method have to fine in the groups
-     * @return boolean true if min and max are respected
-     */
+import static it.polimi.ingsw.Cards.CardColor.EMPTY;
+
+public class NColorGroup {
     public boolean nColorsCheck  (Card[] cards, int min, int max) {
         Card emptyCard = new Card(EMPTY);
         HashSet<Card> hs = new HashSet<>(Arrays.asList(cards));                           //create hash set with same element of the array

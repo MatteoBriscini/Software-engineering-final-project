@@ -18,29 +18,29 @@ public class EqualTargetTest extends TestCase {
         Cards[2] = new Card(EMPTY);
 
         boolean check = testIObj.allEqual(Cards);
-        assert (check == false);
+        assert (!check);
 
         //test case 2 (all equal but with an empty)
-        check = true;
+
         Cards[0] = new Card(YELLOW);
         Cards[1] = new Card(YELLOW);
         Cards[2] = new Card(EMPTY);
         check = testIObj.allEqual(Cards);
-        assert (check == false);
+        assert (!check);
 
         //test case 3 (all equal)
         Cards[0] = new Card(YELLOW);
         Cards[1] = new Card(YELLOW);
         Cards[2] = new Card(YELLOW);
         check = testIObj.allEqual(Cards);
-        assert (check == true);
+        assert (check);
 
         //test case 4 (not all equal)
         Cards[0] = new Card(YELLOW);
         Cards[1] = new Card(YELLOW);
         Cards[2] = new Card(GREEN);
         check = testIObj.allEqual(Cards);
-        assert (check == false);
+        assert (!check);
 
         System.out.println("END TEST \n");
     }
