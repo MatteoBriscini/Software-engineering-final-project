@@ -91,6 +91,7 @@ public class Player {
     public void checkSpots() {
         Card[][] tmpBoard = board.getBoard();
         int i, j;
+        alreadyUsed1 = new boolean[5][6];
         for (i = 0; i < 5; i++) {
             for (j = 0; j < 6; j++) {
                 if (!alreadyUsed1[i][j] && (i + 1 < 5 && (equal.nColorsCheck(new Card[]{tmpBoard[i][j], tmpBoard[i + 1][j]},1,1)) || (j + 1 < 6 && equal.nColorsCheck(new Card[]{tmpBoard[i][j], tmpBoard[i][j + 1]},1,1)))) {
