@@ -52,7 +52,7 @@ public class Player {
     }
 
 
-    private void setPlayerTarget(int targetNumber) throws FileNotFoundException {  //exception file not found
+    public void setPlayerTarget(int targetNumber) throws FileNotFoundException {  //exception file not found
         String path = "src/main/YetToDecide.json";   //file path
         FileReader fileJson = new FileReader(path);      //file executable
 
@@ -73,6 +73,9 @@ public class Player {
         return this.pointSum;
     }
 
+    public Card[][] getBoard(){
+        return Player.board.getBoard();
+    }
 
     //Other Methods
 
