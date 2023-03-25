@@ -13,6 +13,7 @@ public class EightEqualTarget extends CommonGoal {
         int y=0;
         int i=0;
         while(true){
+
             if(board[x][y].getColor().equals(EMPTY)){ //if the cell is empty, the cells above it are empty too
                 if(x<4){ //if the method hasn't checked the last column, it checks the next one
                     x++;
@@ -24,21 +25,27 @@ public class EightEqualTarget extends CommonGoal {
                 switch(board[x][y].getColor()){ //this switch-case is used to count the occurrence of the card's color, it does return TRUE if the current occurrence is the eighth one
                     case BLUE: {
                         i=0;
+                        break;
                     }
                     case GREEN: {
                         i=1;
+                        break;
                     }
                     case LIGHTBLUE: {
                         i=2;
+                        break;
                     }
                     case PINK: {
                         i=3;
+                        break;
                     }
                     case WHITE: {
                         i=4;
+                        break;
                     }
                     case YELLOW: {
                         i=5;
+                        break;
                     }
                 }
                 color[i]++;

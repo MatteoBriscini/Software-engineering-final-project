@@ -13,28 +13,25 @@ import it.polimi.ingsw.SupportClasses.RecursiveUsedSupport;
 public class SquaresGoal extends CommonGoal{
 
     private final RecursiveUsed recursiveUsed = new RecursiveUsed();
-    private boolean[][] alreadyUsed = new boolean[5][6];
-    private final NColorGroup equal = new NColorGroup();
-    private int validCombo = 0;  //amount of valid squares
-    private final int n;
+    private boolean[][] alreadyUsed;
+    private int validCombo;  //amount of valid squares
 
-    public SquaresGoal(int n) throws CostructorExeception {
-        if(n==4)
-            this.n=n;
-        else
-            throw new CostructorExeception("invalid parameter for SquaresGoals [constructor possible value n: 2]");
-    }
+    private final NColorGroup nColor = new NColorGroup();
+    public SquaresGoal() {}
 
     /**
      *
-     * @param board
-     * @return
+     * @param board is a matrix that represents the main board
+     * @return true if the goal has been reached, false otherwise
      */
     public boolean check(Card[][] board) {
         int x, y;
-        for (x = 0; x < 5; x++) {
-            for (y = 0; y < 6; y++) {
-                if (!alreadyUsed[x][y] && (x + 1 < 5 && (equal.nColorsCheck(new Card[]{board[x][y], board[x + 1][y]},1 ,1)) || y + 1 < 6 && (equal.nColorsCheck(new Card[]{board[x][y], board[x + 1][y], board[x][y + 1], board[x + 1][y + 1]},1,1)))) {
+        validCombo=0;
+        alreadyUsed = new boolean[5][6];
+
+        for (x = 0; x < 4; x++) {
+            for (y = 0; y < 5; y++) {
+                if (!alreadyUsed[x][y] && nColor.nColorsCheck(new Card[]{board[x][y], board[x+1][y+1], board[x+1][y], board[x][y+1]}, 1, 1)) {
                     RecursiveUsedSupport used = recursiveUsed.used(board, x, y, alreadyUsed, 0);     //call method to save just used position
                     alreadyUsed = used.getAlreadyUsed();
                     validCombo += 1;
