@@ -77,6 +77,6 @@ public class GameMaster {
     }
     public boolean checkCommonGoal(int commonGoalID, int currentPlayer){ //have to take current player board
         return false;
-    }
+    } //
 
 }
