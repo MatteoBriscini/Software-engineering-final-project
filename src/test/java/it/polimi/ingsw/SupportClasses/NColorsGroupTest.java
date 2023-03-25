@@ -5,9 +5,9 @@ import junit.framework.TestCase;
 
 import static it.polimi.ingsw.Cards.CardColor.*;
 
-public class NColorGroupTest extends TestCase {
+public class NColorsGroupTest extends TestCase {
 
-    private final NColorGroup testIObj  = new NColorGroup();
+    private final NColorsGroup testIObj  = new NColorsGroup();
     private final Card[] Cards5 = new Card[5];
     private final Card[] Cards3 = new Card[3];
 
