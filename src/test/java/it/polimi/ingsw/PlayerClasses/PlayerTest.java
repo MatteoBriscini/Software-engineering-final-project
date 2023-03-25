@@ -20,7 +20,7 @@ public class PlayerTest extends TestCase {
     public void testAddCard(){
         player = new Player("player");
         System.out.println("START TEST ADDCARD \n");
-
+//
         tmp[0]= new Card(BLUE);
         tmp[1]= new Card(WHITE);
         tmp[2] =new Card(LIGHTBLUE);
