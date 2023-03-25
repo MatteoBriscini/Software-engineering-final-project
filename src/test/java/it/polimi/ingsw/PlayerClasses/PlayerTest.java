@@ -258,7 +258,7 @@ public class PlayerTest extends TestCase {
         }
 
         //print library
-        board=playerBoard.getBoard();
+        board=player.getBoard();
         for(int y=5;y>=0;y--){
             System.out.println(board[0][y].getColor().toString()+" "+board[1][y].getColor().toString()+" "+board[2][y].getColor().toString()+" "+board[3][y].getColor().toString()+" "+board[4][y].getColor().toString()+" ");
         }
@@ -390,7 +390,7 @@ public class PlayerTest extends TestCase {
         }
 
         //print library
-        board=playerBoard.getBoard();
+        board=player.getBoard();
         for(int y=5;y>=0;y--){
             System.out.println(board[0][y].getColor().toString()+" "+board[1][y].getColor().toString()+" "+board[2][y].getColor().toString()+" "+board[3][y].getColor().toString()+" "+board[4][y].getColor().toString()+" ");
         }
@@ -423,7 +423,7 @@ public class PlayerTest extends TestCase {
 
 
         //print library
-        board=playerBoard.getBoard();
+        board=player.getBoard();
         for(int y=5;y>=0;y--){
             System.out.println(board[0][y].getColor().toString()+" "+board[1][y].getColor().toString()+" "+board[2][y].getColor().toString()+" "+board[3][y].getColor().toString()+" "+board[4][y].getColor().toString()+" ");
         }
@@ -541,7 +541,7 @@ public class PlayerTest extends TestCase {
 
 
         //print library
-        board=playerBoard.getBoard();
+        board=player.getBoard();
         for(int y=5;y>=0;y--){
             System.out.println(board[0][y].getColor().toString()+" "+board[1][y].getColor().toString()+" "+board[2][y].getColor().toString()+" "+board[3][y].getColor().toString()+" "+board[4][y].getColor().toString()+" ");
         }
