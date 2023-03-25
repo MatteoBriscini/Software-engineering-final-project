@@ -1,82 +1,60 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.Cards.Card;
-import it.polimi.ingsw.JsonSupportClasses.Position;
-import it.polimi.ingsw.JsonSupportClasses.PositionWithColor;
 import it.polimi.ingsw.PlayerClasses.*;
 import it.polimi.ingsw.GroupTargets.*;
-import java.util.ArrayList;
 
+import com.google.gson.Gson;    //import for json
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 public class GameMaster {
-    private ArrayList<Player> players;
-    private CommonGoal[] commonGoals;
-    private final MainBoard mainBoard = new MainBoard();
-    /**
-     * get method
-     */
-    public ArrayList<Player> getPlayerArray(){
-        return players;
+
+    private static int playerNum = 0;
+    private static boolean activeGame = false;
+    private static char[][] validPosArray; //valid position to set card in main board
+
+    private static int currentPlayer = 0;
+    private static Player [] playerArray;
+    private static MainBoard mainBoard = new MainBoard();
+    //private static GroupTarget [] groupTargetArray;
+    public GameMaster(){ //costructor
     }
 
-    public MainBoard getMainBoard() {
-        return mainBoard;
+    //############################# start game method
+    public static void addPlayer(String playerId){  //new player join the game
+        if (playerNum<4 && activeGame == false) {
+            //playerArray[playerNum] = new Player(playerId);
+            playerNum += 1;
+        }
+        if (playerNum == 4 && activeGame == false) startGame();  //if the game is full the game will start auto
     }
-
-    public void getPlayerGoal(int currentPlayer){}  //has to return player target
-
-    public void getPlayerBoard(int currentPlayer){} //has to return player board
-
-    /**
-     * start game method
-     */
-    public int addNewPlayer (String playerID){
-        //add player costrucor
-        return players.size();
-    }
-    public void setCommonGoal (int commonGoalID){
+    public static void startGame(){  //start game
 
     }
 
-    public void setPrivateGoal (int[] privateGoalID){
+    //############################# end game method
+    public static void endGame(){          //end game
+    }
+    private static void endGamePoint(){         //calc end game point
 
     }
 
-    public boolean fullMainBoard(Position[] validPosition){
-        return false;
+    //############################# game method
+    private static void turn (){                                //manage the player turn
+
+    }
+    public static void takeCard(int n, char position[][]){      //take card
+
     }
 
-    /**
-     * point method
-     */
-    public int endGameCalcPoint(){
-        return 0;
+    private static void updateAllData (){       //update client data
+
     }
-   public void playerAddPoint(int point, int currentPlayer){
+    private static void calcGroupPoint(){       //for each game verify if reach the group target
 
-   }
-
-   public int playerGetPoin(int currentPlayer){
-        return 0;
-   }
-
-    /**
-     * MainBoard method
-     */
-    public boolean addCard(int column, Card[] cards){
-        return false;
-    }
-    public boolean delCard(PositionWithColor[] cards){
-        return false;
     }
 
-    /**
-     * commonGoals method
-     */
-    public int getNPlayerCommonGoal(int commonGoalID){
-        return 0;
+    //main board usage
+    private static void fillBoard(){        //full main board
+       // mainBoard.fillBoard(validPosArray); //fill or refill the main board
     }
-    public boolean checkCommonGoal(int commonGoalID, int currentPlayer){ //have to take current player board
-        return false;
-    }
-
 }
