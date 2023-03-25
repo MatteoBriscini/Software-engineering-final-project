@@ -42,6 +42,7 @@ public class CouplesAndPokersGoals extends CommonGoal{
      */
     public boolean check(Card[][] board){
         int i,j;
+        alreadyUsed = new boolean[5][6];
         for (i=0; i<5; i++){
             for (j=0; j<6; j++){
                 if (!alreadyUsed[i][j] &&( i+1<5 && (equal.nColorsCheck(new Card[]{board[i][j], board[i+1][j]}, 1, 1)) || j+1<6 && (equal.nColorsCheck(new Card[]{board[i][j], board[i][j+1]},1, 1)))) { //search for first pair

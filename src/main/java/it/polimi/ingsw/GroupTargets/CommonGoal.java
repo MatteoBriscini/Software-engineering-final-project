@@ -1,14 +1,18 @@
 package it.polimi.ingsw.GroupTargets;
 
-public abstract class CommonGoal {
-    private int nPlayer;
+import it.polimi.ingsw.PlayerClasses.Player;
 
-    public int getnPlayer() {
-        return nPlayer;
+import java.util.ArrayList;
+
+public abstract class CommonGoal {
+    private ArrayList<Player> alreadyScored;
+
+    public ArrayList<Player> getAlreadyScored() {
+        return alreadyScored;
     }
 
-    public void setnPlayer(int nPlayer) {
-        this.nPlayer = nPlayer;
+    public void setAlreadyScored(ArrayList<Player> alreadyScored) {
+        this.alreadyScored = alreadyScored;
     }
 
     //public abstract void check();
