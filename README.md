@@ -10,7 +10,7 @@ Members: <br>
 
 | Functionality                                                      | State          | Current                         | Comment                                                                                                                           |
 |--------------------------------------------------------------------|----------------|---------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
-| class: NColorGroup                                                 | :green_circle: | Matteo Briscini                 | <b>implemented && tested</b><br/> it groups the funcionalities of previouse classes (DifferentTarget,EqualTarget,NElementsTarget) |
+| class: NColorsGroup                                                 | :green_circle: | Matteo Briscini                 | <b>implemented && tested</b><br/> it groups the funcionalities of previouse classes (DifferentTarget,EqualTarget,NElementsTarget) |
 | CornersGoal <br> <b>class</b>: OneColorPatternGoal                 | :green_circle: | Luca Castelli + Matteo Briscini | <b>implemented && tested</b>                                                                                                        |
 | class: EightEqualsTarget                                           | :green_circle: | Luca Castelli                  | implemented && tested                                                                                                                    |
 | NColorsColumsGoal <br> <b>class</b>: RainbowRowsAndColumnsGoals    | :green_circle: | Luca Castelli           | <b>implemented && tested</b>                                                                                                         |
@@ -25,3 +25,4 @@ Members: <br>
 | PokerGoal <br> <b>class</b>: CouplesAndPokersGoals                 | :green_circle: | Matteo Briscini                 | <b>implemented && tested</b>                                                                                                            |
 | class : Player                                                     | :yellow_circle: | Davide Arcaini                  | partially implemented && tested                                                                                                   |
 | class : SquaresGoal                                                | :green_circle: | Luca Castelli                   | implemented && tested                                                                                                                    |
+|class : MainBoard                                                   | :yellow_circle: | Luca Castelli                  | partially implemented
