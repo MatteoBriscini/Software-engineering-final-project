@@ -556,5 +556,11 @@ public class PlayerTest extends TestCase {
     }
 
 
+    public void testSetPlayerTarget(){
+
+
+
+    }
+
 
 }

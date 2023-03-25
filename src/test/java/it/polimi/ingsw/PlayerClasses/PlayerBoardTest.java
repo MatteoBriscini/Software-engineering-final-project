@@ -14,11 +14,14 @@ public class PlayerBoardTest extends TestCase {
     Card[][] board;
     PlayerBoard playerBoard = new PlayerBoard();
     boolean val = false;
+    boolean val2 = false;
 
 
     public void testPlayerBoard(){
 
-        System.out.println("Test 1 start");
+        System.out.println("PlayerBoard test 1 start");
+
+        System.out.println("Checking PlayerBoard constructor method");
 
         PlayerBoard PB = new PlayerBoard();
         Card[][] board = PB.getBoard();
@@ -28,56 +31,65 @@ public class PlayerBoardTest extends TestCase {
             }
         }
 
-        System.out.println("Test 1 end");
+        System.out.println("PlayerBoard test 1 end");
 
     }
 
     public void testGetBoard() {
 
-        System.out.println("Test 2 start");
+        System.out.println("PlayerBoard test 2 start");
+
+        System.out.println("Checking identity");
 
         PlayerBoard PB = new PlayerBoard();
         Card[][] board = PB.getBoard();
         assert(board.equals(PB.getBoard()));
 
-        System.out.println("Test 2 end");
+        System.out.println("PlayerBoard test 2 end");
 
     }
 
     public void testAddCard() {
 
-
+        System.out.println("PlayerBoard test 3 start");
 
         cards[0] = new Card(PINK);
         cards[1] = new Card(BLUE);
         cards[2] = new Card(PINK);
+
+        System.out.println("Checking insertion with an array of three up to full column");
+
         for(i = 0; i < 2; i++){
             try {
                 playerBoard.addCard(0, cards);
 
             } catch (NoSpaceException e) {
-                System.out.println("TOO MANY CARDS");
+                val2 = true;
             }
         }
         board = playerBoard.getBoard();
         for (i = 5; i >=  0; i--){
-            System.out.println(board[0][i].getColor());
+            assert(!board[0][i].getColor().equals(EMPTY));
         }
+        assert(!val2);
+        val2 = false;
+
+        System.out.println("Checking full column exception");
 
         for(i = 0; i < 3; i++){
             try {
                 val = playerBoard.addCard(1, cards);
 
             } catch (NoSpaceException e) {
-                System.out.println("TOO MANY CARDS");
+                val2 = true;
             }
         }
-        board = playerBoard.getBoard();
-        for (j = 5; j >=  0; j--){
-            System.out.println(board[1][j].getColor());
-        }
 
-        System.out.println(val);
+        assert(!val);
+        assert(val2);
+        val2 = false;
+
+        System.out.println("Checking full PlayerBoard check and return value");
 
         for(j = 2; j < 5; j++){
             for(i = 0; i < 2; i++){
@@ -85,14 +97,19 @@ public class PlayerBoardTest extends TestCase {
                     val = playerBoard.addCard(j, cards);
 
                 } catch (NoSpaceException e) {
-                    System.out.println("TOO MANY CARDS");
+                    val2 = true;
                 }
             }
         }
 
-        System.out.println(val);
+        assert(val);
+        assert(!val2);
 
-        cards[2] = new Card(EMPTY);
+        System.out.println("Checking insertion with an array of two");
+
+        Card[] cards2 = new Card[2];
+        cards2[0] = new Card(BLUE);
+        cards2[1] = new Card(PINK);
 
         for (i = 0; i < 5; i++){
             for (j = 0; j < 6; j++){
@@ -102,45 +119,71 @@ public class PlayerBoardTest extends TestCase {
 
         for(i = 0; i < 2; i++){
             try {
-                playerBoard.addCard(0, cards);
+                val = playerBoard.addCard(0, cards2);
 
             } catch (NoSpaceException e) {
-                System.out.println("TOO MANY CARDS");
+                val2 = true;
             }
         }
         board = playerBoard.getBoard();
-        for (i = 5; i >=  0; i--){
-            System.out.println(board[0][i].getColor());
+        for (i = 5; i >=  4; i--){
+            assert(board[0][i].getColor().equals(EMPTY));
         }
+
+        System.out.println("Checking insertion with an array of two up to full column");
+
 
         for(i = 0; i < 3; i++){
             try {
-                playerBoard.addCard(2, cards);
+                val = playerBoard.addCard(2, cards2);
 
             } catch (NoSpaceException e) {
-                System.out.println("TOO MANY CARDS");
+                val2 = true;
             }
         }
         board = playerBoard.getBoard();
         for (i = 5; i >=  0; i--){
-            System.out.println(board[2][i].getColor());
+            assert(!board[2][i].getColor().equals(EMPTY));
         }
+        assert(!val2);
 
-        cards[1] = new Card(EMPTY);
+
+        System.out.println("Checking insertion with an array of one");
+
+        Card[] cards3 = new Card[1];
+        cards3[0] = new Card(BLUE);
 
         for(i = 0; i < 3; i++){
             try {
-                playerBoard.addCard(1, cards);
+                val = playerBoard.addCard(1, cards3);
 
             } catch (NoSpaceException e) {
-                System.out.println("TOO MANY CARDS");
+                val2 = true;
+            }
+        }
+        board = playerBoard.getBoard();
+        for (i = 5; i >=  3; i--){
+            assert(board[1][i].getColor().equals(EMPTY));
+        }
+
+
+        System.out.println("Checking insertion with an array of one up to full column");
+
+
+        for(i = 0; i < 3; i++){
+            try {
+                val = playerBoard.addCard(1, cards3);
+
+            } catch (NoSpaceException e) {
+                val2 = true;
             }
         }
         board = playerBoard.getBoard();
         for (i = 5; i >=  0; i--){
-            System.out.println(board[1][i].getColor());
+            assert(!board[1][i].getColor().equals(EMPTY));
         }
 
+        System.out.println("PlayerBoard test 3 end");
 
     }
 }

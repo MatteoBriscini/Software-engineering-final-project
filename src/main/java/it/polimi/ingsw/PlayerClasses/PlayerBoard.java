@@ -27,7 +27,7 @@ public class PlayerBoard {
 
     //Get Methods
 
-    public static Card[][] getBoard() {
+    public Card[][] getBoard() {
         return board;
     }
 
