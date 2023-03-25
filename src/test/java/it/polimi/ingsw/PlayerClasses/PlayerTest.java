@@ -1,9 +1,12 @@
 package it.polimi.ingsw.PlayerClasses;
 
+import it.polimi.ingsw.PlayerClasses.*;
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Cards.CardColor;
 import it.polimi.ingsw.Exceptions.NoSpaceException;
 import junit.framework.TestCase;
+
+import java.io.FileNotFoundException;
 
 import static it.polimi.ingsw.Cards.CardColor.*;
 
@@ -556,8 +559,26 @@ public class PlayerTest extends TestCase {
     }
 
 
-    public void testSetPlayerTarget(){
+    public void testSetPlayerTarget() throws FileNotFoundException {
 
+        Player playerT = new Player("TEST");
+        PlayerTarget target;
+        int[] x, y;
+        String[] color;
+
+        playerT.setPlayerTarget(2);
+
+        target = playerT.getPersonalTarget();
+
+        x = target.getX();
+        y = target.getY();
+        color = target.getColor();
+
+        for(int i = 0; i < 6; i++){
+            System.out.println(x[i]);
+            System.out.println(y[i]);
+            System.out.println(color[i]);
+        }
 
 
     }

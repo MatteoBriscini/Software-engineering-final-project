@@ -15,6 +15,22 @@ public class PlayerTarget {
     private String[] color;
 
 
+    //Get methods
+
+    public int[] getX() {
+        return x;
+    }
+
+    public int[] getY() {
+        return y;
+    }
+
+    public String[] getColor() {
+        return color;
+    }
+
+
+
     //Methods
 
 
@@ -22,7 +38,7 @@ public class PlayerTarget {
         int counter = 0;
         Card[][] checkBoard = board.getBoard();
         for(int i = 0; i < 6; i++){
-            if(checkBoard[x[i]][y[i]].getColor().toString() == color[i]){
+            if(checkBoard[x[i]][y[i]].getColor().toString().equals(color[i])){
                 counter += 1;
             }
         }

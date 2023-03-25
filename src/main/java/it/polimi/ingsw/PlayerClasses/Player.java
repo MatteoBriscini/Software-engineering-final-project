@@ -53,7 +53,7 @@ public class Player {
 
 
     public void setPlayerTarget(int targetNumber) throws FileNotFoundException {  //exception file not found
-        String path = "src/main/YetToDecide.json";   //file path
+        String path = "src/main/json/PlayerTarget.json";   //file path
         FileReader fileJson = new FileReader(path);      //file executable
 
         Gson gson = new Gson();
@@ -75,6 +75,10 @@ public class Player {
 
     public Card[][] getBoard(){
         return Player.board.getBoard();
+    }
+
+    public PlayerTarget getPersonalTarget() {
+        return personalTarget;
     }
 
     //Other Methods
