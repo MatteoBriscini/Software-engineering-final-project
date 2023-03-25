@@ -4,6 +4,9 @@ package it.polimi.ingsw.PlayerClasses;
 import com.google.gson.Gson;
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Exceptions.NoSpaceException;
+import it.polimi.ingsw.SupportClasses.NColorGroup;
+import it.polimi.ingsw.SupportClasses.RecursiveUsed;
+import it.polimi.ingsw.SupportClasses.RecursiveUsedSupport;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -24,6 +27,8 @@ public class Player {
     private static PlayerTarget personalTarget;
     private boolean alreadyUsed1[][]= new boolean[5][6];
     private int elementCombo;
+    private final NColorGroup equal = new NColorGroup();
+    private final RecursiveUsed recursiveUsed = new RecursiveUsed();
 
 
 
@@ -83,15 +88,19 @@ public class Player {
     }
 
     //get points for spots
-    public void checkSpots(){
+    public void checkSpots() {
         Card[][] tmpBoard = board.getBoard();
-        int i,j;
-        for (i=0; i<5;i++){
-            for (j=0; j<6; j++){
-                if (!alreadyUsed1[i][j] && (i+1 < 5 && (allEqual(new Card[]{tmpBoard[i][j], tmpBoard[i+1][j]})) || (j+1<6 && allEqual(new Card[]{tmpBoard[i][j], tmpBoard[i][j+1]})))) {
-                    this.used(tmpBoard, i, j);
+        int i, j;
+        alreadyUsed1 = new boolean[5][6];
+        for (i = 0; i < 5; i++) {
+            for (j = 0; j < 6; j++) {
+                if (!alreadyUsed1[i][j] && (i + 1 < 5 && (equal.nColorsCheck(new Card[]{tmpBoard[i][j], tmpBoard[i + 1][j]},1,1)) || (j + 1 < 6 && equal.nColorsCheck(new Card[]{tmpBoard[i][j], tmpBoard[i][j + 1]},1,1)))) {
+                    RecursiveUsedSupport used = recursiveUsed.used(tmpBoard, i, j, alreadyUsed1, 0);
+                    alreadyUsed1 = used.getAlreadyUsed();
+                    elementCombo = used.getElementCombo();
+
                     //assign points for the spots
-                    switch(elementCombo){
+                    switch (elementCombo) {
                         case 3:
                             this.updatePointSum(2);
                             break;
@@ -103,7 +112,7 @@ public class Player {
                             break;
                     }
 
-                    if (elementCombo >= 6){        //assign points for exception spots bigger than 6 cards
+                    if (elementCombo >= 6) {        //assign points for exception spots bigger than 6 cards
                         this.updatePointSum(8);
                     }
 
@@ -114,24 +123,6 @@ public class Player {
             }
         }
 
-    }
-
-    private boolean allEqual (Card[] cards) {
-        HashSet<Card> hs = new HashSet<>(Arrays.asList(cards));          //create hash set with same element of the array
-        for (Card c : hs){                                              //verify there are no empty card
-            if (c.getColor().equals(EMPTY)) {return false;}
-        }
-        return hs.size() == 1 ;                                         //if hs size is equal 1 all element are equals
-    }
-
-    //iteration for adjacency
-    private void used (Card[][] board,int i,int j){
-        alreadyUsed1[i][j] = true;
-        elementCombo += 1;
-        if (i>0 && i<5 && !alreadyUsed1[i-1][j] && allEqual(new Card[]{board[i][j], board[i-1][j]})) this.used(board, i-1, j);
-        if (j>0 && j<6 && !alreadyUsed1[i][j-1] && allEqual(new Card[]{board[i][j], board[i][j-1]})) this.used(board, i, j-1);
-        if (i+1<5 && !alreadyUsed1[i+1][j] &&  allEqual(new Card[]{board[i][j], board[i+1][j]})) this.used(board, i+1, j);
-        if (j+1<6 && !alreadyUsed1[i][j+1] && allEqual(new Card[]{board[i][j], board[i][j+1]})) this.used(board, i, j+1);
     }
 
 
