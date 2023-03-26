@@ -4,7 +4,7 @@ package it.polimi.ingsw.PlayerClasses;
 import com.google.gson.Gson;
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Exceptions.NoSpaceException;
-import it.polimi.ingsw.SupportClasses.NColorGroup;
+import it.polimi.ingsw.SupportClasses.NColorsGroup;
 import it.polimi.ingsw.SupportClasses.RecursiveUsed;
 import it.polimi.ingsw.SupportClasses.RecursiveUsedSupport;
 
@@ -27,7 +27,7 @@ public class Player {
     private static PlayerTarget personalTarget;
     private boolean alreadyUsed1[][]= new boolean[5][6];
     private int elementCombo;
-    private final NColorGroup equal = new NColorGroup();
+    private final NColorsGroup equal = new NColorsGroup();
     private final RecursiveUsed recursiveUsed = new RecursiveUsed();
 
 

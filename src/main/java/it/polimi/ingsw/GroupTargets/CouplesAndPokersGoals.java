@@ -2,7 +2,7 @@ package it.polimi.ingsw.GroupTargets;
 
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Exceptions.CostructorExeception;
-import it.polimi.ingsw.SupportClasses.NColorGroup;
+import it.polimi.ingsw.SupportClasses.NColorsGroup;
 import it.polimi.ingsw.SupportClasses.RecursiveUsed;
 import it.polimi.ingsw.SupportClasses.RecursiveUsedSupport;
 
@@ -14,7 +14,7 @@ public class CouplesAndPokersGoals extends CommonGoal{
     private boolean[][] alreadyUsed = new boolean[5][6];
     private int validCombo = 0;  //amount of valid row
     private int elementCombo = 0;  //amount of element in a single combo
-    private final NColorGroup equal = new NColorGroup();
+    private final NColorsGroup equal = new NColorsGroup();
     private final RecursiveUsed recursiveUsed = new RecursiveUsed();
 
     private final int n, mGroups;

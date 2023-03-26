@@ -6,7 +6,7 @@ import it.polimi.ingsw.JsonSupportClasses.Position;
 
 import java.io.FileNotFoundException;
 import com.google.gson.Gson;
-import it.polimi.ingsw.SupportClasses.NColorGroup;
+import it.polimi.ingsw.SupportClasses.NColorsGroup;
 
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ public class OneColorPatternGoals extends CommonGoal{
     private final String url;
     private Position[][] p;
 
-    private final NColorGroup equal = new NColorGroup();
+    private final NColorsGroup equal = new NColorsGroup();
     ArrayList<Card> cards = new ArrayList<>();
 
     /**

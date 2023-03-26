@@ -2,7 +2,7 @@ package it.polimi.ingsw.GroupTargets;
 
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Exceptions.CostructorExeception;
-import it.polimi.ingsw.SupportClasses.NColorGroup;
+import it.polimi.ingsw.SupportClasses.NColorsGroup;
 import it.polimi.ingsw.SupportClasses.RecursiveUsed;
 import it.polimi.ingsw.SupportClasses.RecursiveUsedSupport;
 
@@ -16,7 +16,7 @@ public class SquaresGoal extends CommonGoal{
     private boolean[][] alreadyUsed;
     private int validCombo;  //amount of valid squares
 
-    private final NColorGroup nColor = new NColorGroup();
+    private final NColorsGroup nColor = new NColorsGroup();
     public SquaresGoal() {}
 
     /**

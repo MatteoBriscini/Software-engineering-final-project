@@ -2,7 +2,7 @@ package it.polimi.ingsw.GroupTargets;
 
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Exceptions.CostructorExeception;
-import it.polimi.ingsw.SupportClasses.NColorGroup;
+import it.polimi.ingsw.SupportClasses.NColorsGroup;
 
 /**
  * this class checks the following common goals:
@@ -13,7 +13,7 @@ import it.polimi.ingsw.SupportClasses.NColorGroup;
  */
 public class RainbowRowsAndColumnsGoals extends CommonGoal{
     private int n,min,max,tot;
-    private final NColorGroup nColor = new NColorGroup();
+    private final NColorsGroup nColor = new NColorsGroup();
 
     /**
      * @param n is the number of Cards required from the goal
