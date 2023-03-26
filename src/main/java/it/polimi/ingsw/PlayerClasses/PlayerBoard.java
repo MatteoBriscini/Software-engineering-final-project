@@ -35,6 +35,7 @@ public class PlayerBoard {
     //Methods
 
     /**
+     * Adds cards to the PlayerBoard
      * @param column index of column for the player board
      * @param cards array of Card objects
      * @return true if player board is full, false in all other cases
@@ -45,16 +46,16 @@ public class PlayerBoard {
         int i = 5, j = 0;
         boolean flag = false;
 
-        while(board[column][i].getColor().equals(EMPTY) && i != 0){
+        while(board[column][i].getColor().equals(EMPTY) && i != 0){ //check column for correct line start
             i--;
         }
 
-        if(!board[column][i].getColor().equals(EMPTY)) i++;
+        if(!board[column][i].getColor().equals(EMPTY)) i++; //correcting for empty column
 
         while(j < cards.length) {
 
             if (i > 5) {
-                throw new NoSpaceException("Full column");
+                throw new NoSpaceException("Full column"); //check if column has enough space
             }
             j++;
             i++;
@@ -62,18 +63,18 @@ public class PlayerBoard {
         }
 
         j = 0;
-        i -= cards.length;
+        i -= cards.length; //set back to correct starting line after column check
 
         while(j < cards.length){
 
-            board[column][i] = cards[j];
+            board[column][i] = cards[j]; //add cards
             j++;
             i++;
 
         }
 
         for(int k = 0; k < 5; k++){
-            if(board[k][5].getColor().equals(EMPTY)){
+            if(board[k][5].getColor().equals(EMPTY)){ //check if PlayerBoard is completely full
                 flag = true;
             }
         }

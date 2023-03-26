@@ -52,6 +52,12 @@ public class Player {
     }
 
 
+    /**
+     * Reads the JSON file and assigns the PlayerTarget to the Player
+     * @param targetNumber, indicates which of the twelve PersonalTargets is to be assigned to the player
+     * @targets is an array of objects PlayerTarget
+     * @throws FileNotFoundException
+     */
     public void setPlayerTarget(int targetNumber) throws FileNotFoundException {  //exception file not found
         String path = "src/main/json/PlayerTarget.json";   //file path
         FileReader fileJson = new FileReader(path);      //file executable

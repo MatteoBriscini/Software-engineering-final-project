@@ -18,6 +18,10 @@ public class PlayerTargetTest extends TestCase {
 
         int val;
 
+        Player playerT = new Player("TEST");
+        PlayerTarget target;
+        playerT.setBoard(board);
+
         cards[0] = new Card(PINK);
 
         for(int i = 0; i < 6; i++){
@@ -49,9 +53,6 @@ public class PlayerTargetTest extends TestCase {
 
          */
 
-        Player playerT = new Player("TEST");
-        PlayerTarget target;
-        playerT.setBoard(board);
 
         playerT.setPlayerTarget(0);
 
@@ -59,14 +60,59 @@ public class PlayerTargetTest extends TestCase {
 
         val = target.checkTarget(board);
 
+        testboard = board.getBoard();
+
         for (int i = 0; i < 5; i++){
             for (int j = 0; j < 6; j++){
                 System.out.println(testboard[i][j].getColor());
             }
+            System.out.println("\n");
         }
 
         System.out.println(val);
 
+        cards[0] = new Card(BLUE);
+
+        for(int i = 0; i < 6; i++){
+
+            board.addCard( 2, cards);
+
+        }
+
+        val = target.checkTarget(board);
+
+        testboard = board.getBoard();
+
+        for (int i = 0; i < 5; i++){
+            for (int j = 0; j < 6; j++){
+                System.out.println(testboard[i][j].getColor());
+            }
+            System.out.println("\n");
+        }
+
+        System.out.println(val);
+
+
+        cards[0] = new Card(GREEN);
+
+        for(int i = 0; i < 6; i++){
+
+            board.addCard( 4, cards);
+
+        }
+
+        val = target.checkTarget(board);
+
+        testboard = board.getBoard();
+
+        for (int i = 0; i < 5; i++){
+            for (int j = 0; j < 6; j++){
+                System.out.println(testboard[i][j].getColor());
+            }
+            System.out.println("\n");
+        }
+
+        System.out.println(val);
 
     }
 }

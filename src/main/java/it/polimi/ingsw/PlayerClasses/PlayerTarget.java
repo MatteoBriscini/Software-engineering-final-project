@@ -34,15 +34,21 @@ public class PlayerTarget {
     //Methods
 
 
+    /**
+     * The method checks how many points the Player made based on his PlayerTarget
+     * @param board the PlayerBoard to be checked
+     * @return the points obtained
+     */
     public int checkTarget(PlayerBoard board){
         int counter = 0;
-        Card[][] checkBoard = board.getBoard();
+        Card[][] checkBoard = board.getBoard(); //initialize board for checking
+
         for(int i = 0; i < 6; i++){
-            if(checkBoard[x[i]][y[i]].getColor().toString().equals(color[i])){
+            if(checkBoard[x[i]][y[i]].getColor().toString().equals(color[i])){ //checking the color in all the coordinates of the PlayerTarget
                 counter += 1;
             }
         }
-        switch (counter){
+        switch (counter){  //returning the correct points earned based on the number of matching cards in the PlayerBoard
             case 0: return 0;
             case 1: return 1;
             case 2: return 2;
