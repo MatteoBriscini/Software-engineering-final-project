@@ -8,13 +8,18 @@ import it.polimi.ingsw.GroupTargets.*;
 import java.util.ArrayList;
 
 public class GameMaster {
-    private ArrayList<Player> players;
+    private ArrayList<String> players;
+    private static PlayerBoard board;
     private CommonGoal[] commonGoals;
+
     private final MainBoard mainBoard = new MainBoard();
+
+    private Player playerPoints;
+
     /**
      * get method
      */
-    public ArrayList<Player> getPlayerArray(){
+    public ArrayList<String> getPlayerArray(){
         return players;
     }
 
@@ -22,15 +27,19 @@ public class GameMaster {
         return mainBoard;
     }
 
-    public void getPlayerGoal(int currentPlayer){}  //has to return player target
+    public void getPlayerGoal(int currentPlayer){
 
-    public void getPlayerBoard(int currentPlayer){} //has to return player board
+    }  //has to return player target
+
+    public Card[][] getPlayerBoard(int currentPlayer){
+        return board.getBoard();
+    } //has to return player board
 
     /**
      * start game method
      */
     public int addNewPlayer (String playerID){
-        //add player costrucor
+        this.players.add(playerID);
         return players.size();
     }
     public void setCommonGoal (int commonGoalID){
@@ -39,10 +48,13 @@ public class GameMaster {
 
     public void setPrivateGoal (int[] privateGoalID){
 
+
     }
 
-    public boolean fullMainBoard(Position[] validPosition){
-        return false;
+    public boolean fillMainBoard(Position[] validPosition){
+        MainBoard fullB = new MainBoard();
+        boolean success = fullB.fillBoard(validPosition);   //need a boolean in MainBoard
+        return success;
     }
 
     /**
@@ -51,32 +63,40 @@ public class GameMaster {
     public int endGameCalcPoint(){
         return 0;
     }
-   public void playerAddPoint(int point, int currentPlayer){
+    public void playerAddPoint(int point, int currentPlayer){
 
-   }
+    }
 
-   public int playerGetPoin(int currentPlayer){
-        return 0;
-   }
+    public int playerGetPoint(int currentPlayer){
+        return playerPoints.getPointSum();
+    }
 
     /**
      * MainBoard method
      */
-    public boolean addCard(int column, Card[] cards){
-        return false;
+    public boolean addCard(int column, Card[] cards, int currentPlayer){  //call a try-catch on addCard in player
+        try {
+            Player.addCard(column, cards, currentPlayer);
+                return  true;     //return true if the cards were added
+        }catch (Exception NoSpaceException ) {
+            return false;         //return false if the cards weren't added
+        }
     }
-    public boolean delCard(PositionWithColor[] cards){
+    public boolean delCard(PositionWithColor[] cards){ //need to call the MainBoard method delCard
         return false;
     }
 
     /**
      * commonGoals method
      */
-    public int getNPlayerCommonGoal(int commonGoalID){
-        return 0;
+    public void getAlreadyScored (){
+        this.getAlreadyScored();
     }
-    public boolean checkCommonGoal(int commonGoalID, int currentPlayer){ //have to take current player board
+    public void setAlreadyScored(){
+        this.setAlreadyScored();
+    }
+    public boolean checkCommonGoal(int commonGoalID, int currentPlayer){   //have to take current player board
         return false;
-    } //
+    }
 
 }
