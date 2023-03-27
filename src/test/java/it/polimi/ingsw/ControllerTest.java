@@ -40,9 +40,6 @@ public class ControllerTest extends TestCase {
         System.out.println(test.getCurrentPlayer());
         test.turn();
         System.out.println(test.getCurrentPlayer());
-
-
-
     }
 
     public void testWaitForPlayerResponse() throws InterruptedException {
@@ -50,7 +47,7 @@ public class ControllerTest extends TestCase {
         test.setPlayerNum(2);
         test.turn();
         System.out.println(test.getCurrentPlayer());
-        Thread.sleep(185*1000);                              //aspettare un pochino di piu
+        Thread.sleep(19*1000);                              //aspettare un pochino di piu
         System.out.println(test.getCurrentPlayer());
         System.out.println(test.getCurrentPlayer());
         System.out.println(test.getCurrentPlayer());
