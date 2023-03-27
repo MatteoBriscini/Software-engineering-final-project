@@ -9,7 +9,7 @@ public class RecursiveUsed {
     /**
      * parameters
      */
-    private final NColorGroup equal = new NColorGroup();
+    private final NColorsGroup equal = new NColorsGroup();
     private boolean[][] alreadyUsed;
 
     private int elementCombo;

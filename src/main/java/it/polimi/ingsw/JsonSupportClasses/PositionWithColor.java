@@ -1,13 +1,15 @@
 package it.polimi.ingsw.JsonSupportClasses;
 
+import it.polimi.ingsw.Cards.CardColor;
+
 public class PositionWithColor {
     private final int x;
     private final int y;
 
-    private final String color;
+    private final CardColor color;
 
 
-    public PositionWithColor(int x, int y, String color){
+    public PositionWithColor(int x, int y, CardColor color){
         this.x = x;
         this.y = y;
         this.color = color;
@@ -21,7 +23,7 @@ public class PositionWithColor {
         return y;
     }
 
-    public String getColor() {
+    public CardColor getColor() {
         return color;
     }
 }

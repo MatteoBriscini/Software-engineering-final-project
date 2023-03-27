@@ -20,10 +20,10 @@ public class GameMaster {
     public ArrayList<Player> getPlayerArray(){
         return players;
     }
-
+/*
     public Card[][] getMainBoard() {
         return mainBoard.getBoard();
-    }
+    }*/
 
     public PlayerTarget getPlayerGoal(int currentPlayer){
         return players.get(currentPlayer).getPersonalTarget();
@@ -71,7 +71,7 @@ public class GameMaster {
     public boolean addCard(int column, Card[] cards, int currentPlayer) throws NoSpaceException {  //call a try-catch on addCard in player
         return players.get(currentPlayer).addCard(column, cards);
     }
-    public boolean delCard(PositionWithColor[] cards){ //da fare **************************************************
+    public boolean removeCards(PositionWithColor[] cards){ //da fare **************************************************
         return false;
     }
 
