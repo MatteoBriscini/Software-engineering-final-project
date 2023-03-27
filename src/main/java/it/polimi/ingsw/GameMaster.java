@@ -20,7 +20,7 @@ public class GameMaster {
      * get method
      */
     public ArrayList<String> getPlayerArray(){
-        return players;
+        return players; //
     }
 
     public MainBoard getMainBoard() {
