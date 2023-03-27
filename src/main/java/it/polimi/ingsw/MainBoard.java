@@ -2,6 +2,7 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.JsonSupportClasses.Position;
+import it.polimi.ingsw.JsonSupportClasses.PositionWithColor;
 
 import java.security.PrivilegedAction;
 
@@ -17,10 +18,13 @@ public class MainBoard {
         for( int a : cards)
             cards[a]=22;
         this.board = new Card[9][9];
+        for(int x=0; x<9; x++)
+            for(int y=0; y<9;y++)
+                board[x][y]=new Card(EMPTY);
     }
 
     //input array pos accettabili
-    public void fillBoard(Position[] positions){
+    public boolean fillBoard(Position[] positions){
         int col;
         boolean reDo;
         for( Position a : positions){
@@ -59,11 +63,28 @@ public class MainBoard {
                     }
                     cards[col]--;
                 }
-                else reDo=true;
+                else {
+                    for(int i=0;i<6 && reDo==false;i++) if(cards[i]!=0) reDo=true;
+                    if(!reDo)
+                        return reDo;
+                }
             }while (reDo);
         }
-
+        return true;
     }
 
-    public void removeCard(){};
+    public void removeCard(PositionWithColor[] positions){
+        int diffX=0,diffY=0;
+        for(PositionWithColor p : positions){
+
+        }
+
+        for(PositionWithColor p : positions){
+            if(board[p.getX()][p.getY()].getColor().equals(p.getColor()))
+                board[p.getX()][p.getY()]=new Card(EMPTY);
+            //else eccezione
+
+
+        }
+    }
 }
