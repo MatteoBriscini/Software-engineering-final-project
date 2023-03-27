@@ -51,10 +51,9 @@ public class GameMaster {
 
     }
 
-    public boolean fillMainBoard(Position[] validPosition){
-        MainBoard fullB = new MainBoard();
-        boolean success = fullB.fillBoard(validPosition);   //need a boolean in MainBoard
-        return success;
+    public boolean fillMainBoard(Position[] validPosition){      //check if fillMainBoard method on MainBoard was successful
+        boolean filled = mainBoard.fillBoard(validPosition);
+        return filled;
     }
 
     /**
@@ -90,10 +89,10 @@ public class GameMaster {
      * commonGoals method
      */
     public void getAlreadyScored (){
-        this.getAlreadyScored();
+        ;
     }
     public void setAlreadyScored(){
-        this.setAlreadyScored();
+        ;
     }
     public boolean checkCommonGoal(int commonGoalID, int currentPlayer){   //have to take current player board
         return false;
