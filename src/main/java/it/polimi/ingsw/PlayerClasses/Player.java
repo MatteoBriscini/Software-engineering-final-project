@@ -42,8 +42,8 @@ public class Player {
 
     }
 
-    public void addCard(int column, Card[] cards) throws NoSpaceException {
-        board.addCard(column, cards);
+    public boolean addCard(int column, Card[] cards) throws NoSpaceException {
+       return board.addCard(column, cards);
     }
     //Set Methods
 
