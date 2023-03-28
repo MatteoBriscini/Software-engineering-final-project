@@ -4,12 +4,10 @@ import com.google.gson.Gson;
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Exceptions.NoSpaceException;
 import it.polimi.ingsw.Exceptions.addPlayerToGameExeception;
+import it.polimi.ingsw.GroupTargets.CommonGoal;
 import it.polimi.ingsw.JsonSupportClasses.Position;
 import it.polimi.ingsw.JsonSupportClasses.PositionWithColor;
-
-import java.util.PrimitiveIterator;
-import java.util.concurrent.TimeUnit;
-
+import it.polimi.ingsw.PlayerClasses.PlayerTarget;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -32,7 +30,7 @@ public class Controller {
 
     private Position[] allowedPositionArray;    //array of allowed position fill based on main board and player number (in start game method)
 
-    private final long timeout = 180; //wait for player time (in seconds)
+    private final long timeout = 18; //wait for player time (in seconds)
     private Thread waitForPlayerResponse;
     private Thread endGameThread;
 
@@ -45,7 +43,7 @@ public class Controller {
     }
 
     /**
-     * dowlad json file
+     * download json file
      * @throws FileNotFoundException if method can't file json file
      */
     private void jsonCreate() throws FileNotFoundException {  //download json data
@@ -83,21 +81,23 @@ public class Controller {
         Random rand = new Random();
         int n = rand.nextInt(9);
         int m = rand.nextInt(6);
-        int[] array = new int[4];
+        int[] CommonGoalIDArray = new int[4];
         ArrayList<Integer> numberList = new ArrayList<Integer>();
         if(playerNum >= 2 && !alreadyStarted && !endGame && game.getPlayerArray().get(0).getPlayerID().equals(playerID)){
             for (int i=1; i<11; i++) numberList .add(i);
             Collections.shuffle(numberList);
 
             //set commun goal
-            game.setCommonGoal(numberList.get(n));
-            game.setCommonGoal(numberList.get(n+1));
+            int firstCommonGoal = numberList.get(n);
+            game.setCommonGoal(firstCommonGoal);
+            int secondCommonGoal = numberList.get(n);
+            game.setCommonGoal(secondCommonGoal);
 
             //set private goal
             for (n = 0; n < 4; n++){
-                array[n] = numberList.get(m+n);
+                CommonGoalIDArray[n] = numberList.get(m+n);
             }
-            game.setPrivateGoal(array);
+            game.setPrivateGoal(CommonGoalIDArray);
 
             //fill main board
             ArrayList<Position> tmp = new ArrayList<>();
@@ -110,9 +110,32 @@ public class Controller {
             }
             allowedPositionArray = tmp.toArray(new Position[0]);
             game.fillMainBoard(allowedPositionArray);
+
+            //send data to the player
+            this.createClientData(firstCommonGoal, secondCommonGoal, CommonGoalIDArray);
         }       //aggiungere else ***************************************************
     }
 
+    synchronized private void createClientData(int firstCommonGoal, int secondCommonGoal, int[] CommonGoalIDArray){
+        int i;
+
+        //get main board
+        Card[][] mainBoard = game.getMainBoard();
+
+        //get all player board
+        ArrayList<Card[][]> playersBoard = new ArrayList<>();
+        for(i = 0; i< game.getPlayerArray().size(); i++){
+            playersBoard.add(game.getPlayerBoard(i));
+        }
+
+        /*
+        * for common and private goal i will send the goalID (int)
+        * the method has to send the position of the client in the players array list
+        *
+        * matrix of card has to convert in matrix of position with color
+        * */
+
+    }
 
     /*************************************************************************
      ************************************************** end game method ******
@@ -122,12 +145,15 @@ public class Controller {
             while (currentPlayer != 0 && !endGame) ;
             if (!endGame) endGame();
         });
+        endGameThread.setName("endGameThread");
         endGameThread.start();
     }
 
     synchronized public void endGame(){
         endGame = true;
         endGameThread.interrupt();
+
+        System.out.println("The Thread name is " + endGameThread.currentThread().getName());  //vorrei evitare sta cosa
 
         System.out.println("end game");
     }
@@ -157,28 +183,42 @@ public class Controller {
             }
 
             this.turn(); //skip to next player
-
         } //aggiungere else ***************************************************
     }
     synchronized public void turn(){
         if(endGame) return;         //if game is finish, da completare *******************************
 
+        System.out.println("The Thread name is " + waitForPlayerResponse.currentThread().getName());  //vorrei evitare sta cosa
+
+        //this.updateClientData();
+
         currentPlayer += 1;
-        if(currentPlayer > playerNum) currentPlayer =0;
+        if(currentPlayer > playerNum) currentPlayer = 0;
+
+        //time limit for player response and action
         waitForPlayerResponse = new Thread(() -> {
             int tmp = currentPlayer;
-            System.out.println("test0");
             try {
                 Thread.sleep(timeout*1000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            System.out.println("tmp " +tmp);
-            System.out.println("current " + currentPlayer);
-            if (currentPlayer == tmp) {            System.out.println("test1");
-                turn();}
-            //skip to next player
+            if (currentPlayer == tmp){turn();} //skip to next player
         });
         waitForPlayerResponse.start();
+        waitForPlayerResponse.setName("waitForPlayerResponse");
+    }
+
+    synchronized private void updateClientData(){
+
+        //get main board
+        Card[][] mainBoard = game.getMainBoard();
+
+        //get current player
+        Card[][] currentPlayerBoard = game.getPlayerBoard(currentPlayer);
+
+        /*
+         * matrix of card has to convert in matrix of position with color
+         * */
     }
 }
