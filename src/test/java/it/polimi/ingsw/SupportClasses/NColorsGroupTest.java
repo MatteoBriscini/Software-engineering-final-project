@@ -1,6 +1,8 @@
 package it.polimi.ingsw.SupportClasses;
 
 import it.polimi.ingsw.Cards.Card;
+import it.polimi.ingsw.Cards.CardColor;
+import it.polimi.ingsw.JsonSupportClasses.Position;
 import junit.framework.TestCase;
 
 import static it.polimi.ingsw.Cards.CardColor.*;

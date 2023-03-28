@@ -1,7 +1,6 @@
 package it.polimi.ingsw.GroupTargets;
 
 import it.polimi.ingsw.Cards.Card;
-import it.polimi.ingsw.Exceptions.CostructorExeception;
 import it.polimi.ingsw.SupportClasses.NColorsGroup;
 import it.polimi.ingsw.SupportClasses.RecursiveUsed;
 import it.polimi.ingsw.SupportClasses.RecursiveUsedSupport;

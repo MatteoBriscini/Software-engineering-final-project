@@ -1,7 +1,7 @@
 package it.polimi.ingsw.GroupTargets;
 
 import it.polimi.ingsw.Cards.Card;
-import it.polimi.ingsw.Exceptions.CostructorExeception;
+import it.polimi.ingsw.Exceptions.ConstructorException;
 import it.polimi.ingsw.SupportClasses.NColorsGroup;
 
 /**
@@ -21,14 +21,14 @@ public class RainbowRowsAndColumnsGoals extends CommonGoal{
      * @param max is the maximum number of different colours required from the goal
      * @param tot is the number of rows or columns that must fulfill the requirement of the number of colors
      */
-    public RainbowRowsAndColumnsGoals(int n, int min, int max, int tot) throws CostructorExeception{
+    public RainbowRowsAndColumnsGoals(int n, int min, int max, int tot) throws ConstructorException {
         if((n==6 && ((min==1 && max==3 && tot==4) || (min==5 && max==5 && tot==2))) || (n==5 && ((min==1 && max==3 && tot==3) || (min==6 && max==6 && tot==2))) ) {
             this.n = n;
             this.min = min;
             this.max = max;
             this.tot = tot;
         }
-        else throw new CostructorExeception("invalid parameter for RainbowRowsAndColumnsGoals constructor");
+        else throw new ConstructorException("invalid parameter for RainbowRowsAndColumnsGoals constructor");
 
 
     }

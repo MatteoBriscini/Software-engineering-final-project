@@ -106,9 +106,12 @@ public class GameMaster {
     public boolean addCard(int column, Card[] cards, int currentPlayer) throws NoSpaceException {  //call a try-catch on addCard in player
         return players.get(currentPlayer).addCard(column, cards);
     }
+
+    /*
     public boolean removeCards(PositionWithColor[] cards){  //need a boolean in mainBoard
         return mainBoard.removeCard(cards);
     }
+    */
 
     /**
      * commonGoals method, give info about the commonGoals, if it was already scored, if the common goal was scored in this turn and if it does, set that as already scored

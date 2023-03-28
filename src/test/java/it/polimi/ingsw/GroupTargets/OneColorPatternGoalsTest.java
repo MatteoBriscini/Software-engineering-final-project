@@ -2,7 +2,7 @@ package it.polimi.ingsw.GroupTargets;
 
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Cards.CardColor;
-import it.polimi.ingsw.Exceptions.CostructorExeception;
+import it.polimi.ingsw.Exceptions.ConstructorException;
 import it.polimi.ingsw.Exceptions.NoSpaceException;
 import it.polimi.ingsw.PlayerClasses.PlayerBoard;
 import junit.framework.TestCase;
@@ -53,9 +53,9 @@ public class OneColorPatternGoalsTest extends TestCase {
 
     /**
      * actual test case
-     * @throws CostructorExeception exception threw from the OneColorPatternGoals constructor
+     * @throws ConstructorException exception threw from the OneColorPatternGoals constructor
      */
-    public void testCheck() throws CostructorExeception {
+    public void testCheck() throws ConstructorException {
         System.out.println("START TEST \n");
         boolean val;
         Card[][] board= new Card[6][5];

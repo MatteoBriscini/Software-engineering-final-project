@@ -2,7 +2,7 @@ package it.polimi.ingsw.GroupTargets;
 
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Cards.CardColor;
-import it.polimi.ingsw.Exceptions.CostructorExeception;
+import it.polimi.ingsw.Exceptions.ConstructorException;
 import it.polimi.ingsw.Exceptions.NoSpaceException;
 import it.polimi.ingsw.PlayerClasses.PlayerBoard;
 import junit.framework.TestCase;
@@ -27,7 +27,7 @@ public class RainbowRowsAndColumnsGoalsTest extends TestCase {
 
     Card[][] board= new Card[6][5];
 
-    public RainbowRowsAndColumnsGoalsTest() throws CostructorExeception {
+    public RainbowRowsAndColumnsGoalsTest() throws ConstructorException {
     }
 
     public void testCheck() {

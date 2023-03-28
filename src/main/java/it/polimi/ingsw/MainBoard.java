@@ -1,6 +1,7 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.Cards.Card;
+import it.polimi.ingsw.Cards.CardColor;
 import it.polimi.ingsw.JsonSupportClasses.Position;
 import it.polimi.ingsw.JsonSupportClasses.PositionWithColor;
 
@@ -12,6 +13,10 @@ public class MainBoard {
 
     private int cards[];
     private Card board[][];
+
+    public Card[][] getBoard() {
+        return board;
+    }
 
     public MainBoard(){
         cards= new int[6];
@@ -37,7 +42,7 @@ public class MainBoard {
                 if(cards[col]>0) {
                     switch (col) {
                         case 0: {
-                            board[a.getX()][a.getY()] = new Card(BLUE);
+                            board[a.getX()][a.getY()] = new Card(CardColor.values()[col]);
                             break;
                         }
                         case 1: {

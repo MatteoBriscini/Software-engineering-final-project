@@ -1,7 +1,7 @@
 package it.polimi.ingsw.GroupTargets;
 
 import it.polimi.ingsw.Cards.Card;
-import it.polimi.ingsw.Exceptions.CostructorExeception;
+import it.polimi.ingsw.Exceptions.ConstructorException;
 import it.polimi.ingsw.JsonSupportClasses.Position;
 
 import java.io.FileNotFoundException;
@@ -26,9 +26,9 @@ public class OneColorPatternGoals extends CommonGoal{
     /**
      *  constructor of the goals, have different configuration for different goal
      * @param n is the number of the goal on italian instruction
-     * @throws CostructorExeception  if n ore mGroups aren't allowed value
+     * @throws ConstructorException  if n ore mGroups aren't allowed value
      */
-    OneColorPatternGoals(int n) throws CostructorExeception { //n is the number of the goal (possible value 2,7,11)
+    OneColorPatternGoals(int n) throws ConstructorException { //n is the number of the goal (possible value 2,7,11)
         switch (n) {
             case 2:
                 this.url = "src/main/json/goal/CornersGoal.json";
@@ -40,7 +40,7 @@ public class OneColorPatternGoals extends CommonGoal{
                 this.url = "src/main/json/goal/CrossGoal.json";
                 break;
             default:
-                throw new CostructorExeception("invalid parameter for OneColorPatternGoals constructor (possible value 2,7,11)");
+                throw new ConstructorException("invalid parameter for OneColorPatternGoals constructor (possible value 2,7,11)");
         }
         try {
             this.jsonCreate();

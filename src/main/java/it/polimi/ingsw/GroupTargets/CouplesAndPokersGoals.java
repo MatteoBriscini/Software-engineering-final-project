@@ -1,7 +1,7 @@
 package it.polimi.ingsw.GroupTargets;
 
 import it.polimi.ingsw.Cards.Card;
-import it.polimi.ingsw.Exceptions.CostructorExeception;
+import it.polimi.ingsw.Exceptions.ConstructorException;
 import it.polimi.ingsw.SupportClasses.NColorsGroup;
 import it.polimi.ingsw.SupportClasses.RecursiveUsed;
 import it.polimi.ingsw.SupportClasses.RecursiveUsedSupport;
@@ -23,14 +23,14 @@ public class CouplesAndPokersGoals extends CommonGoal{
      * constructor of the goals, have different configuration for different goal
      * @param n is number of element in one group
      * @param mGroups mGroups is the number of groups required to reach the goal
-     * @throws CostructorExeception if n ore mGroups aren't allowed value
+     * @throws ConstructorException if n ore mGroups aren't allowed value
      */
-    public CouplesAndPokersGoals(int n, int mGroups) throws CostructorExeception { //possible value for n (4 o 2) && for mGroups (4 o 6);
+    public CouplesAndPokersGoals(int n, int mGroups) throws ConstructorException { //possible value for n (4 o 2) && for mGroups (4 o 6);
         if((n==4 && mGroups==4) || (n==2 && mGroups==6)) {
             this.n = n;
             this.mGroups = mGroups;
             //value to distinguish different case (t1 and t3)
-        } else throw new CostructorExeception("invalid parameter for CouplesAndPokersGoals( costructor (possible value n: 2/4 mGroups 6/4)");
+        } else throw new ConstructorException("invalid parameter for CouplesAndPokersGoals( costructor (possible value n: 2/4 mGroups 6/4)");
     }
 
     /**

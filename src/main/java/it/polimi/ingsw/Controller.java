@@ -3,11 +3,9 @@ package it.polimi.ingsw;
 import com.google.gson.Gson;
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Exceptions.NoSpaceException;
-import it.polimi.ingsw.Exceptions.addPlayerToGameExeception;
-import it.polimi.ingsw.GroupTargets.CommonGoal;
+import it.polimi.ingsw.Exceptions.addPlayerToGameException;
 import it.polimi.ingsw.JsonSupportClasses.Position;
 import it.polimi.ingsw.JsonSupportClasses.PositionWithColor;
-import it.polimi.ingsw.PlayerClasses.PlayerTarget;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -67,12 +65,12 @@ public class Controller {
     /************************************************************************
     ************************************************** start game method ****
     *************************************************************************/
-    synchronized public void addNewPlayer(String playerID) throws addPlayerToGameExeception {
+    synchronized public void addNewPlayer(String playerID) throws addPlayerToGameException {
         if(playerNum <= 4 && !alreadyStarted){
             playerNum = game.addNewPlayer(playerID);
         } else {
-            if(playerNum > 4) throw new addPlayerToGameExeception("try to add player in full game");
-            if(alreadyStarted) throw new addPlayerToGameExeception("try to add player in already started game");
+            if(playerNum > 4) throw new addPlayerToGameException("try to add player in full game");
+            if(alreadyStarted) throw new addPlayerToGameException("try to add player in already started game");
         }
         if (playerNum == 4) this.startGame(game.getPlayerArray().get(0).getPlayerID()); //if the game is full start the game
     }
@@ -97,7 +95,7 @@ public class Controller {
             for (n = 0; n < 4; n++){
                 CommonGoalIDArray[n] = numberList.get(m+n);
             }
-            game.setPrivateGoal(CommonGoalIDArray);
+            //game.setPrivateGoal(CommonGoalIDArray);
 
             //fill main board
             ArrayList<Position> tmp = new ArrayList<>();
@@ -165,7 +163,7 @@ public class Controller {
             waitForPlayerResponse.interrupt();
 
             //remove the cards from main board
-            if (game.removeCards(cards)){}
+            //if (game.removeCards(cards)){}
 
             //add card to player board
             ArrayList<Card> tmp = new ArrayList<>();
@@ -181,16 +179,16 @@ public class Controller {
                 //comunica al client che la pescata e invalida perche ha sforato gli spazi disponibili nella colonna
                 return;
             }
-
+            //this.updateClientData(); //update data in clients
             this.turn(); //skip to next player
         } //aggiungere else ***************************************************
     }
     synchronized public void turn(){
         if(endGame) return;         //if game is finish, da completare *******************************
 
-        System.out.println("The Thread name is " + waitForPlayerResponse.currentThread().getName());  //vorrei evitare sta cosa
+        //System.out.println("The Thread name is " + waitForPlayerResponse.currentThread().getName());
 
-        //this.updateClientData();
+
 
         currentPlayer += 1;
         if(currentPlayer > playerNum) currentPlayer = 0;
@@ -220,5 +218,9 @@ public class Controller {
         /*
          * matrix of card has to convert in matrix of position with color
          * */
+    }
+
+    synchronized private void realTimePoint(){
+
     }
 }

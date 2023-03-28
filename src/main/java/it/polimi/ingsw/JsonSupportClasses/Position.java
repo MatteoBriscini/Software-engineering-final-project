@@ -26,6 +26,9 @@ public class Position {
         return y;
     }
 
+    /**
+     * @return an array with all Position obj adjacent
+     */
     public Position[] getNeighbors(){
         ArrayList<Position> neighbors = new ArrayList<>();
         if (x-1 >= 0) neighbors.add(new Position(x-1, y));
@@ -34,14 +37,21 @@ public class Position {
         if (y+1<6) neighbors.add(new Position(x, y+1));
         return neighbors.toArray(new Position[0]);
     }
-    
+
+    /**
+     * @param board the actual mainBoard
+     * @return boolean, true if one of the adjacent of this Position are EMPTY
+     * if you call this method on an empty position it will be return false
+     */
     public boolean pickable(Card[][] board){
         Card emptyCard = new Card(EMPTY);
         HashSet<Card> neighborsCard = new HashSet<>();
         Position[] neighbors = getNeighbors();
+
         for (Position p: neighbors){
             neighborsCard.add(board[p.getX()][p.getY()]);
         }
-        return neighborsCard.contains(emptyCard);
+        System.out.println(neighbors.length);
+        return neighborsCard.contains(emptyCard) && !board[this.getX()][this.getY()].getColor().equals(EMPTY);
     }
 }
