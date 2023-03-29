@@ -1,6 +1,7 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.Cards.Card;
+import it.polimi.ingsw.Exceptions.ConstructorException;
 import it.polimi.ingsw.Exceptions.LenghtException;
 import it.polimi.ingsw.Exceptions.NoSpaceException;
 import it.polimi.ingsw.JsonSupportClasses.Position;
@@ -43,9 +44,44 @@ public class GameMaster {
         this.players.add(new Player(playerID));
         return players.size();
     }
-    public void setCommonGoal (int commonGoalID){//da fare **************************************************
+    public void setCommonGoal (int commonGoalID, int n) throws ConstructorException {
         switch (commonGoalID) {
-
+            case 0:
+                commonGoals[n] = new CouplesAndPokersGoals(2,6);
+                break;
+            case 1:
+                commonGoals[n] = new CouplesAndPokersGoals(4,4);
+                break;
+            case 2:
+                commonGoals[n] = new OneColorPatternGoals(2);
+                break;
+            case 3:
+                commonGoals[n] = new SquaresGoal();
+                break;
+            case 4:
+                commonGoals[n] = new RainbowRowsAndColumnsGoals(6, 1,3, 3);
+                break;
+            case 5:
+                commonGoals[n] = new EightEqualTarget();
+                break;
+            case 6:
+                commonGoals[n] = new OneColorPatternGoals(7);
+                break;
+            case 7:
+                commonGoals[n] = new RainbowRowsAndColumnsGoals(5,1,3,3);
+                break;
+            case 8:
+                commonGoals[n] = new RainbowRowsAndColumnsGoals(6,5,5,2);
+                break;
+            case 9:
+                commonGoals[n]= new RainbowRowsAndColumnsGoals(5,6,6,2);
+                break;
+            case 10:
+                commonGoals[n]= new OneColorPatternGoals(11);
+                break;
+            case 11:
+                commonGoals[n]= new StairsPatternTarget();
+                break;
         }
     }
 
