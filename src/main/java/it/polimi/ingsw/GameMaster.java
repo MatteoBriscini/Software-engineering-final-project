@@ -19,31 +19,50 @@ public class GameMaster {
 
 
     /**
-     * get method
+     * @return return the players of the game
      */
     public ArrayList<Player> getPlayerArray(){
         return players;
     }
 
+    /**
+     * @return return the main board
+     */
     public Card[][] getMainBoard() {
         return mainBoard.getBoard();
     }
 
+    /**
+     * @param currentPlayer is the reference to the player I need
+     * @return return the personal target to the player
+     */
     public PlayerTarget getPlayerGoal(int currentPlayer){
         return players.get(currentPlayer).getPersonalTarget();
     }  //has to return player target
 
+    /**
+     * @param currentPlayer is the reference to the player I need
+     * @return return the bookshelf of the player
+     */
     public Card[][] getPlayerBoard(int currentPlayer){
         return players.get(currentPlayer).getBoard();
     }
 
+
     /**
-     * start game method
+     * @param playerID is the reference to the player I need
+     * @return the number of players in the game
      */
     public int addNewPlayer (String playerID){
         this.players.add(new Player(playerID));
         return players.size();
     }
+
+    /**
+     * @param commonGoalID is an int that identifies the common Goal
+     * @param n index for array CommonGoals
+     * @throws ConstructorException when constructor of goals receives invalid parameters
+     */
     public void setCommonGoal (int commonGoalID, int n) throws ConstructorException {
         switch (commonGoalID) {
             case 0:
@@ -111,8 +130,9 @@ public class GameMaster {
         return mainBoard.fillBoard(validPosition);
     }
 
+
     /**
-     * this method calculate the points scored at the end of the game
+     * @param currentPlayer reference to the player I need
      */
     public void endGameCalcPoint(int currentPlayer){ //return the total scored by the player
         players.get(currentPlayer).checkSpots();
@@ -136,28 +156,50 @@ public class GameMaster {
         return players.get(currentPlayer).getPointSum();
     }
 
+
     /**
-     * Card methods, add or remove a card from the board
+     * @param column is the index of the column
+     * @param cards are the cards to add in the column
+     * @param currentPlayer is the player that I refer to when I need to add a card
+     * @return return the bookshelf with the cards added
+     * @throws NoSpaceException
      */
     public boolean addCard(int column, Card[] cards, int currentPlayer) throws NoSpaceException {  //call a try-catch on addCard in player
         return players.get(currentPlayer).addCard(column, cards);
     }
 
-    /*
-    public boolean removeCards(PositionWithColor[] cards){  //need a boolean in mainBoard
+
+   /**
+     * @param cards is the reference to the cards I need to delete from the main board
+     * @return the main board without the cards eleted
+     */
+   /* public boolean removeCards(PositionWithColor[] cards){  //need a boolean in mainBoard
         return mainBoard.removeCard(cards);
     }
     */
 
+
     /**
-     * commonGoals method, give info about the commonGoals, if it was already scored, if the common goal was scored in this turn and if it does, set that as already scored
+     * @param commonGoalID is the identifier of the common goal
+     * @return return the info about the "already scored" goals
      */
     public ArrayList<Player> getAlreadyScored (int commonGoalID){
         return commonGoals[commonGoalID].getAlreadyScored();
     }
+
+    /**
+     * @param alreadyScored indicate if the goal was already scored and how many times
+     * @param commonGoalID is the identifier of the common goal
+     */
     public void setAlreadyScored(ArrayList<Player> alreadyScored, int commonGoalID){
         commonGoals[commonGoalID].setAlreadyScored(alreadyScored);
     }
+
+    /**
+     * @param commonGoalID  is the identifier of the common goal
+     * @param currentPlayer is the current player
+     * @return return info about the correletion player-common goal
+     */
     public boolean checkCommonGoal(int commonGoalID, int currentPlayer){    //have to take current player board
         return commonGoals[commonGoalID].check(players.get(currentPlayer).getBoard());
     }
