@@ -16,7 +16,7 @@ public class Lobby {
 
     //Methods
 
-    public void login(){
+    public void login(PlayerLogin loginInfo){
 
 
 
