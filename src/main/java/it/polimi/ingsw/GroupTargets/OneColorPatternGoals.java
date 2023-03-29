@@ -28,7 +28,7 @@ public class OneColorPatternGoals extends CommonGoal{
      * @param n is the number of the goal on italian instruction
      * @throws ConstructorException  if n ore mGroups aren't allowed value
      */
-    OneColorPatternGoals(int n) throws ConstructorException { //n is the number of the goal (possible value 2,7,11)
+    public OneColorPatternGoals(int n) throws ConstructorException { //n is the number of the goal (possible value 2,7,11)
         switch (n) {
             case 2:
                 this.url = "src/main/json/goal/CornersGoal.json";
