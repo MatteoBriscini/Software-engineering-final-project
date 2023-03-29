@@ -16,11 +16,18 @@ public class PlayerTargetTest extends TestCase {
 
     public void testCheckTarget() throws FileNotFoundException, NoSpaceException {
 
+        System.out.println("PlayerTarget test start");
+
+        System.out.println("\n");
+
         int val;
 
         Player playerT = new Player("TEST");
         PlayerTarget target;
         playerT.setBoard(board);
+
+
+        System.out.println("Checking first player target point");
 
         cards[0] = new Card(PINK);
 
@@ -30,46 +37,20 @@ public class PlayerTargetTest extends TestCase {
 
         }
 
-
-        /*
-
-        cards = new Card(PINK);
-        testboard[0][5] = cards;
-
-        cards = new Card(BLUE);
-        testboard[2][5] = cards;
-
-        cards = new Card(GREEN);
-        testboard[4][4] = cards;
-
-        cards = new Card(WHITE);
-        testboard[3][3] = cards;
-
-        cards = new Card(YELLOW);
-        testboard[1][2] = cards;
-
-        cards = new Card(LIGHTBLUE);
-        testboard[2][0] = cards;
-
-         */
-
-
         playerT.setPlayerTarget(0);
 
         target = playerT.getPersonalTarget();
 
+
         val = target.checkTarget(board);
 
-        testboard = board.getBoard();
+        assert(val == 1);
 
-        for (int i = 0; i < 5; i++){
-            for (int j = 0; j < 6; j++){
-                System.out.println(testboard[i][j].getColor());
-            }
-            System.out.println("\n");
-        }
+        System.out.println("ok");
+        System.out.println("\n");
 
-        System.out.println(val);
+
+        System.out.println("Checking second player target point");
 
         cards[0] = new Card(BLUE);
 
@@ -81,17 +62,14 @@ public class PlayerTargetTest extends TestCase {
 
         val = target.checkTarget(board);
 
-        testboard = board.getBoard();
 
-        for (int i = 0; i < 5; i++){
-            for (int j = 0; j < 6; j++){
-                System.out.println(testboard[i][j].getColor());
-            }
-            System.out.println("\n");
-        }
+        assert(val == 2);
 
-        System.out.println(val);
+        System.out.println("ok");
+        System.out.println("\n");
 
+
+        System.out.println("Checking third player target point");
 
         cards[0] = new Card(GREEN);
 
@@ -103,16 +81,32 @@ public class PlayerTargetTest extends TestCase {
 
         val = target.checkTarget(board);
 
-        testboard = board.getBoard();
 
-        for (int i = 0; i < 5; i++){
-            for (int j = 0; j < 6; j++){
-                System.out.println(testboard[i][j].getColor());
-            }
-            System.out.println("\n");
+        assert(val == 4);
+
+        System.out.println("ok");
+        System.out.println("\n");
+
+
+        System.out.println("Checking player target with wrong card color");
+
+        cards[0] = new Card(GREEN);
+
+        for(int i = 0; i < 6; i++){
+
+            board.addCard( 1, cards);
+
         }
 
-        System.out.println(val);
+        val = target.checkTarget(board);
+
+        assert(val == 4);
+
+        System.out.println("ok");
+        System.out.println("\n");
+
+
+        System.out.println("PlayerTarget test end");
 
     }
 }
