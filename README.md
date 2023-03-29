@@ -27,4 +27,5 @@ Members: <br>
 | class : SquaresGoal                                                | :green_circle: | Luca Castelli                   | <b>implemented && tested</b>                                                                                                                    |
 | class : MainBoard                                                  | :yellow_circle: | Luca Castelli                  | <b>partially implemented</b>              
 | class : PlayerBoard                                                | :green_circle: | Riccardo Caprioglio             | <b>implemented && tested</b> |            
-| class : PlayerTarget                                               | :green_circle: | Riccardo Caprioglio             | <b>implemented && tested</b> |
+| class : PlayerTarget                                               | :green_circle: | Riccardo Caprioglio             | <b>implemented && tested</b> |    
+| class : Chat                                                       | :red_circle:   | Riccardo Caprioglio             | <b>WIP</b>
