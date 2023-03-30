@@ -175,10 +175,10 @@ public class GameMaster {
      * @param cards is the reference to the cards I need to delete from the main board
      * @return the main board without the cards eleted
      */
-   /* public boolean removeCards(PositionWithColor[] cards){  //need a boolean in mainBoard
+    public boolean removeCards(PositionWithColor[] cards){  //need a boolean in mainBoard
         return mainBoard.removeCard(cards);
     }
-    */
+
 
 
     /**
@@ -207,7 +207,7 @@ public class GameMaster {
     }
 
     public void fixBoard(PositionWithColor[] position){
-
+        mainBoard.fixBoard(position);
     }
 
 }
