@@ -15,9 +15,11 @@ import static it.polimi.ingsw.Cards.CardColor.*;
  */
 public class MainBoard {
 
-    List<Card> colorsList;
+    private List<Card> colorsList;
 
     private Card board[][];
+
+    Random rand = new Random();
 
 
     public MainBoard(){
@@ -42,13 +44,19 @@ public class MainBoard {
      * this method fills the list of colors (that represents the bag) with the required number of cards of each color
      */
     private void fillColorsList(){
-        for(int i=0;i<6;i++)
-            for(int j=0;j<22;j++)
+        for(int i=0;i<6;i++) {
+            for (int j = 0; j < 22; j++) {
                 colorsList.add(new Card(CardColor.values()[i]));
+            }
+        }
     }
 
     public Card[][] getBoard() {
         return board;
+
+
+
+        //ritornare copia di board, non board
     }
 
     /**
@@ -96,7 +104,7 @@ public class MainBoard {
 
         Arrays.asList(positions).sort(Comparator.comparing(Position::getX));
         for( int i = 0; i< positions.length && valid==1;i++){
-            if(positions[i].getX()-positions[0].getX()!=i)
+            if(positions[i].getX()-positions[0].getX()!=i || positions[i].getY()!=positions[0].getY())
                 valid = 0;
 
             if(DeprecatedBoard(positions[i]))
@@ -109,7 +117,7 @@ public class MainBoard {
         if(valid==0) {
             Arrays.asList(positions).sort(Comparator.comparing(Position::getY));
             for (int i = 0; i < positions.length; i++) {
-                if (positions[i].getY() - positions[0].getY() != i)
+                if (positions[i].getY() - positions[0].getY() != i || positions[i].getX()!=positions[0].getX())
                     throw new InvalidPickException("The pick is neither a row nor a column, or the tiles are not adjacent");
 
                 if(DeprecatedBoard(positions[i]))
@@ -174,9 +182,8 @@ public class MainBoard {
      * card from the list of available cards
      */
     private boolean insert(Position p){
-        int i;
         if(colorsList.size()>0) {
-            Card c=new Card(CardColor.values()[(int) Math.random() * colorsList.size()]);
+            Card c=colorsList.get(rand.nextInt(colorsList.size()));
             board[p.getX()][p.getY()] = c;
             colorsList.remove(c);
             return true;
