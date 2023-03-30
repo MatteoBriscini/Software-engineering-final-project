@@ -25,7 +25,7 @@ Members: <br>
 | PokerGoal <br> <b>class</b>: CouplesAndPokersGoals                 | :green_circle: | Matteo Briscini                 | <b>implemented && tested</b>                                                                                                            |
 | class : Player                                                     | :green_circle: | Davide Arcaini + Riccardo Caprioglio                  | <b>implemented && tested</b>                                                                                                   |
 | class : SquaresGoal                                                | :green_circle: | Luca Castelli                   | <b>implemented && tested</b>                                                                                                                    |
-| class : MainBoard                                                  | :yellow_circle: | Luca Castelli                  | <b>not tested yet</b>              
+| class : MainBoard                                                  | :green_circle: | Luca Castelli                  | <b>implemented && tested</b>              
 | class : PlayerBoard                                                | :green_circle: | Riccardo Caprioglio             | <b>implemented && tested</b> |            
 | class : PlayerTarget                                               | :green_circle: | Riccardo Caprioglio             | <b>implemented && tested</b> |    
 | class : Chat                                                       | :red_circle:   | Riccardo Caprioglio             | <b>WIP</b>
