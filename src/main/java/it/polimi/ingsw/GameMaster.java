@@ -2,7 +2,8 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Exceptions.ConstructorException;
-import it.polimi.ingsw.Exceptions.LenghtException;
+import it.polimi.ingsw.Exceptions.LengthException;
+import it.polimi.ingsw.Exceptions.LengthException;
 import it.polimi.ingsw.Exceptions.NoSpaceException;
 import it.polimi.ingsw.JsonSupportClasses.Position;
 import it.polimi.ingsw.JsonSupportClasses.PositionWithColor;
@@ -101,19 +102,21 @@ public class GameMaster {
             case 11:
                 commonGoals[n]= new StairsPatternTarget();
                 break;
+            default:
+                throw new RuntimeException("invalid commonGoalID");
         }
     }
 
     /**
      * @param privateGoalID is an array that contains identifier of the common goals
      * @throws FileNotFoundException exception if the private goals are not enough for the players
-     * @throws LenghtException exception if the private goals are not enough for the players
+     * @throws LengthException exception if the private goals are not enough for the players
      */
-    public void setPrivateGoal (int[] privateGoalID) throws FileNotFoundException, LenghtException {
+    public void setPrivateGoal (int[] privateGoalID) throws FileNotFoundException, LengthException {
 
         // Check that the number of private goals matches the number of players
         if (privateGoalID.length != players.size()){
-            throw new LenghtException("different length for arrays privateGaolId or players");
+            throw new LengthException("different length for arrays privateGaolId or players");
         }
 
         //Iterate over players and assign the private goal
@@ -137,7 +140,6 @@ public class GameMaster {
     public void endGameCalcPoint(int currentPlayer){ //return the total scored by the player
         players.get(currentPlayer).checkSpots();
         players.get(currentPlayer).checkPlayerTarget();
-
     }
 
     /** mathod to add points to the players
@@ -202,6 +204,10 @@ public class GameMaster {
      */
     public boolean checkCommonGoal(int commonGoalID, int currentPlayer){    //have to take current player board
         return commonGoals[commonGoalID].check(players.get(currentPlayer).getBoard());
+    }
+
+    public void fixBoard(PositionWithColor[] position){
+
     }
 
 }
