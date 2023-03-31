@@ -28,5 +28,5 @@ Members: <br>
 | class : MainBoard                                                  | :green_circle:  | Luca Castelli                  | <b>implemented && tested</b>              
 | class : PlayerBoard                                                | :green_circle:  | Riccardo Caprioglio             | <b>implemented && tested</b> |            
 | class : PlayerTarget                                               | :green_circle:  | Riccardo Caprioglio             | <b>implemented && tested</b> |    
-| class : Chat                                                       | :red_circle:    | Riccardo Caprioglio             | WIP
-| Controller                                                         | :orange_circle: | Matteo Briscini                 | partially implemented && tested
+| class : Chat                                                       | :red_circle:    | Riccardo Caprioglio             | WIP|    
+| Controller                                                         | :orange_circle: | Matteo Briscini                 | partially implemented && tested|    
