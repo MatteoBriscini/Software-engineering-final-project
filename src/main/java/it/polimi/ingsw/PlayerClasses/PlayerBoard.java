@@ -11,7 +11,7 @@ public class PlayerBoard {
 
     //Attributes
 
-    private static Card[][] board;
+    private Card[][] board;
 
 
     //Constructor

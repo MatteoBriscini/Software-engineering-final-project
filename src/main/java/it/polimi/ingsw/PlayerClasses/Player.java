@@ -20,11 +20,11 @@ public class Player {
 
     //Attributes
 
-    private static String playerID;
+    private final String playerID;
     private int pointSum;
     //private int pointArray;
-    private static PlayerBoard board;
-    private static PlayerTarget personalTarget;
+    private final PlayerBoard board;
+    private PlayerTarget personalTarget;
     private boolean alreadyUsed1[][]= new boolean[5][6];
     private int elementCombo;
     private final NColorsGroup equal = new NColorsGroup();
@@ -46,10 +46,6 @@ public class Player {
        return board.addCard(column, cards);
     }
     //Set Methods
-
-    public void setBoard(PlayerBoard board) {
-        this.board = board;
-    }
 
 
     /**
@@ -80,7 +76,7 @@ public class Player {
     }
 
     public Card[][] getBoard(){
-        return Player.board.getBoard();
+        return this.board.getBoard();
     }
 
     public PlayerTarget getPersonalTarget() {
