@@ -16,13 +16,29 @@ public class Lobby {
 
     //Methods
 
-    public void login(PlayerLogin loginInfo){
+    public synchronized void login(PlayerLogin loginInfo){
 
+        ArrayList<String[]> games;
 
+        synchronized (playersInGames){
+
+            games = playersInGames;
+
+        }
+
+        for(String[] players : games){
+
+            for(int i = 0; i < 4; i++){
+                if(players[i].equals(loginInfo.getPlayerID())){
+
+                }
+            }
+
+        }
 
     }
 
-    public void registration(){
+    public synchronized void registration(){
 
     }
 
