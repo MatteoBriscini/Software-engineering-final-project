@@ -1,10 +1,7 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.Cards.Card;
-import it.polimi.ingsw.Exceptions.ConstructorException;
-import it.polimi.ingsw.Exceptions.LengthException;
-import it.polimi.ingsw.Exceptions.LengthException;
-import it.polimi.ingsw.Exceptions.NoSpaceException;
+import it.polimi.ingsw.Exceptions.*;
 import it.polimi.ingsw.JsonSupportClasses.Position;
 import it.polimi.ingsw.JsonSupportClasses.PositionWithColor;
 import it.polimi.ingsw.PlayerClasses.*;
@@ -15,7 +12,7 @@ import java.util.ArrayList;
 
 public class GameMaster {
     private ArrayList<Player> players = new ArrayList<>();
-    private CommonGoal[] commonGoals;
+    private final CommonGoal[] commonGoals = new CommonGoal[2];
     private final MainBoard mainBoard = new MainBoard();
 
 
@@ -24,6 +21,10 @@ public class GameMaster {
      */
     public ArrayList<Player> getPlayerArray(){
         return players;
+    }
+
+    public void setPlayersArray(ArrayList<Player> players){
+        this.players = players;
     }
 
     /**
@@ -55,7 +56,10 @@ public class GameMaster {
      * @return the number of players in the game
      */
     public int addNewPlayer (String playerID){
-        this.players.add(new Player(playerID));
+
+        ArrayList<Player> tmp = new ArrayList<>();
+        tmp.add(new Player(playerID));
+        this.players.addAll(tmp);
         return players.size();
     }
 
@@ -79,7 +83,7 @@ public class GameMaster {
                 commonGoals[n] = new SquaresGoal();
                 break;
             case 4:
-                commonGoals[n] = new RainbowRowsAndColumnsGoals(6, 1,3, 3);
+                commonGoals[n] = new RainbowRowsAndColumnsGoals(6, 1,3, 4);
                 break;
             case 5:
                 commonGoals[n] = new EightEqualTarget();
@@ -175,7 +179,7 @@ public class GameMaster {
      * @param cards is the reference to the cards I need to delete from the main board
      * @return the main board without the cards eleted
      */
-    public boolean removeCards(PositionWithColor[] cards){  //need a boolean in mainBoard
+    public boolean removeCards(PositionWithColor[] cards) throws InvalidPickException {  //need a boolean in mainBoard
         return mainBoard.removeCard(cards);
     }
 
