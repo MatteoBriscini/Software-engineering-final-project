@@ -23,7 +23,7 @@ public class Player {
     private final String playerID;
     private int pointSum;
     //private int pointArray;
-    private final PlayerBoard board;
+    private PlayerBoard board;
     private PlayerTarget personalTarget;
     private boolean alreadyUsed1[][]= new boolean[5][6];
     private int elementCombo;
@@ -45,8 +45,13 @@ public class Player {
     public boolean addCard(int column, Card[] cards) throws NoSpaceException {
        return board.addCard(column, cards);
     }
+
+
     //Set Methods
 
+    public void setBoard(PlayerBoard board) {
+        this.board = board;
+    }
 
     /**
      * Reads the JSON file and assigns the PlayerTarget to the Player
