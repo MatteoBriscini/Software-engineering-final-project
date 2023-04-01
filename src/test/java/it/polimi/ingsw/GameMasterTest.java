@@ -1,17 +1,19 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.Cards.Card;
-import it.polimi.ingsw.Exceptions.NoSpaceException;
-import it.polimi.ingsw.GroupTargets.CommonGoal;
-import it.polimi.ingsw.JsonSupportClasses.Position;
-import it.polimi.ingsw.PlayerClasses.Player;
+import it.polimi.ingsw.Server.Model.Cards.Card;
+import it.polimi.ingsw.Server.Exceptions.NoSpaceException;
+import it.polimi.ingsw.Server.Model.GameMaster;
+import it.polimi.ingsw.Server.Model.GroupGoals.CommonGoal;
+import it.polimi.ingsw.Server.JsonSupportClasses.Position;
+import it.polimi.ingsw.Server.Model.MainBoard;
+import it.polimi.ingsw.Server.Model.PlayerClasses.Player;
 import junit.framework.TestCase;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-import static it.polimi.ingsw.Cards.CardColor.*;
-import static it.polimi.ingsw.Cards.CardColor.LIGHTBLUE;
+import static it.polimi.ingsw.Server.Model.Cards.CardColor.*;
+import static it.polimi.ingsw.Server.Model.Cards.CardColor.LIGHTBLUE;
 
 public class GameMasterTest extends TestCase {
 
@@ -38,7 +40,7 @@ public class GameMasterTest extends TestCase {
         if (!gameMaster.getPlayerArray().get(newPlayerIndex - 1).getPlayerID().equals(newPlayerID)) {
             System.out.println("Test failed2");
         }
-
+        gameMaster.addNewPlayer("player2");
         System.out.println("end test addPlayer\n");
     }
 
@@ -78,7 +80,7 @@ public class GameMasterTest extends TestCase {
 
         //check if the positions were filled
         board = mainBoard.getBoard();
-        for (Position a : positions) {
+        for (Position a : validPositions) {
             if (!board[a.getX()][a.getY()].getColor().equals(EMPTY)) {
                 assertFalse("positions not filled", false);
             }

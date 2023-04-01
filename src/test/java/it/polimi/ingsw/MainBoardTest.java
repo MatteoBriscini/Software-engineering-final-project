@@ -1,15 +1,15 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.Cards.Card;
-import it.polimi.ingsw.Cards.CardColor;
-import it.polimi.ingsw.Exceptions.InvalidPickException;
-import it.polimi.ingsw.JsonSupportClasses.Position;
-import it.polimi.ingsw.JsonSupportClasses.PositionWithColor;
+import it.polimi.ingsw.Server.Model.Cards.Card;
+import it.polimi.ingsw.Server.Exceptions.InvalidPickException;
+import it.polimi.ingsw.Server.JsonSupportClasses.Position;
+import it.polimi.ingsw.Server.JsonSupportClasses.PositionWithColor;
+import it.polimi.ingsw.Server.Model.MainBoard;
 import junit.framework.TestCase;
 
 import java.util.List;
 
-import static it.polimi.ingsw.Cards.CardColor.*;
+import static it.polimi.ingsw.Server.Model.Cards.CardColor.*;
 
 public class MainBoardTest extends TestCase {
 

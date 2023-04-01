@@ -1,10 +1,11 @@
 package it.polimi.ingsw.PlayerClasses;
 
-import it.polimi.ingsw.Cards.Card;
-import it.polimi.ingsw.Exceptions.NoSpaceException;
+import it.polimi.ingsw.Server.Model.Cards.Card;
+import it.polimi.ingsw.Server.Exceptions.NoSpaceException;
+import it.polimi.ingsw.Server.Model.PlayerClasses.PlayerBoard;
 import junit.framework.TestCase;
 
-import static it.polimi.ingsw.Cards.CardColor.*;
+import static it.polimi.ingsw.Server.Model.Cards.CardColor.*;
 
 public class PlayerBoardTest extends TestCase {
 

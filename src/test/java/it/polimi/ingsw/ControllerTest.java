@@ -1,8 +1,8 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.Cards.Card;
-import it.polimi.ingsw.Exceptions.addPlayerToGameException;
-import it.polimi.ingsw.JsonSupportClasses.PositionWithColor;
+import it.polimi.ingsw.Server.Exceptions.addPlayerToGameException;
+import it.polimi.ingsw.Server.JsonSupportClasses.PositionWithColor;
+import it.polimi.ingsw.Server.Controller;
 import junit.framework.TestCase;
 
 public class ControllerTest extends TestCase {
@@ -93,7 +93,12 @@ public class ControllerTest extends TestCase {
         assert (test.getCurrentPlayer() == 1);
         test.setTimeout(180);                           //set timeout at 3 minutes (default)
 
+
+
         assert (!test.takeCard(0,cards, "pierino"));
+
+        //finire ***************************************
+
 
         System.out.println("\nEND TEST\n");
     }

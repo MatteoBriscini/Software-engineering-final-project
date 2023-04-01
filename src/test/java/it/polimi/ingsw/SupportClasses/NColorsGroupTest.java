@@ -1,11 +1,10 @@
 package it.polimi.ingsw.SupportClasses;
 
-import it.polimi.ingsw.Cards.Card;
-import it.polimi.ingsw.Cards.CardColor;
-import it.polimi.ingsw.JsonSupportClasses.Position;
+import it.polimi.ingsw.Server.Model.Cards.Card;
+import it.polimi.ingsw.Server.SupportClasses.NColorsGroup;
 import junit.framework.TestCase;
 
-import static it.polimi.ingsw.Cards.CardColor.*;
+import static it.polimi.ingsw.Server.Model.Cards.CardColor.*;
 
 public class NColorsGroupTest extends TestCase {
 
