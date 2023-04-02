@@ -48,7 +48,7 @@ public class GameMaster {
         fileJson = new FileReader(gameMasterConfigURL);
         jsonObject = new  Gson().fromJson(fileJson, JsonObject.class);
         this.couplesAndPokerGoalsConfig = gson.fromJson(jsonObject.get("couplesAndPokersGoals").getAsJsonArray(), Integer[].class);
-        this.oneColourPatternGoalsConfig = gson.fromJson(jsonObject.get("oneColourPatternGoals").getAsJsonArray(), Integer[].class);
+        this.oneColourPatternGoalsConfig = gson.fromJson(jsonObject.get("oneColorPatternGoals").getAsJsonArray(), Integer[].class);
         this.rainbowRowsAndColumnsGoalsConfig = gson.fromJson(jsonObject.get("rainbowRowsAndColumnsGoals").getAsJsonArray(), Integer[].class);
 
     }
@@ -153,9 +153,14 @@ public class GameMaster {
     /**
      * @param currentPlayer reference to the player I need
      */
-    public void endGameCalcPoint(int currentPlayer){ //return the total scored by the player
+    public int endGameCalcPoint(int currentPlayer){ //return the total scored by the player
+        int sum;
+
         players.get(currentPlayer).checkSpots();
         players.get(currentPlayer).checkPlayerTarget();
+        sum = players.get(currentPlayer).getPointSum();
+
+        return sum;
     }
 
     /** mathod to add points to the players
@@ -216,7 +221,7 @@ public class GameMaster {
     /**
      * @param commonGoalID  is the identifier of the common goal
      * @param currentPlayer is the current player
-     * @return return info about the correletion player-common goal
+     * @return return info about the correlation player-common goal
      */
     public boolean checkCommonGoal(int commonGoalID, int currentPlayer){    //have to take current player board
         return commonGoals[commonGoalID].check(players.get(currentPlayer).getBoard());

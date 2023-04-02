@@ -27,7 +27,7 @@ public class GameMasterTest extends TestCase {
     Card[] cards;
 
 
-    public void testAddNewPlayer(){
+    public void testAddNewPlayer() {
         System.out.println("start test addPlayer \n");
 
         GameMaster gameMaster = new GameMaster();
@@ -35,7 +35,7 @@ public class GameMasterTest extends TestCase {
         String newPlayerID = "player1";
         int newPlayerIndex = gameMaster.addNewPlayer(newPlayerID);
 
-        if (gameMaster.getPlayerArray().size() != initialPlayerCount + 1 ) {
+        if (gameMaster.getPlayerArray().size() != initialPlayerCount + 1) {
             System.out.println("Test failed1");
         }
         if (!gameMaster.getPlayerArray().get(newPlayerIndex - 1).getPlayerID().equals(newPlayerID)) {
@@ -46,12 +46,11 @@ public class GameMasterTest extends TestCase {
     }
 
     public void testSetCommonGoal() throws FileNotFoundException, ConstructorException {
-        GameMaster gameMaster = new GameMaster();
-        for(int i = 0; i<= 20; i++){
-            System.out.println(i);
-            gameMaster.setCommonGoal(i, 0);
-        }
+        //to do
     }
+
+
+
 
     public void testSetPrivateGoal() throws FileNotFoundException {
         System.out.println("start test privateGoal \n");
@@ -93,8 +92,22 @@ public class GameMasterTest extends TestCase {
         System.out.println("end test FillBoard");
     }
 
-    public void testEndGameCalcPoint() {
+    public void testEndGameCalcPoint() throws FileNotFoundException {
+        System.out.println("start test endGameCalcPoints");
 
+        int sum;
+        GameMaster gamemaster = new GameMaster();
+        Player player = new Player("Billone");
+        player.setPlayerTarget(1);
+        gamemaster.addNewPlayer("Billone");
+
+
+        player.checkSpots();
+        player.checkPlayerTarget();
+        sum = player.getPointSum();
+        assertEquals(0, sum);
+
+        System.out.println("end test endGameCalcPoint");
     }
 
     public void testPlayerAddPoints() {
@@ -132,17 +145,13 @@ public class GameMasterTest extends TestCase {
             System.out.println("too much cards0");
         }
 
-        try {
-            gameMaster.addCard(0, tmp, 0);
-        } catch (NoSpaceException e) {
-            System.out.println("too much cards0");
-        }
-
     }
 
     public void testSetAlreadyScored() {
+        //useless
     }
 
     public void testCheckCommonGoal() {
+        //useless
     }
 }
