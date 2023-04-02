@@ -25,6 +25,10 @@ public class GameMaster {
     private Integer[] couplesAndPokerGoalsConfig;
     private Integer[] oneColourPatternGoalsConfig;
     private Integer[] rainbowRowsAndColumnsGoalsConfig;
+    private Integer[] couplesAndPokerGoalsRange;
+    private Integer[] oneColourPatternGoalsRange;
+    private Integer[] rainbowRowsAndColumnsGoalsRange;
+
 
 
     public GameMaster(){
@@ -50,6 +54,11 @@ public class GameMaster {
         this.couplesAndPokerGoalsConfig = gson.fromJson(jsonObject.get("couplesAndPokersGoals").getAsJsonArray(), Integer[].class);
         this.oneColourPatternGoalsConfig = gson.fromJson(jsonObject.get("oneColorPatternGoals").getAsJsonArray(), Integer[].class);
         this.rainbowRowsAndColumnsGoalsConfig = gson.fromJson(jsonObject.get("rainbowRowsAndColumnsGoals").getAsJsonArray(), Integer[].class);
+
+        this.couplesAndPokerGoalsRange = gson.fromJson(jsonObject.get("couplesAndPokersGoalsRange").getAsJsonArray(), Integer[].class);
+        this.oneColourPatternGoalsRange = gson.fromJson(jsonObject.get("oneColorPatternGoalsRange").getAsJsonArray(), Integer[].class);
+        this.rainbowRowsAndColumnsGoalsRange = gson.fromJson(jsonObject.get("rainbowRowsAndColumnsGoalsRange").getAsJsonArray(), Integer[].class);
+
 
     }
 
@@ -112,14 +121,13 @@ public class GameMaster {
 
         int minValue;
 
-        if(commonGoalID >= 0 && commonGoalID <= 1){
+        if(commonGoalID >= couplesAndPokerGoalsRange[0] && commonGoalID <= couplesAndPokerGoalsRange[1]){
             commonGoals[n] = new CouplesAndPokersGoals(couplesAndPokerGoalsConfig[3-(commonGoalID*2)],couplesAndPokerGoalsConfig[2-(commonGoalID*2)]);
-        }else if(commonGoalID >= 2 && commonGoalID <= 4){
-            minValue = commonGoalID-1;
-
+        }else if(commonGoalID >= oneColourPatternGoalsRange[0] && commonGoalID <= oneColourPatternGoalsRange[1]){
+            minValue = commonGoalID-(oneColourPatternGoalsRange[0]-1);
             commonGoals[n] = new OneColorPatternGoals(oneColourPatternGoalsConfig[3-minValue]);
-        }else if(commonGoalID >= 5 && commonGoalID < 8){
-            minValue = commonGoalID-4;
+        }else if(commonGoalID >= rainbowRowsAndColumnsGoalsRange[0] && commonGoalID < rainbowRowsAndColumnsGoalsRange[1]){
+            minValue = commonGoalID-(rainbowRowsAndColumnsGoalsRange[0]-1);
             commonGoals[n] = new RainbowRowsAndColumnsGoals(rainbowRowsAndColumnsGoalsConfig[12-(minValue*4)],rainbowRowsAndColumnsGoalsConfig[13-(minValue*4)],rainbowRowsAndColumnsGoalsConfig[14-(minValue*4)],rainbowRowsAndColumnsGoalsConfig[15-(minValue*4)]);
         }
     }
