@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Server;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Exceptions.*;
 import it.polimi.ingsw.Server.Model.Cards.Card;
@@ -8,13 +9,12 @@ import it.polimi.ingsw.Server.Exceptions.*;
 import it.polimi.ingsw.Server.Model.GameMaster;
 import it.polimi.ingsw.Server.JsonSupportClasses.Position;
 import it.polimi.ingsw.Server.JsonSupportClasses.PositionWithColor;
+import it.polimi.ingsw.Server.Model.GroupGoals.VoidArrayListException;
 import it.polimi.ingsw.Server.Model.PlayerClasses.Player;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Random;
+import java.util.*;
 
 
 public class Controller {
@@ -27,7 +27,7 @@ public class Controller {
     final ArrayList<Boolean> activePlayers = new ArrayList<>();
     boolean alreadyStarted = false;
     boolean endGame = false; //stop playing phase in end game
-    private Position[][] allowedPositionMatrix; //matrix of allowed position on main board (download from json file)
+    JsonObject mainBoardConfig = new JsonObject();
     private Position[] allowedPositionArray;    //array of allowed position fill based on main board and player number (in start game method)
     private Thread waitForPlayerResponse;
     private Thread endGameThread;
@@ -81,7 +81,7 @@ public class Controller {
         this.maxPlayerNumber =  controller.get("maxPlayerNumber").getAsInt();
 
         //allowed position for mainBoard
-        allowedPositionMatrix = gson.fromJson(fileJsonPosition , Position[][].class);
+        mainBoardConfig = new Gson().fromJson(fileJsonPosition, JsonObject.class).getAsJsonObject();
     }
 
     /**
@@ -89,6 +89,15 @@ public class Controller {
      */
     public int getCurrentPlayer() {
         return currentPlayer;
+    }
+    public String getCurrentPlayerID() {
+        return game.getPlayerArray().get(currentPlayer).getPlayerID();
+    }
+    public String getNotCurrentPlayerID() {
+        int i =currentPlayer +1;
+        if(i>playerNum) i=0;
+
+        return game.getPlayerArray().get(i).getPlayerID();
     }
 
     public int getMaxPlayerNumber(){
@@ -104,6 +113,11 @@ public class Controller {
     public void setTimeout(int timeout){
         this.timeout = timeout;
     }
+
+    public void fixMainBoard(PositionWithColor[] cards){
+        game.fixBoard(cards);
+    }
+    public Card[][] getMainBoard(){return game.getMainBoard();}
     /**************************************************************************
      ************************************************** disconnect management *
      *************************************************************************/
@@ -149,13 +163,13 @@ public class Controller {
             game.setPlayersArray(tmpPlayers);
 
             //set commun goal
-            for (int i=1; i<numberOfPossibleCommonGoals ; i++) numberList.add(i);
+            for (int i=1; i<numberOfPossibleCommonGoals; i++) numberList.add(i);
             Collections.shuffle(numberList);
             int[] commonGoalIDArray = this.setCommonGoals(numberList, n);
 
             //set private goal
             numberList.clear();
-            for (int i=1; i<numberOfPossiblePrivateGoals ; i++) numberList.add(i);
+            for (int i=1; i<numberOfPossiblePrivateGoals; i++) numberList.add(i);
             Collections.shuffle(numberList);
             int[] privateGoalIDArray = this.setPrivateGoals(numberList, m);
 
@@ -173,10 +187,11 @@ public class Controller {
 
     private int[] setCommonGoals(ArrayList<Integer> numberList,int n){
         int[] commonGoalArray = new int[commonGoalNumber];
+
         for(int i = 0; i<commonGoalNumber; i++){
             try {
-                commonGoalArray[i] = numberList.get(n+1);
-                game.setCommonGoal(commonGoalArray[i], 0);
+                commonGoalArray[i] = numberList.get(n+i);
+                game.setCommonGoal(commonGoalArray[i], i);
             } catch (ConstructorException e) {
                 System.out.println("invalid value for CommonGoals constructor");
                 throw new RuntimeException(e);
@@ -204,13 +219,15 @@ public class Controller {
 
     private void fillMainBoard(){
         ArrayList<Position> tmp = new ArrayList<>();
-        Collections.addAll(tmp, allowedPositionMatrix[0]);
-        if (playerNum > minPlayerNumber){
-            Collections.addAll(tmp, allowedPositionMatrix[1]);
+        Gson gson = new Gson();
+        Collections.addAll(tmp, gson.fromJson(mainBoardConfig.get("player2").getAsJsonArray(), Position[].class));
+        if (playerNum > 2){
+            Collections.addAll(tmp, gson.fromJson(mainBoardConfig.get("player3").getAsJsonArray(), Position[].class));
         }
-        if (playerNum == maxPlayerNumber){
-            Collections.addAll(tmp, allowedPositionMatrix[2]);
+        if (playerNum == 4){
+            Collections.addAll(tmp, gson.fromJson(mainBoardConfig.get("player4").getAsJsonArray(), Position[].class));
         }
+        allowedPositionArray = new Position[tmp.size()];
         allowedPositionArray = tmp.toArray(new Position[0]);
 
         if(!game.fillMainBoard(allowedPositionArray)){
@@ -259,7 +276,6 @@ public class Controller {
             game.endGameCalcPoint(i);
         }
 
-        //System.out.println("The Thread name is " + endGameThread.currentThread().getName());  //vorrei evitare sta cosa
 
         System.out.println("end game");
     }
@@ -268,13 +284,11 @@ public class Controller {
      *************************************************************************/
     synchronized public boolean takeCard(int column, PositionWithColor[] cards, String playerID){
         if(!endGame && alreadyStarted && game.getPlayerArray().get(currentPlayer).getPlayerID().equals(playerID)){
-
-
+            boolean bool = true;
             //verify the numbers of cards
-            if (cards.length > 0 && cards.length<=3){
-                System.out.println("invalid card number");
-                //devo comunucare al client che la mossa è errata ******************************************
-                return false;
+            if (cards.length <= 0 && cards.length>3){
+
+                return false;               //devo comunucare al client che la mossa è errata ******************************************
             }
 
             //remove the cards from main board
@@ -283,9 +297,8 @@ public class Controller {
                     if(!game.fillMainBoard(allowedPositionArray)) this.endGame();
                 }
             } catch (InvalidPickException e) {
-                System.out.println("wrong color");
-               //devo comunucare al client che la mossa è errata ******************************************
-                return false;
+                bool = false;
+                return false;               //devo comunucare al client che la mossa è errata ******************************************
             }
 
             //add card to player board
@@ -299,10 +312,11 @@ public class Controller {
                     this.waitForEndGame();
                 }
             } catch (NoSpaceException e) {
-                System.out.println("no space");
                 game.fixBoard(cards);
-                //devo comunucare al client che la mossa è errata ******************************************
-                return false;
+
+
+                System.out.println("preso2: " + bool);
+                return false;       //devo comunucare al client che la mossa è errata ******************************************
             }
 
             //calc real time points and add it to current player
@@ -312,7 +326,6 @@ public class Controller {
             this.turn(); //skip to next player
             return true;
         } else {
-            System.out.println(endGame);
             return false;
             //finire else ***************************************************
         }
@@ -320,24 +333,27 @@ public class Controller {
 
     private void updateAllCommonGoal(){
         for(int i = 0; i<commonGoalNumber ; i+=1){
-            if (!game.getAlreadyScored(i).contains(game.getPlayerArray().get(currentPlayer)) && game.checkCommonGoal(i, currentPlayer)) {
+            ArrayList<Player> alreadyScored = new ArrayList<>();
 
+            //System.out.println(tmp.size());
+            if (!alreadyScored.contains(game.getPlayerArray().get(currentPlayer)) && game.checkCommonGoal(i, currentPlayer)){
 
-                ArrayList<Player> alreadyScored = game.getAlreadyScored(i);//update the list of player has already reached the goal
-                alreadyScored.add(game.getPlayerArray().get(currentPlayer));
-                game.setAlreadyScored(alreadyScored, i);
+                    //update the list of player has already reached the goal
+                    alreadyScored.add(game.getPlayerArray().get(currentPlayer));
+                    game.setAlreadyScored(alreadyScored, i);
 
-                int point = maxPointCommonGoals - alreadyScored.size()*2;
-                if(playerNum == 2 && point == 6) point = 4;
-                game.playerAddPoint(point, currentPlayer);
+                    int point = maxPointCommonGoals - alreadyScored.size() * 2;
+                    if (playerNum == 2 && point == 6) point = 4;
+                    game.playerAddPoint(point, currentPlayer);
             }
+
         }
     }
     synchronized public void turn(){
         if(endGame) return;         //if game is finish, da completare *******************************
 
         currentPlayer += 1;
-        if(currentPlayer > playerNum) currentPlayer = 0;
+        if(currentPlayer >= playerNum) currentPlayer = 0;
 
         synchronized (activePlayers) {
             if (!activePlayers.get(currentPlayer)) {        //if a player is market as offline skip him
@@ -351,9 +367,7 @@ public class Controller {
             int tmp = currentPlayer;
             try {
                 Thread.sleep(timeout*1000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            } catch (InterruptedException e) {}
             if (currentPlayer == tmp){turn();} //skip to next player
         });
         waitForPlayerResponse.start();

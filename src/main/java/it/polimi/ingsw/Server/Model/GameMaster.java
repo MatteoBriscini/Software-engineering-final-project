@@ -118,7 +118,6 @@ public class GameMaster {
      * @throws ConstructorException when constructor of goals receives invalid parameters
      */
     public void setCommonGoal (int commonGoalID, int n) throws ConstructorException {
-
         int minValue;
 
         if(commonGoalID >= couplesAndPokerGoalsRange[0] && commonGoalID <= couplesAndPokerGoalsRange[1]){
@@ -129,6 +128,12 @@ public class GameMaster {
         }else if(commonGoalID >= rainbowRowsAndColumnsGoalsRange[0] && commonGoalID < rainbowRowsAndColumnsGoalsRange[1]){
             minValue = commonGoalID-(rainbowRowsAndColumnsGoalsRange[0]-1);
             commonGoals[n] = new RainbowRowsAndColumnsGoals(rainbowRowsAndColumnsGoalsConfig[12-(minValue*4)],rainbowRowsAndColumnsGoalsConfig[13-(minValue*4)],rainbowRowsAndColumnsGoalsConfig[14-(minValue*4)],rainbowRowsAndColumnsGoalsConfig[15-(minValue*4)]);
+        }else if(commonGoalID == rainbowRowsAndColumnsGoalsRange[1]){
+            commonGoals[n] = new EightEqualTarget();
+        }else if(commonGoalID == rainbowRowsAndColumnsGoalsRange[1]+1){
+            commonGoals[n] = new SquaresGoal();
+        } else if(commonGoalID == rainbowRowsAndColumnsGoalsRange[1]+2){
+            commonGoals[n] = new StairsPatternTarget();
         }
     }
 
@@ -216,6 +221,7 @@ public class GameMaster {
      * @return return the info about the "already scored" goals
      */
     public ArrayList<Player> getAlreadyScored (int commonGoalID){
+        System.out.println(commonGoals[0]);
         return commonGoals[commonGoalID].getAlreadyScored();
     }
 
