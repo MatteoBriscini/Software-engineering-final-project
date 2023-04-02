@@ -46,7 +46,13 @@ public class GameMasterTest extends TestCase {
     }
 
     public void testSetCommonGoal() throws FileNotFoundException, ConstructorException {
-        //to do
+        System.out.println("start testSetCommonGoal");
+
+        GameMaster gameMaster = new GameMaster();
+        for(int i=0; i<=20; i++){
+            gameMaster.setCommonGoal(i,0);
+        }
+        System.out.println("end testSetCommonGoal");
     }
 
 
