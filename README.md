@@ -30,3 +30,4 @@ Members: <br>
 | class : PlayerTarget                                               | :green_circle:  | Riccardo Caprioglio             | <b>implemented && tested</b> |    
 | class : Chat                                                       | :red_circle:    | Riccardo Caprioglio             | WIP|    
 | Controller                                                         | :orange_circle: | Matteo Briscini                 | partially implemented && tested|    
+| GameMaster                                                         | :green_circle   | Davide Arcaini                  | imlemented && tested |
