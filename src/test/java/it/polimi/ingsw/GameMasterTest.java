@@ -1,5 +1,6 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.Server.Exceptions.ConstructorException;
 import it.polimi.ingsw.Server.Model.Cards.Card;
 import it.polimi.ingsw.Server.Exceptions.NoSpaceException;
 import it.polimi.ingsw.Server.Model.GameMaster;
@@ -44,8 +45,12 @@ public class GameMasterTest extends TestCase {
         System.out.println("end test addPlayer\n");
     }
 
-    public void testSetCommonGoal() throws FileNotFoundException {
-
+    public void testSetCommonGoal() throws FileNotFoundException, ConstructorException {
+        GameMaster gameMaster = new GameMaster();
+        for(int i = 0; i<= 20; i++){
+            System.out.println(i);
+            gameMaster.setCommonGoal(i, 0);
+        }
     }
 
     public void testSetPrivateGoal() throws FileNotFoundException {
@@ -89,7 +94,7 @@ public class GameMasterTest extends TestCase {
     }
 
     public void testEndGameCalcPoint() {
-        //useless if the other methods that add points are working on their own tests
+
     }
 
     public void testPlayerAddPoints() {

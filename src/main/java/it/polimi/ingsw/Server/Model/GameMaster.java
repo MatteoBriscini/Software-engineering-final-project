@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Server.Model;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Exceptions.ConstructorException;
 import it.polimi.ingsw.Server.Exceptions.InvalidPickException;
 import it.polimi.ingsw.Server.Exceptions.LengthException;
@@ -12,12 +14,46 @@ import it.polimi.ingsw.Server.Model.PlayerClasses.Player;
 import it.polimi.ingsw.Server.Model.PlayerClasses.PlayerTarget;
 
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class GameMaster {
     private ArrayList<Player> players = new ArrayList<>();
-    private final CommonGoal[] commonGoals = new CommonGoal[2];
+    private CommonGoal[] commonGoals;
     private final MainBoard mainBoard = new MainBoard();
+    private Integer[] couplesAndPokerGoalsConfig;
+    private Integer[] oneColourPatternGoalsConfig;
+    private Integer[] rainbowRowsAndColumnsGoalsConfig;
+
+
+    public GameMaster(){
+        try {
+            this.jsonCreate();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void jsonCreate() throws FileNotFoundException{
+        Gson gson = new Gson();
+
+        String gameMasterConfigURL = "src/main/json/config/gameMasterConfig.json";
+        String controllerConfigURL = "src/main/json/config/controllerConfig.json";
+        FileReader fileJson = new FileReader(controllerConfigURL);
+        JsonObject jsonObject = new Gson().fromJson(fileJson, JsonObject.class);
+        commonGoals = new CommonGoal[jsonObject.get("commonGoalNumber").getAsInt()];
+
+
+        fileJson = new FileReader(gameMasterConfigURL);
+        jsonObject = new  Gson().fromJson(fileJson, JsonObject.class);
+        this.couplesAndPokerGoalsConfig = gson.fromJson(jsonObject.get("couplesAndPokersGoals").getAsJsonArray(), Integer[].class);
+        this.oneColourPatternGoalsConfig = gson.fromJson(jsonObject.get("oneColourPatternGoals").getAsJsonArray(), Integer[].class);
+        this.rainbowRowsAndColumnsGoalsConfig = gson.fromJson(jsonObject.get("rainbowRowsAndColumnsGoals").getAsJsonArray(), Integer[].class);
+
+    }
+
+
 
 
     /**
@@ -73,45 +109,17 @@ public class GameMaster {
      * @throws ConstructorException when constructor of goals receives invalid parameters
      */
     public void setCommonGoal (int commonGoalID, int n) throws ConstructorException {
-        switch (commonGoalID) {
-            case 0:
-                commonGoals[n] = new CouplesAndPokersGoals(2,6);
-                break;
-            case 1:
-                commonGoals[n] = new CouplesAndPokersGoals(4,4);
-                break;
-            case 2:
-                commonGoals[n] = new OneColorPatternGoals(2);
-                break;
-            case 3:
-                commonGoals[n] = new SquaresGoal();
-                break;
-            case 4:
-                commonGoals[n] = new RainbowRowsAndColumnsGoals(6, 1,3, 4);
-                break;
-            case 5:
-                commonGoals[n] = new EightEqualTarget();
-                break;
-            case 6:
-                commonGoals[n] = new OneColorPatternGoals(7);
-                break;
-            case 7:
-                commonGoals[n] = new RainbowRowsAndColumnsGoals(5,1,3,3);
-                break;
-            case 8:
-                commonGoals[n] = new RainbowRowsAndColumnsGoals(6,5,5,2);
-                break;
-            case 9:
-                commonGoals[n]= new RainbowRowsAndColumnsGoals(5,6,6,2);
-                break;
-            case 10:
-                commonGoals[n]= new OneColorPatternGoals(11);
-                break;
-            case 11:
-                commonGoals[n]= new StairsPatternTarget();
-                break;
-            default:
-                throw new RuntimeException("invalid commonGoalID");
+
+        int minValue;
+
+        if(commonGoalID >= 0 && commonGoalID <= 1){
+            commonGoals[n] = new CouplesAndPokersGoals(couplesAndPokerGoalsConfig[3-(commonGoalID*2)],couplesAndPokerGoalsConfig[2-(commonGoalID*2)]);
+        }else if(commonGoalID >= 2 && commonGoalID <= 4){
+            minValue = commonGoalID-2;
+            commonGoals[n] = new OneColorPatternGoals(oneColourPatternGoalsConfig[3-minValue]);
+        }else if(commonGoalID >= 5 && commonGoalID <= 20){
+            minValue = commonGoalID-5;
+            commonGoals[n] = new RainbowRowsAndColumnsGoals(rainbowRowsAndColumnsGoalsConfig[15-(minValue*4)],rainbowRowsAndColumnsGoalsConfig[14-(minValue*4)],rainbowRowsAndColumnsGoalsConfig[13-(minValue*4)],rainbowRowsAndColumnsGoalsConfig[12-(minValue*4)]);
         }
     }
 
