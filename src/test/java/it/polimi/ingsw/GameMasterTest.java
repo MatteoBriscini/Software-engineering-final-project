@@ -42,6 +42,7 @@ public class GameMasterTest extends TestCase {
             System.out.println("Test failed2");
         }
         gameMaster.addNewPlayer("player2");
+
         System.out.println("end test addPlayer\n");
     }
 
@@ -133,7 +134,7 @@ public class GameMasterTest extends TestCase {
     }
 
     public void testAddCard() {
-
+        System.out.println("start test addCard");
 
         GameMaster gameMaster = new GameMaster();
         Player player = new Player("GiakomoBillone"); //check if the exception is thrown if the column is full
@@ -150,14 +151,6 @@ public class GameMasterTest extends TestCase {
         } catch (NoSpaceException e) {
             System.out.println("too much cards0");
         }
-
-    }
-
-    public void testSetAlreadyScored() {
-        //useless
-    }
-
-    public void testCheckCommonGoal() {
-        //useless
+        System.out.println("end test addCard");
     }
 }
