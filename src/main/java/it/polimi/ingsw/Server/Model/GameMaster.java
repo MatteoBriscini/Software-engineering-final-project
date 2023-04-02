@@ -115,11 +115,12 @@ public class GameMaster {
         if(commonGoalID >= 0 && commonGoalID <= 1){
             commonGoals[n] = new CouplesAndPokersGoals(couplesAndPokerGoalsConfig[3-(commonGoalID*2)],couplesAndPokerGoalsConfig[2-(commonGoalID*2)]);
         }else if(commonGoalID >= 2 && commonGoalID <= 4){
-            minValue = commonGoalID-2;
+            minValue = commonGoalID-1;
+
             commonGoals[n] = new OneColorPatternGoals(oneColourPatternGoalsConfig[3-minValue]);
-        }else if(commonGoalID >= 5 && commonGoalID <= 20){
-            minValue = commonGoalID-5;
-            commonGoals[n] = new RainbowRowsAndColumnsGoals(rainbowRowsAndColumnsGoalsConfig[15-(minValue*4)],rainbowRowsAndColumnsGoalsConfig[14-(minValue*4)],rainbowRowsAndColumnsGoalsConfig[13-(minValue*4)],rainbowRowsAndColumnsGoalsConfig[12-(minValue*4)]);
+        }else if(commonGoalID >= 5 && commonGoalID < 8){
+            minValue = commonGoalID-4;
+            commonGoals[n] = new RainbowRowsAndColumnsGoals(rainbowRowsAndColumnsGoalsConfig[12-(minValue*4)],rainbowRowsAndColumnsGoalsConfig[13-(minValue*4)],rainbowRowsAndColumnsGoalsConfig[14-(minValue*4)],rainbowRowsAndColumnsGoalsConfig[15-(minValue*4)]);
         }
     }
 
