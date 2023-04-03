@@ -32,8 +32,8 @@ public class Position {
         ArrayList<Position> neighbors = new ArrayList<>();
         if (x-1 >= 0) neighbors.add(new Position(x-1, y));
         if (y-1 >= 0) neighbors.add(new Position(x, y-1));
-        if (x+1<5) neighbors.add(new Position(x+1, y));
-        if (y+1<6) neighbors.add(new Position(x, y+1));
+        if (x+1<9) neighbors.add(new Position(x+1, y));
+        if (y+1<9) neighbors.add(new Position(x, y+1));
         return neighbors.toArray(new Position[0]);
     }
 
