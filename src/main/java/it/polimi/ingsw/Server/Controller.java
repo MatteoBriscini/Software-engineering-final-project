@@ -2,6 +2,8 @@ package it.polimi.ingsw.Server;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import it.polimi.ingsw.Server.Connection.ControllerRMI;
+import it.polimi.ingsw.Server.Connection.ControllerSOCKET;
 import it.polimi.ingsw.Server.Exceptions.*;
 import it.polimi.ingsw.Server.Model.Cards.Card;
 import it.polimi.ingsw.Server.Model.GameMaster;
@@ -28,6 +30,11 @@ public class Controller {
     private Position[] allowedPositionArray;    //array of allowed position fill based on main board and player number (in start game method)
     private Thread waitForPlayerResponse;
     private Thread endGameThread;
+
+    //connection
+    ControllerRMI rmi;
+    ControllerSOCKET socket;
+
     //configuration value for controller
     private int timeout; //wait for player time (in seconds)
     private int numberOfPossibleCommonGoals;
@@ -119,6 +126,12 @@ public class Controller {
      ************************************************** disconnect management *
      *************************************************************************/
 
+    public void createRMIConnection(int PORT){
+        rmi = new ControllerRMI(this, PORT);
+    }
+    public void createSOCKETConnection(int PORT){
+        socket = new ControllerSOCKET(this, PORT);
+    }
     public void setPlayerOffline(int i){
         synchronized (activePlayers) {
             activePlayers.set(i, false);
@@ -129,10 +142,15 @@ public class Controller {
             activePlayers.set(i, true);
         }
     }
-    
+
     /************************************************************************
-    ************************************************** start game method ****
-    *************************************************************************/
+     ************************************************** start game method ****
+     * ***********************************************************************
+     * *
+     * add new player to the game (called by lobby)
+     * @param playerID id of the new player of the game
+     * @throws addPlayerToGameException if the game is full or already started
+     */
     synchronized public void addNewPlayer(String playerID) throws addPlayerToGameException {
         if(playerNum < maxPlayerNumber && !alreadyStarted){
             playerNum = game.addNewPlayer(playerID);
@@ -144,6 +162,11 @@ public class Controller {
         if (playerNum == maxPlayerNumber) this.startGame(game.getPlayerArray().get(0).getPlayerID()); //if the game is full start the game
     }
 
+    /**
+     * this method start the game
+     * @param playerID playerID of the client call the method
+     * @return true if the players can start the game false in all other case
+     */
     synchronized public boolean startGame(String playerID){
         Random rand = new Random();
         int n = rand.nextInt(numberOfPossibleCommonGoals-commonGoalNumber);
@@ -182,6 +205,11 @@ public class Controller {
         }
     }
 
+    /**
+     * @param numberList shuffle array list of int
+     * @param n random start index in the numberList
+     * @return the array containing id for all commong goals
+     */
     private int[] setCommonGoals(ArrayList<Integer> numberList,int n){
         int[] commonGoalArray = new int[commonGoalNumber];
 
@@ -197,6 +225,12 @@ public class Controller {
         return commonGoalArray;
     }
 
+    /**
+     * this method create random private goal for all players
+     * @param numberList shuffle array list of int
+     * @param m random start index in the numberList
+     * @return the array containing id for all private goal
+     */
     private int[] setPrivateGoals(ArrayList<Integer> numberList,int m){
         int[] privateGoalIDArray = new int[game.getPlayerArray().size()];
         for (int n = 0; n < game.getPlayerArray().size(); n++){
@@ -214,6 +248,9 @@ public class Controller {
         return privateGoalIDArray;
     }
 
+    /**
+     * random fill the player board for first time based on players number
+     */
     private void fillMainBoard(){
         ArrayList<Position> tmp = new ArrayList<>();
         Gson gson = new Gson();
@@ -255,7 +292,10 @@ public class Controller {
 
     /*************************************************************************
      ************************************************** end game method ******
-     *************************************************************************/
+     * ***********************************************************************
+     * *
+     * called when player have full board this method wait the end of the turn ad call end game
+     */
     synchronized public void waitForEndGame() {
         endGameThread = new Thread(() -> {
             while (currentPlayer != 0 && !endGame) ;
@@ -278,7 +318,14 @@ public class Controller {
     }
     /*************************************************************************
      ************************************************** in game method *******
-     *************************************************************************/
+     * ***********************************************************************
+     * *
+     * called from client when player want to take cards from mainBoard to add it to him board
+     * @param column number of column in the playerBoard
+     * @param cards array of card the player want to take, contains color and position on mainBoard
+     * @param playerID playerID of the client call the method
+     * @return true if the move is valid false in all other case
+     */
     synchronized public boolean takeCard(int column, PositionWithColor[] cards, String playerID){
         if(!endGame && alreadyStarted && game.getPlayerArray().get(currentPlayer).getPlayerID().equals(playerID)){
             //verify the numbers of cards
@@ -324,6 +371,9 @@ public class Controller {
         }
     }
 
+    /**
+     * verify if a player score a commonGoal and save it
+     */
     private void updateAllCommonGoal(){
         for(int i = 0; i<commonGoalNumber ; i+=1){
             ArrayList<Player> alreadyScored = new ArrayList<>();
@@ -342,6 +392,10 @@ public class Controller {
 
         }
     }
+
+    /**
+     * this method increment the currentPlayer and verify the player do not exceeds time limit to make a move
+     */
     synchronized public void turn(){
         if(endGame) return;         //if game is finish, da completare *******************************
 

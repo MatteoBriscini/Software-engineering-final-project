@@ -2,7 +2,6 @@ package it.polimi.ingsw;
 
 import com.google.gson.Gson;
 import it.polimi.ingsw.Server.Exceptions.addPlayerToGameException;
-import it.polimi.ingsw.Server.JsonSupportClasses.Position;
 import it.polimi.ingsw.Server.JsonSupportClasses.PositionWithColor;
 import it.polimi.ingsw.Server.Controller;
 import it.polimi.ingsw.Server.Model.Cards.Card;
@@ -17,7 +16,6 @@ public class ControllerTest extends TestCase {
 
     Controller test;
     private final int timeout = 2;
-
     Card[][] board;
 
     private PositionWithColor[] jsonCreate() throws FileNotFoundException {
