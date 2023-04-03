@@ -1,15 +1,12 @@
 package it.polimi.ingsw.Server;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Exceptions.*;
 import it.polimi.ingsw.Server.Model.Cards.Card;
-import it.polimi.ingsw.Server.Exceptions.*;
 import it.polimi.ingsw.Server.Model.GameMaster;
 import it.polimi.ingsw.Server.JsonSupportClasses.Position;
 import it.polimi.ingsw.Server.JsonSupportClasses.PositionWithColor;
-import it.polimi.ingsw.Server.Model.GroupGoals.VoidArrayListException;
 import it.polimi.ingsw.Server.Model.PlayerClasses.Player;
 
 import java.io.FileNotFoundException;
@@ -284,9 +281,8 @@ public class Controller {
      *************************************************************************/
     synchronized public boolean takeCard(int column, PositionWithColor[] cards, String playerID){
         if(!endGame && alreadyStarted && game.getPlayerArray().get(currentPlayer).getPlayerID().equals(playerID)){
-            boolean bool = true;
             //verify the numbers of cards
-            if (cards.length <= 0 && cards.length>3){
+            if (cards.length <= 0 || cards.length>3){
 
                 return false;               //devo comunucare al client che la mossa è errata ******************************************
             }
@@ -297,7 +293,7 @@ public class Controller {
                     if(!game.fillMainBoard(allowedPositionArray)) this.endGame();
                 }
             } catch (InvalidPickException e) {
-                bool = false;
+                System.out.println(e.toString());
                 return false;               //devo comunucare al client che la mossa è errata ******************************************
             }
 
@@ -313,9 +309,6 @@ public class Controller {
                 }
             } catch (NoSpaceException e) {
                 game.fixBoard(cards);
-
-
-                System.out.println("preso2: " + bool);
                 return false;       //devo comunucare al client che la mossa è errata ******************************************
             }
 

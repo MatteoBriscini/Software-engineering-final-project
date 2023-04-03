@@ -100,7 +100,7 @@ public class ControllerTest extends TestCase {
         System.out.println("\n\n");
 
         //test 3
-        System.out.println("3 playerr entry test:\n");
+        System.out.println("3 player entry test:\n");
         test = new Controller(3);                        //create new game with max 3 players
         test.addNewPlayer("piero");     //4 player join the game
         assert (test.getPlayerNumber() == 1);
@@ -189,9 +189,23 @@ public class ControllerTest extends TestCase {
         cards = new PositionWithColor[2];
         cards[0] =new PositionWithColor(4,4,0, BLUE);
         cards[1] =new PositionWithColor(4,3,0, LIGHTBLUE);
-        boolean tmp = test.takeCard(0,cards,  test.getCurrentPlayerID());
-        System.out.println(tmp);
-        assert (!tmp);
+        assert (!test.takeCard(0,cards,  test.getCurrentPlayerID()));
+        assert (test.getCurrentPlayer() == 2);
+
+        //test 6 (takeCard invalid, card no near empty)
+        System.out.println("test5: \n");
+        cards = new PositionWithColor[2];
+        cards[0] =new PositionWithColor(4,7,0, PINK);
+        cards[1] =new PositionWithColor(4,6,0, LIGHTBLUE);
+        assert (!test.takeCard(0,cards,  test.getCurrentPlayerID()));
+        assert (test.getCurrentPlayer() == 2);
+
+        //test 7 (takeCard invalid, card no near empty)
+        System.out.println("test5: \n");
+        cards = new PositionWithColor[2];
+        cards[0] =new PositionWithColor(8,5,0, PINK);
+        cards[1] =new PositionWithColor(7,5,0, LIGHTBLUE);
+        assert (!test.takeCard(0,cards,  test.getCurrentPlayerID()));
         assert (test.getCurrentPlayer() == 2);
 
         System.out.println("\nEND TEST\n");
