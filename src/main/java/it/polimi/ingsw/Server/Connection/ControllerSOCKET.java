@@ -4,8 +4,12 @@ import it.polimi.ingsw.Server.Controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+
+import java.lang.reflect.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+
+import java.rmi.RemoteException;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -15,8 +19,14 @@ public class ControllerSOCKET extends ControllerRMI{
         super(controller, port);
     }
 
+    public boolean getName(String C) {
+        System.out.println(C + " on port: "+ PORT);
+        return false;
+    }
+
     @Override
     synchronized public void connection(){
+
         ExecutorService executor = Executors.newCachedThreadPool();
         ServerSocket serverSocket;
 
@@ -52,6 +62,7 @@ public class ControllerSOCKET extends ControllerRMI{
         public void run(){
             //go here when players connect to the server
             try {
+                boolean bool;
                 Scanner in = new Scanner(socket.getInputStream());
                 PrintWriter out = new PrintWriter(socket.getOutputStream());
                 while (true){
@@ -59,7 +70,29 @@ public class ControllerSOCKET extends ControllerRMI{
                     if (line.equals("quit")) {
                         break;
                     } else {
-                        out.println("Received: " + line); //response
+                        bool = true;
+
+                        //da finire method name non dovra essere line ma un solo parametro di line
+                        String methodName = line;
+                        Method getNameMethod = null;
+                        try {
+                            getNameMethod = ControllerSOCKET.this.getClass().getMethod(methodName, String.class);
+                        } catch (NoSuchMethodException e) {
+                            bool = false;
+                        }
+
+                        System.out.println(bool);
+
+                        if(bool == true) {
+                            try {
+                                boolean name = (boolean) getNameMethod.invoke(ControllerSOCKET.this, "Mishka");
+                            } catch (IllegalAccessException | InvocationTargetException e) {
+                                bool = false;
+                                System.out.println(bool);
+                            }
+                        }
+
+                        out.println(bool); //response
                         System.out.println(line);
                         out.flush();
                     }

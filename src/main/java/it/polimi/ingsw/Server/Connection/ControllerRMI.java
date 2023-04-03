@@ -50,7 +50,7 @@ public class ControllerRMI implements ControllerRemoteInterface{
         System.err.println("Server (rmi) for newGame ready on port: " + PORT);
     }
     @Override
-    synchronized public boolean startGame(String playerID) throws RemoteException {
+    public boolean startGame(String playerID) throws RemoteException {
         System.out.println(playerID + " on port: "+ PORT);
 
         return false;
