@@ -110,7 +110,7 @@ public class MainBoard {
             if(DeprecatedBoard(positions[i]))
                 throw new InvalidPickException("Client board is deprecated");
 
-            if(!freeAdjacency(positions[i]))
+            if(!positions[i].pickable(board))
                 throw new InvalidPickException("One or more tiles do not have one side free");
 
         }
@@ -123,7 +123,7 @@ public class MainBoard {
                 if(DeprecatedBoard(positions[i]))
                     throw new InvalidPickException("Client board is deprecated");
 
-                if(!freeAdjacency(positions[i]))
+                if(positions[i].pickable(board))
                     throw new InvalidPickException("One or more tile does not have one side free");
             }
         }
@@ -137,15 +137,20 @@ public class MainBoard {
         return(!(board[position.getX()][position.getY()].getColor().equals(position.getColor())));
     }
 
+
     /**
      * @param position is the position of the card to check
      * @return true if there is a free adjacency from the selected card, false otherwise
      */
+    /*
     private boolean freeAdjacency(PositionWithColor position){
-        if(!(position.getX()==0) && !(position.getX()==4) && !(position.getY()==0)  && !(position.getY()==5))
+        if(!(position.getX()==0) && !(position.getX()==9) && !(position.getY()==0)  && !(position.getY()==9))
             return((board[position.getX()-1][position.getY()].getColor().equals(EMPTY)) || (board[position.getX()][position.getY()-1].getColor().equals(EMPTY)) ||(board[position.getX()+1][position.getY()].getColor().equals(EMPTY)) || (board[position.getX()][position.getY()+1].getColor().equals(EMPTY)));
         return true;
     }
+    */
+
+
 
     /**
      * @return true if there are no moves left on the board, false otherwise
