@@ -40,7 +40,7 @@ public class Position {
     /**
      * @param board the actual mainBoard
      * @return boolean, true if one of the adjacent of this Position are EMPTY
-     * if you call this method on an empty position it will be return false
+     * if you call this method on an empty position it will be return ture
      */
     public boolean pickable(Card[][] board){
         Card emptyCard = new Card(EMPTY);
@@ -49,6 +49,6 @@ public class Position {
         for (Position p: neighbors){
             neighborsCard.add(board[p.getX()][p.getY()]);
         }
-        return neighborsCard.contains(emptyCard) && !board[this.getX()][this.getY()].getColor().equals(EMPTY);
+        return neighborsCard.contains(emptyCard) || board[this.getX()][this.getY()].getColor().equals(EMPTY);
     }
 }
