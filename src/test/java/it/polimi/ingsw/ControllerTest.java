@@ -166,7 +166,7 @@ public class ControllerTest extends TestCase {
         assert (!test.takeCard(0,cards, test.getCurrentPlayerID()));
         assert (test.getCurrentPlayer() == 1);
 
-        //test 4 (takeCard valid)
+        //test 4 (takeCard valid) --
         System.out.println("test4: \n");
         cards = new PositionWithColor[2];
         cards[0] =new PositionWithColor(5,0,0, GREEN);
