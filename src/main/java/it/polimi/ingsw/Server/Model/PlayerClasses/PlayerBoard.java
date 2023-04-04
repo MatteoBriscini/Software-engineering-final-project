@@ -29,7 +29,13 @@ public class PlayerBoard {
     //Get Methods
 
     public Card[][] getBoard() {
-        return board;
+        Card[][] card = new Card[5][6];
+        for(int x=0; x<5; x++){
+            for(int y=0; y<6; y++){
+                card[x][y] = new Card(board[x][y].getColor());
+            }
+        }
+        return card;
     }
 
 
