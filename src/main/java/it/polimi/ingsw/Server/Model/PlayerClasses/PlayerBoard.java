@@ -26,6 +26,15 @@ public class PlayerBoard {
         }
     }
 
+    public PlayerBoard(Card[][] board){
+        this.board = new Card[5][6];
+        for (int i = 0; i < 5; i++){
+            for (int j = 0; j < 6; j++){
+                this.board[i][j] = board[i][j];
+            }
+        }
+    }
+
     //Get Methods
 
     public Card[][] getBoard() {
