@@ -38,32 +38,32 @@ public class PositionTest extends TestCase {
         assert (result[0].getY() == 0);
         assert (result[1].getY() == 1);
 
-        test = new Position(4, 0);
+        test = new Position(8, 0);
         result = test.getNeighbors();
         assert (result.length == 2);
-        assert (result[0].getX() == 3);
-        assert (result[1].getX() == 4);
+        assert (result[0].getX() == 7);
+        assert (result[1].getX() == 8);
 
         assert (result[0].getY() == 0);
         assert (result[1].getY() == 1);
 
-        test = new Position(0, 5);
+        test = new Position(0, 8);
         result = test.getNeighbors();
         assert (result.length == 2);
         assert (result[0].getX() == 0);
         assert (result[1].getX() == 1);
 
-        assert (result[0].getY() == 4);
-        assert (result[1].getY() == 5);
+        assert (result[0].getY() == 7);
+        assert (result[1].getY() == 8);
 
-        test = new Position(4, 5);
+        test = new Position(8, 8);
         result = test.getNeighbors();
         assert (result.length == 2);
-        assert (result[0].getX() == 3);
-        assert (result[1].getX() == 4);
+        assert (result[0].getX() == 7);
+        assert (result[1].getX() == 8);
 
-        assert (result[0].getY() == 5);
-        assert (result[1].getY() == 4);
+        assert (result[0].getY() == 8);
+        assert (result[1].getY() == 7);
 
 
         System.out.println("\nEND TEST\n");
