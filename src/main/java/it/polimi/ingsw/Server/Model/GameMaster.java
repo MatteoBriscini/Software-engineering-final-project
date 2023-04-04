@@ -136,7 +136,7 @@ public class GameMaster {
         }else if(commonGoalID == rainbowRowsAndColumnsGoalsRange[1]+1){
             commonGoals[n] = new SquaresGoal();
         } else if(commonGoalID == rainbowRowsAndColumnsGoalsRange[1]+2){
-            commonGoals[n] = new StairsPatternTarget();
+            commonGoals[n] = new StairsPatternGoal();
         }
     }
 
