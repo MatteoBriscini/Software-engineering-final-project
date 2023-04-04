@@ -23,6 +23,7 @@ public class PlayerTarget {
     //constructor of copies
     public PlayerTarget(PlayerTarget playerTarget){
         this.x = playerTarget.x;
+
         this.y = playerTarget.y;
         this.color = playerTarget.color;
     }
