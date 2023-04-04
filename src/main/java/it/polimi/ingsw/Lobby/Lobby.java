@@ -16,7 +16,7 @@ public class Lobby {
 
     private ArrayList<Controller> activeGames = new ArrayList<>();
 
-    private String loginJSONURL;
+    private static String loginJSONURL;
 
     private ArrayList<String[]> playersInGames = new ArrayList<>();
 
@@ -27,7 +27,7 @@ public class Lobby {
         ArrayList<String[]> games;
         boolean f = false;
 
-        String path = "src/main/json/.json";   //file path
+        String path = loginJSONURL;   //file path
         FileReader fileJson = null;      //file executable
         try {
             fileJson = new FileReader(path);
@@ -73,9 +73,9 @@ public class Lobby {
 
     }
 
-    public synchronized void registration(){
+    public synchronized void registration(PlayerLogin loginInfo){
 
-        
+
 
     }
 
