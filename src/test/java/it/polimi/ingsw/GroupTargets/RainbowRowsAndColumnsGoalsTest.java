@@ -1,13 +1,14 @@
 package it.polimi.ingsw.GroupTargets;
 
-import it.polimi.ingsw.Cards.Card;
-import it.polimi.ingsw.Cards.CardColor;
-import it.polimi.ingsw.Exceptions.ConstructorException;
-import it.polimi.ingsw.Exceptions.NoSpaceException;
-import it.polimi.ingsw.PlayerClasses.PlayerBoard;
+import it.polimi.ingsw.Server.Model.Cards.Card;
+import it.polimi.ingsw.Server.Model.Cards.CardColor;
+import it.polimi.ingsw.Server.Exceptions.ConstructorException;
+import it.polimi.ingsw.Server.Exceptions.NoSpaceException;
+import it.polimi.ingsw.Server.Model.PlayerClasses.PlayerBoard;
+import it.polimi.ingsw.Server.Model.GroupGoals.RainbowRowsAndColumnsGoals;
 import junit.framework.TestCase;
 
-import static it.polimi.ingsw.Cards.CardColor.*;
+import static it.polimi.ingsw.Server.Model.Cards.CardColor.*;
 
 public class RainbowRowsAndColumnsGoalsTest extends TestCase {
     private RainbowRowsAndColumnsGoals test5 = new RainbowRowsAndColumnsGoals(6,1,3, 4);

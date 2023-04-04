@@ -1,0 +1,9 @@
+{
+  "timeout": 180,
+  "numberOfPossibleCommonGoals": 12,
+  "numberOfPossiblePrivateGoal": 12,
+  "commonGoalNumber": 2,
+  "maxPointCommonGoals": 8,
+  "minPlayerNumber": 2,
+  "maxPlayerNumber": 4
+}

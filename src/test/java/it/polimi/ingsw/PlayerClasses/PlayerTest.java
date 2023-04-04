@@ -1,14 +1,15 @@
 package it.polimi.ingsw.PlayerClasses;
 
-import it.polimi.ingsw.PlayerClasses.*;
-import it.polimi.ingsw.Cards.Card;
-import it.polimi.ingsw.Cards.CardColor;
-import it.polimi.ingsw.Exceptions.NoSpaceException;
+import it.polimi.ingsw.Server.Model.Cards.Card;
+import it.polimi.ingsw.Server.Exceptions.NoSpaceException;
+import it.polimi.ingsw.Server.Model.PlayerClasses.Player;
+import it.polimi.ingsw.Server.Model.PlayerClasses.PlayerBoard;
+import it.polimi.ingsw.Server.Model.PlayerClasses.PlayerTarget;
 import junit.framework.TestCase;
 
 import java.io.FileNotFoundException;
 
-import static it.polimi.ingsw.Cards.CardColor.*;
+import static it.polimi.ingsw.Server.Model.Cards.CardColor.*;
 
 public class PlayerTest extends TestCase {
     private Player player = new Player("player");
@@ -261,7 +262,7 @@ public class PlayerTest extends TestCase {
         }
 
         //print library
-        board=playerBoard.getBoard();
+        board=player.getBoard();
         for(int y=5;y>=0;y--){
             System.out.println(board[0][y].getColor().toString()+" "+board[1][y].getColor().toString()+" "+board[2][y].getColor().toString()+" "+board[3][y].getColor().toString()+" "+board[4][y].getColor().toString()+" ");
         }
@@ -393,7 +394,7 @@ public class PlayerTest extends TestCase {
         }
 
         //print library
-        board=playerBoard.getBoard();
+        board=player.getBoard();
         for(int y=5;y>=0;y--){
             System.out.println(board[0][y].getColor().toString()+" "+board[1][y].getColor().toString()+" "+board[2][y].getColor().toString()+" "+board[3][y].getColor().toString()+" "+board[4][y].getColor().toString()+" ");
         }
@@ -426,7 +427,7 @@ public class PlayerTest extends TestCase {
 
 
         //print library
-        board=playerBoard.getBoard();
+        board=player.getBoard();
         for(int y=5;y>=0;y--){
             System.out.println(board[0][y].getColor().toString()+" "+board[1][y].getColor().toString()+" "+board[2][y].getColor().toString()+" "+board[3][y].getColor().toString()+" "+board[4][y].getColor().toString()+" ");
         }
@@ -544,7 +545,7 @@ public class PlayerTest extends TestCase {
 
 
         //print library
-        board=playerBoard.getBoard();
+        board=player.getBoard();
         for(int y=5;y>=0;y--){
             System.out.println(board[0][y].getColor().toString()+" "+board[1][y].getColor().toString()+" "+board[2][y].getColor().toString()+" "+board[3][y].getColor().toString()+" "+board[4][y].getColor().toString()+" ");
         }

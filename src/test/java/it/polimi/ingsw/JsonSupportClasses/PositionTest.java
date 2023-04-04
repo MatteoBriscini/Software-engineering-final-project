@@ -1,13 +1,12 @@
 package it.polimi.ingsw.JsonSupportClasses;
 
-import it.polimi.ingsw.Cards.Card;
-import it.polimi.ingsw.Cards.CardColor;
+import it.polimi.ingsw.Server.JsonSupportClasses.Position;
+import it.polimi.ingsw.Server.Model.Cards.Card;
+import it.polimi.ingsw.Server.Model.Cards.CardColor;
 import junit.framework.TestCase;
 
-import java.util.Arrays;
-
-import static it.polimi.ingsw.Cards.CardColor.BLUE;
-import static it.polimi.ingsw.Cards.CardColor.EMPTY;
+import static it.polimi.ingsw.Server.Model.Cards.CardColor.BLUE;
+import static it.polimi.ingsw.Server.Model.Cards.CardColor.EMPTY;
 
 public class PositionTest extends TestCase {
 
