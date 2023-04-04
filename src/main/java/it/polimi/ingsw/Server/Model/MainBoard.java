@@ -52,11 +52,14 @@ public class MainBoard {
     }
 
     public Card[][] getBoard() {
-        return board;
+        Card[][] tmpBoard=new Card[9][9];
 
-
-
-        //ritornare copia di board, non board
+        for(int x=0;x<9;x++) {
+            for (int y = 0; y < 9; y++) {
+                tmpBoard[x][y] = new Card(board[x][y].getColor());
+            }
+        }
+        return tmpBoard;
     }
 
     /**
