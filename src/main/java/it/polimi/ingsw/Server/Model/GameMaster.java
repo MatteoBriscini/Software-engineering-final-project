@@ -39,6 +39,9 @@ public class GameMaster {
         }
     }
 
+    /**
+     * @throws FileNotFoundException used when file is not found
+     */
     private void jsonCreate() throws FileNotFoundException{
         Gson gson = new Gson();
 
@@ -133,7 +136,7 @@ public class GameMaster {
         }else if(commonGoalID == rainbowRowsAndColumnsGoalsRange[1]+1){
             commonGoals[n] = new SquaresGoal();
         } else if(commonGoalID == rainbowRowsAndColumnsGoalsRange[1]+2){
-            commonGoals[n] = new StairsPatternTarget();
+            commonGoals[n] = new StairsPatternGoal();
         }
     }
 
@@ -242,6 +245,9 @@ public class GameMaster {
         return commonGoals[commonGoalID].check(players.get(currentPlayer).getBoard());
     }
 
+    /**
+     * @param position is the position of the card needed
+     */
     public void fixBoard(PositionWithColor[] position){
         mainBoard.fixBoard(position);
     }
