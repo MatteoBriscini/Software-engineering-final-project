@@ -183,13 +183,13 @@ public class Controller {
             game.setPlayersArray(tmpPlayers);
 
             //set commun goal
-            for (int i=1; i<numberOfPossibleCommonGoals; i++) numberList.add(i);
+            for (int i=0; i<numberOfPossibleCommonGoals; i++) numberList.add(i);
             Collections.shuffle(numberList);
             int[] commonGoalIDArray = this.setCommonGoals(numberList, n);
 
             //set private goal
             numberList.clear();
-            for (int i=1; i<numberOfPossiblePrivateGoals; i++) numberList.add(i);
+            for (int i=0; i<numberOfPossiblePrivateGoals; i++) numberList.add(i);
             Collections.shuffle(numberList);
             int[] privateGoalIDArray = this.setPrivateGoals(numberList, m);
 
@@ -208,7 +208,7 @@ public class Controller {
     /**
      * @param numberList shuffle array list of int
      * @param n random start index in the numberList
-     * @return the array containing id for all commong goals
+     * @return the array containing id for all common goals
      */
     private int[] setCommonGoals(ArrayList<Integer> numberList,int n){
         int[] commonGoalArray = new int[commonGoalNumber];
