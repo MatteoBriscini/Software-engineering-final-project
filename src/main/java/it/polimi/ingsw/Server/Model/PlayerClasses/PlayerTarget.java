@@ -11,6 +11,23 @@ public class PlayerTarget {
     private int[] y;
     private String[] color;
 
+    public PlayerTarget(int[] x, int[] y, String[] color) {
+        this.x = x;
+
+        this.y = y;
+
+        this.color = color;
+    }
+
+
+    //constructor of copies
+    public PlayerTarget(PlayerTarget playerTarget){
+        this.x = playerTarget.x;
+        this.y = playerTarget.y;
+        this.color = playerTarget.color;
+    }
+
+
 
     //Get methods
 
