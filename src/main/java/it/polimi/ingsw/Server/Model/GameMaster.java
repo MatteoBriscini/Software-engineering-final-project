@@ -39,6 +39,9 @@ public class GameMaster {
         }
     }
 
+    /**
+     * @throws FileNotFoundException used when file is not found
+     */
     private void jsonCreate() throws FileNotFoundException{
         Gson gson = new Gson();
 
@@ -242,6 +245,9 @@ public class GameMaster {
         return commonGoals[commonGoalID].check(players.get(currentPlayer).getBoard());
     }
 
+    /**
+     * @param position is the position of the card needed
+     */
     public void fixBoard(PositionWithColor[] position){
         mainBoard.fixBoard(position);
     }
