@@ -171,6 +171,7 @@ public class ControllerTest extends TestCase {
         cards = new PositionWithColor[2];
         cards[0] =new PositionWithColor(5,0,0, GREEN);
         cards[1] =new PositionWithColor(5,1,0, BLUE);
+
         assert (test.takeCard(0,cards,  test.getCurrentPlayerID()));
         assert (test.getCurrentPlayer() == 2);
 

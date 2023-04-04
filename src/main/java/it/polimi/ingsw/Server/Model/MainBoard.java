@@ -113,8 +113,10 @@ public class MainBoard {
             if(DeprecatedBoard(positions[i]))
                 throw new InvalidPickException("Client board is deprecated");
 
+
             if(!positions[i].pickable(board))
                 throw new InvalidPickException("One or more tiles do not have one side free");
+
 
         }
         if(valid==0) {
@@ -126,7 +128,8 @@ public class MainBoard {
                 if(DeprecatedBoard(positions[i]))
                     throw new InvalidPickException("Client board is deprecated");
 
-                if(positions[i].pickable(board))
+
+                if(!positions[i].pickable(board))
                     throw new InvalidPickException("One or more tile does not have one side free");
             }
         }
@@ -159,11 +162,11 @@ public class MainBoard {
      * @return true if there are no moves left on the board, false otherwise
      */
     private boolean noMovesLeft(){
-        for(int x=0; x<5; x++) {
-            for (int y = 0; y < 6; y++) {
-                if (x < 4 && !board[x][y].getColor().equals(EMPTY) && !board[x + 1][y].getColor().equals(EMPTY))
+        for(int x=0; x<9; x++) {
+            for (int y = 0; y < 9; y++) {
+                if (x < 8 && !board[x][y].getColor().equals(EMPTY) && !board[x + 1][y].getColor().equals(EMPTY))
                     return false;
-                if (y < 5 && !board[x][y].getColor().equals(EMPTY) && !board[x][y + 1].getColor().equals(EMPTY))
+                if (y < 8 && !board[x][y].getColor().equals(EMPTY) && !board[x][y + 1].getColor().equals(EMPTY))
                     return false;
             }
         }
