@@ -13,9 +13,13 @@ public class LobbyRMI implements LobbyRemoteInterface{
 
     protected final int PORT;
 
+    protected final String cntType;
+
     public LobbyRMI(int port){
         this.PORT = port;
+        this.cntType = "RMI";
         this.connection();
+
     }
 
     synchronized public void connection(){
