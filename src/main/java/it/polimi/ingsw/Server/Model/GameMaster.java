@@ -128,15 +128,18 @@ public class GameMaster {
         }else if(commonGoalID >= oneColourPatternGoalsRange[0] && commonGoalID <= oneColourPatternGoalsRange[1]){
             minValue = commonGoalID-(oneColourPatternGoalsRange[0]-1);
             commonGoals[n] = new OneColorPatternGoals(oneColourPatternGoalsConfig[3-minValue]);
-        }else if(commonGoalID >= rainbowRowsAndColumnsGoalsRange[0] && commonGoalID < rainbowRowsAndColumnsGoalsRange[1]){
-            minValue = commonGoalID-(rainbowRowsAndColumnsGoalsRange[0]-1);
+        }else if(commonGoalID >= rainbowRowsAndColumnsGoalsRange[0] && commonGoalID <= rainbowRowsAndColumnsGoalsRange[1]){
+            minValue = commonGoalID-(rainbowRowsAndColumnsGoalsRange[0]);
+            System.out.println("max: " + (12-(minValue*4)));
             commonGoals[n] = new RainbowRowsAndColumnsGoals(rainbowRowsAndColumnsGoalsConfig[12-(minValue*4)],rainbowRowsAndColumnsGoalsConfig[13-(minValue*4)],rainbowRowsAndColumnsGoalsConfig[14-(minValue*4)],rainbowRowsAndColumnsGoalsConfig[15-(minValue*4)]);
-        }else if(commonGoalID == rainbowRowsAndColumnsGoalsRange[1]){
-            commonGoals[n] = new EightEqualTarget();
         }else if(commonGoalID == rainbowRowsAndColumnsGoalsRange[1]+1){
+            commonGoals[n] = new EightEqualTarget();
+        }else if(commonGoalID == rainbowRowsAndColumnsGoalsRange[1]+2){
             commonGoals[n] = new SquaresGoal();
-        } else if(commonGoalID == rainbowRowsAndColumnsGoalsRange[1]+2){
+        } else if(commonGoalID == rainbowRowsAndColumnsGoalsRange[1]+3){
             commonGoals[n] = new StairsPatternGoal();
+        } else {
+            throw new ConstructorException("invalid commonGoalID");
         }
     }
 
