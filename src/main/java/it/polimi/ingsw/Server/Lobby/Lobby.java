@@ -1,20 +1,22 @@
-package it.polimi.ingsw.Lobby;
+package it.polimi.ingsw.Server.Lobby;
 
 import com.google.gson.Gson;
-import it.polimi.ingsw.Controller;
-import it.polimi.ingsw.PlayerClasses.PlayerTarget;
+//import it.polimi.ingsw.Controller;
+import it.polimi.ingsw.Server.Connection.LobbyRMI;
 
 import javax.security.auth.login.LoginException;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class Lobby {
 
     //Attributes
 
-    private ArrayList<Controller> activeGames = new ArrayList<>();
+
+    private LobbyRMI RMI = new LobbyRMI(1234);
+
+    //private ArrayList<Controller> activeGames = new ArrayList<>();
 
     private static String loginJSONURL;
 

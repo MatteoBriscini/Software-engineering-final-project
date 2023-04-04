@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Lobby;
+package it.polimi.ingsw.Server.Lobby;
 
 public class PlayerLogin {
 
@@ -20,3 +20,11 @@ public class PlayerLogin {
         return password;
     }
 }
+/*
+* JsonArray asdasdas = new Gson()
+* JsonObject asddasd = asdasdada.get().getAsJsonObject
+*
+* asdad.get("parametro").getAsString()
+*
+*
+* */
