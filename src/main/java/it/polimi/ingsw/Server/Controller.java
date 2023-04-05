@@ -2,8 +2,7 @@ package it.polimi.ingsw.Server;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import it.polimi.ingsw.Server.Connection.ControllerRMI;
-import it.polimi.ingsw.Server.Connection.ControllerSOCKET;
+import it.polimi.ingsw.Server.Connection.ConnectionControllerManager;
 import it.polimi.ingsw.Server.Exceptions.*;
 import it.polimi.ingsw.Server.Model.Cards.Card;
 import it.polimi.ingsw.Server.Model.GameMaster;
@@ -23,7 +22,6 @@ public class Controller {
     GameMaster game = new GameMaster();
     int playerNum = 0;
     int currentPlayer = -1;  //start game put this to zero to enable the game
-    final ArrayList<Boolean> activePlayers = new ArrayList<>();
     boolean alreadyStarted = false;
     boolean endGame = false; //stop playing phase in end game
     JsonObject mainBoardConfig = new JsonObject();
@@ -32,8 +30,8 @@ public class Controller {
     private Thread endGameThread;
 
     //connection
-    ControllerRMI rmi;
-    ControllerSOCKET socket;
+    ConnectionControllerManager controllerManager = new ConnectionControllerManager();
+    final ArrayList<Boolean> activePlayers = new ArrayList<>();
 
     //configuration value for controller
     private int timeout; //wait for player time (in seconds)
@@ -123,23 +121,35 @@ public class Controller {
     }
     public Card[][] getMainBoard(){return game.getMainBoard();}
     /**************************************************************************
-     ************************************************** disconnect management *
-     *************************************************************************/
+     ************************************************** connection management *
+     * ************************************************************************
+     * *
+     * create new connection class for controller when necessary
+     * @param PORT available port
+     * @param connectionType rmi or socket
+     * @return true if the new port will be used false in all other case
+     * @throws ConnectionControllerManagerException if connection type has an invalid parameters
+     */
+    public boolean addClient(int PORT, String connectionType) throws ConnectionControllerManagerException {
+       return controllerManager.addClient(PORT, connectionType, this);
+    }
 
-    public void createRMIConnection(int PORT){
-        rmi = new ControllerRMI(this, PORT);
-    }
-    public void createSOCKETConnection(int PORT){
-        socket = new ControllerSOCKET(this, PORT);
-    }
-    public void setPlayerOffline(int i){
-        synchronized (activePlayers) {
-            activePlayers.set(i, false);
+    synchronized public void setPlayerOffline(String playerID){
+        ArrayList<Player> players = game.getPlayerArray();
+        for (int i = 0; i<players.size(); i++){
+            if(players.get(i).getPlayerID().equals(playerID)){
+                activePlayers.set(i, false);
+                return;
+            }
         }
     }
-    public void setPlayerOnline(int i){
-        synchronized (activePlayers) {
-            activePlayers.set(i, true);
+    synchronized public void setPlayerOnline(String playerID){
+        ArrayList<Player> players = game.getPlayerArray();
+        for (int i = 0; i<players.size(); i++){
+            if(players.get(i).getPlayerID().equals(playerID)){
+                activePlayers.set(i, true);
+                return;
+            }
         }
     }
 
@@ -154,7 +164,7 @@ public class Controller {
     synchronized public void addNewPlayer(String playerID) throws addPlayerToGameException {
         if(playerNum < maxPlayerNumber && !alreadyStarted){
             playerNum = game.addNewPlayer(playerID);
-            activePlayers.add(true);
+            activePlayers.add(true); //there is new client online
         } else {
             if(alreadyStarted) throw new addPlayerToGameException("try to add player in already started game");
             throw new addPlayerToGameException("try to add player in full game");
@@ -376,13 +386,13 @@ public class Controller {
      */
     private void updateAllCommonGoal(){
         for(int i = 0; i<commonGoalNumber ; i+=1){
-            ArrayList<Player> alreadyScored = new ArrayList<>();
+            ArrayList<String> alreadyScored = game.getAlreadyScored(i);
 
             //System.out.println(tmp.size());
-            if (!alreadyScored.contains(game.getPlayerArray().get(currentPlayer)) && game.checkCommonGoal(i, currentPlayer)){
+            if (!alreadyScored.contains(game.getPlayerArray().get(currentPlayer).getPlayerID()) && game.checkCommonGoal(i, currentPlayer)){
 
                     //update the list of player has already reached the goal
-                    alreadyScored.add(game.getPlayerArray().get(currentPlayer));
+                    alreadyScored.add(game.getPlayerArray().get(currentPlayer).getPlayerID());
                     game.setAlreadyScored(alreadyScored, i);
 
                     int point = maxPointCommonGoals - alreadyScored.size() * 2;

@@ -6,13 +6,13 @@ import it.polimi.ingsw.Server.Model.PlayerClasses.Player;
 import java.util.ArrayList;
 
 public abstract class CommonGoal {
-    private ArrayList<Player> alreadyScored;
+    private ArrayList<String> alreadyScored = new ArrayList<>();
 
-    public ArrayList<Player> getAlreadyScored() {
+    public ArrayList<String> getAlreadyScored(){
         return alreadyScored;
     }
 
-    public void setAlreadyScored(ArrayList<Player> alreadyScored) {
+    public void setAlreadyScored(ArrayList<String> alreadyScored) {
         this.alreadyScored = alreadyScored;
     }
 

@@ -226,8 +226,7 @@ public class GameMaster {
      * @param commonGoalID is the identifier of the common goal
      * @return return the info about the "already scored" goals
      */
-    public ArrayList<Player> getAlreadyScored (int commonGoalID){
-        System.out.println(commonGoals[0]);
+    public ArrayList<String> getAlreadyScored (int commonGoalID){
         return commonGoals[commonGoalID].getAlreadyScored();
     }
 
@@ -235,7 +234,7 @@ public class GameMaster {
      * @param alreadyScored indicate if the goal was already scored and how many times
      * @param commonGoalID is the identifier of the common goal
      */
-    public void setAlreadyScored(ArrayList<Player> alreadyScored, int commonGoalID){
+    public void setAlreadyScored(ArrayList<String> alreadyScored, int commonGoalID){
         commonGoals[commonGoalID].setAlreadyScored(alreadyScored);
     }
 

@@ -14,17 +14,16 @@ import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ControllerSOCKET extends ControllerRMI{
+public class ControllerSOCKET extends ConnectionController {
     public ControllerSOCKET(Controller controller, int port){
         super(controller, port);
+        this.connection();
     }
 
-    public boolean getName(String C) {
-        System.out.println(C + " on port: "+ PORT);
-        return false;
+    public void notifyActivePlayer(int activePlayerID){
+
     }
 
-    @Override
     synchronized public void connection(){
 
         ExecutorService executor = Executors.newCachedThreadPool();
@@ -81,8 +80,6 @@ public class ControllerSOCKET extends ControllerRMI{
                             bool = false;
                         }
 
-                        System.out.println(bool);
-
                         if(bool == true) {
                             try {
                                 boolean name = (boolean) getNameMethod.invoke(ControllerSOCKET.this, "Mishka");
@@ -92,8 +89,7 @@ public class ControllerSOCKET extends ControllerRMI{
                             }
                         }
 
-                        out.println(bool); //response
-                        System.out.println(line);
+                        out.println(bool); //response{
                         out.flush();
                     }
                 }
