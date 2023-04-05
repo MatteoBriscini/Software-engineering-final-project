@@ -81,7 +81,7 @@ public class Player {
     }
 
     public PlayerTarget getPersonalTarget() {
-        return personalTarget;
+        return new PlayerTarget(personalTarget);
     }
 
     //Other Methods

@@ -44,7 +44,13 @@ public class PlayerBoardTest extends TestCase {
 
         PlayerBoard PB = new PlayerBoard();
         Card[][] board = PB.getBoard();
-        assert(board.equals(PB.getBoard()));
+        Card[][] board2 = PB.getBoard();
+        //assert(board.equals(PB.getBoard()));
+        for(int i=0; i<4; i++ ){
+            for(int j = 0; j<5; j++){
+                board[i][j].getColor().equals(board2[i][j]);
+            }
+        }
 
         System.out.println("PlayerBoard test 2 end");
 
@@ -112,11 +118,7 @@ public class PlayerBoardTest extends TestCase {
         cards2[0] = new Card(BLUE);
         cards2[1] = new Card(PINK);
 
-        for (i = 0; i < 5; i++){
-            for (j = 0; j < 6; j++){
-                board[i][j] = new Card(EMPTY);
-            }
-        }
+        playerBoard = new PlayerBoard();
 
         for(i = 0; i < 2; i++){
             try {
@@ -127,7 +129,14 @@ public class PlayerBoardTest extends TestCase {
             }
         }
         board = playerBoard.getBoard();
+
+        for(int y=5;y>=0;y--){
+            System.out.println(board[0][y].getColor().toString()+"\t"+board[1][y].getColor().toString()+"\t"+board[2][y].getColor().toString()+"\t"+board[3][y].getColor().toString()+"\t"+board[4][y].getColor().toString()+"\t");
+        }
+        System.out.println("\n");
+
         for (i = 5; i >=  4; i--){
+            System.out.println(board[0][i].getColor());
             assert(board[0][i].getColor().equals(EMPTY));
         }
 

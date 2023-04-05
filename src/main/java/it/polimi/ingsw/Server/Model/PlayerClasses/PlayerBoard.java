@@ -26,10 +26,25 @@ public class PlayerBoard {
         }
     }
 
+    public PlayerBoard(Card[][] board){
+        this.board = new Card[5][6];
+        for (int i = 0; i < 5; i++){
+            for (int j = 0; j < 6; j++){
+                this.board[i][j] = board[i][j];
+            }
+        }
+    }
+
     //Get Methods
 
     public Card[][] getBoard() {
-        return board;
+        Card[][] card = new Card[5][6];
+        for(int x=0; x<5; x++){
+            for(int y=0; y<6; y++){
+                card[x][y] = new Card(board[x][y].getColor());
+            }
+        }
+        return card;
     }
 
 

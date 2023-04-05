@@ -4,13 +4,13 @@ import it.polimi.ingsw.Server.Model.Cards.Card;
 
 import static it.polimi.ingsw.Server.Model.Cards.CardColor.EMPTY;
 
-public class StairsPatternTarget extends CommonGoal {
+public class StairsPatternGoal extends CommonGoal {
 
     public boolean check(Card[][] board){
         int x=0;
         int y=5;
         while(true){
-            if(!(board[x][y].getColor().equals(EMPTY)) && board[x+1][y].getColor().equals(EMPTY)){
+            if(!(board[x][y].getColor().equals(EMPTY)) && (x==4 || board[x+1][y].getColor().equals(EMPTY))){
                 if(x<4){
                     x++;
                     y--;
@@ -26,7 +26,7 @@ public class StairsPatternTarget extends CommonGoal {
                     y=0;
                     while(true){
                         if(!(board[x][y].getColor().equals(EMPTY))){
-                            if(board[x][y+1].getColor().equals(EMPTY)){
+                            if(y==5 || board[x][y+1].getColor().equals(EMPTY)){
                                 if(x<4){
                                     x++;
                                     y++;

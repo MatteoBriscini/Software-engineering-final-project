@@ -183,13 +183,13 @@ public class Controller {
             game.setPlayersArray(tmpPlayers);
 
             //set commun goal
-            for (int i=1; i<numberOfPossibleCommonGoals; i++) numberList.add(i);
+            for (int i=0; i<numberOfPossibleCommonGoals; i++) numberList.add(i);
             Collections.shuffle(numberList);
             int[] commonGoalIDArray = this.setCommonGoals(numberList, n);
 
             //set private goal
             numberList.clear();
-            for (int i=1; i<numberOfPossiblePrivateGoals; i++) numberList.add(i);
+            for (int i=0; i<numberOfPossiblePrivateGoals; i++) numberList.add(i);
             Collections.shuffle(numberList);
             int[] privateGoalIDArray = this.setPrivateGoals(numberList, m);
 
@@ -208,7 +208,7 @@ public class Controller {
     /**
      * @param numberList shuffle array list of int
      * @param n random start index in the numberList
-     * @return the array containing id for all commong goals
+     * @return the array containing id for all common goals
      */
     private int[] setCommonGoals(ArrayList<Integer> numberList,int n){
         int[] commonGoalArray = new int[commonGoalNumber];
@@ -330,7 +330,6 @@ public class Controller {
         if(!endGame && alreadyStarted && game.getPlayerArray().get(currentPlayer).getPlayerID().equals(playerID)){
             //verify the numbers of cards
             if (cards.length <= 0 || cards.length>3){
-
                 return false;               //devo comunucare al client che la mossa è errata ******************************************
             }
 
@@ -340,6 +339,7 @@ public class Controller {
                     if(!game.fillMainBoard(allowedPositionArray)) this.endGame();
                 }
             } catch (InvalidPickException e) {
+
                 System.out.println(e.toString());
                 return false;               //devo comunucare al client che la mossa è errata ******************************************
             }

@@ -46,6 +46,8 @@ public class Position {
         Card emptyCard = new Card(EMPTY);
         HashSet<Card> neighborsCard = new HashSet<>();
         Position[] neighbors = getNeighbors();
+
+
         for (Position p: neighbors){
             neighborsCard.add(board[p.getX()][p.getY()]);
         }
