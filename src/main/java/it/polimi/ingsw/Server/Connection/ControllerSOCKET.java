@@ -1,6 +1,8 @@
 package it.polimi.ingsw.Server.Connection;
 
 import it.polimi.ingsw.Server.Controller;
+import it.polimi.ingsw.Shared.Cards.Card;
+import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -10,6 +12,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -51,10 +54,59 @@ public class ControllerSOCKET extends ConnectionController {
         executor.shutdown();
     }
 
+    /*************************************************************************
+     ************************************************** OUT method ***********
+     * ***********************************************************************
+     */
     @Override
     public void notifyActivePlayer(String activePlayerID) {
 
     }
+
+    @Override
+    public void sendPlayerList(String[] players) {
+
+    }
+
+    @Override
+    public void sendPlayersNUmber(int playersNumber) {
+
+    }
+
+    @Override
+    public void sendMainBoard(Card[][] mainBoard) {
+
+    }
+
+    @Override
+    public void addCardToClientBoard(String playerID, int column, Card[] cards) {
+
+    }
+
+    @Override
+    public void dellCardFromMainBoard(PositionWithColor[] cards) {
+
+    }
+
+    @Override
+    public void sendAllPlayerBoard(ArrayList<Card[][]> playerBoards) {
+
+    }
+
+    @Override
+    public void sendAllCommonGoal(int[] commonGoalID) {
+
+    }
+
+    @Override
+    public void sendPrivateGoal(PositionWithColor[] cards, String playerID) {
+
+    }
+
+    /***********************************************************************************
+     ************************************************** MultiClientSocketGame***********
+     * *********************************************************************************
+     */
 
     private class MultiClientSocketGame implements Runnable{
         private final Socket socket;

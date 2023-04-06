@@ -57,7 +57,7 @@ public class ControllerRMI extends ConnectionController implements ControllerRem
      ************************************************** IN method ***********
      * ***********************************************************************
      * *
-     * client RMI join the game
+     * new client join the party :)
      * @param client_ref ref to remote obj
      * @return true if the ref can be added false in all other case
      * @throws RemoteException if the server isn't available
@@ -75,7 +75,7 @@ public class ControllerRMI extends ConnectionController implements ControllerRem
     }
 
     /**
-     * client RMI quit friendly connection
+     * client left the party :(
      * @param client_ref  ref to remote obj
      * @return true if the ref can be removed false in all other case
      * @throws RemoteException if the server isn't available
@@ -143,5 +143,19 @@ public class ControllerRMI extends ConnectionController implements ControllerRem
         sendCommand(command);
     }
 
+    public void sendAllPlayerBoard(ArrayList<Card[][]> playerBoards){
+        Command command = new SendAllPlayerBoardCommand(playerBoards);
+        sendCommand(command);
+    }
+
+    public void sendAllCommonGoal(int[] commonGoalID){
+        Command command = new SendAllCommonGoalCommand(commonGoalID);
+        sendCommand(command);
+    }
+
+    public void sendPrivateGoal(PositionWithColor[] cards,String playerID){
+        Command command = new SendPrivateGoalCommand(cards,playerID);
+        sendCommand(command);
+    }
 
 }
