@@ -45,8 +45,18 @@ public class MainBoardTest extends TestCase {
             System.out.println(board[0][y].getColor().toString()+"\t"+board[1][y].getColor().toString()+"\t"+board[2][y].getColor().toString()+"\t"+board[3][y].getColor().toString()+"\t"+board[4][y].getColor().toString()+"\t"+board[5][y].getColor().toString()+"\t"+board[6][y].getColor().toString()+"\t"+board[7][y].getColor().toString()+"\t"+board[8][y].getColor().toString());
         }
 
+        rm2[0]=new PositionWithColor(4,1,0,board[4][1].getColor());
+        rm2[1]= new PositionWithColor(5,1,0,board[5][1].getColor());
+
+        try {
+            mboard.removeCard(rm2);
+        }catch (InvalidPickException e){
+            assert false;
+        }
+
+
         System.out.println("\n\n\n\n\n");
-        mboard.fillBoard(position);
+        bool=mboard.fillBoard(position);
         assert bool;
         board=mboard.getBoard();
         for(int y=8;y>=0;y--){
@@ -197,5 +207,6 @@ public class MainBoardTest extends TestCase {
         }
 
     }
+
 
 }

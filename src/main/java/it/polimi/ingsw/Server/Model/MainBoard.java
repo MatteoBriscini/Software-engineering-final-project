@@ -67,20 +67,23 @@ public class MainBoard {
      * @return false if there are no cards left in the bag, true otherwise
      */
     public boolean fillBoard(Position[] positions){
-        boolean end;
-
-        for( Position a : positions){
-            if(!board[a.getX()][a.getY()].getColor().equals(EMPTY)){
-                PositionWithColor p= new PositionWithColor(a.getX(),a.getY(),0,board[a.getX()][a.getY()].getColor());
-                try {
-                    removeCard(new PositionWithColor[]{p});
-                }catch (InvalidPickException e){}
+        boolean remainingCards=false;
+            for (Position a : positions) {
+                if (!board[a.getX()][a.getY()].getColor().equals(EMPTY)) {
+                    PositionWithColor p = new PositionWithColor(a.getX(), a.getY(), 0, board[a.getX()][a.getY()].getColor());
+                    removeAndUpdate(new PositionWithColor[]{p});
+                }
             }
-            end=insert(a);
-            if(!end)
-                return end;
-        }
-        return true;
+
+            for(Position a : positions){
+                if(colorsList.size()>0) {
+                    remainingCards = true;
+                    insert(a);
+                }
+                else
+                    break;
+            }
+        return remainingCards;
     }
 
     /**
@@ -92,7 +95,8 @@ public class MainBoard {
 
         validPick(positions);
 
-        removeAndUpdate(positions);
+        for(PositionWithColor p : positions)
+            board[p.getX()][p.getY()]=new Card(EMPTY);
 
         return noMovesLeft();
 
@@ -192,14 +196,12 @@ public class MainBoard {
      * this method picks a random card from the bag, put it in the selected position on the board and then removes the
      * card from the list of available cards
      */
-    private boolean insert(Position p){
-        if(colorsList.size()>0) {
+    private void insert(Position p){
             Card c=colorsList.get(rand.nextInt(colorsList.size()));
             board[p.getX()][p.getY()] = c;
+
             colorsList.remove(c);
-            return true;
-        }
-        return false;
+
     }
 
 
