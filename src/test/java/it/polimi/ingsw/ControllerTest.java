@@ -11,6 +11,7 @@ import junit.framework.TestCase;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static it.polimi.ingsw.Shared.Cards.CardColor.*;
 
@@ -19,16 +20,18 @@ public class ControllerTest extends TestCase {
     Controller test;
     private final int timeout = 2;
     Card[][] board;
+    String url1 = "src/main/json/testJson/mainBoard3Players.json";
 
-    private PositionWithColor[] jsonCreate() throws FileNotFoundException {
+    String url2 = "src/main/json/testJson/quiteVoidMainBoard.json";
+
+    private PositionWithColor[] jsonCreate(String url) throws FileNotFoundException {
         Gson gson = new Gson();
-        String url = "src/main/json/testJson/mainBoard3Players.json";
         FileReader fileJson = new FileReader(url);
         return new Gson().fromJson(fileJson, PositionWithColor[].class);
     }
 
-    private void setNotRandomBoard() throws FileNotFoundException {
-        test.fixMainBoard(this.jsonCreate());
+    private void setNotRandomBoard(String url) throws FileNotFoundException {
+        test.fixMainBoard(this.jsonCreate(url));
     }
 
 
@@ -142,7 +145,7 @@ public class ControllerTest extends TestCase {
         assert (test.getCurrentPlayer() == 1);
         test.setTimeout(180);                           //set timeout at 3 minutes (default)
 
-        this.setNotRandomBoard();                       //fill the main board with predetermined colors
+        this.setNotRandomBoard(url1);                       //fill the main board with predetermined colors
 
         //print main board
         board = test.getMainBoard();
@@ -303,6 +306,55 @@ public class ControllerTest extends TestCase {
         Thread.sleep((timeout*1000)+5);         //wait player time limit to make a move
         assert (test.getCurrentPlayer() == 0);
 
+        System.out.println("\nEND TEST\n");
+    }
+
+    public void testRefil() throws addPlayerToGameException, FileNotFoundException {
+        System.out.println("START TEST testRefil\n");
+
+        test = new Controller(2);
+        test.addNewPlayer("piero");     //2 player join the game
+        assert (test.getPlayerNumber() == 1);
+        test.addNewPlayer("pino");
+        assert (test.getPlayerNumber() == 2);   //the game is full it will be start autonomous
+        assert (test.getCurrentPlayer() == 0);
+
+        ArrayList<PositionWithColor> tmpCards = new ArrayList<>();             //clear all the mainBoard
+        for (int i = 0; i<9; i++){
+            for (int j=0; j<9; j++){
+                tmpCards.add(new PositionWithColor(i,j,0, EMPTY));
+            }
+        }
+        PositionWithColor[] cardsArray = tmpCards.toArray(new PositionWithColor[0]);
+        test.fixMainBoard(cardsArray);
+        //print main board
+
+
+        this.setNotRandomBoard(url2);                       //fill the main board with predetermined colors
+        //print main board
+        board = test.getMainBoard();
+        for(int y=8;y>=0;y--){
+            System.out.println(board[0][y].getColor().toString()+"\t"+board[1][y].getColor().toString()+"\t"+board[2][y].getColor().toString()+"\t"+board[3][y].getColor().toString()+"\t"+board[4][y].getColor().toString()+"\t"+board[5][y].getColor().toString()+"\t"+board[6][y].getColor().toString()+"\t"+board[7][y].getColor().toString()+"\t"+board[8][y].getColor().toString());
+        }
+        System.out.println("\n\n");
+
+        //test 1
+        PositionWithColor[] cards = new PositionWithColor[2];
+        cards[0] =new PositionWithColor(4,4,0,  BLUE);
+        cards[1] =new PositionWithColor(4,3,0, LIGHTBLUE);
+        test.takeCard(0, cards, test.getCurrentPlayerID());
+        assert (test.getCurrentPlayer() == 1);
+        board = test.getMainBoard();
+        Card empty = new Card(EMPTY);
+        assert(!Objects.equals(test.getMainBoard()[4][7], empty));
+        assert(!Objects.equals(test.getMainBoard()[4][4], empty));
+        assert(!Objects.equals(test.getMainBoard()[1][4], empty));
+
+        //print main board
+        for(int y=8;y>=0;y--){
+            System.out.println(board[0][y].getColor().toString()+"\t"+board[1][y].getColor().toString()+"\t"+board[2][y].getColor().toString()+"\t"+board[3][y].getColor().toString()+"\t"+board[4][y].getColor().toString()+"\t"+board[5][y].getColor().toString()+"\t"+board[6][y].getColor().toString()+"\t"+board[7][y].getColor().toString()+"\t"+board[8][y].getColor().toString());
+        }
+        System.out.println("\n\n");
         System.out.println("\nEND TEST\n");
     }
 }

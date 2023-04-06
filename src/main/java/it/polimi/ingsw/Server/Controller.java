@@ -349,7 +349,7 @@ public class Controller {
     synchronized public boolean takeCard(int column, PositionWithColor[] cards, String playerID){
         if(!endGame && alreadyStarted && game.getPlayerArray().get(currentPlayer).getPlayerID().equals(playerID)){
             //verify the numbers of cards
-            if (cards.length <= 0 || cards.length>3){
+            if (cards.length == 0 || cards.length>3){
                 return false;               //devo comunucare al client che la mossa è errata ******************************************
             }
 
@@ -359,8 +359,6 @@ public class Controller {
                     if(!game.fillMainBoard(allowedPositionArray)) this.endGame();
                 }
             } catch (InvalidPickException e) {
-
-                System.out.println(e.toString());
                 return false;               //devo comunucare al client che la mossa è errata ******************************************
             }
 
