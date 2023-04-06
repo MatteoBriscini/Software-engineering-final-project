@@ -5,10 +5,12 @@ import it.polimi.ingsw.Server.Exceptions.addPlayerToGameException;
 import it.polimi.ingsw.Server.JsonSupportClasses.PositionWithColor;
 import it.polimi.ingsw.Server.Controller;
 import it.polimi.ingsw.Server.Model.Cards.Card;
+import it.polimi.ingsw.Server.Model.PlayerClasses.Player;
 import junit.framework.TestCase;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
 
 import static it.polimi.ingsw.Server.Model.Cards.CardColor.*;
 
@@ -210,5 +212,97 @@ public class ControllerTest extends TestCase {
         System.out.println("\nEND TEST\n");
     }
 
+    public void testOffline_OnlinePlayer() throws addPlayerToGameException, InterruptedException {
+        System.out.println("START TEST Offline_OnlinePlayer\n");
 
+        ArrayList<Player> players = new ArrayList<>();      //gaming order array list for this test
+        players.add(new Player("piero"));
+        players.add(new Player("pino"));
+        players.add(new Player("pierino"));
+        players.add(new Player("pierina"));
+
+
+        test = new Controller(4);                        //create new game with max 4 players
+        test.setTimeout(timeout);                   //set timeout at 2 seconds
+
+        test.addNewPlayer("piero");     //4 player join the game
+        assert (test.getPlayerNumber() == 1);
+        test.addNewPlayer("pino");
+        assert (test.getPlayerNumber() == 2);
+        test.addNewPlayer("pierino");
+        assert (test.getPlayerNumber() == 3);
+        test.addNewPlayer("pierina");
+        assert (test.getPlayerNumber() == 4);   //the game is full it will be start autonomous
+
+        test.setNotRandomPlayerOrder(players);
+
+        assert (test.getCurrentPlayer() == 0);
+
+        //test 1
+        System.out.println("test1: \n");
+        Thread.sleep((timeout*1000)+5);         //wait player time limit to make a move
+        assert (test.getCurrentPlayer() == 1);
+
+        Thread.sleep((timeout*1000)+5);         //wait player time limit to make a move
+        assert (test.getCurrentPlayer() == 2);
+
+        test.setPlayerOffline("pierina");             //pierina lost connection
+
+        Thread.sleep((timeout*1000)+5);         //wait player time limit to make a move
+        assert (test.getCurrentPlayer() == 0);
+
+        test.setPlayerOnline("pierina");               //pierina reconnect
+        test.setPlayerOffline("pierino");               //pierino lost  connection
+
+        Thread.sleep((timeout*1000)+5);         //wait player time limit to make a move
+        assert (test.getCurrentPlayer() == 1);
+
+        Thread.sleep((timeout*1000)+5);         //wait player time limit to make a move
+        assert (test.getCurrentPlayer() == 3);
+
+        //test 2
+        System.out.println("\ntest2: \n");
+
+        test = new Controller(4);                        //create new game with max 4 players
+        test.setTimeout(timeout);                   //set timeout at 2 seconds
+
+        test.addNewPlayer("piero");     //4 player join the game
+        assert (test.getPlayerNumber() == 1);
+        test.addNewPlayer("pino");
+        assert (test.getPlayerNumber() == 2);
+        test.addNewPlayer("pierino");
+        assert (test.getPlayerNumber() == 3);
+        test.addNewPlayer("pierina");
+        assert (test.getPlayerNumber() == 4);   //the game is full it will be start autonomous
+
+        test.setNotRandomPlayerOrder(players);
+
+        assert (test.getCurrentPlayer() == 0);
+        Thread.sleep((timeout*1000)+5);         //wait player time limit to make a move
+        assert (test.getCurrentPlayer() == 1);
+
+        test.setPlayerOffline("pino");               //pino lost  connection
+        test.setPlayerOffline("pierina");            //pierina lost  connection
+
+        Thread.sleep((timeout*1000)+5);         //wait player time limit to make a move
+        assert (test.getCurrentPlayer() == 2);
+
+        Thread.sleep((timeout*1000)+5);         //wait player time limit to make a move
+        assert (test.getCurrentPlayer() == 0);
+
+        test.setPlayerOnline("pino");               //pino reconnect
+        test.setPlayerOnline("piero");               //piero reconnect
+        test.setPlayerOffline("pierina");            //pierina lost  connection
+
+        Thread.sleep((timeout*1000)+5);         //wait player time limit to make a move
+        assert (test.getCurrentPlayer() == 1);
+
+        Thread.sleep((timeout*1000)+5);         //wait player time limit to make a move
+        assert (test.getCurrentPlayer() == 2);
+
+        Thread.sleep((timeout*1000)+5);         //wait player time limit to make a move
+        assert (test.getCurrentPlayer() == 0);
+
+        System.out.println("\nEND TEST\n");
+    }
 }

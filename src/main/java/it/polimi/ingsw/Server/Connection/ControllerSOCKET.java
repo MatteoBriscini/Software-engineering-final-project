@@ -35,7 +35,7 @@ public class ControllerSOCKET extends ConnectionController {
             System.out.println(e.toString());           //da finire*********************************
             return;
         }
-        System.err.println("Server (socket) for newGame ready on port: " + PORT);
+        System.err.println("\u001B[32m" + "Server (socket) for newGame ready on port: " + PORT + "\u001B[0m");
 
         while (true){
             try {

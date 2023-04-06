@@ -45,7 +45,7 @@ public class ControllerRMI extends ConnectionController implements ControllerRem
             // finire ********************************************************
             e.printStackTrace();
         }
-        System.err.println("Server (rmi) for newGame ready on port: " + PORT);
+        System.err.println("\u001B[32m" + "Server (rmi) for newGame ready on port: " + PORT + "\u001B[0m");
     }
 
 

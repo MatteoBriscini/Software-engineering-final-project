@@ -105,6 +105,10 @@ public class Controller {
     public int getMaxPlayerNumber(){
         return maxPlayerNumber;
     }
+
+    public void setNotRandomPlayerOrder(ArrayList<Player> players){
+        game.setPlayersArray(players);
+    }
     public int getPlayerNumber(){
         return playerNum;
     }
@@ -138,8 +142,11 @@ public class Controller {
         ArrayList<Player> players = game.getPlayerArray();
         for (int i = 0; i<players.size(); i++){
             if(players.get(i).getPlayerID().equals(playerID)){
-                activePlayers.set(i, false);
-                return;
+                if(activePlayers.get(i)) {
+                    System.err.println(players.get(i).getPlayerID() + " lost connection");
+                    activePlayers.set(i, false);
+                    return;
+                }
             }
         }
     }
@@ -147,8 +154,11 @@ public class Controller {
         ArrayList<Player> players = game.getPlayerArray();
         for (int i = 0; i<players.size(); i++){
             if(players.get(i).getPlayerID().equals(playerID)){
-                activePlayers.set(i, true);
-                return;
+                if(!activePlayers.get(i)) {
+                    System.out.println("\u001B[33m" + players.get(i).getPlayerID() + " reconnected the game" + "\u001B[0m");
+                    activePlayers.set(i, true);
+                    return;
+                }
             }
         }
     }
