@@ -1,7 +1,6 @@
 package it.polimi.ingsw.Server.Model.PlayerClasses;
 
-import it.polimi.ingsw.Server.Model.Cards.*;
-import it.polimi.ingsw.Server.Model.Cards.Card;
+import it.polimi.ingsw.Shared.Cards.Card;
 
 public class PlayerTarget {
 

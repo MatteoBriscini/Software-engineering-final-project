@@ -1,13 +1,14 @@
-package it.polimi.ingsw.client.Connection;
+package it.polimi.ingsw.Client.Connection;
 
-import it.polimi.ingsw.Server.Connection.ControllerRemoteInterface;
+import it.polimi.ingsw.Server.Connection.RMI.ControllerRemoteInterface;
+import it.polimi.ingsw.Shared.Cards.Card;
+import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
 
-public class PlayingPlayerRMI extends UnicastRemoteObject implements PlayingPlayerRemoteInterface{
+public class PlayingPlayerRMI extends PlayingPlayerController implements PlayingPlayerRemoteInterface{
     static ControllerRemoteInterface stub;
 
     private String playerID = "anthony";
@@ -35,6 +36,12 @@ public class PlayingPlayerRMI extends UnicastRemoteObject implements PlayingPlay
 
             throw new RuntimeException(e);
         }
+
+        try {
+            startGame(playerID);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /*************************************************************************
@@ -57,12 +64,34 @@ public class PlayingPlayerRMI extends UnicastRemoteObject implements PlayingPlay
     */
 
     @Override
-    public void notifyActivePlayer(int activePlayerID) {
-        System.out.println(activePlayerID);
+    public void notifyActivePlayer(String activePlayerID) {
+
     }
 
     @Override
     public void receivePlayerList(String[] playersID) throws RemoteException {
 
     }
+
+    @Override
+    public void receivePlayersNumber(int playersNumber) throws RemoteException {
+
+    }
+
+    @Override
+    public void receiveMainBoard(Card[][] mainBoard) throws RemoteException {
+
+    }
+
+    @Override
+    public void addCardToPlayerBoard(String playerID, int column, Card[] cards) {
+
+    }
+
+    @Override
+    public void dellCardFromMainBoard(PositionWithColor[] cards) {
+
+    }
+
+
 }

@@ -1,14 +1,14 @@
 package it.polimi.ingsw.Server.Model;
 
-import it.polimi.ingsw.Server.Model.Cards.Card;
-import it.polimi.ingsw.Server.Model.Cards.CardColor;
+import it.polimi.ingsw.Shared.Cards.Card;
+import it.polimi.ingsw.Shared.Cards.CardColor;
 import it.polimi.ingsw.Server.Exceptions.InvalidPickException;
-import it.polimi.ingsw.Server.JsonSupportClasses.Position;
-import it.polimi.ingsw.Server.JsonSupportClasses.PositionWithColor;
+import it.polimi.ingsw.Shared.JsonSupportClasses.Position;
+import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 
 import java.util.*;
 
-import static it.polimi.ingsw.Server.Model.Cards.CardColor.*;
+import static it.polimi.ingsw.Shared.Cards.CardColor.*;
 
 /**
  * this class is used to make all the checks on the MainBoard, removing or inserting the cards

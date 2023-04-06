@@ -1,8 +1,8 @@
 package it.polimi.ingsw.Server.Model.GroupGoals;
 
-import it.polimi.ingsw.Server.Model.Cards.Card;
+import it.polimi.ingsw.Shared.Cards.Card;
 
-import static it.polimi.ingsw.Server.Model.Cards.CardColor.*;
+import static it.polimi.ingsw.Shared.Cards.CardColor.*;
 
 //this class is used to check that there are 8 cards having the same color on the player's board
 public class EightEqualTarget extends CommonGoal {

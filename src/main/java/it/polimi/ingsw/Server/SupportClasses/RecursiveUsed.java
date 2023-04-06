@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Server.SupportClasses;
 
-import it.polimi.ingsw.Server.Model.Cards.Card;
+import it.polimi.ingsw.Shared.Cards.Card;
 
 /**
  * support class to avoid duplicate code line

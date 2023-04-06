@@ -2,10 +2,8 @@ package it.polimi.ingsw.Server.Connection;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Controller;
-import it.polimi.ingsw.Server.JsonSupportClasses.PositionWithColor;
-import it.polimi.ingsw.Server.Model.Cards.Card;
+import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 
 import java.rmi.RemoteException;
 
@@ -20,13 +18,9 @@ public abstract class ConnectionController {
 
     public abstract void connection();
 
-    public abstract void notifyActivePlayer(int activePlayerID);
+    public abstract void notifyActivePlayer(String activePlayerID);
 
     public boolean startGame(String playerID) throws RemoteException {
-        //testing ***
-        System.out.println("startGame by: " + playerID + " on port: "+ PORT);
-        notifyActivePlayer(2);
-
         return controller.startGame(playerID);
     }
 

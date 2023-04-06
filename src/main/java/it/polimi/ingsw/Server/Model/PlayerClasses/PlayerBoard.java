@@ -3,14 +3,13 @@ package it.polimi.ingsw.Server.Model.PlayerClasses;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import it.polimi.ingsw.Server.Model.Cards.*;
 import it.polimi.ingsw.Server.Exceptions.NoSpaceException;
-import it.polimi.ingsw.Server.Model.Cards.Card;
+import it.polimi.ingsw.Shared.Cards.Card;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 
-import static it.polimi.ingsw.Server.Model.Cards.CardColor.EMPTY;
+import static it.polimi.ingsw.Shared.Cards.CardColor.EMPTY;
 
 public class PlayerBoard {
 

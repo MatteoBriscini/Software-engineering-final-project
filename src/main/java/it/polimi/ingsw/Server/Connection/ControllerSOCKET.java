@@ -51,7 +51,12 @@ public class ControllerSOCKET extends ConnectionController {
         executor.shutdown();
     }
 
-     private class MultiClientSocketGame implements Runnable{
+    @Override
+    public void notifyActivePlayer(String activePlayerID) {
+
+    }
+
+    private class MultiClientSocketGame implements Runnable{
         private final Socket socket;
 
         public MultiClientSocketGame(Socket socket){

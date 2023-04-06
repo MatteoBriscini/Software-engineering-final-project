@@ -1,7 +1,11 @@
-package it.polimi.ingsw.Server.Connection;
+package it.polimi.ingsw.Server.Connection.RMI;
 
+import it.polimi.ingsw.Server.Connection.ConnectionController;
+import it.polimi.ingsw.Server.Connection.RMI.SendCommand.*;
 import it.polimi.ingsw.Server.Controller;
-import it.polimi.ingsw.client.Connection.PlayingPlayerRemoteInterface;
+import it.polimi.ingsw.Client.Connection.PlayingPlayerRemoteInterface;
+import it.polimi.ingsw.Shared.Cards.Card;
+import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 
 import java.rmi.AlreadyBoundException;
 import java.rmi.Remote;
@@ -11,7 +15,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
-public class ControllerRMI extends ConnectionController implements ControllerRemoteInterface{
+public class ControllerRMI extends ConnectionController implements ControllerRemoteInterface {
 
     ArrayList<PlayingPlayerRemoteInterface> clients = new ArrayList<>();
     ArrayList<String> clientsID = new ArrayList<>();
@@ -60,6 +64,8 @@ public class ControllerRMI extends ConnectionController implements ControllerRem
      */
     public synchronized boolean joinRMIControllerConnection(PlayingPlayerRemoteInterface client_ref,String playerID) throws RemoteException{
         if(!clients.contains(client_ref)){
+            System.out.println("\u001B[36m"+"client: " + playerID + " join the game on port(RMI): " + PORT +"\u001B[0m");
+
             clients.add(client_ref);
             clientsID.add(playerID);
             controller.setPlayerOnline(playerID);
@@ -90,20 +96,52 @@ public class ControllerRMI extends ConnectionController implements ControllerRem
      ************************************************** OUT method ***********
      * ***********************************************************************
      */
-    public void notifyActivePlayer(int activePlayerID){
+
+
+    public void sendCommand(Command command){
         for(int i = 0; i<clients.size(); i ++){
-            try {
-                clients.get(i).notifyActivePlayer(activePlayerID);
-                controller.setPlayerOnline(clientsID.get(i));
-            } catch (RemoteException e) {
-                controller.setPlayerOffline(clientsID.get(i));
+            boolean bool= command.execute(clients.get(i));
+            if(!bool) {
                 try {
                     this.quitRMIControllerConnection(clients.get(i), clientsID.get(i));
                 } catch (RemoteException ex) {
                     throw new RuntimeException(ex);
                 }
+            }else {
+                controller.setPlayerOnline(clientsID.get(i));
             }
         }
     }
+
+    public void notifyActivePlayer(String activePlayerID){
+        Command command = new NotifyActivePlayerCommand(activePlayerID);
+        sendCommand(command);
+    }
+
+    public void sendPlayerList(String[] players){
+        Command command = new SendActivePlayerListCommand(players);
+        sendCommand(command);
+    }
+
+    public void sendPlayersNUmber(int playersNumber){
+        Command command = new SendPlayersNumberCommand(playersNumber);
+        sendCommand(command);
+    }
+
+    public void sendMainBoard(Card[][] mainBoard){
+        Command command = new SendMainBoardCommand(mainBoard);
+        sendCommand(command);
+    }
+
+    public void addCardToClientBoard(String playerID, int column, Card[] cards){
+        Command command = new AddCardToClientBoard(playerID, column, cards);
+        sendCommand(command);
+    }
+
+    public void dellCardFromMainBoard(PositionWithColor[] cards){
+        Command command = new DellCardFromMainBoard(cards);
+        sendCommand(command);
+    }
+
 
 }

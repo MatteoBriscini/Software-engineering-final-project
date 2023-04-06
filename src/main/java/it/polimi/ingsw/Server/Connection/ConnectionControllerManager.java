@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Server.Connection;
 
+import it.polimi.ingsw.Server.Connection.RMI.ControllerRMI;
 import it.polimi.ingsw.Server.Controller;
 import it.polimi.ingsw.Server.Exceptions.ConnectionControllerManagerException;
 

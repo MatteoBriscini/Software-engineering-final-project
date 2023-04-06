@@ -1,13 +1,13 @@
 package it.polimi.ingsw.GroupTargets;
 
-import it.polimi.ingsw.Server.Model.Cards.Card;
-import it.polimi.ingsw.Server.Model.Cards.CardColor;
+import it.polimi.ingsw.Shared.Cards.Card;
+import it.polimi.ingsw.Shared.Cards.CardColor;
 import it.polimi.ingsw.Server.Exceptions.NoSpaceException;
 import it.polimi.ingsw.Server.Model.PlayerClasses.PlayerBoard;
 import it.polimi.ingsw.Server.Model.GroupGoals.SquaresGoal;
 import junit.framework.TestCase;
 
-import static it.polimi.ingsw.Server.Model.Cards.CardColor.*;
+import static it.polimi.ingsw.Shared.Cards.CardColor.*;
 
 public class SquaresGoalTest extends TestCase {
 

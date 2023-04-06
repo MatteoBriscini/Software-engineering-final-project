@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Server.Model.Cards;
+package it.polimi.ingsw.Shared.Cards;
 
 /**
  * this enumeration contains all the possible colors of the cards, plus EMPTY that represents a card that is not present

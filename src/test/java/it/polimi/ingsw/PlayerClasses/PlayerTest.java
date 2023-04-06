@@ -1,6 +1,6 @@
 package it.polimi.ingsw.PlayerClasses;
 
-import it.polimi.ingsw.Server.Model.Cards.Card;
+import it.polimi.ingsw.Shared.Cards.Card;
 import it.polimi.ingsw.Server.Exceptions.NoSpaceException;
 import it.polimi.ingsw.Server.Model.PlayerClasses.Player;
 import it.polimi.ingsw.Server.Model.PlayerClasses.PlayerBoard;
@@ -9,7 +9,7 @@ import junit.framework.TestCase;
 
 import java.io.FileNotFoundException;
 
-import static it.polimi.ingsw.Server.Model.Cards.CardColor.*;
+import static it.polimi.ingsw.Shared.Cards.CardColor.*;
 
 public class PlayerTest extends TestCase {
     private Player player = new Player("player");

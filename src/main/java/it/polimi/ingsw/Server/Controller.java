@@ -4,10 +4,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Connection.ConnectionControllerManager;
 import it.polimi.ingsw.Server.Exceptions.*;
-import it.polimi.ingsw.Server.Model.Cards.Card;
+import it.polimi.ingsw.Shared.Cards.Card;
 import it.polimi.ingsw.Server.Model.GameMaster;
-import it.polimi.ingsw.Server.JsonSupportClasses.Position;
-import it.polimi.ingsw.Server.JsonSupportClasses.PositionWithColor;
+import it.polimi.ingsw.Shared.JsonSupportClasses.Position;
+import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 import it.polimi.ingsw.Server.Model.PlayerClasses.Player;
 
 import java.io.FileNotFoundException;

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Server.Model.GroupGoals;
 
-import it.polimi.ingsw.Server.Model.Cards.Card;
+import it.polimi.ingsw.Shared.Cards.Card;
 import it.polimi.ingsw.Server.Exceptions.ConstructorException;
 import it.polimi.ingsw.Server.SupportClasses.NColorsGroup;
 

@@ -2,9 +2,9 @@ package it.polimi.ingsw;
 
 import com.google.gson.Gson;
 import it.polimi.ingsw.Server.Exceptions.addPlayerToGameException;
-import it.polimi.ingsw.Server.JsonSupportClasses.PositionWithColor;
+import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 import it.polimi.ingsw.Server.Controller;
-import it.polimi.ingsw.Server.Model.Cards.Card;
+import it.polimi.ingsw.Shared.Cards.Card;
 import it.polimi.ingsw.Server.Model.PlayerClasses.Player;
 import junit.framework.TestCase;
 
@@ -12,7 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 
-import static it.polimi.ingsw.Server.Model.Cards.CardColor.*;
+import static it.polimi.ingsw.Shared.Cards.CardColor.*;
 
 public class ControllerTest extends TestCase {
 

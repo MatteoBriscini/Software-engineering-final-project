@@ -6,9 +6,9 @@ import it.polimi.ingsw.Server.Exceptions.ConstructorException;
 import it.polimi.ingsw.Server.Exceptions.InvalidPickException;
 import it.polimi.ingsw.Server.Exceptions.LengthException;
 import it.polimi.ingsw.Server.Exceptions.NoSpaceException;
-import it.polimi.ingsw.Server.Model.Cards.Card;
-import it.polimi.ingsw.Server.JsonSupportClasses.Position;
-import it.polimi.ingsw.Server.JsonSupportClasses.PositionWithColor;
+import it.polimi.ingsw.Shared.Cards.Card;
+import it.polimi.ingsw.Shared.JsonSupportClasses.Position;
+import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 import it.polimi.ingsw.Server.Model.GroupGoals.*;
 import it.polimi.ingsw.Server.Model.PlayerClasses.Player;
 import it.polimi.ingsw.Server.Model.PlayerClasses.PlayerTarget;
@@ -16,7 +16,6 @@ import it.polimi.ingsw.Server.Model.PlayerClasses.PlayerTarget;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class GameMaster {
     private ArrayList<Player> players = new ArrayList<>();
