@@ -134,6 +134,16 @@ public class Controller {
        return controllerManager.addClient(PORT, connectionType, this);
     }
 
+    /**
+     * @param playerID name of the player want to check the status
+     * @return true if the player is the game and his status is offline false in all other case
+     */
+    public boolean isPlayerOffline(String playerID){
+        for(int i=0; i<activePlayers.size();i++){
+            if(game.getPlayerArray().get(i).getPlayerID().equals(playerID) && activePlayers.get(i).equals(false))return true;
+        }
+        return false;
+    }
     synchronized public void setPlayerOffline(String playerID){
         ArrayList<Player> players = game.getPlayerArray();
         for (int i = 0; i<players.size(); i++){
