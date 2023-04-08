@@ -1,6 +1,9 @@
 package it.polimi.ingsw.Server.Lobby;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonWriter;
 import it.polimi.ingsw.Server.Controller;
 import it.polimi.ingsw.Server.Connection.LobbyRMI;
 import it.polimi.ingsw.Server.Exceptions.addPlayerToGameException;
@@ -8,6 +11,8 @@ import it.polimi.ingsw.Server.Exceptions.addPlayerToGameException;
 import javax.security.auth.login.LoginException;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Lobby {
@@ -19,7 +24,7 @@ public class Lobby {
 
     private ArrayList<Controller> activeGames = new ArrayList<>();
 
-    private static String loginJSONURL;
+    private static String loginJSONURL = "src/main/json/config/registeredPlayers.json";
 
     private ArrayList<String[]> playersInGames = new ArrayList<>();
 
@@ -28,9 +33,10 @@ public class Lobby {
     public synchronized void login(String ID, String pwd) throws LoginException {
 
         ArrayList<String[]> games;
+        ArrayList<Controller> activeG;
         boolean f = false;
 
-        String path = loginJSONURL;   //file path
+        String path = loginJSONURL;      //file path
         FileReader fileJson = null;      //file executable
         try {
             fileJson = new FileReader(path);
@@ -39,12 +45,15 @@ public class Lobby {
         }
 
         Gson gson = new Gson();
-        PlayerLogin[] loginJSON = gson.fromJson(fileJson, PlayerLogin[].class);       //Call constructor on PlayerTarget array by passing the json file attributes
+        JsonArray loginJSON = gson.fromJson(fileJson, JsonArray.class);
+        JsonObject temp;
 
-        for(int i = 0; i < loginJSON.length || !f; i++){
+        for(int i = 0; i < loginJSON.size() && !f; i++){
 
-            if(loginJSON[i].getPlayerID().equals(ID)){
-                if(!loginJSON[i].getPassword().equals(pwd)){
+            temp = loginJSON.get(i).getAsJsonObject();
+
+            if(temp.get("playerID").getAsString().equals(ID)){
+                if(!temp.get("password").getAsString().equals(pwd)){
                     throw new LoginException("Wrong password");
                 }else{
                     f = true;
@@ -66,11 +75,24 @@ public class Lobby {
 
         }
 
-        for(String[] players : games){
+        for(int j = 0; j < games.size(); j++){
+
+            String[] players = games.get(j);
 
             for(int i = 0; i < players.length; i++){
                 if(players[i].equals(ID)){
-                    //connect to game with player already in
+
+                    synchronized (activeGames){
+
+                        activeG = activeGames;
+
+                    }
+
+                    try {
+                        activeG.get(j).addNewPlayer(ID);
+                    } catch (addPlayerToGameException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
 
@@ -78,8 +100,45 @@ public class Lobby {
 
     }
 
-    public synchronized void signUp(PlayerLogin loginInfo){
+    public synchronized void signUp(String ID, String pwd){
 
+        String path = loginJSONURL;   //file path
+
+        FileReader fileJsonRead = null;      //file executable
+        try {
+            fileJsonRead = new FileReader(path);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        JsonArray original = new Gson().fromJson(fileJsonRead, JsonArray.class);
+
+
+        FileWriter fileJson = null;      //file executable
+        try {
+            fileJson = new FileWriter(path);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        Gson gson = new Gson();
+
+        JsonWriter writer = new JsonWriter(fileJson);
+
+
+        JsonObject update = new JsonObject();
+        update.addProperty("playerID", ID);
+        update.addProperty("password", pwd);
+
+        original.add(update);
+
+        gson.toJson(original, JsonObject.class, writer);
+
+        try {
+            writer.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
 
     }

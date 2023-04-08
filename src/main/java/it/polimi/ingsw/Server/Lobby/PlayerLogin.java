@@ -9,6 +9,12 @@ public class PlayerLogin {
     private String password;
 
 
+    public PlayerLogin(String ID, String pwd){
+        this.playerID = ID;
+        this.password = pwd;
+    }
+
+
     //Method
 
 
