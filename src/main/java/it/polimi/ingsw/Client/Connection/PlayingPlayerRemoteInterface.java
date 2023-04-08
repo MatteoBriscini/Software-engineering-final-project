@@ -58,4 +58,6 @@ public interface PlayingPlayerRemoteInterface extends Remote {
      * @throws RemoteException if the client is offline
      */
     void receivePrivateGoal(String cards,String playerID) throws RemoteException;//PositionWithColor[] (cards)
+    void endGameValue(String points) throws RemoteException;
+    void receiveWinner(String winner) throws RemoteException;
 }

@@ -11,6 +11,7 @@ import junit.framework.TestCase;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+
 import java.util.Objects;
 
 import static it.polimi.ingsw.Shared.Cards.CardColor.*;
@@ -356,5 +357,19 @@ public class ControllerTest extends TestCase {
         }
         System.out.println("\n\n");
         System.out.println("\nEND TEST\n");
+    }
+
+    public void testCalcEndGamePoint() throws addPlayerToGameException {
+        test = new Controller(4);
+
+        test.addNewPlayer("piero");     //4 player join the game
+        assert (test.getPlayerNumber() == 1);
+        test.addNewPlayer("pino");
+        assert (test.getPlayerNumber() == 2);
+        test.addNewPlayer("pierino");
+        assert (test.getPlayerNumber() == 3);
+        test.addNewPlayer("pierina");
+        assert (test.getPlayerNumber() == 4);   //the game is full it will be start autonomous
+        test.endGame();
     }
 }

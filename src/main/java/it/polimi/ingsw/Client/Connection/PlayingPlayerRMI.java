@@ -141,6 +141,20 @@ public class PlayingPlayerRMI extends PlayingPlayerConnectionManager implements 
     public void receivePrivateGoal(String cards,String playerID) throws RemoteException {//PositionWithColor[] (cards)
 
     }
+    /**
+     * receive points of all the players in the game
+     * @param points map playerID + point for each game
+     * @throws RemoteException if the players is offline
+     */
+    @Override
+    public void endGameValue(String points) throws RemoteException {
+
+    }
+
+    @Override
+    public void receiveWinner(String winner) throws RemoteException {
+
+    }
 
 
 }

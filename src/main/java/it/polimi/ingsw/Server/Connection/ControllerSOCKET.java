@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Server.Connection;
 
+import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Controller;
 import it.polimi.ingsw.Shared.Cards.Card;
 import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
@@ -100,6 +101,16 @@ public class ControllerSOCKET extends ConnectionController {
 
     @Override
     public void sendPrivateGoal(PositionWithColor[] cards, String playerID) {
+
+    }
+
+    @Override
+    public void sendEndGamePoint(JsonObject points) {
+
+    }
+
+    @Override
+    public void sendWinner(JsonObject winner) {
 
     }
 

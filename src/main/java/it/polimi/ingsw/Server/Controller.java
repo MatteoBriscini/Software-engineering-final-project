@@ -6,6 +6,7 @@ import it.polimi.ingsw.Server.Connection.ConnectionControllerManager;
 import it.polimi.ingsw.Server.Exceptions.*;
 import it.polimi.ingsw.Shared.Cards.Card;
 import it.polimi.ingsw.Server.Model.GameMaster;
+import it.polimi.ingsw.Shared.Cards.CardColor;
 import it.polimi.ingsw.Shared.JsonSupportClasses.Position;
 import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 import it.polimi.ingsw.Server.Model.PlayerClasses.Player;
@@ -65,7 +66,6 @@ public class Controller {
      * @throws FileNotFoundException if method can't file json file
      */
     private void jsonCreate() throws FileNotFoundException {  //download json data
-        Gson gson = new Gson();
 
         String urlController = "src/main/json/config/controllerConfig.json";
         FileReader fileJsonController = new FileReader(urlController);
@@ -98,7 +98,6 @@ public class Controller {
     public String getNotCurrentPlayerID() {
         int i =currentPlayer +1;
         if(i>playerNum) i=0;
-
         return game.getPlayerArray().get(i).getPlayerID();
     }
 
@@ -111,9 +110,6 @@ public class Controller {
     }
     public int getPlayerNumber(){
         return playerNum;
-    }
-    public void setPlayerNum(int playerNum) {
-        this.playerNum = playerNum;
     }
 
     public void setTimeout(int timeout){
@@ -174,6 +170,7 @@ public class Controller {
     synchronized public void addNewPlayer(String playerID) throws addPlayerToGameException {
         if(playerNum < maxPlayerNumber && !alreadyStarted){
             playerNum = game.addNewPlayer(playerID);
+            controllerManager.sendPlayersNUmber(playerNum);
             activePlayers.add(true); //there is new client online
         } else {
             if(alreadyStarted) throw new addPlayerToGameException("try to add player in already started game");
@@ -211,13 +208,13 @@ public class Controller {
             numberList.clear();
             for (int i=0; i<numberOfPossiblePrivateGoals; i++) numberList.add(i);
             Collections.shuffle(numberList);
-            int[] privateGoalIDArray = this.setPrivateGoals(numberList, m);
+            this.setPrivateGoals(numberList, m);
 
             //fill main board
             this.fillMainBoard();
 
             //send data to the player
-            this.createClientData(commonGoalIDArray, privateGoalIDArray);
+            this.createClientData(commonGoalIDArray);
             this.turn();
             return true;
         } else {
@@ -289,25 +286,44 @@ public class Controller {
         }
     }
 
-    synchronized private void createClientData(int[] commonGoalIDArray, int[] CommonGoalIDArray){
-        int i;
+    synchronized private void createClientData(int[] commonGoalIDArray){
+        System.out.println("\u001B[36m" + "create client data" + "\u001B[0m");
+
+        //send players id list, and game order (broadcast to each client)
+        ArrayList<String> playersID = new ArrayList<>();
+        for(Player p: game.getPlayerArray()){
+            playersID.add(p.getPlayerID());
+        }
+        controllerManager.sendPlayerList(playersID.toArray(new String[0]));
 
         //get main board
         Card[][] mainBoard = game.getMainBoard();
 
+        //send all main board (broadcast to each client)
+        controllerManager.sendMainBoard(mainBoard);
+
         //get all player board
         ArrayList<Card[][]> playersBoard = new ArrayList<>();
-        for(i = 0; i< game.getPlayerArray().size(); i++){
+        for(int i = 0; i< game.getPlayerArray().size(); i++){
             playersBoard.add(game.getPlayerBoard(i));
         }
 
-        /*
-        * for common and private goal i will send the goalID (int)
-        * the method has to send the position of the client in the players array list
-        *
-        * has to send the matrix to client (via connection class)
-        * */
+        //send all player board (broadcast to each client)
+        controllerManager.sendAllPlayerBoard(playersBoard);
 
+        //send all commonGoalID (broadcast to each client)
+        controllerManager.sendAllCommonGoal(commonGoalIDArray);
+
+        //send all private goal (broadcast to each client)
+        ArrayList<Player> players = game.getPlayerArray();
+        for (Player p: players) {
+            ArrayList<PositionWithColor> privateGoal = new ArrayList<>();
+            for(int j=0; j<p.getPersonalTarget().getColor().length; j++){
+                privateGoal.add(new PositionWithColor(p.getPersonalTarget().getX()[j],
+                        p.getPersonalTarget().getY()[j],0,Enum.valueOf(CardColor.class, p.getPersonalTarget().getColor()[j])));
+            }
+            controllerManager.sendPrivateGoal(privateGoal.toArray(new PositionWithColor[0]), p.getPlayerID());
+        }
     }
 
     /*************************************************************************
@@ -327,14 +343,24 @@ public class Controller {
 
     synchronized public void endGame(){
         endGame = true;
-        endGameThread.interrupt();
+        System.out.println("\u001B[36m" + "the game is ended" + "\u001B[0m");
+        if(endGameThread!=null)endGameThread.interrupt();
 
         for(int i=0; i<playerNum; i++) {
             game.endGameCalcPoint(i);
         }
 
-
-        System.out.println("end game");
+        JsonObject points = new JsonObject();
+        JsonObject winner = new JsonObject();
+        for(Player p : game.getPlayerArray()){
+            if(winner.get("winnerName")==null || winner.get("winnerPoints").getAsInt()<p.getPointSum()){
+                winner.addProperty("winnerName",p.getPlayerID());
+                winner.addProperty("winnerPoints",p.getPointSum());
+            }
+            points.addProperty(p.getPlayerID(),p.getPointSum());
+        }
+        controllerManager.sendWinner(winner);
+        controllerManager.sendEndGamePoint(points);
     }
     /*************************************************************************
      ************************************************** in game method *******
@@ -379,7 +405,7 @@ public class Controller {
 
             //calc real time points and add it to current player
             this.updateAllCommonGoal();
-            this.updateClientData(cards, tmp.toArray(new Card[0])); //update data in clients
+            this.updateClientData(cards, tmp.toArray(new Card[0]), column); //update data in clients
             waitForPlayerResponse.interrupt();
             this.turn(); //skip to next player
             return true;
@@ -396,7 +422,6 @@ public class Controller {
         for(int i = 0; i<commonGoalNumber ; i+=1){
             ArrayList<String> alreadyScored = game.getAlreadyScored(i);
 
-            //System.out.println(tmp.size());
             if (!alreadyScored.contains(game.getPlayerArray().get(currentPlayer).getPlayerID()) && game.checkCommonGoal(i, currentPlayer)){
 
                     //update the list of player has already reached the goal
@@ -415,23 +440,27 @@ public class Controller {
      * this method increment the currentPlayer and verify the player do not exceeds time limit to make a move
      */
     synchronized public void turn(){
-        if(endGame) return;         //if game is finish, da completare *******************************
+        if(endGame) return;         //if game is finish
 
         currentPlayer += 1;
         if(currentPlayer >= playerNum) currentPlayer = 0;
 
+        //if a player is market as offline skip him
         synchronized (activePlayers) {
-            if (!activePlayers.get(currentPlayer)) {        //if a player is market as offline skip him
+            if (!activePlayers.get(currentPlayer)) {
                 turn();
                 return;
             }
         }
 
+        //send current player to client
+        controllerManager.notifyActivePlayer(game.getPlayerArray().get(currentPlayer).getPlayerID());
+
         //time limit for player response and action
         waitForPlayerResponse = new Thread(() -> {
             int tmp = currentPlayer;
             try {
-                Thread.sleep(timeout*1000);
+                Thread.sleep((long)timeout*1000);
             } catch (InterruptedException e) {}
             if (currentPlayer == tmp){turn();} //skip to next player
         });
@@ -439,15 +468,14 @@ public class Controller {
         waitForPlayerResponse.setName("waitForPlayerResponse");
     }
 
-    synchronized private void updateClientData(PositionWithColor[] positions, Card[] cards){ //da finire********************************
+    synchronized private void updateClientData(PositionWithColor[] positions, Card[] cards, int column){ //da finire********************************
+        System.out.println("\u001B[36m" + "update client data" + "\u001B[0m");
 
-        //get main board
-        Card[][] mainBoard = game.getMainBoard();
+        //update main board (broadcast to each client)
+        controllerManager.dellCardFromMainBoard(positions);
 
-        //get current player
-        Card[][] currentPlayerBoard = game.getPlayerBoard(currentPlayer);
-
-        //has to send the matrix to client (via connection class)
+        //update player board off current player (broadcast to each client)
+        controllerManager.addCardToClientBoard(game.getPlayerArray().get(getCurrentPlayer()).getPlayerID(), column, cards);
     }
 
 }

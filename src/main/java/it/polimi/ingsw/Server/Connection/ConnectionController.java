@@ -35,6 +35,8 @@ public abstract class ConnectionController {
     public abstract void sendAllPlayerBoard(ArrayList<Card[][]> playerBoards);
     public abstract void sendAllCommonGoal(int[] commonGoalID);
     public abstract void sendPrivateGoal(PositionWithColor[] cards,String playerID);
+    public abstract void sendEndGamePoint(JsonObject points);
+    public abstract void sendWinner(JsonObject winner);
 
     /************************************************************************
      ************************************************** IN method ***********

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Server.Connection.RMI;
 
+import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Connection.ConnectionController;
 import it.polimi.ingsw.Server.Connection.RMI.SendCommand.*;
 import it.polimi.ingsw.Server.Controller;
@@ -90,14 +91,13 @@ public class ControllerRMI extends ConnectionController implements ControllerRem
         return false;
     }
 
-
-
     /*************************************************************************
      ************************************************** OUT method ***********
      * ***********************************************************************
+     * *
+     * send broadcast command to all the client (command pattern)
+     * @param command actual command
      */
-
-
     public void sendCommand(Command command){
         for(int i = 0; i<clients.size(); i ++){
             boolean bool= command.execute(clients.get(i));
@@ -158,4 +158,12 @@ public class ControllerRMI extends ConnectionController implements ControllerRem
         sendCommand(command);
     }
 
+    public void sendEndGamePoint(JsonObject points){
+        Command command = new EndGameCommand(points);
+        sendCommand(command);
+    }
+    public void sendWinner(JsonObject winner){
+        Command command = new WinnerCommand(winner);
+        sendCommand(command);
+    }
 }
