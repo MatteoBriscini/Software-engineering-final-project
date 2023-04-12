@@ -216,7 +216,7 @@ public class Controller {
             Collections.shuffle(tmpPlayers, new Random());
             game.setPlayersArray(tmpPlayers);
 
-            //set commun goal
+            //set common goal
             for (int i=0; i<numberOfPossibleCommonGoals; i++) numberList.add(i);
             Collections.shuffle(numberList);
             int[] commonGoalIDArray = this.setCommonGoals(numberList, n);
@@ -480,7 +480,7 @@ public class Controller {
     }
 
     /**
-     * this method increment the currentPlayer and verify the player do not exceeds time limit to make a move
+     * this method increment the currentPlayer and verify the player do not exceed time limit to make a move
      */
     synchronized public void turn(){
         if(endGame) return;         //if game is finish
