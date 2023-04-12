@@ -53,7 +53,6 @@ public class ControllerRMI extends ConnectionController implements ControllerRem
         System.err.println("\u001B[32m" + "Server (rmi) for newGame ready on port: " + PORT + "\u001B[0m");
     }
 
-
     /************************************************************************
      ************************************************** IN method ***********
      * ***********************************************************************

@@ -3,6 +3,7 @@ package it.polimi.ingsw.Server;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Connection.ConnectionControllerManager;
+import it.polimi.ingsw.Server.Connection.ConnectionType;
 import it.polimi.ingsw.Server.Exceptions.*;
 import it.polimi.ingsw.Shared.Cards.Card;
 import it.polimi.ingsw.Server.Model.GameMaster;
@@ -127,10 +128,10 @@ public class Controller {
      * create new connection class for controller when necessary
      * @param PORT available port
      * @param connectionType rmi or socket
-     * @return true if the new port will be used false in all other case
+     * @return number of the used port
      * @throws ConnectionControllerManagerException if connection type has an invalid parameters
      */
-    public boolean addClient(int PORT, String connectionType) throws ConnectionControllerManagerException {
+    public int addClient(int PORT, ConnectionType connectionType) throws ConnectionControllerManagerException {
        return controllerManager.addClient(PORT, connectionType, this);
     }
 
@@ -478,7 +479,7 @@ public class Controller {
         waitForPlayerResponse.setName("waitForPlayerResponse");
     }
 
-    synchronized private void updateClientData(PositionWithColor[] positions, Card[] cards, int column){ //da finire********************************
+    synchronized private void updateClientData(PositionWithColor[] positions, Card[] cards, int column){
         System.out.println("\u001B[36m" + "update client data" + "\u001B[0m");
 
         //update main board (broadcast to each client)
