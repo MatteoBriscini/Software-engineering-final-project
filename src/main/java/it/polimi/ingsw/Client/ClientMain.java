@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Client;
 
 import it.polimi.ingsw.Client.Connection.PlayingPlayerRMI;
+import it.polimi.ingsw.client.Connection.LobbyPlayerRMI;
 
 import java.rmi.RemoteException;
 
@@ -10,17 +11,8 @@ public class ClientMain {
 
 
     public static void main(String[] args) {
-        PlayingPlayerRMI tmp = null;
-        try {
-            tmp = new PlayingPlayerRMI(1233, serverIP, "carlo");
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            tmp = new PlayingPlayerRMI(1234, serverIP, "antonio");
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
+        LobbyPlayerRMI tmp = null;
+        tmp = new LobbyPlayerRMI(1234, serverIP);
     }
 
 }

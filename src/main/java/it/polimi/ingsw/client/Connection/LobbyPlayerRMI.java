@@ -15,7 +15,7 @@ public class LobbyPlayerRMI {
 
     //temp for testing
 
-    private String ID = new String("Pupù");
+    private String ID = new String("Papa");
     private String pwd = new String("caspiterina");
 
 
@@ -32,7 +32,7 @@ public class LobbyPlayerRMI {
             Registry registry = LocateRegistry.getRegistry(serverIP, PORT);
             stub = (LobbyRemoteInterface) registry.lookup("LobbyRemoteInterface");
 
-            this.login(ID, pwd);
+            login(ID, pwd);
 
         }catch(Exception e){
             System.err.println("Client exception: " + e.toString());
@@ -41,12 +41,29 @@ public class LobbyPlayerRMI {
 
     }
 
-    public static boolean login(String ID, String pwd){
+    public static int login(String ID, String pwd){
         try {
             return stub.login(ID, pwd);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
     }
+
+    public static boolean signUp(String ID, String pwd){
+        try {
+            return stub.signUp(ID, pwd);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void joinGame(){
+
+    }
+
+    public void createGame(){
+
+    }
+
 
 }

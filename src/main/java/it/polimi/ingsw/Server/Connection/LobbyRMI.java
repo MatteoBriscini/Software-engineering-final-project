@@ -1,7 +1,9 @@
 package it.polimi.ingsw.Server.Connection;
 
 import it.polimi.ingsw.Server.Controller;
+import it.polimi.ingsw.Server.Lobby.Lobby;
 
+import javax.security.auth.login.LoginException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -11,11 +13,13 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class LobbyRMI implements LobbyRemoteInterface{
 
+    protected final Lobby lobby;
     protected final int PORT;
 
     protected final String cntType;
 
-    public LobbyRMI(int port){
+    public LobbyRMI(int port, Lobby lobby){
+        this.lobby = lobby;
         this.PORT = port;
         this.cntType = "RMI";
         this.connection();
@@ -49,9 +53,22 @@ public class LobbyRMI implements LobbyRemoteInterface{
     }
 
     @Override
-    public boolean login(String ID, String pwd) throws RemoteException {
+    public int login(String ID, String pwd) throws RemoteException {
 
         System.out.println(ID + " on port: "+ PORT);
+        try {
+            lobby.login(ID, pwd);
+        } catch (LoginException e) {
+            throw new RuntimeException(e);
+        }
+        return PORT;
+    }
+
+    @Override
+    public boolean signUp(String ID, String pwd) throws RemoteException {
+
+        System.out.println(ID + " on port: "+ PORT + ", trying to sign up");
+        lobby.signUp(ID, pwd);
         return false;
     }
 }

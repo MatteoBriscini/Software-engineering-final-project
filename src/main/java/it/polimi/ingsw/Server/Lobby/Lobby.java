@@ -20,7 +20,7 @@ public class Lobby {
     //Attributes
 
 
-    private LobbyRMI RMI = new LobbyRMI(1234);
+    private LobbyRMI RMI = new LobbyRMI(1234, this);
 
     private ArrayList<Controller> activeGames = new ArrayList<>();
 
@@ -28,12 +28,15 @@ public class Lobby {
 
     private ArrayList<String[]> playersInGames = new ArrayList<>();
 
+    private ArrayList<Integer> allocatedPORT;
+
     //Methods
 
-    public synchronized void login(String ID, String pwd) throws LoginException {
+    public synchronized int login(String ID, String pwd) throws LoginException {
 
         ArrayList<String[]> games;
         ArrayList<Controller> activeG;
+        ArrayList<Integer> PORT;
         boolean f = false;
 
         String path = loginJSONURL;      //file path
@@ -87,17 +90,22 @@ public class Lobby {
                         activeG = activeGames;
 
                     }
+                    synchronized (allocatedPORT){
 
-                    try {
-                        activeG.get(j).addNewPlayer(ID);
-                    } catch (addPlayerToGameException e) {
-                        throw new RuntimeException(e);
+                        PORT = allocatedPORT;
+
                     }
+
+                    if(activeG.get(j).isPlayerOffline(ID)){
+                        return PORT.get(j);
+                    }
+
                 }
             }
 
         }
 
+        return -1;
     }
 
     public synchronized void signUp(String ID, String pwd){

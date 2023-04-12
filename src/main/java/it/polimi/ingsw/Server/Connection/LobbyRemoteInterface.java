@@ -5,6 +5,8 @@ import java.rmi.RemoteException;
 
 public interface LobbyRemoteInterface extends Remote {
 
-    public boolean login(String ID, String pwd) throws RemoteException;
+    public int login(String ID, String pwd) throws RemoteException;
+
+    public boolean signUp(String ID, String pwd) throws RemoteException;
 
 }

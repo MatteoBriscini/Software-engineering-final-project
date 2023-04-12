@@ -1,12 +1,17 @@
 package it.polimi.ingsw.Server;
 
 import it.polimi.ingsw.Server.Exceptions.ConnectionControllerManagerException;
+import it.polimi.ingsw.Server.Lobby.Lobby;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 public class ServerMain {
 
     public static void main(String[] args) {
+
+        Lobby lobby1 = new Lobby();
+
+        /*
 
        Controller game1 =new Controller();
         try {
@@ -27,6 +32,8 @@ public class ServerMain {
             throw new RuntimeException(e);
         }
 
+
+         */
 
     }
 
