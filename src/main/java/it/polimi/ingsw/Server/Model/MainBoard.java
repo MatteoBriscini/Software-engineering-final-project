@@ -1,14 +1,18 @@
 package it.polimi.ingsw.Server.Model;
 
-import it.polimi.ingsw.Server.Model.Cards.Card;
-import it.polimi.ingsw.Server.Model.Cards.CardColor;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import it.polimi.ingsw.Shared.Cards.Card;
+import it.polimi.ingsw.Shared.Cards.CardColor;
 import it.polimi.ingsw.Server.Exceptions.InvalidPickException;
-import it.polimi.ingsw.Server.JsonSupportClasses.Position;
-import it.polimi.ingsw.Server.JsonSupportClasses.PositionWithColor;
+import it.polimi.ingsw.Shared.JsonSupportClasses.Position;
+import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.*;
 
-import static it.polimi.ingsw.Server.Model.Cards.CardColor.*;
+import static it.polimi.ingsw.Shared.Cards.CardColor.*;
 
 /**
  * this class is used to make all the checks on the MainBoard, removing or inserting the cards
@@ -21,9 +25,40 @@ public class MainBoard {
 
     Random rand = new Random();
 
+    private final String url="src/main/json/config/MainBoardConfig.json";
+
+    private int nColors;
+    private int cardsByColor;
+    private int rows;
+    private int columns;
+
+
+
+    private void jsonCreate() throws FileNotFoundException {
+
+        Gson gson = new Gson();
+
+        String urlConfig = url;
+        FileReader fileJsonConfig = new FileReader(urlConfig);
+
+        JsonObject controller = new Gson().fromJson(fileJsonConfig, JsonObject.class);
+
+        this.nColors = controller.get("nColors").getAsInt();
+        this.cardsByColor = controller.get("cardsByColor").getAsInt();
+        this.columns = controller.get("columns").getAsInt();
+        this.rows = controller.get("rows").getAsInt();
+    }
 
     public MainBoard(){
-        this.board = new Card[9][9];
+
+        try {
+            this.jsonCreate();
+        } catch (FileNotFoundException e) {
+            System.out.println("MainBoard: JSON FILE NOT FOUND");
+        }
+
+
+        this.board = new Card[columns][rows];
 
         fillWithEmpty();
 
@@ -35,8 +70,8 @@ public class MainBoard {
      * this method fills the board with Empty cards
      */
     private void fillWithEmpty(){
-        for(int x=0; x<9; x++)
-            for(int y=0; y<9;y++)
+        for(int x=0; x<columns; x++)
+            for(int y=0; y<rows;y++)
                 board[x][y]=new Card(EMPTY);
     }
 
@@ -44,18 +79,18 @@ public class MainBoard {
      * this method fills the list of colors (that represents the bag) with the required number of cards of each color
      */
     private void fillColorsList(){
-        for(int i=0;i<6;i++) {
-            for (int j = 0; j < 22; j++) {
+        for(int i=0;i<nColors;i++) {
+            for (int j = 0; j < cardsByColor; j++) {
                 colorsList.add(new Card(CardColor.values()[i]));
             }
         }
     }
 
     public Card[][] getBoard() {
-        Card[][] tmpBoard=new Card[9][9];
+        Card[][] tmpBoard=new Card[columns][rows];
 
-        for(int x=0;x<9;x++) {
-            for (int y = 0; y < 9; y++) {
+        for(int x=0;x<columns;x++) {
+            for (int y = 0; y < rows; y++) {
                 tmpBoard[x][y] = new Card(board[x][y].getColor());
             }
         }
@@ -67,20 +102,23 @@ public class MainBoard {
      * @return false if there are no cards left in the bag, true otherwise
      */
     public boolean fillBoard(Position[] positions){
-        boolean end;
-
-        for( Position a : positions){
-            if(!board[a.getX()][a.getY()].getColor().equals(EMPTY)){
-                PositionWithColor p= new PositionWithColor(a.getX(),a.getY(),0,board[a.getX()][a.getY()].getColor());
-                try {
-                    removeCard(new PositionWithColor[]{p});
-                }catch (InvalidPickException e){}
+        boolean remainingCards=false;
+            for (Position a : positions) {
+                if (!board[a.getX()][a.getY()].getColor().equals(EMPTY)) {
+                    PositionWithColor p = new PositionWithColor(a.getX(), a.getY(), 0, board[a.getX()][a.getY()].getColor());
+                    removeAndUpdate(new PositionWithColor[]{p});
+                }
             }
-            end=insert(a);
-            if(!end)
-                return end;
-        }
-        return true;
+
+            for(Position a : positions){
+                if(colorsList.size()>0) {
+                    remainingCards = true;
+                    insert(a);
+                }
+                else
+                    break;
+            }
+        return remainingCards;
     }
 
     /**
@@ -92,7 +130,8 @@ public class MainBoard {
 
         validPick(positions);
 
-        removeAndUpdate(positions);
+        for(PositionWithColor p : positions)
+            board[p.getX()][p.getY()]=new Card(EMPTY);
 
         return noMovesLeft();
 
@@ -162,11 +201,11 @@ public class MainBoard {
      * @return true if there are no moves left on the board, false otherwise
      */
     private boolean noMovesLeft(){
-        for(int x=0; x<9; x++) {
-            for (int y = 0; y < 9; y++) {
-                if (x < 8 && !board[x][y].getColor().equals(EMPTY) && !board[x + 1][y].getColor().equals(EMPTY))
+        for(int x=0; x<columns; x++) {
+            for (int y = 0; y < rows; y++) {
+                if (x < (columns-1) && !board[x][y].getColor().equals(EMPTY) && !board[x + 1][y].getColor().equals(EMPTY))
                     return false;
-                if (y < 8 && !board[x][y].getColor().equals(EMPTY) && !board[x][y + 1].getColor().equals(EMPTY))
+                if (y < (rows-1) && !board[x][y].getColor().equals(EMPTY) && !board[x][y + 1].getColor().equals(EMPTY))
                     return false;
             }
         }
@@ -192,14 +231,12 @@ public class MainBoard {
      * this method picks a random card from the bag, put it in the selected position on the board and then removes the
      * card from the list of available cards
      */
-    private boolean insert(Position p){
-        if(colorsList.size()>0) {
+    private void insert(Position p){
             Card c=colorsList.get(rand.nextInt(colorsList.size()));
             board[p.getX()][p.getY()] = c;
+
             colorsList.remove(c);
-            return true;
-        }
-        return false;
+
     }
 
 

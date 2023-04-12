@@ -2,7 +2,7 @@ package it.polimi.ingsw.Server.Model.PlayerClasses;
 
 
 import com.google.gson.Gson;
-import it.polimi.ingsw.Server.Model.Cards.Card;
+import it.polimi.ingsw.Shared.Cards.Card;
 import it.polimi.ingsw.Server.Exceptions.NoSpaceException;
 import it.polimi.ingsw.Server.SupportClasses.NColorsGroup;
 import it.polimi.ingsw.Server.SupportClasses.RecursiveUsed;

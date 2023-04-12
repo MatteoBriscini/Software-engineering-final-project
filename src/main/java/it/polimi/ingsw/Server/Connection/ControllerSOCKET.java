@@ -1,6 +1,9 @@
 package it.polimi.ingsw.Server.Connection;
 
+import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Controller;
+import it.polimi.ingsw.Shared.Cards.Card;
+import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -10,21 +13,21 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ControllerSOCKET extends ControllerRMI{
+public class ControllerSOCKET extends ConnectionController {
     public ControllerSOCKET(Controller controller, int port){
         super(controller, port);
+        this.connection();
     }
 
-    public boolean getName(String C) {
-        System.out.println(C + " on port: "+ PORT);
-        return false;
+    public void notifyActivePlayer(int activePlayerID){
+
     }
 
-    @Override
     synchronized public void connection(){
 
         ExecutorService executor = Executors.newCachedThreadPool();
@@ -36,7 +39,7 @@ public class ControllerSOCKET extends ControllerRMI{
             System.out.println(e.toString());           //da finire*********************************
             return;
         }
-        System.err.println("Server (socket) for newGame ready on port: " + PORT);
+        System.err.println("\u001B[32m" + "Server (socket) for newGame ready on port: " + PORT + "\u001B[0m");
 
         while (true){
             try {
@@ -52,7 +55,71 @@ public class ControllerSOCKET extends ControllerRMI{
         executor.shutdown();
     }
 
-     private class MultiClientSocketGame implements Runnable{
+    /*************************************************************************
+     ************************************************** OUT method ***********
+     * ***********************************************************************
+     */
+    @Override
+    public void notifyActivePlayer(String activePlayerID) {
+
+    }
+
+    @Override
+    public void sendPlayerList(String[] players) {
+
+    }
+
+    @Override
+    public void sendPlayersNUmber(int playersNumber) {
+
+    }
+
+    @Override
+    public void sendMainBoard(Card[][] mainBoard) {
+
+    }
+
+    @Override
+    public void addCardToClientBoard(String playerID, int column, Card[] cards) {
+
+    }
+
+    @Override
+    public void dellCardFromMainBoard(PositionWithColor[] cards) {
+
+    }
+
+    @Override
+    public void sendAllPlayerBoard(ArrayList<Card[][]> playerBoards) {
+
+    }
+
+    @Override
+    public void sendAllCommonGoal(int[] commonGoalID) {
+
+    }
+
+    @Override
+    public void sendPrivateGoal(PositionWithColor[] cards, String playerID) {
+
+    }
+
+    @Override
+    public void sendEndGamePoint(JsonObject points) {
+
+    }
+
+    @Override
+    public void sendWinner(JsonObject winner) {
+
+    }
+
+    /***********************************************************************************
+     ************************************************** MultiClientSocketGame***********
+     * *********************************************************************************
+     */
+
+    private class MultiClientSocketGame implements Runnable{
         private final Socket socket;
 
         public MultiClientSocketGame(Socket socket){
@@ -81,8 +148,6 @@ public class ControllerSOCKET extends ControllerRMI{
                             bool = false;
                         }
 
-                        System.out.println(bool);
-
                         if(bool == true) {
                             try {
                                 boolean name = (boolean) getNameMethod.invoke(ControllerSOCKET.this, "Mishka");
@@ -92,8 +157,7 @@ public class ControllerSOCKET extends ControllerRMI{
                             }
                         }
 
-                        out.println(bool); //response
-                        System.out.println(line);
+                        out.println(bool); //response{
                         out.flush();
                     }
                 }

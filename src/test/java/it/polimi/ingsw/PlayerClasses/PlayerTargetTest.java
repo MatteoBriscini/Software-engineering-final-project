@@ -1,7 +1,7 @@
 package it.polimi.ingsw.PlayerClasses;
 
-import it.polimi.ingsw.Server.Model.Cards.Card;
-import static it.polimi.ingsw.Server.Model.Cards.CardColor.*;
+import it.polimi.ingsw.Shared.Cards.Card;
+import static it.polimi.ingsw.Shared.Cards.CardColor.*;
 
 import it.polimi.ingsw.Server.Exceptions.NoSpaceException;
 import it.polimi.ingsw.Server.Model.PlayerClasses.Player;

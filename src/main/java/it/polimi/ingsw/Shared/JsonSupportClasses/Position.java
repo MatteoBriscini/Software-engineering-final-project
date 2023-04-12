@@ -1,11 +1,11 @@
-package it.polimi.ingsw.Server.JsonSupportClasses;
+package it.polimi.ingsw.Shared.JsonSupportClasses;
 
-import it.polimi.ingsw.Server.Model.Cards.Card;
+import it.polimi.ingsw.Shared.Cards.Card;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import static it.polimi.ingsw.Server.Model.Cards.CardColor.EMPTY;
+import static it.polimi.ingsw.Shared.Cards.CardColor.EMPTY;
 
 public class Position {
     private final int x;

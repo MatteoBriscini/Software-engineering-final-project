@@ -1,11 +1,15 @@
 package it.polimi.ingsw.Server.Model.PlayerClasses;
 
 
-import it.polimi.ingsw.Server.Model.Cards.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Exceptions.NoSpaceException;
-import it.polimi.ingsw.Server.Model.Cards.Card;
+import it.polimi.ingsw.Shared.Cards.Card;
 
-import static it.polimi.ingsw.Server.Model.Cards.CardColor.EMPTY;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+
+import static it.polimi.ingsw.Shared.Cards.CardColor.EMPTY;
 
 public class PlayerBoard {
 
@@ -13,23 +17,34 @@ public class PlayerBoard {
     //Attributes
 
     private Card[][] board;
+    private int x;
+    private int y;
+
+    JsonObject playerBoardConfig = new JsonObject();
+
+    private static final String jsonURL = "src/main/json/config/playerBoardConfig.json";
 
 
     //Constructor
 
     public PlayerBoard(){
-        board = new Card[5][6];
-        for (int i = 0; i < 5; i++){
-            for (int j = 0; j < 6; j++){
+        try {
+            this.jsonCreate();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        board = new Card[x][y];
+        for (int i = 0; i < x; i++){
+            for (int j = 0; j < y; j++){
                 board[i][j] = new Card(EMPTY);
             }
         }
     }
 
     public PlayerBoard(Card[][] board){
-        this.board = new Card[5][6];
-        for (int i = 0; i < 5; i++){
-            for (int j = 0; j < 6; j++){
+        this.board = new Card[x][y];
+        for (int i = 0; i < x; i++){
+            for (int j = 0; j < y; j++){
                 this.board[i][j] = board[i][j];
             }
         }
@@ -38,9 +53,9 @@ public class PlayerBoard {
     //Get Methods
 
     public Card[][] getBoard() {
-        Card[][] card = new Card[5][6];
-        for(int x=0; x<5; x++){
-            for(int y=0; y<6; y++){
+        Card[][] card = new Card[this.x][this.y];
+        for(int x=0; x<this.x; x++){
+            for(int y=0; y<this.y; y++){
                 card[x][y] = new Card(board[x][y].getColor());
             }
         }
@@ -59,7 +74,7 @@ public class PlayerBoard {
      */
     public boolean addCard (int column, Card[] cards) throws NoSpaceException{
 
-        int i = 5, j = 0;
+        int i = y-1, j = 0;
         boolean flag = false;
 
         while(board[column][i].getColor().equals(EMPTY) && i != 0){ //check column for correct line start
@@ -70,7 +85,7 @@ public class PlayerBoard {
 
         while(j < cards.length) {
 
-            if (i > 5) {
+            if (i >= y) {
                 throw new NoSpaceException("Full column"); //check if column has enough space
             }
             j++;
@@ -89,12 +104,25 @@ public class PlayerBoard {
 
         }
 
-        for(int k = 0; k < 5; k++){
-            if(board[k][5].getColor().equals(EMPTY)){ //check if PlayerBoard is completely full
+        for(int k = 0; k < x; k++){
+            if(board[k][y-1].getColor().equals(EMPTY)){ //check if PlayerBoard is completely full
                 flag = true;
             }
         }
         return !flag;
+
+    }
+
+    private void jsonCreate() throws FileNotFoundException{
+
+        Gson gson = new Gson();
+
+        String urlConfig = jsonURL;
+        FileReader fileJsonConfig = new FileReader(urlConfig);
+
+        JsonObject controller = new Gson().fromJson(fileJsonConfig, JsonObject.class);
+        this.x = controller.get("x").getAsInt();
+        this.y = controller.get("y").getAsInt();
 
     }
 

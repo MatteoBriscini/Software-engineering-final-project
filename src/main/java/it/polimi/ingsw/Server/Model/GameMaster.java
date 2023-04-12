@@ -6,9 +6,9 @@ import it.polimi.ingsw.Server.Exceptions.ConstructorException;
 import it.polimi.ingsw.Server.Exceptions.InvalidPickException;
 import it.polimi.ingsw.Server.Exceptions.LengthException;
 import it.polimi.ingsw.Server.Exceptions.NoSpaceException;
-import it.polimi.ingsw.Server.Model.Cards.Card;
-import it.polimi.ingsw.Server.JsonSupportClasses.Position;
-import it.polimi.ingsw.Server.JsonSupportClasses.PositionWithColor;
+import it.polimi.ingsw.Shared.Cards.Card;
+import it.polimi.ingsw.Shared.JsonSupportClasses.Position;
+import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 import it.polimi.ingsw.Server.Model.GroupGoals.*;
 import it.polimi.ingsw.Server.Model.PlayerClasses.Player;
 import it.polimi.ingsw.Server.Model.PlayerClasses.PlayerTarget;
@@ -16,7 +16,6 @@ import it.polimi.ingsw.Server.Model.PlayerClasses.PlayerTarget;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class GameMaster {
     private ArrayList<Player> players = new ArrayList<>();
@@ -130,7 +129,6 @@ public class GameMaster {
             commonGoals[n] = new OneColorPatternGoals(oneColourPatternGoalsConfig[3-minValue]);
         }else if(commonGoalID >= rainbowRowsAndColumnsGoalsRange[0] && commonGoalID <= rainbowRowsAndColumnsGoalsRange[1]){
             minValue = commonGoalID-(rainbowRowsAndColumnsGoalsRange[0]);
-            System.out.println("max: " + (12-(minValue*4)));
             commonGoals[n] = new RainbowRowsAndColumnsGoals(rainbowRowsAndColumnsGoalsConfig[12-(minValue*4)],rainbowRowsAndColumnsGoalsConfig[13-(minValue*4)],rainbowRowsAndColumnsGoalsConfig[14-(minValue*4)],rainbowRowsAndColumnsGoalsConfig[15-(minValue*4)]);
         }else if(commonGoalID == rainbowRowsAndColumnsGoalsRange[1]+1){
             commonGoals[n] = new EightEqualTarget();
@@ -226,8 +224,7 @@ public class GameMaster {
      * @param commonGoalID is the identifier of the common goal
      * @return return the info about the "already scored" goals
      */
-    public ArrayList<Player> getAlreadyScored (int commonGoalID){
-        System.out.println(commonGoals[0]);
+    public ArrayList<String> getAlreadyScored (int commonGoalID){
         return commonGoals[commonGoalID].getAlreadyScored();
     }
 
@@ -235,7 +232,7 @@ public class GameMaster {
      * @param alreadyScored indicate if the goal was already scored and how many times
      * @param commonGoalID is the identifier of the common goal
      */
-    public void setAlreadyScored(ArrayList<Player> alreadyScored, int commonGoalID){
+    public void setAlreadyScored(ArrayList<String> alreadyScored, int commonGoalID){
         commonGoals[commonGoalID].setAlreadyScored(alreadyScored);
     }
 

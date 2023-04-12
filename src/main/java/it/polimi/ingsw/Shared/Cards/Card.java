@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Server.Model.Cards;
+package it.polimi.ingsw.Shared.Cards;
 
 /**
  * this class is used to represent the cards
@@ -9,7 +9,7 @@ public class Card{
 
     public Card(CardColor color){
         this.color=color;
-        this.sketch=(int)Math.random()*3;
+        this.sketch= (int) (Math.random() * 3);
     }
 
     public CardColor getColor(){
