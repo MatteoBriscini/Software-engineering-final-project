@@ -156,5 +156,16 @@ public class PlayingPlayerRMI extends PlayingPlayerConnectionManager implements 
 
     }
 
+    @Override
+    public void receiveLastCommonScored(String scored) throws RemoteException {
+
+    }
+
+    @Override
+    public void errorMSG(String error, String playerID) throws RemoteException {
+
+
+    }
+
 
 }

@@ -165,4 +165,14 @@ public class ControllerRMI extends ConnectionController implements ControllerRem
         Command command = new WinnerCommand(winner);
         sendCommand(command);
     }
+
+    public void sendLastCommonScored(JsonObject scored){
+        Command command = new SendLastCommonScored(scored);
+        sendCommand(command);
+    }
+
+    public void sendError(JsonObject error, String playerID){
+        Command command = new ErrorCommand(error, playerID);
+        sendCommand(command);
+    }
 }
