@@ -114,6 +114,16 @@ public class ControllerSOCKET extends ConnectionController {
 
     }
 
+    @Override
+    public void sendLastCommonScored(JsonObject scored) {
+
+    }
+
+    @Override
+    public void sendError(JsonObject error, String playerID){
+
+    }
+
     /***********************************************************************************
      ************************************************** MultiClientSocketGame***********
      * *********************************************************************************

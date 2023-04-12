@@ -21,6 +21,10 @@ public abstract class ConnectionController {
 
     public abstract void connection();
 
+    public int getPORT(){
+        return this.PORT;
+    }
+
     /*************************************************************************
      ************************************************** OUT method ***********
      * ***********************************************************************
@@ -37,6 +41,8 @@ public abstract class ConnectionController {
     public abstract void sendPrivateGoal(PositionWithColor[] cards,String playerID);
     public abstract void sendEndGamePoint(JsonObject points);
     public abstract void sendWinner(JsonObject winner);
+    public abstract void sendLastCommonScored(JsonObject scored);
+    public abstract void sendError(JsonObject error, String playerID);
 
     /************************************************************************
      ************************************************** IN method ***********

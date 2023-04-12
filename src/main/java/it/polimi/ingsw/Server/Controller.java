@@ -3,6 +3,7 @@ package it.polimi.ingsw.Server;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Connection.ConnectionControllerManager;
+import it.polimi.ingsw.Server.Connection.ConnectionType;
 import it.polimi.ingsw.Server.Exceptions.*;
 import it.polimi.ingsw.Shared.Cards.Card;
 import it.polimi.ingsw.Server.Model.GameMaster;
@@ -127,10 +128,10 @@ public class Controller {
      * create new connection class for controller when necessary
      * @param PORT available port
      * @param connectionType rmi or socket
-     * @return true if the new port will be used false in all other case
+     * @return number of the used port
      * @throws ConnectionControllerManagerException if connection type has an invalid parameters
      */
-    public boolean addClient(int PORT, String connectionType) throws ConnectionControllerManagerException {
+    public int addClient(int PORT, ConnectionType connectionType) throws ConnectionControllerManagerException {
        return controllerManager.addClient(PORT, connectionType, this);
     }
 
@@ -199,9 +200,15 @@ public class Controller {
         int n = rand.nextInt(numberOfPossibleCommonGoals-commonGoalNumber);
         int m = rand.nextInt(numberOfPossiblePrivateGoals-maxPlayerNumber);
         ArrayList<Integer> numberList = new ArrayList<>();
+        JsonObject error = new JsonObject();
         if(playerNum >= minPlayerNumber && !alreadyStarted && !endGame){
 
-            if(!game.getPlayerArray().get(0).getPlayerID().equals(playerID)) return false; //if player hasn't privileges to start the game
+            if(!game.getPlayerArray().get(0).getPlayerID().equals(playerID)) {//if player hasn't privileges to start the game
+                error.addProperty("errorID", "can't start the game");
+                error.addProperty("errorMSG", "the player hasn't privileges to start the game");
+                controllerManager.sendError(error, playerID);
+                return false;
+            }
             alreadyStarted = true;
 
             //shuffle gaming order
@@ -209,7 +216,7 @@ public class Controller {
             Collections.shuffle(tmpPlayers, new Random());
             game.setPlayersArray(tmpPlayers);
 
-            //set commun goal
+            //set common goal
             for (int i=0; i<numberOfPossibleCommonGoals; i++) numberList.add(i);
             Collections.shuffle(numberList);
             int[] commonGoalIDArray = this.setCommonGoals(numberList, n);
@@ -228,7 +235,12 @@ public class Controller {
             this.turn();
             return true;
         } else {
-            return false;   //finire else ***************************************************
+            error.addProperty("errorID", "can't start the game");
+            if(alreadyStarted) error.addProperty("errorMSG", "the game is already started");
+            if(playerNum < minPlayerNumber ) error.addProperty("errorMSG", "there isn't enough player in the game");
+            controllerManager.sendError(error, playerID);
+
+            return false;
         }
     }
 
@@ -383,10 +395,15 @@ public class Controller {
      * @return true if the move is valid false in all other case
      */
     synchronized public boolean takeCard(int column, PositionWithColor[] cards, String playerID){
+        JsonObject error = new JsonObject();
         if(!endGame && alreadyStarted && game.getPlayerArray().get(currentPlayer).getPlayerID().equals(playerID)){
             //verify the numbers of cards
             if (cards.length == 0 || cards.length>3){
-                return false;               //devo comunucare al client che la mossa è errata ******************************************
+                error.addProperty("errorID", "invalid move");
+                error.addProperty("errorMSG", "taken none ore to many cards");
+                controllerManager.sendError(error, playerID);
+
+                return false;
             }
 
             //remove the cards from main board
@@ -395,7 +412,10 @@ public class Controller {
                     if(!game.fillMainBoard(allowedPositionArray)) this.endGame();
                 }
             } catch (InvalidPickException e) {
-                return false;               //devo comunucare al client che la mossa è errata ******************************************
+                error.addProperty("errorID", "invalid move");
+                error.addProperty("errorMSG", e.toString());
+                controllerManager.sendError(error, playerID);
+                return false;
             }
 
             //add card to player board
@@ -409,8 +429,11 @@ public class Controller {
                     this.waitForEndGame();
                 }
             } catch (NoSpaceException e) {
+                error.addProperty("errorID", "invalid move");
+                error.addProperty("errorMSG", "not enough space on the player board");
+                controllerManager.sendError(error, playerID);
                 game.fixBoard(cards);
-                return false;       //devo comunucare al client che la mossa è errata ******************************************
+                return false;
             }
 
             //calc real time points and add it to current player
@@ -420,8 +443,11 @@ public class Controller {
             this.turn(); //skip to next player
             return true;
         } else {
+            error.addProperty("errorID", "invalid move");
+            error.addProperty("errorMSG", game.getPlayerArray().get(currentPlayer).getPlayerID() + "'s turn, you can't take cards");
+            controllerManager.sendError(error, playerID);
+
             return false;
-            //finire else ***************************************************
         }
     }
 
@@ -438,16 +464,23 @@ public class Controller {
                     alreadyScored.add(game.getPlayerArray().get(currentPlayer).getPlayerID());
                     game.setAlreadyScored(alreadyScored, i);
 
+                    //calc point && add to the player points
                     int point = maxPointCommonGoals - alreadyScored.size() * 2;
                     if (playerNum == 2 && point == 6) point = 4;
                     game.playerAddPoint(point, currentPlayer);
+
+                    //send to client the value of the common goal just scored
+                    JsonObject scored = new JsonObject();
+                    scored.addProperty("playerID", game.getPlayerArray().get(currentPlayer).getPlayerID());
+                    scored.addProperty("value", point);
+                    controllerManager.sendLastCommonScored(scored);
             }
 
         }
     }
 
     /**
-     * this method increment the currentPlayer and verify the player do not exceeds time limit to make a move
+     * this method increment the currentPlayer and verify the player do not exceed time limit to make a move
      */
     synchronized public void turn(){
         if(endGame) return;         //if game is finish
@@ -478,7 +511,7 @@ public class Controller {
         waitForPlayerResponse.setName("waitForPlayerResponse");
     }
 
-    synchronized private void updateClientData(PositionWithColor[] positions, Card[] cards, int column){ //da finire********************************
+    synchronized private void updateClientData(PositionWithColor[] positions, Card[] cards, int column){
         System.out.println("\u001B[36m" + "update client data" + "\u001B[0m");
 
         //update main board (broadcast to each client)

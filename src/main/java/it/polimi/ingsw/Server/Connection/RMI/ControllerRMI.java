@@ -53,7 +53,6 @@ public class ControllerRMI extends ConnectionController implements ControllerRem
         System.err.println("\u001B[32m" + "Server (rmi) for newGame ready on port: " + PORT + "\u001B[0m");
     }
 
-
     /************************************************************************
      ************************************************** IN method ***********
      * ***********************************************************************
@@ -164,6 +163,16 @@ public class ControllerRMI extends ConnectionController implements ControllerRem
     }
     public void sendWinner(JsonObject winner){
         Command command = new WinnerCommand(winner);
+        sendCommand(command);
+    }
+
+    public void sendLastCommonScored(JsonObject scored){
+        Command command = new SendLastCommonScored(scored);
+        sendCommand(command);
+    }
+
+    public void sendError(JsonObject error, String playerID){
+        Command command = new ErrorCommand(error, playerID);
         sendCommand(command);
     }
 }
