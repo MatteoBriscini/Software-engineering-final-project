@@ -13,7 +13,7 @@ import static it.polimi.ingsw.Shared.Cards.CardColor.EMPTY;
 
 public class StairsPatternGoal extends CommonGoal {
 
-    private final String url = "src/main/json/goal/StairsPatternGoal.json";
+    private final String url = "src/main/json/config/playerBoardConfig.json";
 
     int maxX,maxY;
 
@@ -30,10 +30,10 @@ public class StairsPatternGoal extends CommonGoal {
          String urlConfig = url;
          FileReader fileJsonConfig = new FileReader(urlConfig);
 
-         JsonObject controller = new Gson().fromJson(fileJsonConfig, JsonObject.class);
+         JsonObject stair = new Gson().fromJson(fileJsonConfig, JsonObject.class);
 
-         this.maxX = controller.get("maxX").getAsInt();
-         this.maxY = controller.get("maxY").getAsInt();
+         this.maxX = stair.get("x").getAsInt()-1;
+         this.maxY = stair.get("y").getAsInt()-1;
 
      }
 

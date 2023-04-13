@@ -26,6 +26,7 @@ public class RainbowRowsAndColumnsGoals extends CommonGoal{
     private List<Card> cardsColumn;
 
     private final String url = "src/main/json/goal/RainbowRowsAndColumnsGoal.json";
+    private final String urlBoard = "src/main/json/config/playerBoardConfig.json";
 
     private int rows,columns,minRows,minColumns,maxRows,maxColumns,totRows,totColumns,totRainbowRows,totRainbowColumns;
 
@@ -55,18 +56,23 @@ public class RainbowRowsAndColumnsGoals extends CommonGoal{
         String urlConfig = url;
         FileReader fileJsonConfig = new FileReader(urlConfig);
 
-        JsonObject controller = new Gson().fromJson(fileJsonConfig, JsonObject.class);
+        JsonObject rainbow = new Gson().fromJson(fileJsonConfig, JsonObject.class);
 
-        this.rows = controller.get("rows").getAsInt();
-        this.columns = controller.get("columns").getAsInt();
-        this.minRows = controller.get("minRows").getAsInt();
-        this.minColumns = controller.get("minColumns").getAsInt();
-        this.maxRows = controller.get("maxRows").getAsInt();
-        this.maxColumns = controller.get("maxColumns").getAsInt();
-        this.totRows = controller.get("totRows").getAsInt();
-        this.totColumns = controller.get("totColumns").getAsInt();
-        this.totRainbowRows = controller.get("totRainbowRows").getAsInt();
-        this.totRainbowColumns = controller.get("totRainbowColumns").getAsInt();
+        String urlConfigBoard = urlBoard;
+        FileReader fileJsonConfigBoard = new FileReader(urlConfigBoard);
+
+        JsonObject rainbowBoard = new Gson().fromJson(fileJsonConfigBoard, JsonObject.class);
+
+        this.rows = rainbowBoard.get("y").getAsInt();
+        this.columns = rainbowBoard.get("x").getAsInt();
+        this.minRows = rainbow.get("minRows").getAsInt();
+        this.minColumns = rainbow.get("minColumns").getAsInt();
+        this.maxRows = rainbow.get("maxRows").getAsInt();
+        this.maxColumns = rainbow.get("maxColumns").getAsInt();
+        this.totRows = rainbow.get("totRows").getAsInt();
+        this.totColumns = rainbow.get("totColumns").getAsInt();
+        this.totRainbowRows = rainbow.get("totRainbowRows").getAsInt();
+        this.totRainbowColumns = rainbow.get("totRainbowColumns").getAsInt();
 
 
     }

@@ -23,6 +23,7 @@ public class SquaresGoal extends CommonGoal{
     private final NColorsGroup nColor = new NColorsGroup();
 
     private final String url = "src/main/json/goal/SquaresGoal.json";
+    private final String urlBoard = "src/main/json/config/playerBoardConfig.json";
 
     int maxX,maxY,nColorsMin,nColorsMax,nSquares;
 
@@ -39,13 +40,18 @@ public class SquaresGoal extends CommonGoal{
         String urlConfig = url;
         FileReader fileJsonConfig = new FileReader(urlConfig);
 
-        JsonObject controller = new Gson().fromJson(fileJsonConfig, JsonObject.class);
+        JsonObject square = new Gson().fromJson(fileJsonConfig, JsonObject.class);
 
-        this.maxX = controller.get("maxX").getAsInt();
-        this.maxY = controller.get("maxY").getAsInt();
-        this.nColorsMin = controller.get("nColorsMin").getAsInt();
-        this.nColorsMax = controller.get("nColorsMax").getAsInt();
-        this.nSquares = controller.get("nSquares").getAsInt();
+        String urlConfigBoard = urlBoard;
+        FileReader fileJsonConfigBoard = new FileReader(urlConfigBoard);
+
+        JsonObject squareBoard = new Gson().fromJson(fileJsonConfigBoard, JsonObject.class);
+
+        this.maxX = squareBoard.get("x").getAsInt();
+        this.maxY = squareBoard.get("y").getAsInt();
+        this.nColorsMin = square.get("nColorsMin").getAsInt();
+        this.nColorsMax = square.get("nColorsMax").getAsInt();
+        this.nSquares = square.get("nSquares").getAsInt();
 
 
     }
