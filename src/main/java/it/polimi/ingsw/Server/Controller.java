@@ -43,7 +43,9 @@ public class Controller {
     private int maxPointCommonGoals;
     private int minPlayerNumber;
     private int maxPlayerNumber;
-
+    private int fullBoardPoint;
+    private int minTakeCard;
+    private int maxTakeCard;
     public Controller(int maxPlayerNumber){
         try {
             jsonCreate();
@@ -82,6 +84,9 @@ public class Controller {
         this.maxPointCommonGoals = controller.get("maxPointCommonGoals").getAsInt();
         this.minPlayerNumber = controller.get("minPlayerNumber").getAsInt();
         this.maxPlayerNumber =  controller.get("maxPlayerNumber").getAsInt();
+        this.fullBoardPoint = controller.get("fullBoardPoint").getAsInt();
+        this.minTakeCard = controller.get("minTakeCard").getAsInt();
+        this.maxTakeCard = controller.get("maxTakeCard").getAsInt();
 
         //allowed position for mainBoard
         mainBoardConfig = new Gson().fromJson(fileJsonPosition, JsonObject.class).getAsJsonObject();
@@ -409,7 +414,7 @@ public class Controller {
         JsonObject error = new JsonObject();
         if(!endGame && alreadyStarted && game.getPlayerArray().get(currentPlayer).getPlayerID().equals(playerID)){
             //verify the numbers of cards
-            if (cards.length == 0 || cards.length>3){
+            if (cards.length < minTakeCard || cards.length > maxTakeCard){                       //TODO
                 error.addProperty("errorID", "invalid move");
                 error.addProperty("errorMSG", "taken none ore to many cards");
                 controllerManager.sendError(error, playerID);
@@ -440,7 +445,7 @@ public class Controller {
             }
             try {
                 if(game.addCard(column, tmp.toArray(new Card[0]), currentPlayer)){
-                    game.playerAddPoint(1, currentPlayer);
+                    game.playerAddPoint(fullBoardPoint, currentPlayer);
                     this.waitForEndGame();
                 }
             } catch (NoSpaceException e) {
@@ -487,7 +492,7 @@ public class Controller {
                     alreadyScored.add(game.getPlayerArray().get(currentPlayer).getPlayerID());
                     game.setAlreadyScored(alreadyScored, i);
 
-                    //calc point && add to the player points
+                    //calculate point && add to the player points
                     int point = maxPointCommonGoals - alreadyScored.size() * 2;
                     if (playerNum == 2 && point == 6) point = 4;
                     game.playerAddPoint(point, currentPlayer);

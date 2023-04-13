@@ -18,10 +18,10 @@ public class PlayingPlayer extends Player{
     PlayerBoard[] playerBoards;
     String[] playersID;
     String activePlayer;
+    boolean myTurn;
     int playersNumber;
     int[]CommonGoalID;
     JsonObject[] commonGoalScored;
-
     /**
      * @param connectionType rmi or socket
      * @param port for the specific game on the server
@@ -31,9 +31,9 @@ public class PlayingPlayer extends Player{
     public PlayingPlayer(ConnectionType connectionType, int port, String serverIP) throws RemoteException {
         switch (connectionType){
             case RMI:
-                connectionManager = new PlayingPlayerRMI(port, serverIP, playerID);
+                connectionManager = new PlayingPlayerRMI(port, serverIP, playerID, this);
                 break;
-            case SOCKET: //da finireeeee
+            case SOCKET: //TODO
                 break;
         }
     }
@@ -74,6 +74,7 @@ public class PlayingPlayer extends Player{
      */
     public void setActivePlayer(String activePlayer) {
         this.activePlayer = activePlayer;
+        myTurn = activePlayer.equals(playerID);
     }
     public void setCommonGoalID(int[] commonGoalID) {
         CommonGoalID = commonGoalID;
@@ -84,7 +85,6 @@ public class PlayingPlayer extends Player{
     public void setPlayersNumber(int playersNumber) {
         this.playersNumber = playersNumber;
     }
-
     public void createMainBoard(Card[][] board){
         this.mainBoard = new MainBoard(board);
     }

@@ -8,7 +8,6 @@ import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public abstract class ConnectionController {
     protected final Controller controller;
@@ -52,7 +51,7 @@ public abstract class ConnectionController {
      * @return true if player can start the game false in all other cases
      * @throws RemoteException if server is offline
      */
-    public boolean startGame(String playerID) throws RemoteException {
+    public boolean startGame(String playerID){
         return controller.startGame(playerID);
     }
     /**
@@ -63,7 +62,7 @@ public abstract class ConnectionController {
      * @return if the player who call the method is the current and if the move is valid, false in all other cases
      * @throws RemoteException if server is offline
      */
-    public boolean takeCard (int column, String cards , String playerID) throws RemoteException {
+    public boolean takeCard (int column, String cards , String playerID){
         Gson gson = new Gson();
         PositionWithColor[] cardsArray = new Gson().fromJson(cards, PositionWithColor[].class);
         return controller.takeCard(column, cardsArray, playerID);

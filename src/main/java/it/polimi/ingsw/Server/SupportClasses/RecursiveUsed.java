@@ -1,6 +1,11 @@
 package it.polimi.ingsw.Server.SupportClasses;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import it.polimi.ingsw.Shared.Cards.Card;
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 
 /**
  * support class to avoid duplicate code line
@@ -11,8 +16,10 @@ public class RecursiveUsed {
      */
     private final NColorsGroup equal = new NColorsGroup();
     private boolean[][] alreadyUsed;
-
     private int elementCombo;
+
+    private int rowSize;
+    private int columnSize;
 
     /**
      * this method just call the recursiveUsed method and the constructor for RecursiveUsedSupport
@@ -24,10 +31,25 @@ public class RecursiveUsed {
      * @return RecursiveUsedSupport to make possible to return 2 parameters
      */
     public RecursiveUsedSupport used(Card[][] board, int i, int j, boolean[][] alreadyUsed, int elementCombo){
+        try {
+            this.jsonCreate();
+        } catch (FileNotFoundException e) {
+            System.out.println("RecursiveUsedSupport: JSON FILE NOT FOUND");
+            throw new RuntimeException(e);
+        }
         this.elementCombo = elementCombo;
         this.alreadyUsed = alreadyUsed;
         this.recursiveUsed(board, i, j);
         return new RecursiveUsedSupport(this.alreadyUsed, this.elementCombo);
+    }
+
+    public void jsonCreate() throws FileNotFoundException {
+        String url = "src/main/json/config/playerBoardConfig.json";
+        FileReader fileJsonConfig = new FileReader(url);
+
+        JsonObject jsonObject = new Gson().fromJson(fileJsonConfig, JsonObject.class);
+        this.rowSize = jsonObject.get("x").getAsInt();
+        this.columnSize = jsonObject.get("y").getAsInt();
     }
 
     /**
@@ -39,13 +61,13 @@ public class RecursiveUsed {
     private void recursiveUsed (Card[][] board, int i, int j){
         alreadyUsed[i][j] = true;
         this.elementCombo += 1;
-        if (i>0 && i<5 && !alreadyUsed[i-1][j] && equal.nColorsCheck(new Card[]{board[i][j], board[i-1][j]},1,1))
+        if (i>0 && i<rowSize && !alreadyUsed[i-1][j] && equal.nColorsCheck(new Card[]{board[i][j], board[i-1][j]},1,1))
             this.recursiveUsed (board, i-1, j);
-        if (j>0 && j<6 && !alreadyUsed[i][j-1] && equal.nColorsCheck(new Card[]{board[i][j], board[i][j-1]},1 ,1))
+        if (j>0 && j<columnSize && !alreadyUsed[i][j-1] && equal.nColorsCheck(new Card[]{board[i][j], board[i][j-1]},1 ,1))
             this.recursiveUsed (board, i, j-1);
-        if (i+1<5 && !alreadyUsed[i+1][j] &&  equal.nColorsCheck(new Card[]{board[i][j], board[i+1][j]}, 1,1))
+        if (i+1<rowSize && !alreadyUsed[i+1][j] &&  equal.nColorsCheck(new Card[]{board[i][j], board[i+1][j]}, 1,1))
             this.recursiveUsed (board, i+1, j);
-        if (j+1<6 && !alreadyUsed[i][j+1] && equal.nColorsCheck(new Card[]{board[i][j], board[i][j+1]},1,1))
+        if (j+1<columnSize && !alreadyUsed[i][j+1] && equal.nColorsCheck(new Card[]{board[i][j], board[i][j+1]},1,1))
             this.recursiveUsed (board, i, j+1);
     }
 }

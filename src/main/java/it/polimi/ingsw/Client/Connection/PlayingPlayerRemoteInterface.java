@@ -64,7 +64,21 @@ public interface PlayingPlayerRemoteInterface extends Remote {
      * @throws RemoteException if the players is offline
      */
     void endGameValue(String points) throws RemoteException;
+    /**
+     * @param winner json object with playerID and points of the winner
+     * @throws RemoteException if the players is offline
+     */
     void receiveWinner(String winner) throws RemoteException;
+
+    /**
+     * @param scored json object with point for each client
+     * @throws RemoteException if the players is offline
+     */
     void receiveLastCommonScored(String scored) throws RemoteException;
+    /**
+     * @param error json object with errorID && errorMSG
+     * @param playerID name of the player the message is intended for
+     * @throws RemoteException if the players is offline
+     */
     void errorMSG(String error, String playerID) throws RemoteException;
 }

@@ -1,10 +1,16 @@
 package it.polimi.ingsw.Server.Model.GroupGoals;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import it.polimi.ingsw.Shared.Cards.Card;
 import it.polimi.ingsw.Server.Exceptions.ConstructorException;
 import it.polimi.ingsw.Server.SupportClasses.NColorsGroup;
 import it.polimi.ingsw.Server.SupportClasses.RecursiveUsed;
 import it.polimi.ingsw.Server.SupportClasses.RecursiveUsedSupport;
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 
 public class CouplesAndPokersGoals extends CommonGoal{
 
@@ -17,6 +23,11 @@ public class CouplesAndPokersGoals extends CommonGoal{
     private final NColorsGroup equal = new NColorsGroup();
     private final RecursiveUsed recursiveUsed = new RecursiveUsed();
 
+    private int rowSize;
+    private int columnSize;
+    private JsonArray nCardsArray;
+    private JsonArray mGroupsArray;
+
     private final int n, mGroups;
 
     /**
@@ -26,13 +37,39 @@ public class CouplesAndPokersGoals extends CommonGoal{
      * @throws ConstructorException if n ore mGroups aren't allowed value
      */
     public CouplesAndPokersGoals(int n, int mGroups) throws ConstructorException { //possible value for n (4 o 2) && for mGroups (4 o 6);
-        if((n==4 && mGroups==4) || (n==2 && mGroups==6)) {
-            this.n = n;
-            this.mGroups = mGroups;
-            //value to distinguish different case (t1 and t3)
-        } else throw new ConstructorException("invalid parameter for CouplesAndPokersGoals( costructor (possible value n: 2/4 mGroups 6/4)");
+        try {
+            jsonCreate();
+        } catch (FileNotFoundException e) {
+            System.out.println("CouplesAndPokers: JSON FILE NOT FOUND");
+            throw new RuntimeException(e);
+        }
+
+        for(int i = 0; i<mGroupsArray.size(); i++){
+            if(nCardsArray.get(i).getAsInt() == n && mGroupsArray.get(i).getAsInt()==mGroups) {
+                this.n = n;
+                this.mGroups = mGroups;
+                return;
+                //value to distinguish different case (t1 and t3)
+            }
+        }
+        throw new ConstructorException("invalid parameter for CouplesAndPokersGoals( costructor (possible value n: 2/4 mGroups 6/4)");
     }
 
+    public void jsonCreate() throws FileNotFoundException {
+        String url = "src/main/json/config/playerBoardConfig.json";
+        FileReader fileJsonConfig = new FileReader(url);
+
+        JsonObject jsonObject = new Gson().fromJson(fileJsonConfig, JsonObject.class);
+        this.rowSize = jsonObject.get("x").getAsInt();
+        this.columnSize = jsonObject.get("y").getAsInt();
+
+        url = "src/main/json/config/CouplesAndPokersGoalsConfig.json";
+        fileJsonConfig = new FileReader(url);
+
+        jsonObject = new Gson().fromJson(fileJsonConfig, JsonObject.class);
+        this.nCardsArray = jsonObject.get("nCards").getAsJsonArray();
+        this.mGroupsArray = jsonObject.get("mGroups").getAsJsonArray();
+    }
     /**
      * actual check of the goal
      * search for a couple of card from the same color
@@ -43,9 +80,9 @@ public class CouplesAndPokersGoals extends CommonGoal{
     public boolean check(Card[][] board){
         int i,j;
         alreadyUsed = new boolean[5][6];
-        for (i=0; i<5; i++){
-            for (j=0; j<6; j++){
-                if (!alreadyUsed[i][j] &&( i+1<5 && (equal.nColorsCheck(new Card[]{board[i][j], board[i+1][j]}, 1, 1)) || j+1<6 && (equal.nColorsCheck(new Card[]{board[i][j], board[i][j+1]},1, 1)))) { //search for first pair
+        for (i=0; i<rowSize ; i++){
+            for (j=0; j<columnSize; j++){
+                if (!alreadyUsed[i][j] &&( i+1<rowSize && (equal.nColorsCheck(new Card[]{board[i][j], board[i+1][j]}, 1, 1)) || j+1<columnSize && (equal.nColorsCheck(new Card[]{board[i][j], board[i][j+1]},1, 1)))) { //search for first pair
                     RecursiveUsedSupport used = recursiveUsed.used(board, i, j, alreadyUsed, 0);     //call method to save just used position
                     alreadyUsed = used.getAlreadyUsed();
                     elementCombo = used.getElementCombo();

@@ -12,7 +12,8 @@ import java.io.FileReader;
 import java.util.ArrayList;
 
 
-public class OneColorPatternGoals extends CommonGoal{
+public class
+OneColorPatternGoals extends CommonGoal{
 
     /**
      * parameters
