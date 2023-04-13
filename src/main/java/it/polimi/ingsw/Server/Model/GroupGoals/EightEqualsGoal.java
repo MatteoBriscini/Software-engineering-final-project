@@ -15,6 +15,8 @@ public class EightEqualsGoal extends CommonGoal {
 
     private final String url = "src/main/json/goal/EightEqualsGoal.json";
 
+    private final String urlBoard = "src/main/json/config/playerBoardConfig.json";
+
     int maxX,maxY,nTiles;
 
     public EightEqualsGoal(){
@@ -29,11 +31,16 @@ public class EightEqualsGoal extends CommonGoal {
         String urlConfig = url;
         FileReader fileJsonConfig = new FileReader(urlConfig);
 
-        JsonObject controller = new Gson().fromJson(fileJsonConfig, JsonObject.class);
+        JsonObject eight = new Gson().fromJson(fileJsonConfig, JsonObject.class);
 
-        this.maxX = controller.get("maxX").getAsInt();
-        this.maxY = controller.get("maxY").getAsInt();
-        this.nTiles = controller.get("nTiles").getAsInt();
+        String urlConfigBoard = urlBoard;
+        FileReader fileJsonConfigBoard = new FileReader(urlConfigBoard);
+
+        JsonObject eightBoard = new Gson().fromJson(fileJsonConfigBoard, JsonObject.class);
+
+        this.maxX = eightBoard.get("x").getAsInt();
+        this.maxY = eightBoard.get("y").getAsInt();
+        this.nTiles = eight.get("nTiles").getAsInt();
     }
 
 
