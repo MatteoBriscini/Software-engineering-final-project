@@ -5,6 +5,7 @@ import it.polimi.ingsw.Server.Connection.RMI.ControllerRMI;
 import it.polimi.ingsw.Server.Controller;
 import it.polimi.ingsw.Server.Exceptions.ConnectionControllerManagerException;
 import it.polimi.ingsw.Shared.Cards.Card;
+import it.polimi.ingsw.Shared.Connection.ConnectionType;
 import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 
 import java.util.ArrayList;

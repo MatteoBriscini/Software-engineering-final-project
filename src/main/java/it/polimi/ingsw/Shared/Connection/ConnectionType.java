@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Server.Connection;
+package it.polimi.ingsw.Shared.Connection;
 
 public enum ConnectionType {
     RMI,

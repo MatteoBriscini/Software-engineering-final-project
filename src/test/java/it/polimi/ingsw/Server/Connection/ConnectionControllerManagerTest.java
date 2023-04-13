@@ -2,6 +2,7 @@ package it.polimi.ingsw.Server.Connection;
 
 import it.polimi.ingsw.Server.Controller;
 import it.polimi.ingsw.Server.Exceptions.ConnectionControllerManagerException;
+import it.polimi.ingsw.Shared.Connection.ConnectionType;
 import junit.framework.TestCase;
 
 public class ConnectionControllerManagerTest extends TestCase {

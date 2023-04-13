@@ -3,7 +3,7 @@ package it.polimi.ingsw.Server;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Connection.ConnectionControllerManager;
-import it.polimi.ingsw.Server.Connection.ConnectionType;
+import it.polimi.ingsw.Shared.Connection.ConnectionType;
 import it.polimi.ingsw.Server.Exceptions.*;
 import it.polimi.ingsw.Shared.Cards.Card;
 import it.polimi.ingsw.Server.Model.GameMaster;
