@@ -164,6 +164,17 @@ public class Controller {
                 if(!activePlayers.get(i)) {
                     System.out.println("\u001B[33m" + players.get(i).getPlayerID() + " reconnected the game" + "\u001B[0m");
                     activePlayers.set(i, true);
+
+                    //update all playerBoards in all clients
+                    ArrayList<Card[][]> playersBoard = new ArrayList<>();
+                    for(int j = 0; j< game.getPlayerArray().size(); j++){
+                        playersBoard.add(game.getPlayerBoard(j));
+                    }
+                    controllerManager.sendAllPlayerBoard(playersBoard);
+
+                    //update main board to all clients
+                    controllerManager.sendMainBoard(game.getMainBoard());
+
                     return;
                 }
             }
@@ -412,9 +423,13 @@ public class Controller {
                     if(!game.fillMainBoard(allowedPositionArray)) this.endGame();
                 }
             } catch (InvalidPickException e) {
+                //send error msg to the client
                 error.addProperty("errorID", "invalid move");
                 error.addProperty("errorMSG", e.toString());
                 controllerManager.sendError(error, playerID);
+
+                //update main board to all clients
+                controllerManager.sendMainBoard(game.getMainBoard());
                 return false;
             }
 
@@ -429,10 +444,18 @@ public class Controller {
                     this.waitForEndGame();
                 }
             } catch (NoSpaceException e) {
+                //send error msg to the client
                 error.addProperty("errorID", "invalid move");
                 error.addProperty("errorMSG", "not enough space on the player board");
                 controllerManager.sendError(error, playerID);
                 game.fixBoard(cards);
+
+                //update all playerBoards in all clients
+                ArrayList<Card[][]> playersBoard = new ArrayList<>();
+                for(int i = 0; i< game.getPlayerArray().size(); i++){
+                    playersBoard.add(game.getPlayerBoard(i));
+                }
+                controllerManager.sendAllPlayerBoard(playersBoard);
                 return false;
             }
 

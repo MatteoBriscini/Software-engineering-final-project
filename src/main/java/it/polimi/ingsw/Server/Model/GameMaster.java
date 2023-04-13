@@ -131,7 +131,7 @@ public class GameMaster {
             minValue = commonGoalID-(rainbowRowsAndColumnsGoalsRange[0]);
             commonGoals[n] = new RainbowRowsAndColumnsGoals(rainbowRowsAndColumnsGoalsConfig[12-(minValue*4)],rainbowRowsAndColumnsGoalsConfig[13-(minValue*4)],rainbowRowsAndColumnsGoalsConfig[14-(minValue*4)],rainbowRowsAndColumnsGoalsConfig[15-(minValue*4)]);
         }else if(commonGoalID == rainbowRowsAndColumnsGoalsRange[1]+1){
-            commonGoals[n] = new EightEqualTarget();
+            commonGoals[n] = new EightEqualsGoal();
         }else if(commonGoalID == rainbowRowsAndColumnsGoalsRange[1]+2){
             commonGoals[n] = new SquaresGoal();
         } else if(commonGoalID == rainbowRowsAndColumnsGoalsRange[1]+3){

@@ -14,7 +14,21 @@ public class ConnectionControllerManager {
     private final ArrayList<ConnectionController> interfaces = new ArrayList<>();
     boolean rmiActive = false;
     boolean socketActive = false;
-    boolean debug = false;
+
+    /**
+     * debug
+     */
+    public ArrayList<ConnectionController> getInterfaces() {
+        return interfaces;
+    }
+
+    public boolean isRmiActive() {
+        return rmiActive;
+    }
+
+    public boolean isSocketActive() {
+        return socketActive;
+    }
 
     /**
      * create new connection class for controller when necessary
