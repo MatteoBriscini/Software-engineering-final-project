@@ -8,12 +8,12 @@ import it.polimi.ingsw.Server.Exceptions.*;
 import it.polimi.ingsw.Shared.Cards.Card;
 import it.polimi.ingsw.Server.Model.GameMaster;
 import it.polimi.ingsw.Shared.Cards.CardColor;
+import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
 import it.polimi.ingsw.Shared.JsonSupportClasses.Position;
 import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 import it.polimi.ingsw.Server.Model.PlayerClasses.Player;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.util.*;
 
 
@@ -36,6 +36,7 @@ public class Controller {
     final ArrayList<Boolean> activePlayers = new ArrayList<>();
 
     //configuration value for controller
+    private JsonUrl jsonUrl;
     private int timeout; //wait for player time (in seconds)
     private int numberOfPossibleCommonGoals;
     private int numberOfPossiblePrivateGoals;
@@ -60,7 +61,7 @@ public class Controller {
             jsonCreate();
         } catch (FileNotFoundException e) {
             System.out.println("Controller: JSON FILE NOT FOUND");
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         }
     }
 
@@ -69,14 +70,15 @@ public class Controller {
      * @throws FileNotFoundException if method can't file json file
      */
     private void jsonCreate() throws FileNotFoundException {  //download json data
-
-        String urlController = "src/main/json/config/controllerConfig.json";
-        FileReader fileJsonController = new FileReader(urlController);
-        String urlPosition = "src/main/json/config/gameConfig.json";
-        FileReader fileJsonPosition = new FileReader(urlPosition);
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("controllerConfig"));
+        if(inputStream == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        InputStream inputStream1 = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("gameConfig"));
+        if(inputStream1 == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader1 = new BufferedReader(new InputStreamReader(inputStream1));
 
         //load default settings for the game
-        JsonObject controller = new Gson().fromJson(fileJsonController, JsonObject.class);
+        JsonObject controller = new Gson().fromJson(bufferedReader , JsonObject.class);
         this.timeout = controller.get("timeout").getAsInt();
         this.numberOfPossibleCommonGoals =  controller.get("numberOfPossibleCommonGoals").getAsInt();
         this.numberOfPossiblePrivateGoals =  controller.get("numberOfPossiblePrivateGoal").getAsInt();
@@ -89,7 +91,7 @@ public class Controller {
         this.maxTakeCard = controller.get("maxTakeCard").getAsInt();
 
         //allowed position for mainBoard
-        mainBoardConfig = new Gson().fromJson(fileJsonPosition, JsonObject.class).getAsJsonObject();
+        mainBoardConfig = new Gson().fromJson( bufferedReader1, JsonObject.class).getAsJsonObject();
     }
 
     /**

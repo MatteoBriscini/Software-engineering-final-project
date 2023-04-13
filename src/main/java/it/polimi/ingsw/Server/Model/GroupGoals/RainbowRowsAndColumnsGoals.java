@@ -5,9 +5,9 @@ import com.google.gson.JsonObject;
 import it.polimi.ingsw.Shared.Cards.Card;
 import it.polimi.ingsw.Server.Exceptions.ConstructorException;
 import it.polimi.ingsw.Server.SupportClasses.NColorsGroup;
+import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,10 +24,7 @@ public class RainbowRowsAndColumnsGoals extends CommonGoal{
 
     private List<Card> cardsRow;
     private List<Card> cardsColumn;
-
-    private final String url = "src/main/json/goal/RainbowRowsAndColumnsGoal.json";
-    private final String urlBoard = "src/main/json/config/playerBoardConfig.json";
-
+    private JsonUrl jsonUrl;
     private int rows,columns,minRows,minColumns,maxRows,maxColumns,totRows,totColumns,totRainbowRows,totRainbowColumns;
 
     /**
@@ -41,6 +38,7 @@ public class RainbowRowsAndColumnsGoals extends CommonGoal{
             this.jsonCreate();
         } catch (FileNotFoundException e) {
             System.out.println("SquaresGoal: JSON FILE NOT FOUND");
+            throw new RuntimeException(e);
         }
         if((n==rows && ((min==minRows && max==maxRows && tot==totRows) || (min==columns && max==columns && tot==totRainbowColumns))) || (n==columns && ((min==minColumns && max==maxColumns && tot==totColumns) || (min==rows && max==rows && tot==totRainbowRows))) ) {
             this.n = n;
@@ -53,15 +51,15 @@ public class RainbowRowsAndColumnsGoals extends CommonGoal{
 
 
     private void jsonCreate() throws FileNotFoundException {
-        String urlConfig = url;
-        FileReader fileJsonConfig = new FileReader(urlConfig);
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("playerBoardConfig"));
+        if(inputStream == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        InputStream inputStream1 = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("rainbowRowsAndColumnsGoal"));
+        if(inputStream1 == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader1 = new BufferedReader(new InputStreamReader(inputStream1));
 
-        JsonObject rainbow = new Gson().fromJson(fileJsonConfig, JsonObject.class);
-
-        String urlConfigBoard = urlBoard;
-        FileReader fileJsonConfigBoard = new FileReader(urlConfigBoard);
-
-        JsonObject rainbowBoard = new Gson().fromJson(fileJsonConfigBoard, JsonObject.class);
+        JsonObject rainbow = new Gson().fromJson(bufferedReader1, JsonObject.class);
+        JsonObject rainbowBoard = new Gson().fromJson(bufferedReader, JsonObject.class);
 
         this.rows = rainbowBoard.get("y").getAsInt();
         this.columns = rainbowBoard.get("x").getAsInt();

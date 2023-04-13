@@ -17,7 +17,7 @@ public class MainBoardTest extends TestCase {
 
     private MainBoard mboard=new MainBoard();
 
-    private Card board[][];
+    private Card[][] board;
 
     private PositionWithColor rm[]= new PositionWithColor[1];
     private PositionWithColor rm2[] = new PositionWithColor[2];
@@ -207,6 +207,4 @@ public class MainBoardTest extends TestCase {
         }
 
     }
-
-
 }

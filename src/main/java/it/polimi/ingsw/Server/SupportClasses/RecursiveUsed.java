@@ -3,9 +3,9 @@ package it.polimi.ingsw.Server.SupportClasses;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Shared.Cards.Card;
+import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 
 /**
  * support class to avoid duplicate code line
@@ -17,7 +17,7 @@ public class RecursiveUsed {
     private final NColorsGroup equal = new NColorsGroup();
     private boolean[][] alreadyUsed;
     private int elementCombo;
-
+    private JsonUrl jsonUrl = new JsonUrl();
     private int rowSize;
     private int columnSize;
 
@@ -44,10 +44,11 @@ public class RecursiveUsed {
     }
 
     public void jsonCreate() throws FileNotFoundException {
-        String url = "src/main/json/config/playerBoardConfig.json";
-        FileReader fileJsonConfig = new FileReader(url);
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("playerBoardConfig"));
+        if(inputStream == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
-        JsonObject jsonObject = new Gson().fromJson(fileJsonConfig, JsonObject.class);
+        JsonObject jsonObject = new Gson().fromJson(bufferedReader, JsonObject.class);
         this.rowSize = jsonObject.get("x").getAsInt();
         this.columnSize = jsonObject.get("y").getAsInt();
     }

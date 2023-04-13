@@ -8,9 +8,9 @@ import it.polimi.ingsw.Server.Exceptions.ConstructorException;
 import it.polimi.ingsw.Server.SupportClasses.NColorsGroup;
 import it.polimi.ingsw.Server.SupportClasses.RecursiveUsed;
 import it.polimi.ingsw.Server.SupportClasses.RecursiveUsedSupport;
+import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 
 public class CouplesAndPokersGoals extends CommonGoal{
 
@@ -27,7 +27,7 @@ public class CouplesAndPokersGoals extends CommonGoal{
     private int columnSize;
     private JsonArray nCardsArray;
     private JsonArray mGroupsArray;
-
+    private JsonUrl jsonUrl;
     private final int n, mGroups;
 
     /**
@@ -56,17 +56,18 @@ public class CouplesAndPokersGoals extends CommonGoal{
     }
 
     public void jsonCreate() throws FileNotFoundException {
-        String url = "src/main/json/config/playerBoardConfig.json";
-        FileReader fileJsonConfig = new FileReader(url);
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("playerBoardConfig"));
+        if(inputStream == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        InputStream inputStream1 = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("couplesAndPokersConfig"));
+        if(inputStream1 == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader1 = new BufferedReader(new InputStreamReader(inputStream1));
 
-        JsonObject jsonObject = new Gson().fromJson(fileJsonConfig, JsonObject.class);
+        JsonObject jsonObject = new Gson().fromJson(bufferedReader, JsonObject.class);
         this.rowSize = jsonObject.get("x").getAsInt();
         this.columnSize = jsonObject.get("y").getAsInt();
 
-        url = "src/main/json/config/CouplesAndPokersGoalsConfig.json";
-        fileJsonConfig = new FileReader(url);
-
-        jsonObject = new Gson().fromJson(fileJsonConfig, JsonObject.class);
+        jsonObject = new Gson().fromJson(bufferedReader1, JsonObject.class);
         this.nCardsArray = jsonObject.get("nCards").getAsJsonArray();
         this.mGroupsArray = jsonObject.get("mGroups").getAsJsonArray();
     }

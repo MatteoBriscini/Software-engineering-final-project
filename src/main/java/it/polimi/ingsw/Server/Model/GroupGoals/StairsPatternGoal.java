@@ -3,9 +3,9 @@ package it.polimi.ingsw.Server.Model.GroupGoals;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Shared.Cards.Card;
+import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 
 import static it.polimi.ingsw.Shared.Cards.CardColor.EMPTY;
 
@@ -13,24 +13,25 @@ import static it.polimi.ingsw.Shared.Cards.CardColor.EMPTY;
 
 public class StairsPatternGoal extends CommonGoal {
 
-    private final String url = "src/main/json/config/playerBoardConfig.json";
-
     int maxX,maxY;
-
+    private JsonUrl jsonUrl;
     public StairsPatternGoal(){
         try {
             this.jsonCreate();
         } catch (FileNotFoundException e) {
             System.out.println("StairsPatternGoal: JSON FILE NOT FOUND");
+            throw new RuntimeException(e);
         }
     }
 
 
      private void jsonCreate() throws FileNotFoundException {
-         String urlConfig = url;
-         FileReader fileJsonConfig = new FileReader(urlConfig);
 
-         JsonObject stair = new Gson().fromJson(fileJsonConfig, JsonObject.class);
+         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("playerBoardConfig"));
+         if(inputStream == null) throw new FileNotFoundException();
+         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+         JsonObject stair = new Gson().fromJson(bufferedReader, JsonObject.class);
 
          this.maxX = stair.get("x").getAsInt()-1;
          this.maxY = stair.get("y").getAsInt()-1;

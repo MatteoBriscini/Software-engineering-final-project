@@ -7,14 +7,14 @@ import it.polimi.ingsw.Server.Exceptions.InvalidPickException;
 import it.polimi.ingsw.Server.Exceptions.LengthException;
 import it.polimi.ingsw.Server.Exceptions.NoSpaceException;
 import it.polimi.ingsw.Shared.Cards.Card;
+import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
 import it.polimi.ingsw.Shared.JsonSupportClasses.Position;
 import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 import it.polimi.ingsw.Server.Model.GroupGoals.*;
 import it.polimi.ingsw.Server.Model.PlayerClasses.Player;
 import it.polimi.ingsw.Server.Model.PlayerClasses.PlayerTarget;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.util.ArrayList;
 
 public class GameMaster {
@@ -27,8 +27,7 @@ public class GameMaster {
     private Integer[] couplesAndPokerGoalsRange;
     private Integer[] oneColourPatternGoalsRange;
     private Integer[] rainbowRowsAndColumnsGoalsRange;
-
-
+    private final JsonUrl jsonUrl = new JsonUrl();
 
     public GameMaster(){
         try {
@@ -44,15 +43,17 @@ public class GameMaster {
     private void jsonCreate() throws FileNotFoundException{
         Gson gson = new Gson();
 
-        String gameMasterConfigURL = "src/main/json/config/gameMasterConfig.json";
-        String controllerConfigURL = "src/main/json/config/controllerConfig.json";
-        FileReader fileJson = new FileReader(controllerConfigURL);
-        JsonObject jsonObject = new Gson().fromJson(fileJson, JsonObject.class);
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("controllerConfig"));
+        if(inputStream == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        InputStream inputStream1 = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("gameMasterConfig"));
+        if(inputStream1 == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader1 = new BufferedReader(new InputStreamReader(inputStream1));
+
+        JsonObject jsonObject = new Gson().fromJson(bufferedReader , JsonObject.class);
         commonGoals = new CommonGoal[jsonObject.get("commonGoalNumber").getAsInt()];
 
-
-        fileJson = new FileReader(gameMasterConfigURL);
-        jsonObject = new  Gson().fromJson(fileJson, JsonObject.class);
+        jsonObject = new  Gson().fromJson(bufferedReader1, JsonObject.class);
         this.couplesAndPokerGoalsConfig = gson.fromJson(jsonObject.get("couplesAndPokersGoals").getAsJsonArray(), Integer[].class);
         this.oneColourPatternGoalsConfig = gson.fromJson(jsonObject.get("oneColorPatternGoals").getAsJsonArray(), Integer[].class);
         this.rainbowRowsAndColumnsGoalsConfig = gson.fromJson(jsonObject.get("rainbowRowsAndColumnsGoals").getAsJsonArray(), Integer[].class);

@@ -4,18 +4,17 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Shared.Cards.Card;
 import it.polimi.ingsw.Shared.Cards.CardColor;
+import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 
 import static it.polimi.ingsw.Shared.Cards.CardColor.*;
 
 //this class is used to check that there are 8 cards having the same color on the player's board
 public class EightEqualsGoal extends CommonGoal {
 
-    private final String url = "src/main/json/goal/EightEqualsGoal.json";
 
-    private final String urlBoard = "src/main/json/config/playerBoardConfig.json";
+    private JsonUrl jsonUrl;
 
     int maxX,maxY,nTiles;
 
@@ -24,19 +23,20 @@ public class EightEqualsGoal extends CommonGoal {
             this.jsonCreate();
         } catch (FileNotFoundException e) {
             System.out.println("SquaresGoal: JSON FILE NOT FOUND");
+            throw new RuntimeException(e);
         }
     }
 
     private void jsonCreate() throws FileNotFoundException {
-        String urlConfig = url;
-        FileReader fileJsonConfig = new FileReader(urlConfig);
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("playerBoardConfig"));
+        if(inputStream == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        InputStream inputStream1 = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("eightEqualsGoal"));
+        if(inputStream1 == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader1 = new BufferedReader(new InputStreamReader(inputStream1));
 
-        JsonObject eight = new Gson().fromJson(fileJsonConfig, JsonObject.class);
-
-        String urlConfigBoard = urlBoard;
-        FileReader fileJsonConfigBoard = new FileReader(urlConfigBoard);
-
-        JsonObject eightBoard = new Gson().fromJson(fileJsonConfigBoard, JsonObject.class);
+        JsonObject eight = new Gson().fromJson(bufferedReader1, JsonObject.class);
+        JsonObject eightBoard = new Gson().fromJson(bufferedReader, JsonObject.class);
 
         this.maxX = eightBoard.get("x").getAsInt();
         this.maxY = eightBoard.get("y").getAsInt();

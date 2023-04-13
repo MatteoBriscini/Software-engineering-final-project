@@ -6,9 +6,9 @@ import it.polimi.ingsw.Shared.Cards.Card;
 import it.polimi.ingsw.Server.SupportClasses.NColorsGroup;
 import it.polimi.ingsw.Server.SupportClasses.RecursiveUsed;
 import it.polimi.ingsw.Server.SupportClasses.RecursiveUsedSupport;
+import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 
 /**
  * this class checks the common goal which requires the existence of two groups each containing 4 tiles of the same type
@@ -19,12 +19,8 @@ public class SquaresGoal extends CommonGoal{
     private final RecursiveUsed recursiveUsed = new RecursiveUsed();
     private boolean[][] alreadyUsed;
     private int validCombo;  //amount of valid squares
-
     private final NColorsGroup nColor = new NColorsGroup();
-
-    private final String url = "src/main/json/goal/SquaresGoal.json";
-    private final String urlBoard = "src/main/json/config/playerBoardConfig.json";
-
+    private JsonUrl jsonUrl;
     int maxX,maxY,nColorsMin,nColorsMax,nSquares;
 
 
@@ -33,19 +29,20 @@ public class SquaresGoal extends CommonGoal{
             this.jsonCreate();
         } catch (FileNotFoundException e) {
             System.out.println("SquaresGoal: JSON FILE NOT FOUND");
+            throw new RuntimeException(e);
         }
     }
 
     private void jsonCreate() throws FileNotFoundException {
-        String urlConfig = url;
-        FileReader fileJsonConfig = new FileReader(urlConfig);
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("squaresGoal"));
+        if(inputStream == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        JsonObject square = new Gson().fromJson(bufferedReader , JsonObject.class);
 
-        JsonObject square = new Gson().fromJson(fileJsonConfig, JsonObject.class);
-
-        String urlConfigBoard = urlBoard;
-        FileReader fileJsonConfigBoard = new FileReader(urlConfigBoard);
-
-        JsonObject squareBoard = new Gson().fromJson(fileJsonConfigBoard, JsonObject.class);
+        InputStream inputStream1 = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("playerBoardConfig"));
+        if(inputStream1 == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader1 = new BufferedReader(new InputStreamReader(inputStream1));
+        JsonObject squareBoard = new Gson().fromJson(bufferedReader1, JsonObject.class);
 
         this.maxX = squareBoard.get("x").getAsInt();
         this.maxY = squareBoard.get("y").getAsInt();

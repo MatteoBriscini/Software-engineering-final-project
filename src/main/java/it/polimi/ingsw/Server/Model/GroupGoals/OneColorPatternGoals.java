@@ -2,13 +2,14 @@ package it.polimi.ingsw.Server.Model.GroupGoals;
 
 import it.polimi.ingsw.Shared.Cards.Card;
 import it.polimi.ingsw.Server.Exceptions.ConstructorException;
+import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
 import it.polimi.ingsw.Shared.JsonSupportClasses.Position;
 
-import java.io.FileNotFoundException;
+import java.io.*;
+
 import com.google.gson.Gson;
 import it.polimi.ingsw.Server.SupportClasses.NColorsGroup;
 
-import java.io.FileReader;
 import java.util.ArrayList;
 
 
@@ -19,6 +20,7 @@ OneColorPatternGoals extends CommonGoal{
      * parameters
      */
     private final String url;
+    private JsonUrl jsonUrl;
     private Position[][] p;
 
     private final NColorsGroup equal = new NColorsGroup();
@@ -32,13 +34,13 @@ OneColorPatternGoals extends CommonGoal{
     public OneColorPatternGoals(int n) throws ConstructorException { //n is the number of the goal (possible value 2,7,11)
         switch (n) {
             case 2:
-                this.url = "src/main/json/goal/CornersGoal.json";
+                this.url = "cornersGoal";
                 break;
             case 7:
-                this.url = "src/main/json/goal/DiagonAlleyGoal.json";
+                this.url = "diagonAlleyGoal";
                 break;
             case 11:
-                this.url = "src/main/json/goal/CrossGoal.json";
+                this.url = "crossGoal";
                 break;
             default:
                 throw new ConstructorException("invalid parameter for OneColorPatternGoals constructor (possible value 2,7,11)");
@@ -55,10 +57,11 @@ OneColorPatternGoals extends CommonGoal{
      * @throws FileNotFoundException if file not found
      */
     private void jsonCreate() throws FileNotFoundException{  //download json data
-        assert url != null;
-        FileReader fileJson = new FileReader(url);
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl(url));
+        if(inputStream == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         Gson gson = new Gson();
-        p = gson.fromJson(fileJson, Position[][].class);
+        p = gson.fromJson(bufferedReader, Position[][].class);
     }
 
     /**

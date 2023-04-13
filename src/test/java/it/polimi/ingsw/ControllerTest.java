@@ -2,14 +2,14 @@ package it.polimi.ingsw;
 
 import com.google.gson.Gson;
 import it.polimi.ingsw.Server.Exceptions.addPlayerToGameException;
+import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
 import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 import it.polimi.ingsw.Server.Controller;
 import it.polimi.ingsw.Shared.Cards.Card;
 import it.polimi.ingsw.Server.Model.PlayerClasses.Player;
 import junit.framework.TestCase;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.util.ArrayList;
 
 import java.util.Objects;
@@ -20,15 +20,16 @@ public class ControllerTest extends TestCase {
 
     Controller test;
     private final int timeout = 2;
+    private JsonUrl jsonUrl;
     Card[][] board;
-    String url1 = "src/main/json/testJson/mainBoard3Players.json";
 
-    String url2 = "src/main/json/testJson/quiteVoidMainBoard.json";
 
-    private PositionWithColor[] jsonCreate(String url) throws FileNotFoundException {
+    private PositionWithColor[] jsonCreate(String name) throws FileNotFoundException {
         Gson gson = new Gson();
-        FileReader fileJson = new FileReader(url);
-        return new Gson().fromJson(fileJson, PositionWithColor[].class);
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl(name));
+        if(inputStream == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        return new Gson().fromJson(bufferedReader, PositionWithColor[].class);
     }
 
     private void setNotRandomBoard(String url) throws FileNotFoundException {
@@ -146,7 +147,7 @@ public class ControllerTest extends TestCase {
         assert (test.getCurrentPlayer() == 1);
         test.setTimeout(180);                           //set timeout at 3 minutes (default)
 
-        this.setNotRandomBoard(url1);                       //fill the main board with predetermined colors
+        this.setNotRandomBoard("mainBoard3Players");                       //fill the main board with predetermined colors
 
         //print main board
         board = test.getMainBoard();
@@ -331,7 +332,7 @@ public class ControllerTest extends TestCase {
         //print main board
 
 
-        this.setNotRandomBoard(url2);                       //fill the main board with predetermined colors
+        this.setNotRandomBoard("quiteVoidMainBoard");                       //fill the main board with predetermined colors
         //print main board
         board = test.getMainBoard();
         for(int y=8;y>=0;y--){
