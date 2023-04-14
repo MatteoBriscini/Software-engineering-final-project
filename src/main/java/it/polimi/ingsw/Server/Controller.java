@@ -152,7 +152,7 @@ public class Controller {
         }
         return false;
     }
-    synchronized public void setPlayerOffline(String playerID){
+    synchronized public void setPlayerOffline(String playerID){  //TODO when only one player is online
         ArrayList<Player> players = game.getPlayerArray();
         for (int i = 0; i<players.size(); i++){
             if(players.get(i).getPlayerID().equals(playerID)){
@@ -416,7 +416,7 @@ public class Controller {
         JsonObject error = new JsonObject();
         if(!endGame && alreadyStarted && game.getPlayerArray().get(currentPlayer).getPlayerID().equals(playerID)){
             //verify the numbers of cards
-            if (cards.length < minTakeCard || cards.length > maxTakeCard){                       //TODO
+            if (cards.length < minTakeCard || cards.length > maxTakeCard){
                 error.addProperty("errorID", "invalid move");
                 error.addProperty("errorMSG", "taken none ore to many cards");
                 controllerManager.sendError(error, playerID);

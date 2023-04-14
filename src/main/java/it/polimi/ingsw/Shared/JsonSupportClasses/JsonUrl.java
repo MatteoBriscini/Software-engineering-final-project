@@ -23,6 +23,8 @@ public class JsonUrl {
             case "eightEqualsGoal": return "json/goal/EightEqualsGoal.json";
             case "rainbowRowsAndColumnsGoal": return "json/goal/RainbowRowsAndColumnsGoal.json";
             case "squaresGoal": return "json/goal/SquaresGoal.json";
+            case "playerGoalConfig": return  "json/config/PlayerGoalConfig.json";
+            case "checkSpotConfig": return  "json/config/checkSpotsConfig.json";
             default: return "invalid";
         }
     }

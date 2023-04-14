@@ -22,7 +22,7 @@ public abstract class PlayingPlayerConnectionManager extends UnicastRemoteObject
 
     /************************************************************************
      ************************************************** IN method ***********
-     * ***********************************************************************
+     * **********************************************************************
      * *
      * @param activePlayerID PLayerID of the player have to play now
      */
