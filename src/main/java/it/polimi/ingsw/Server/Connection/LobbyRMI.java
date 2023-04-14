@@ -55,20 +55,25 @@ public class LobbyRMI implements LobbyRemoteInterface{
     @Override
     public int login(String ID, String pwd) throws RemoteException {
 
+        int msg;
         System.out.println(ID + " on port: "+ PORT);
         try {
-            lobby.login(ID, pwd);
+            msg = lobby.login(ID, pwd);
         } catch (LoginException e) {
             throw new RuntimeException(e);
         }
-        return PORT;
+        return msg;
     }
 
     @Override
     public boolean signUp(String ID, String pwd) throws RemoteException {
 
         System.out.println(ID + " on port: "+ PORT + ", trying to sign up");
-        lobby.signUp(ID, pwd);
+        try {
+            lobby.signUp(ID, pwd);
+        } catch (LoginException e) {
+            throw new RuntimeException(e);
+        }
         return false;
     }
 }

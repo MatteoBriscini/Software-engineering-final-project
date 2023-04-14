@@ -32,7 +32,6 @@ public class LobbyPlayerRMI {
             Registry registry = LocateRegistry.getRegistry(serverIP, PORT);
             stub = (LobbyRemoteInterface) registry.lookup("LobbyRemoteInterface");
 
-            login(ID, pwd);
 
         }catch(Exception e){
             System.err.println("Client exception: " + e.toString());
