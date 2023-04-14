@@ -1,10 +1,9 @@
 package it.polimi.ingsw.Server;
 
+import it.polimi.ingsw.Shared.Connection.ConnectionType;
 import it.polimi.ingsw.Server.Exceptions.ConnectionControllerManagerException;
 import it.polimi.ingsw.Server.Lobby.Lobby;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 public class ServerMain {
 
     public static void main(String[] args) {
@@ -15,19 +14,19 @@ public class ServerMain {
 
        Controller game1 =new Controller();
         try {
-            game1.addClient(1233, "RMI");
+            game1.addClient(1233, ConnectionType.RMI);
         } catch (ConnectionControllerManagerException e) {
             throw new RuntimeException(e);
         }
         Controller game2 =new Controller();
         try {
-            game2.addClient(1234, "RMI");
+            game2.addClient(1234, ConnectionType.RMI);
         } catch (ConnectionControllerManagerException e) {
             throw new RuntimeException(e);
         }
 
         try {
-            game2.addClient(1245, "SOCKET");
+            game2.addClient(1245, ConnectionType.SOCKET);
         } catch (ConnectionControllerManagerException e) {
             throw new RuntimeException(e);
         }

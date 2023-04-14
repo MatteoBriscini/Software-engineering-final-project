@@ -5,11 +5,11 @@ import com.google.gson.JsonObject;
 import it.polimi.ingsw.Shared.Cards.Card;
 import it.polimi.ingsw.Shared.Cards.CardColor;
 import it.polimi.ingsw.Server.Exceptions.InvalidPickException;
+import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
 import it.polimi.ingsw.Shared.JsonSupportClasses.Position;
 import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.util.*;
 
 import static it.polimi.ingsw.Shared.Cards.CardColor.*;
@@ -19,14 +19,10 @@ import static it.polimi.ingsw.Shared.Cards.CardColor.*;
  */
 public class MainBoard {
 
-    private List<Card> colorsList;
-
-    private Card board[][];
-
+    private final List<Card> colorsList;
+    private final Card[][] board;
     Random rand = new Random();
-
-    private final String url="src/main/json/config/MainBoardConfig.json";
-
+    private JsonUrl jsonUrl;
     private int nColors;
     private int cardsByColor;
     private int rows;
@@ -35,13 +31,13 @@ public class MainBoard {
 
 
     private void jsonCreate() throws FileNotFoundException {
-
         Gson gson = new Gson();
 
-        String urlConfig = url;
-        FileReader fileJsonConfig = new FileReader(urlConfig);
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("mainBoardConfig"));
+        if(inputStream == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
-        JsonObject controller = new Gson().fromJson(fileJsonConfig, JsonObject.class);
+        JsonObject controller = new Gson().fromJson(bufferedReader, JsonObject.class);
 
         this.nColors = controller.get("nColors").getAsInt();
         this.cardsByColor = controller.get("cardsByColor").getAsInt();
@@ -181,21 +177,6 @@ public class MainBoard {
     private boolean DeprecatedBoard(PositionWithColor position){
         return(!(board[position.getX()][position.getY()].getColor().equals(position.getColor())));
     }
-
-
-    /**
-     * @param position is the position of the card to check
-     * @return true if there is a free adjacency from the selected card, false otherwise
-     */
-    /*
-    private boolean freeAdjacency(PositionWithColor position){
-        if(!(position.getX()==0) && !(position.getX()==9) && !(position.getY()==0)  && !(position.getY()==9))
-            return((board[position.getX()-1][position.getY()].getColor().equals(EMPTY)) || (board[position.getX()][position.getY()-1].getColor().equals(EMPTY)) ||(board[position.getX()+1][position.getY()].getColor().equals(EMPTY)) || (board[position.getX()][position.getY()+1].getColor().equals(EMPTY)));
-        return true;
-    }
-    */
-
-
 
     /**
      * @return true if there are no moves left on the board, false otherwise

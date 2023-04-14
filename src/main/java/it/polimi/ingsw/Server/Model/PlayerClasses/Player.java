@@ -7,9 +7,9 @@ import it.polimi.ingsw.Server.Exceptions.NoSpaceException;
 import it.polimi.ingsw.Server.SupportClasses.NColorsGroup;
 import it.polimi.ingsw.Server.SupportClasses.RecursiveUsed;
 import it.polimi.ingsw.Server.SupportClasses.RecursiveUsedSupport;
+import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 
 public class Player {
 
@@ -25,7 +25,7 @@ public class Player {
     private int elementCombo;
     private final NColorsGroup equal = new NColorsGroup();
     private final RecursiveUsed recursiveUsed = new RecursiveUsed();
-
+    private JsonUrl jsonUrl;
 
 
     //Constructor
@@ -56,11 +56,12 @@ public class Player {
      * @throws FileNotFoundException
      */
     public void setPlayerTarget(int targetNumber) throws FileNotFoundException {  //exception file not found
-        String path = "src/main/json/PlayerTarget.json";   //file path
-        FileReader fileJson = new FileReader(path);      //file executable
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("playerTarget"));
+        if(inputStream == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
         Gson gson = new Gson();
-        PlayerTarget[] targets = gson.fromJson(fileJson, PlayerTarget[].class);       //Call constructor on PlayerTarget array by passing the json file attributes
+        PlayerTarget[] targets = gson.fromJson(bufferedReader, PlayerTarget[].class);       //Call constructor on PlayerTarget array by passing the json file attributes
 
         this.personalTarget = targets[targetNumber];
     }
@@ -89,7 +90,6 @@ public class Player {
     public void updatePointSum(int pointSum) {
 
         this.pointSum += pointSum;
-        System.out.println(pointSum);
     }
 
     public void checkPlayerTarget(){

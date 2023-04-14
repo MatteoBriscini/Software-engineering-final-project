@@ -5,5 +5,8 @@
   "commonGoalNumber": 2,
   "maxPointCommonGoals": 8,
   "minPlayerNumber": 2,
-  "maxPlayerNumber": 4
+  "maxPlayerNumber": 4,
+  "fullBoardPoint": 1,
+  "minTakeCard":1,
+  "maxTakeCard": 3
 }

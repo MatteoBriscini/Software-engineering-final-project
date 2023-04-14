@@ -5,6 +5,7 @@ import it.polimi.ingsw.Server.Connection.RMI.ControllerRMI;
 import it.polimi.ingsw.Server.Controller;
 import it.polimi.ingsw.Server.Exceptions.ConnectionControllerManagerException;
 import it.polimi.ingsw.Shared.Cards.Card;
+import it.polimi.ingsw.Shared.Connection.ConnectionType;
 import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 
 import java.util.ArrayList;
@@ -14,35 +15,57 @@ public class ConnectionControllerManager {
     private final ArrayList<ConnectionController> interfaces = new ArrayList<>();
     boolean rmiActive = false;
     boolean socketActive = false;
-    boolean debug = false;
+
+    /**
+     * debug
+     */
+    public ArrayList<ConnectionController> getInterfaces() {
+        return interfaces;
+    }
+
+    public boolean isRmiActive() {
+        return rmiActive;
+    }
+
+    public boolean isSocketActive() {
+        return socketActive;
+    }
 
     /**
      * create new connection class for controller when necessary
      * @param PORT available port
      * @param connectionType rmi or socket
      * @param controller game reference
-     * @return true if the new port will be used false in all other case
+     * @return number of the used port
      * @throws ConnectionControllerManagerException if connection type has an invalid parameters
      */
-    public boolean addClient(int PORT, String connectionType, Controller controller) throws ConnectionControllerManagerException {
+    public int addClient(int PORT, ConnectionType connectionType, Controller controller) throws ConnectionControllerManagerException {
         switch (connectionType){
-            case "RMI":
+            case RMI:
                 if(!rmiActive) {
                     rmiActive = true;
                     interfaces.add(new ControllerRMI(controller, PORT));
-                    return true;
+                    return PORT;
+                } else {
+                    for (ConnectionController c : interfaces){
+                        if (c instanceof ControllerRMI) return c.getPORT();
+                    }
                 }
                 break;
-            case "SOCKET":
+            case SOCKET:
                 if(!socketActive) {
                     socketActive = true;
                     interfaces.add(new ControllerSOCKET(controller, PORT));
-                    return true;
+                    return PORT;
+                } else {
+                    for (ConnectionController c : interfaces){
+                        if (c instanceof ControllerSOCKET) return c.getPORT();
+                    }
                 }
                 break;
             default: throw new ConnectionControllerManagerException("invalid connectionType (use: RMI or SOCKET)");
         }
-        return false;
+        return -1;
     }
 
     /*************************************************************************
@@ -104,6 +127,18 @@ public class ConnectionControllerManager {
     public void sendWinner(JsonObject winner){
         for (ConnectionController c: interfaces) {
             c.sendWinner(winner);
+        }
+    }
+
+    public void sendLastCommonScored(JsonObject scored){
+        for (ConnectionController c: interfaces){
+            c.sendLastCommonScored(scored);
+        }
+    }
+
+    public void sendError(JsonObject error, String playerID){
+        for (ConnectionController c: interfaces){
+            c.sendError(error, playerID);
         }
     }
 }

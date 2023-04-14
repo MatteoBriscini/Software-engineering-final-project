@@ -3,16 +3,17 @@ package it.polimi.ingsw.Server;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Connection.ConnectionControllerManager;
+import it.polimi.ingsw.Shared.Connection.ConnectionType;
 import it.polimi.ingsw.Server.Exceptions.*;
 import it.polimi.ingsw.Shared.Cards.Card;
 import it.polimi.ingsw.Server.Model.GameMaster;
 import it.polimi.ingsw.Shared.Cards.CardColor;
+import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
 import it.polimi.ingsw.Shared.JsonSupportClasses.Position;
 import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 import it.polimi.ingsw.Server.Model.PlayerClasses.Player;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.util.*;
 
 
@@ -35,6 +36,7 @@ public class Controller {
     final ArrayList<Boolean> activePlayers = new ArrayList<>();
 
     //configuration value for controller
+    private JsonUrl jsonUrl;
     private int timeout; //wait for player time (in seconds)
     private int numberOfPossibleCommonGoals;
     private int numberOfPossiblePrivateGoals;
@@ -42,7 +44,9 @@ public class Controller {
     private int maxPointCommonGoals;
     private int minPlayerNumber;
     private int maxPlayerNumber;
-
+    private int fullBoardPoint;
+    private int minTakeCard;
+    private int maxTakeCard;
     public Controller(int maxPlayerNumber){
         try {
             jsonCreate();
@@ -57,7 +61,7 @@ public class Controller {
             jsonCreate();
         } catch (FileNotFoundException e) {
             System.out.println("Controller: JSON FILE NOT FOUND");
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         }
     }
 
@@ -66,14 +70,15 @@ public class Controller {
      * @throws FileNotFoundException if method can't file json file
      */
     private void jsonCreate() throws FileNotFoundException {  //download json data
-
-        String urlController = "src/main/json/config/controllerConfig.json";
-        FileReader fileJsonController = new FileReader(urlController);
-        String urlPosition = "src/main/json/config/gameConfig.json";
-        FileReader fileJsonPosition = new FileReader(urlPosition);
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("controllerConfig"));
+        if(inputStream == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        InputStream inputStream1 = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("gameConfig"));
+        if(inputStream1 == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader1 = new BufferedReader(new InputStreamReader(inputStream1));
 
         //load default settings for the game
-        JsonObject controller = new Gson().fromJson(fileJsonController, JsonObject.class);
+        JsonObject controller = new Gson().fromJson(bufferedReader , JsonObject.class);
         this.timeout = controller.get("timeout").getAsInt();
         this.numberOfPossibleCommonGoals =  controller.get("numberOfPossibleCommonGoals").getAsInt();
         this.numberOfPossiblePrivateGoals =  controller.get("numberOfPossiblePrivateGoal").getAsInt();
@@ -81,9 +86,12 @@ public class Controller {
         this.maxPointCommonGoals = controller.get("maxPointCommonGoals").getAsInt();
         this.minPlayerNumber = controller.get("minPlayerNumber").getAsInt();
         this.maxPlayerNumber =  controller.get("maxPlayerNumber").getAsInt();
+        this.fullBoardPoint = controller.get("fullBoardPoint").getAsInt();
+        this.minTakeCard = controller.get("minTakeCard").getAsInt();
+        this.maxTakeCard = controller.get("maxTakeCard").getAsInt();
 
         //allowed position for mainBoard
-        mainBoardConfig = new Gson().fromJson(fileJsonPosition, JsonObject.class).getAsJsonObject();
+        mainBoardConfig = new Gson().fromJson( bufferedReader1, JsonObject.class).getAsJsonObject();
     }
 
     /**
@@ -127,10 +135,10 @@ public class Controller {
      * create new connection class for controller when necessary
      * @param PORT available port
      * @param connectionType rmi or socket
-     * @return true if the new port will be used false in all other case
+     * @return number of the used port
      * @throws ConnectionControllerManagerException if connection type has an invalid parameters
      */
-    public boolean addClient(int PORT, String connectionType) throws ConnectionControllerManagerException {
+    public int addClient(int PORT, ConnectionType connectionType) throws ConnectionControllerManagerException {
        return controllerManager.addClient(PORT, connectionType, this);
     }
 
@@ -163,6 +171,17 @@ public class Controller {
                 if(!activePlayers.get(i)) {
                     System.out.println("\u001B[33m" + players.get(i).getPlayerID() + " reconnected the game" + "\u001B[0m");
                     activePlayers.set(i, true);
+
+                    //update all playerBoards in all clients
+                    ArrayList<Card[][]> playersBoard = new ArrayList<>();
+                    for(int j = 0; j< game.getPlayerArray().size(); j++){
+                        playersBoard.add(game.getPlayerBoard(j));
+                    }
+                    controllerManager.sendAllPlayerBoard(playersBoard);
+
+                    //update main board to all clients
+                    controllerManager.sendMainBoard(game.getMainBoard());
+
                     return;
                 }
             }
@@ -199,9 +218,15 @@ public class Controller {
         int n = rand.nextInt(numberOfPossibleCommonGoals-commonGoalNumber);
         int m = rand.nextInt(numberOfPossiblePrivateGoals-maxPlayerNumber);
         ArrayList<Integer> numberList = new ArrayList<>();
+        JsonObject error = new JsonObject();
         if(playerNum >= minPlayerNumber && !alreadyStarted && !endGame){
 
-            if(!game.getPlayerArray().get(0).getPlayerID().equals(playerID)) return false; //if player hasn't privileges to start the game
+            if(!game.getPlayerArray().get(0).getPlayerID().equals(playerID)) {//if player hasn't privileges to start the game
+                error.addProperty("errorID", "can't start the game");
+                error.addProperty("errorMSG", "the player hasn't privileges to start the game");
+                controllerManager.sendError(error, playerID);
+                return false;
+            }
             alreadyStarted = true;
 
             //shuffle gaming order
@@ -209,7 +234,7 @@ public class Controller {
             Collections.shuffle(tmpPlayers, new Random());
             game.setPlayersArray(tmpPlayers);
 
-            //set commun goal
+            //set common goal
             for (int i=0; i<numberOfPossibleCommonGoals; i++) numberList.add(i);
             Collections.shuffle(numberList);
             int[] commonGoalIDArray = this.setCommonGoals(numberList, n);
@@ -228,7 +253,12 @@ public class Controller {
             this.turn();
             return true;
         } else {
-            return false;   //finire else ***************************************************
+            error.addProperty("errorID", "can't start the game");
+            if(alreadyStarted) error.addProperty("errorMSG", "the game is already started");
+            if(playerNum < minPlayerNumber ) error.addProperty("errorMSG", "there isn't enough player in the game");
+            controllerManager.sendError(error, playerID);
+
+            return false;
         }
     }
 
@@ -383,10 +413,15 @@ public class Controller {
      * @return true if the move is valid false in all other case
      */
     synchronized public boolean takeCard(int column, PositionWithColor[] cards, String playerID){
+        JsonObject error = new JsonObject();
         if(!endGame && alreadyStarted && game.getPlayerArray().get(currentPlayer).getPlayerID().equals(playerID)){
             //verify the numbers of cards
-            if (cards.length == 0 || cards.length>3){
-                return false;               //devo comunucare al client che la mossa è errata ******************************************
+            if (cards.length < minTakeCard || cards.length > maxTakeCard){                       //TODO
+                error.addProperty("errorID", "invalid move");
+                error.addProperty("errorMSG", "taken none ore to many cards");
+                controllerManager.sendError(error, playerID);
+
+                return false;
             }
 
             //remove the cards from main board
@@ -395,7 +430,14 @@ public class Controller {
                     if(!game.fillMainBoard(allowedPositionArray)) this.endGame();
                 }
             } catch (InvalidPickException e) {
-                return false;               //devo comunucare al client che la mossa è errata ******************************************
+                //send error msg to the client
+                error.addProperty("errorID", "invalid move");
+                error.addProperty("errorMSG", e.toString());
+                controllerManager.sendError(error, playerID);
+
+                //update main board to all clients
+                controllerManager.sendMainBoard(game.getMainBoard());
+                return false;
             }
 
             //add card to player board
@@ -405,12 +447,23 @@ public class Controller {
             }
             try {
                 if(game.addCard(column, tmp.toArray(new Card[0]), currentPlayer)){
-                    game.playerAddPoint(1, currentPlayer);
+                    game.playerAddPoint(fullBoardPoint, currentPlayer);
                     this.waitForEndGame();
                 }
             } catch (NoSpaceException e) {
+                //send error msg to the client
+                error.addProperty("errorID", "invalid move");
+                error.addProperty("errorMSG", "not enough space on the player board");
+                controllerManager.sendError(error, playerID);
                 game.fixBoard(cards);
-                return false;       //devo comunucare al client che la mossa è errata ******************************************
+
+                //update all playerBoards in all clients
+                ArrayList<Card[][]> playersBoard = new ArrayList<>();
+                for(int i = 0; i< game.getPlayerArray().size(); i++){
+                    playersBoard.add(game.getPlayerBoard(i));
+                }
+                controllerManager.sendAllPlayerBoard(playersBoard);
+                return false;
             }
 
             //calc real time points and add it to current player
@@ -420,8 +473,11 @@ public class Controller {
             this.turn(); //skip to next player
             return true;
         } else {
+            error.addProperty("errorID", "invalid move");
+            error.addProperty("errorMSG", game.getPlayerArray().get(currentPlayer).getPlayerID() + "'s turn, you can't take cards");
+            controllerManager.sendError(error, playerID);
+
             return false;
-            //finire else ***************************************************
         }
     }
 
@@ -438,16 +494,23 @@ public class Controller {
                     alreadyScored.add(game.getPlayerArray().get(currentPlayer).getPlayerID());
                     game.setAlreadyScored(alreadyScored, i);
 
+                    //calculate point && add to the player points
                     int point = maxPointCommonGoals - alreadyScored.size() * 2;
                     if (playerNum == 2 && point == 6) point = 4;
                     game.playerAddPoint(point, currentPlayer);
+
+                    //send to client the value of the common goal just scored
+                    JsonObject scored = new JsonObject();
+                    scored.addProperty("playerID", game.getPlayerArray().get(currentPlayer).getPlayerID());
+                    scored.addProperty("value", point);
+                    controllerManager.sendLastCommonScored(scored);
             }
 
         }
     }
 
     /**
-     * this method increment the currentPlayer and verify the player do not exceeds time limit to make a move
+     * this method increment the currentPlayer and verify the player do not exceed time limit to make a move
      */
     synchronized public void turn(){
         if(endGame) return;         //if game is finish
@@ -478,7 +541,7 @@ public class Controller {
         waitForPlayerResponse.setName("waitForPlayerResponse");
     }
 
-    synchronized private void updateClientData(PositionWithColor[] positions, Card[] cards, int column){ //da finire********************************
+    synchronized private void updateClientData(PositionWithColor[] positions, Card[] cards, int column){
         System.out.println("\u001B[36m" + "update client data" + "\u001B[0m");
 
         //update main board (broadcast to each client)

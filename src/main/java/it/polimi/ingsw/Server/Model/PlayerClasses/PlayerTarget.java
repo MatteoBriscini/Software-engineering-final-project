@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Server.Model.PlayerClasses;
 
 import it.polimi.ingsw.Shared.Cards.Card;
+import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
 
 public class PlayerTarget {
 

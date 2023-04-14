@@ -1,8 +1,15 @@
 package it.polimi.ingsw.Server.Model.GroupGoals;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import it.polimi.ingsw.Shared.Cards.Card;
 import it.polimi.ingsw.Server.Exceptions.ConstructorException;
 import it.polimi.ingsw.Server.SupportClasses.NColorsGroup;
+import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * this class checks the following common goals:
@@ -15,6 +22,11 @@ public class RainbowRowsAndColumnsGoals extends CommonGoal{
     private int n,min,max,tot;
     private final NColorsGroup nColor = new NColorsGroup();
 
+    private List<Card> cardsRow;
+    private List<Card> cardsColumn;
+    private JsonUrl jsonUrl;
+    private int rows,columns,minRows,minColumns,maxRows,maxColumns,totRows,totColumns,totRainbowRows,totRainbowColumns;
+
     /**
      * @param n is the number of Cards required from the goal
      * @param min is the minimum number of different colours required from the goal
@@ -22,13 +34,43 @@ public class RainbowRowsAndColumnsGoals extends CommonGoal{
      * @param tot is the number of rows or columns that must fulfill the requirement of the number of colors
      */
     public RainbowRowsAndColumnsGoals(int n, int min, int max, int tot) throws ConstructorException {
-        if((n==6 && ((min==1 && max==3 && tot==4) || (min==5 && max==5 && tot==2))) || (n==5 && ((min==1 && max==3 && tot==3) || (min==6 && max==6 && tot==2))) ) {
+        try {
+            this.jsonCreate();
+        } catch (FileNotFoundException e) {
+            System.out.println("SquaresGoal: JSON FILE NOT FOUND");
+            throw new RuntimeException(e);
+        }
+        if((n==rows && ((min==minRows && max==maxRows && tot==totRows) || (min==columns && max==columns && tot==totRainbowColumns))) || (n==columns && ((min==minColumns && max==maxColumns && tot==totColumns) || (min==rows && max==rows && tot==totRainbowRows))) ) {
             this.n = n;
             this.min = min;
             this.max = max;
             this.tot = tot;
         }
         else throw new ConstructorException("invalid parameter for RainbowRowsAndColumnsGoals constructor");
+    }
+
+
+    private void jsonCreate() throws FileNotFoundException {
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("playerBoardConfig"));
+        if(inputStream == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        InputStream inputStream1 = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("rainbowRowsAndColumnsGoal"));
+        if(inputStream1 == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader1 = new BufferedReader(new InputStreamReader(inputStream1));
+
+        JsonObject rainbow = new Gson().fromJson(bufferedReader1, JsonObject.class);
+        JsonObject rainbowBoard = new Gson().fromJson(bufferedReader, JsonObject.class);
+
+        this.rows = rainbowBoard.get("y").getAsInt();
+        this.columns = rainbowBoard.get("x").getAsInt();
+        this.minRows = rainbow.get("minRows").getAsInt();
+        this.minColumns = rainbow.get("minColumns").getAsInt();
+        this.maxRows = rainbow.get("maxRows").getAsInt();
+        this.maxColumns = rainbow.get("maxColumns").getAsInt();
+        this.totRows = rainbow.get("totRows").getAsInt();
+        this.totColumns = rainbow.get("totColumns").getAsInt();
+        this.totRainbowRows = rainbow.get("totRainbowRows").getAsInt();
+        this.totRainbowColumns = rainbow.get("totRainbowColumns").getAsInt();
 
 
     }
@@ -45,7 +87,19 @@ public class RainbowRowsAndColumnsGoals extends CommonGoal{
          ** (if n==6 the check is made on the rows, if n==5 it is made on the columns
          * */
         for(int i=0;i<n;i++) {
-            if((n==6 && (nColor.nColorsCheck(new Card[]{board[0][i], board[1][i], board[2][i], board[3][i], board[4][i]}, min, max))) || (n==5 && (nColor.nColorsCheck(new Card[]{board[i][0], board[i][1], board[i][2], board[i][3], board[i][4], board[i][5]}, min, max)))) {
+            if(i<rows) {
+                cardsRow = new ArrayList<>();
+                for (int j = 0; j < columns; j++)
+                    cardsRow.add(board[j][i]);
+            }
+
+            if(i<columns) {
+                cardsColumn = new ArrayList<>();
+                for (int j = 0; j < rows; j++)
+                    cardsColumn.add(board[i][j]);
+            }
+
+            if((n==rows && (nColor.nColorsCheck(cardsRow.toArray(new Card[0]), min, max))) || (n==columns && (nColor.nColorsCheck(cardsColumn.toArray(new Card[0]), min, max)))) {
                 {
                     tmptot--;
                 }

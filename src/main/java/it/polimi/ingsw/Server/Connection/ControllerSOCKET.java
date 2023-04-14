@@ -12,7 +12,6 @@ import java.lang.reflect.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
@@ -111,6 +110,16 @@ public class ControllerSOCKET extends ConnectionController {
 
     @Override
     public void sendWinner(JsonObject winner) {
+
+    }
+
+    @Override
+    public void sendLastCommonScored(JsonObject scored) {
+
+    }
+
+    @Override
+    public void sendError(JsonObject error, String playerID){
 
     }
 

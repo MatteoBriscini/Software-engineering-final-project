@@ -5,9 +5,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Exceptions.NoSpaceException;
 import it.polimi.ingsw.Shared.Cards.Card;
+import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 
 import static it.polimi.ingsw.Shared.Cards.CardColor.EMPTY;
 
@@ -19,11 +19,8 @@ public class PlayerBoard {
     private Card[][] board;
     private int x;
     private int y;
-
     JsonObject playerBoardConfig = new JsonObject();
-
-    private static final String jsonURL = "src/main/json/config/playerBoardConfig.json";
-
+    private JsonUrl jsonUrl;
 
     //Constructor
 
@@ -62,7 +59,17 @@ public class PlayerBoard {
         return card;
     }
 
+    private void jsonCreate() throws FileNotFoundException{
+        Gson gson = new Gson();
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("playerBoardConfig"));
+        if(inputStream == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
+        JsonObject controller = new Gson().fromJson(bufferedReader, JsonObject.class);
+        this.x = controller.get("x").getAsInt();
+        this.y = controller.get("y").getAsInt();
+
+    }
     //Methods
 
     /**
@@ -113,17 +120,6 @@ public class PlayerBoard {
 
     }
 
-    private void jsonCreate() throws FileNotFoundException{
 
-        Gson gson = new Gson();
-
-        String urlConfig = jsonURL;
-        FileReader fileJsonConfig = new FileReader(urlConfig);
-
-        JsonObject controller = new Gson().fromJson(fileJsonConfig, JsonObject.class);
-        this.x = controller.get("x").getAsInt();
-        this.y = controller.get("y").getAsInt();
-
-    }
 
 }
