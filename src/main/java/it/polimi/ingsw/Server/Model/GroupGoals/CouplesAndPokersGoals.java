@@ -78,6 +78,7 @@ public class CouplesAndPokersGoals extends CommonGoal{
      * @param board player board on which method have to check the goal
      * @return boolean true if the player has reach the goal
      */
+    @Override
     public boolean check(Card[][] board){
         int i,j;
         alreadyUsed = new boolean[5][6];

@@ -75,6 +75,12 @@ public class GameMaster {
         return players;
     }
 
+    public void setBoardNonRandomBoard(Card[][] board,String playerID){
+        for(Player p: players){
+            if(p.getPlayerID().equals(playerID))p.setBoardNonRandomBoard(board);
+        }
+    }
+
     public void setPlayersArray(ArrayList<Player> players){
         this.players = players;
     }

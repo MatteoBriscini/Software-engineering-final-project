@@ -1,7 +1,10 @@
 package it.polimi.ingsw;
 
 import com.google.gson.Gson;
+import it.polimi.ingsw.Server.Exceptions.ConstructorException;
+import it.polimi.ingsw.Server.Exceptions.LengthException;
 import it.polimi.ingsw.Server.Exceptions.addPlayerToGameException;
+import it.polimi.ingsw.Shared.Cards.CardColor;
 import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
 import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 import it.polimi.ingsw.Server.Controller;
@@ -34,6 +37,20 @@ public class ControllerTest extends TestCase {
 
     private void setNotRandomBoard(String url) throws FileNotFoundException {
         test.fixMainBoard(this.jsonCreate(url));
+    }
+
+    private  Card[][] setNotRandomPlayerBoard(String url) throws FileNotFoundException{
+        Card[][] board = new Card[5][6];
+        PositionWithColor[] pos = this.jsonCreate(url);
+        for(int i=0; i<5;i++){
+            for (int j=0; j<6;j++){
+                board[i][j]= new Card(EMPTY);
+            }
+        }
+        for(PositionWithColor p : pos){
+            board[p.getX()][p.getY()]= new Card(p.getColor());
+        }
+        return board;
     }
 
 
@@ -360,17 +377,77 @@ public class ControllerTest extends TestCase {
         System.out.println("\nEND TEST\n");
     }
 
-    public void testCalcEndGamePoint() throws addPlayerToGameException {
-        test = new Controller(4);
+    public void testCalcEndGamePoint() throws addPlayerToGameException, FileNotFoundException, ConstructorException, InterruptedException, LengthException {
+        System.out.println("START TEST testRefil\n");
+
+        PositionWithColor[] cards = new PositionWithColor[2];
+
+        ArrayList<Player> players = new ArrayList<>();      //gaming order array list for this test
+        players.add(new Player("piero"));
+        players.add(new Player("pino"));
+        players.add(new Player("pierino"));
+
+        test = new Controller(3);
 
         test.addNewPlayer("piero");     //4 player join the game
         assert (test.getPlayerNumber() == 1);
         test.addNewPlayer("pino");
         assert (test.getPlayerNumber() == 2);
         test.addNewPlayer("pierino");
-        assert (test.getPlayerNumber() == 3);
-        test.addNewPlayer("pierina");
-        assert (test.getPlayerNumber() == 4);   //the game is full it will be start autonomous
-        test.endGame();
+        assert (test.getPlayerNumber() == 3);   //the game is full it will be start autonomous
+
+        test.setNotRandomPlayerOrder(players);
+        this.setNotRandomBoard("mainBoard3Players");                       //fill the main board with predetermined colors
+
+        test.setNotRandomPrivateGaol(new int[]{0, 1, 2});
+
+        test.setBoardNonRandomBoard(this.setNotRandomPlayerBoard("personalBoard3"), players.get(0).getPlayerID());                       //fill the players board with predetermined colors
+        test.setBoardNonRandomBoard(this.setNotRandomPlayerBoard("personalBoard2"), players.get(1).getPlayerID());
+        test.setBoardNonRandomBoard(this.setNotRandomPlayerBoard("personalBoard1"), players.get(2).getPlayerID());
+
+        test.setNonRandomCommonGoal(3,0);
+        test.setNonRandomCommonGoal(2,1);
+
+        System.out.println("test1: (start testing common goal point && end game)");
+        cards = new PositionWithColor[2];
+        cards[0] =new PositionWithColor(5,1,0, BLUE);
+        cards[1] =new PositionWithColor(5,0,0, GREEN);
+        assert (test.takeCard(0, cards, "piero"));
+        assert (test.getPlayerPoint("piero")==8);
+        assert (test.getPlayerPoint("pino")==0);
+        assert (test.getPlayerPoint("pierino")==0);
+
+        System.out.println("test2:");
+        cards = new PositionWithColor[2];
+        cards[0] =new PositionWithColor(3,8,0, BLUE);
+        cards[1] =new PositionWithColor(3,7,0, PINK);
+        assert (test.takeCard(4, cards, "pino"));
+        assert (test.getPlayerPoint("piero")==8);
+        assert (test.getPlayerPoint("pino")==6);
+        assert (test.getPlayerPoint("pierino")==0);
+
+        System.out.println("test3:");
+        cards = new PositionWithColor[2];
+        cards[0] =new PositionWithColor(5,6,0, PINK);
+        cards[1] =new PositionWithColor(6,6,0, GREEN);
+        assert (test.takeCard(0, cards, "pierino"));
+        assert (test.getPlayerPoint("piero")==8);
+        assert (test.getPlayerPoint("pino")==6);
+        assert (test.getPlayerPoint("pierino")==9);
+
+        assert (!test.takeCard(0, cards, "pino"));//pino can't play the game is finished
+
+        Thread.sleep((timeout*1000)+5);         //wait end game
+
+        System.out.println(
+                test.getPlayerPoint("piero")
+        );
+        System.out.println(test.getPlayerPoint("pino"));
+        System.out.println(test.getPlayerPoint("pierino"));
+        assert (test.getPlayerPoint("piero")>=10);      //verify final point except for private goal
+        assert (test.getPlayerPoint("pino")>=8);
+        assert (test.getPlayerPoint("pierino")>=12);
+
+        System.out.println("\nEND TEST\n");
     }
 }

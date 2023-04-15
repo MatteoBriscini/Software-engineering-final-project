@@ -44,6 +44,7 @@ public class EightEqualsGoal extends CommonGoal {
     }
 
 
+    @Override
     public boolean check(Card[][] board){
         int[] color=new int[values().length-1]; //this array is used to count the occurrences of each color (the order is the same of the enum in CardColor)
         int x=0;

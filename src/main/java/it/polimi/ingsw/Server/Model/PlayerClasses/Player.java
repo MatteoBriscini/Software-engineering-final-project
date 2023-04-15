@@ -12,6 +12,7 @@ import it.polimi.ingsw.Server.SupportClasses.RecursiveUsedSupport;
 import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
 
 import java.io.*;
+import java.util.Arrays;
 
 public class Player {
 
@@ -80,6 +81,14 @@ public class Player {
     }
 
     /**
+     * set the board from a matrix of Card
+     * @param board matrix of Card
+     */
+    public void setBoardNonRandomBoard(Card[][] board) {
+        this.board = new PlayerBoard(board);
+    }
+
+    /**
      * Reads the JSON file and assigns the PlayerTarget to the Player
      * @param targetNumber, indicates which of the twelve PersonalTargets is to be assigned to the player
      * @targets is an array of objects PlayerTarget
@@ -131,7 +140,7 @@ public class Player {
     public void checkSpots() {
         Card[][] tmpBoard = board.getBoard();
         int i, j;
-        alreadyUsed1 = new boolean[5][6];
+        alreadyUsed1 = new boolean[rowSize][columnSize];
         for (i = 0; i < rowSize; i++) {
             for (j = 0; j < columnSize; j++) {
                 if (!alreadyUsed1[i][j] && (i + 1 < rowSize && (equal.nColorsCheck(new Card[]{tmpBoard[i][j], tmpBoard[i + 1][j]},1,1)) || (j + 1 < columnSize && equal.nColorsCheck(new Card[]{tmpBoard[i][j], tmpBoard[i][j + 1]},1,1)))) {
@@ -143,8 +152,9 @@ public class Player {
                         this.elementCombo = maxElement;
                     }
                     //assign points for the spots
-                    if(elementCombo >= minElement) this.updatePointSum(pt.get(elementCombo-minElement).getAsInt());
-
+                    if(elementCombo >= minElement) {
+                        this.updatePointSum(pt.get(elementCombo - minElement).getAsInt());
+                    }
                     elementCombo = 0;
 
                 }

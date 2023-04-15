@@ -25,6 +25,9 @@ public class JsonUrl {
             case "squaresGoal": return "json/goal/SquaresGoal.json";
             case "playerGoalConfig": return  "json/config/PlayerGoalConfig.json";
             case "checkSpotConfig": return  "json/config/checkSpotsConfig.json";
+            case "personalBoard1": return "json/testJson/personalBoard1.json";
+            case "personalBoard2": return "json/testJson/personalBoard2.json";
+            case "personalBoard3": return "json/testJson/personalBoard3.json";
             default: return "invalid";
         }
     }

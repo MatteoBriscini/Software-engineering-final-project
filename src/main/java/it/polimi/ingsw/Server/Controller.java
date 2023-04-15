@@ -112,20 +112,30 @@ public class Controller {
     public int getMaxPlayerNumber(){
         return maxPlayerNumber;
     }
-
     public void setNotRandomPlayerOrder(ArrayList<Player> players){
         game.setPlayersArray(players);
+    }
+    public void setNotRandomPrivateGaol(int[] privateGoalID) throws FileNotFoundException, LengthException {
+        game.setPrivateGoal(privateGoalID);
     }
     public int getPlayerNumber(){
         return playerNum;
     }
-
     public void setTimeout(int timeout){
         this.timeout = timeout;
     }
-
     public void fixMainBoard(PositionWithColor[] cards){
         game.fixBoard(cards);
+    }
+    public void setBoardNonRandomBoard(Card[][] board,String playerID){game.setBoardNonRandomBoard(board, playerID);}
+    public int getPlayerPoint(String playerID){
+        for(Player p : game.getPlayerArray()){
+            if (p.getPlayerID().equals(playerID))return p.getPointSum();
+        }
+        return 0;
+    }
+    public void setNonRandomCommonGoal (int commonGoalID, int n) throws ConstructorException{
+        game.setCommonGoal(commonGoalID, n);
     }
     public Card[][] getMainBoard(){return game.getMainBoard();}
     /**************************************************************************
@@ -424,12 +434,19 @@ public class Controller {
                 return false;
             }
 
+
+
             //remove the cards from main board
+            PositionWithColor[] tmpCards = new PositionWithColor[cards.length];
+            for (int i = 0; i<cards.length;i++){
+                tmpCards[i] = new PositionWithColor(cards[i].getX(), cards[i].getY(), cards[i].getSketch(),cards[i].getColor());
+            }
             try {
-                if (game.removeCards(cards)){
+                if (game.removeCards(tmpCards)){
                     if(!game.fillMainBoard(allowedPositionArray)) this.endGame();
                 }
             } catch (InvalidPickException e) {
+                System.out.println(e.toString());
                 //send error msg to the client
                 error.addProperty("errorID", "invalid move");
                 error.addProperty("errorMSG", e.toString());
@@ -440,9 +457,11 @@ public class Controller {
                 return false;
             }
 
+
             //add card to player board
             ArrayList<Card> tmp = new ArrayList<>();
-            for (PositionWithColor p : cards){
+
+            for (PositionWithColor p: cards){
                 tmp.add(new Card(p.getColor()));
             }
             try {
@@ -451,6 +470,7 @@ public class Controller {
                     this.waitForEndGame();
                 }
             } catch (NoSpaceException e) {
+
                 //send error msg to the client
                 error.addProperty("errorID", "invalid move");
                 error.addProperty("errorMSG", "not enough space on the player board");
@@ -476,7 +496,6 @@ public class Controller {
             error.addProperty("errorID", "invalid move");
             error.addProperty("errorMSG", game.getPlayerArray().get(currentPlayer).getPlayerID() + "'s turn, you can't take cards");
             controllerManager.sendError(error, playerID);
-
             return false;
         }
     }
@@ -485,9 +504,9 @@ public class Controller {
      * verify if a player score a commonGoal and save it
      */
     private void updateAllCommonGoal(){
+
         for(int i = 0; i<commonGoalNumber ; i+=1){
             ArrayList<String> alreadyScored = game.getAlreadyScored(i);
-
             if (!alreadyScored.contains(game.getPlayerArray().get(currentPlayer).getPlayerID()) && game.checkCommonGoal(i, currentPlayer)){
 
                     //update the list of player has already reached the goal
@@ -495,7 +514,7 @@ public class Controller {
                     game.setAlreadyScored(alreadyScored, i);
 
                     //calculate point && add to the player points
-                    int point = maxPointCommonGoals - alreadyScored.size() * 2;
+                    int point = maxPointCommonGoals - (alreadyScored.size()-1) * 2;
                     if (playerNum == 2 && point == 6) point = 4;
                     game.playerAddPoint(point, currentPlayer);
 
@@ -504,6 +523,7 @@ public class Controller {
                     scored.addProperty("playerID", game.getPlayerArray().get(currentPlayer).getPlayerID());
                     scored.addProperty("value", point);
                     controllerManager.sendLastCommonScored(scored);
+                    System.out.println("\u001B[36m" + "send new CommonGoal scorer" + "\u001B[0m");
             }
 
         }

@@ -58,6 +58,7 @@ public class SquaresGoal extends CommonGoal{
      * @param board is a matrix that represents the main board
      * @return true if the goal has been reached, false otherwise
      */
+    @Override
     public boolean check(Card[][] board) {
         int x, y;
         validCombo=0;

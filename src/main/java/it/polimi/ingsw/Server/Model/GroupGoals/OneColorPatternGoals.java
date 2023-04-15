@@ -71,6 +71,7 @@ OneColorPatternGoals extends CommonGoal{
      * @param board player board on which method have to check the goal
      * @return boolean true if the player has reach the goal
      */
+    @Override
     public boolean check(Card[][] board){
         //the json file has an array with the position we have to verify, in this two for we create an array list with the card in "interesting"position
         for (Position[] array : p){

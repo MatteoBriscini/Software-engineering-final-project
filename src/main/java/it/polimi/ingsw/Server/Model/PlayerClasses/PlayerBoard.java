@@ -39,6 +39,11 @@ public class PlayerBoard {
     }
 
     public PlayerBoard(Card[][] board){
+        try {
+            this.jsonCreate();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         this.board = new Card[x][y];
         for (int i = 0; i < x; i++){
             for (int j = 0; j < y; j++){
@@ -85,6 +90,7 @@ public class PlayerBoard {
         boolean flag = false;
 
         while(board[column][i].getColor().equals(EMPTY) && i != 0){ //check column for correct line start
+
             i--;
         }
 
