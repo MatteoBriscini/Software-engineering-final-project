@@ -59,19 +59,23 @@ public class ControllerTest extends TestCase {
 
         boolean ex = false;
         //test 1
-        System.out.println("3 playerr entry test:\n");
+        System.out.println("3 player entry test:\n");
         test = new Controller();
 
         assert (test.getMaxPlayerNumber() == 4);
         assert (!test.startGame("piero"));
+
         assert (test.getPlayerNumber() == 0);
         assert (test.getCurrentPlayer() == -1);
 
         test.addNewPlayer("piero");     //3 player join the game
+        test.setPlayerOnline("piero");
         assert (test.getPlayerNumber() == 1);
         test.addNewPlayer("pino");
+        test.setPlayerOnline("pino");
         assert (test.getPlayerNumber() == 2);
         test.addNewPlayer("pierino");
+        test.setPlayerOnline("pierino");
         assert (test.getPlayerNumber() == 3);
 
         assert (!test.startGame("pino"));       //not allowed player try to start the game
@@ -94,12 +98,16 @@ public class ControllerTest extends TestCase {
         assert (test.getCurrentPlayer() == -1);
 
         test.addNewPlayer("piero");     //4 player join the game
+        test.setPlayerOnline("piero");
         assert (test.getPlayerNumber() == 1);
         test.addNewPlayer("pino");
+        test.setPlayerOnline("pino");
         assert (test.getPlayerNumber() == 2);
         test.addNewPlayer("pierino");
+        test.setPlayerOnline("pierino");
         assert (test.getPlayerNumber() == 3);
         test.addNewPlayer("pinuccia");
+        test.setPlayerOnline("pinuccia");
         assert (test.getPlayerNumber() == 4);   //the game is full it will be start autonomous
 
         assert (test.getCurrentPlayer() == 0);
@@ -124,11 +132,14 @@ public class ControllerTest extends TestCase {
         //test 3
         System.out.println("3 player entry test:\n");
         test = new Controller(3);                        //create new game with max 3 players
-        test.addNewPlayer("piero");     //4 player join the game
+        test.addNewPlayer("piero");     //3 player join the game
+        test.setPlayerOnline("piero");
         assert (test.getPlayerNumber() == 1);
         test.addNewPlayer("pino");
+        test.setPlayerOnline("pino");
         assert (test.getPlayerNumber() == 2);
         test.addNewPlayer("pierino");
+        test.setPlayerOnline("pierino");
         assert (test.getPlayerNumber() == 3);   //the game is full it will be start autonomous
 
         assert (test.getCurrentPlayer() == 0);
@@ -151,10 +162,13 @@ public class ControllerTest extends TestCase {
 
         test.addNewPlayer("piero");     //4 player join the game
         assert (test.getPlayerNumber() == 1);
+        test.setPlayerOnline("piero");
         test.addNewPlayer("pino");
         assert (test.getPlayerNumber() == 2);
+        test.setPlayerOnline("pino");
         test.addNewPlayer("pierino");
         assert (test.getPlayerNumber() == 3);   //the game is full it will be start autonomous
+        test.setPlayerOnline("pierino");
 
         assert (test.getCurrentPlayer() == 0);
 
@@ -270,6 +284,7 @@ public class ControllerTest extends TestCase {
 
         test.setPlayerOffline("pierina");             //pierina lost connection
 
+        //System.out.println(test.isPlayerOffline("pierina"));
         Thread.sleep((timeout*1000)+5);         //wait player time limit to make a move
         assert (test.getCurrentPlayer() == 0);
 
@@ -278,8 +293,7 @@ public class ControllerTest extends TestCase {
 
         Thread.sleep((timeout*1000)+5);         //wait player time limit to make a move
         assert (test.getCurrentPlayer() == 1);
-
-        Thread.sleep((timeout*1000)+5);         //wait player time limit to make a move
+        Thread.sleep((timeout*1000)+2);         //wait player time limit to make a move
         assert (test.getCurrentPlayer() == 3);
 
         //test 2
@@ -333,8 +347,10 @@ public class ControllerTest extends TestCase {
 
         test = new Controller(2);
         test.addNewPlayer("piero");     //2 player join the game
+        test.setPlayerOnline("piero");
         assert (test.getPlayerNumber() == 1);
         test.addNewPlayer("pino");
+        test.setPlayerOnline("pino");
         assert (test.getPlayerNumber() == 2);   //the game is full it will be start autonomous
         assert (test.getCurrentPlayer() == 0);
 
@@ -358,10 +374,14 @@ public class ControllerTest extends TestCase {
         System.out.println("\n\n");
 
         //test 1
+
         PositionWithColor[] cards = new PositionWithColor[2];
         cards[0] =new PositionWithColor(4,4,0,  BLUE);
         cards[1] =new PositionWithColor(4,3,0, LIGHTBLUE);
-        test.takeCard(0, cards, test.getCurrentPlayerID());
+        //System.out.println(test.isPlayerOffline(test.getCurrentPlayerID()));
+        assert(test.takeCard(0, cards, test.getCurrentPlayerID()));
+
+
         assert (test.getCurrentPlayer() == 1);
         board = test.getMainBoard();
         Card empty = new Card(EMPTY);
@@ -378,7 +398,7 @@ public class ControllerTest extends TestCase {
     }
 
     public void testCalcEndGamePoint() throws addPlayerToGameException, FileNotFoundException, ConstructorException, InterruptedException, LengthException {
-        System.out.println("START TEST testRefil\n");
+        System.out.println("START TEST testCalcEndGamePoint\n");
 
         PositionWithColor[] cards = new PositionWithColor[2];
 
@@ -389,12 +409,15 @@ public class ControllerTest extends TestCase {
 
         test = new Controller(3);
 
-        test.addNewPlayer("piero");     //4 player join the game
+        test.addNewPlayer("piero");     //3 player join the game
+        test.setPlayerOnline("piero");
         assert (test.getPlayerNumber() == 1);
         test.addNewPlayer("pino");
+        test.setPlayerOnline("pino");
         assert (test.getPlayerNumber() == 2);
         test.addNewPlayer("pierino");
-        assert (test.getPlayerNumber() == 3);   //the game is full it will be start autonomous
+        test.setPlayerOnline("pierino");
+        assert (test.getPlayerNumber() == 3);  //the game is full it will be start autonomous
 
         test.setNotRandomPlayerOrder(players);
         this.setNotRandomBoard("mainBoard3Players");                       //fill the main board with predetermined colors
@@ -437,13 +460,12 @@ public class ControllerTest extends TestCase {
 
         assert (!test.takeCard(0, cards, "pino"));//pino can't play the game is finished
 
-        Thread.sleep((timeout*1000)+5);         //wait end game
+        Thread.sleep((timeout*1000)+5);         //wait for end game
 
-        System.out.println(
-                test.getPlayerPoint("piero")
-        );
+        System.out.println(test.getPlayerPoint("piero"));
         System.out.println(test.getPlayerPoint("pino"));
         System.out.println(test.getPlayerPoint("pierino"));
+
         assert (test.getPlayerPoint("piero")>=10);      //verify final point except for private goal
         assert (test.getPlayerPoint("pino")>=8);
         assert (test.getPlayerPoint("pierino")>=12);

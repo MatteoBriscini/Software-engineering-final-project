@@ -97,7 +97,7 @@ public class Controller {
     /**
      * for debugging
      */
-    public int getCurrentPlayer() {
+    public synchronized int getCurrentPlayer() {
         return currentPlayer;
     }
     public String getCurrentPlayerID() {
@@ -149,7 +149,7 @@ public class Controller {
      * @throws ConnectionControllerManagerException if connection type has an invalid parameters
      */
     public int addClient(int PORT, ConnectionType connectionType) throws ConnectionControllerManagerException {
-       return controllerManager.addClient(PORT, connectionType, this);
+        return controllerManager.addClient(PORT, connectionType, this);
     }
 
     /**
@@ -192,6 +192,7 @@ public class Controller {
                     //update main board to all clients
                     controllerManager.sendMainBoard(game.getMainBoard());
 
+                    System.out.println("\u001B[36m" + "recreate client data after "+ playerID+ " reconnection after a crash" + "\u001B[0m");
                     return;
                 }
             }
@@ -509,21 +510,21 @@ public class Controller {
             ArrayList<String> alreadyScored = game.getAlreadyScored(i);
             if (!alreadyScored.contains(game.getPlayerArray().get(currentPlayer).getPlayerID()) && game.checkCommonGoal(i, currentPlayer)){
 
-                    //update the list of player has already reached the goal
-                    alreadyScored.add(game.getPlayerArray().get(currentPlayer).getPlayerID());
-                    game.setAlreadyScored(alreadyScored, i);
+                //update the list of player has already reached the goal
+                alreadyScored.add(game.getPlayerArray().get(currentPlayer).getPlayerID());
+                game.setAlreadyScored(alreadyScored, i);
 
-                    //calculate point && add to the player points
-                    int point = maxPointCommonGoals - (alreadyScored.size()-1) * 2;
-                    if (playerNum == 2 && point == 6) point = 4;
-                    game.playerAddPoint(point, currentPlayer);
+                //calculate point && add to the player points
+                int point = maxPointCommonGoals - (alreadyScored.size()-1) * 2;
+                if (playerNum == 2 && point == 6) point = 4;
+                game.playerAddPoint(point, currentPlayer);
 
-                    //send to client the value of the common goal just scored
-                    JsonObject scored = new JsonObject();
-                    scored.addProperty("playerID", game.getPlayerArray().get(currentPlayer).getPlayerID());
-                    scored.addProperty("value", point);
-                    controllerManager.sendLastCommonScored(scored);
-                    System.out.println("\u001B[36m" + "send new CommonGoal scorer" + "\u001B[0m");
+                //send to client the value of the common goal just scored
+                JsonObject scored = new JsonObject();
+                scored.addProperty("playerID", game.getPlayerArray().get(currentPlayer).getPlayerID());
+                scored.addProperty("value", point);
+                controllerManager.sendLastCommonScored(scored);
+                System.out.println("\u001B[36m" + "send new CommonGoal scorer" + "\u001B[0m");
             }
 
         }
@@ -537,14 +538,15 @@ public class Controller {
 
         currentPlayer += 1;
         if(currentPlayer >= playerNum) currentPlayer = 0;
-
         //if a player is market as offline skip him
         synchronized (activePlayers) {
-            if (!activePlayers.get(currentPlayer)) {
-                turn();
-                return;
+            while (!activePlayers.get(currentPlayer)) {
+
+                currentPlayer+=1;
+                if(currentPlayer >= playerNum) currentPlayer = 0;
             }
         }
+
 
         //send current player to client
         controllerManager.notifyActivePlayer(game.getPlayerArray().get(currentPlayer).getPlayerID());

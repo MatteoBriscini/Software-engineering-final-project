@@ -7,6 +7,8 @@ import it.polimi.ingsw.Client.Game.MainBoard;
 import it.polimi.ingsw.Client.Game.PlayerBoard;
 import it.polimi.ingsw.Shared.Cards.Card;
 import it.polimi.ingsw.Shared.Connection.ConnectionType;
+import it.polimi.ingsw.Shared.JsonSupportClasses.Position;
+import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -28,7 +30,8 @@ public class PlayingPlayer extends Player{
      * @param serverIP to reach the server
      * @throws RemoteException if the server do not response (wrong port or ip)
      */
-    public PlayingPlayer(ConnectionType connectionType, int port, String serverIP) throws RemoteException {
+    public PlayingPlayer(String playerID, String pwd, ConnectionType connectionType, int port, String serverIP) throws RemoteException {
+        super(playerID, pwd);
         switch (connectionType){
             case RMI:
                 connectionManager = new PlayingPlayerRMI(port, serverIP, playerID, this);
@@ -95,10 +98,46 @@ public class PlayingPlayer extends Player{
         }
         playerBoards = tmpBoards.toArray(new PlayerBoard[0]);
     }
+
+    /*************************************************************************
+     ************************************************** others ******************
+     * ***********************************************************************
+     */
     public void addCommonGoalScored(JsonObject scored){
         ArrayList<JsonObject> tmpScored = new ArrayList<>();
         Collections.addAll(tmpScored, commonGoalScored);
         tmpScored.add(scored);
         commonGoalScored = tmpScored.toArray(new JsonObject[0]);
+    }
+    public boolean startGame(){
+        try {
+            return connectionManager.startGame(this.playerID);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);//TODO come va gestita questa eccezione?
+        }
+    }
+
+    public boolean quitGame(){
+        try {
+            return connectionManager.quitGame(this.playerID);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);//TODO come va gestita questa eccezione?
+        }
+    }
+
+    public boolean takeCard(int column, Position[] cards){
+        PositionWithColor[] pos = new  PositionWithColor[cards.length];
+        for(int i = 0; i<cards.length; i++){
+            pos[i] = new PositionWithColor(cards[i].getX(), cards[i].getY(), mainBoard.getSketch(cards[i].getX(), cards[i].getY()) , mainBoard.getColor(cards[i].getX(), cards[i].getY()));
+        }
+        try {
+            return connectionManager.takeCard(column, pos);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);//TODO come va gestita questa eccezione?
+        }
+    }
+
+    public void errMsg(JsonObject err){
+        System.err.println(err.get("errorID").toString().toUpperCase() + ": " + err.get("errorMSG")); //TODO necessita metodo lato grafico
     }
 }

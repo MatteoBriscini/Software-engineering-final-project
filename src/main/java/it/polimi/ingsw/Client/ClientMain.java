@@ -24,15 +24,13 @@ public class ClientMain {
         pos[1] = new PositionWithColor(3,6,1,YELLOW);
 
         try {
-            tmp = new PlayingPlayer(ConnectionType.RMI, 1234, serverIP);
-            tmp.setPlayerID("paolo");
+            tmp = new PlayingPlayer("antonio", "antonio", ConnectionType.RMI, 1234, serverIP);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
 
         try {
-            tmp2 = new PlayingPlayer(ConnectionType.RMI, 1233, serverIP);
-            tmp2.setPlayerID("emma");
+            tmp2 = new PlayingPlayer("emma", "antonio", ConnectionType.RMI, 1233, serverIP);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }

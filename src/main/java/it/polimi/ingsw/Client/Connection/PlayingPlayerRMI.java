@@ -40,12 +40,6 @@ public class PlayingPlayerRMI extends PlayingPlayerConnectionManager implements 
 
             throw new RuntimeException(e);
         }
-
-        try {
-            startGame(playerID);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     /*************************************************************************
@@ -55,14 +49,18 @@ public class PlayingPlayerRMI extends PlayingPlayerConnectionManager implements 
     public boolean quitGame(String  playerID) throws RemoteException{
         return stub.quitRMIControllerConnection(this, playerID);
     }
-    public static boolean startGame(String  playerID) throws RemoteException {
+    public boolean startGame(String  playerID) throws RemoteException {
         return stub.startGame( playerID);
     }
+
+    @Override
+
     public boolean takeCard(int column, PositionWithColor[] cards) throws RemoteException {
         Gson gson = new Gson();
         JsonArray jsonArray = new Gson().toJsonTree(cards).getAsJsonArray();
         return stub.takeCard(column,jsonArray.toString(), playerID);
     }
+
 
 
 

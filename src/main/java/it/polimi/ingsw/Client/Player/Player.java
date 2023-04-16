@@ -4,8 +4,9 @@ public abstract class Player {
     String playerID;
     String pwd;
 
-    public void setPlayerID(String playerID) {
+    public Player(String playerID, String pwd){
         this.playerID = playerID;
+        this.pwd = pwd;
     }
 
     public String getPlayerID() {
