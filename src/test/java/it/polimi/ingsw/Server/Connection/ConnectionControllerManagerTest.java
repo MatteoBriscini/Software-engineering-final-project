@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Server.Connection;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import it.polimi.ingsw.Client.Player.Player;
 import it.polimi.ingsw.Client.Player.PlayingPlayer;
 import it.polimi.ingsw.Server.Controller;
@@ -57,14 +58,25 @@ public class ConnectionControllerManagerTest extends TestCase {
         assert(testServer.isRmiActive());
         assert(testServer.getInterfaces().size()==1);
 
-        Player testClient  = new PlayingPlayer("antonio", "antonio", ConnectionType.RMI, 1234, "127.0.0.1");
+        PlayingPlayer testClient  = new PlayingPlayer("antonio", "antonio", ConnectionType.RMI, 1234, "127.0.0.1");
 
         ArrayList<Card[][]> playersBoard = new ArrayList<>();
         playersBoard.add(this.setNotRandomPlayerBoard("personalBoard3"));
         playersBoard.add(this.setNotRandomPlayerBoard("personalBoard2"));
         playersBoard.add(this.setNotRandomPlayerBoard("personalBoard1"));
 
+        System.out.println("TEST 1: send player board");
         testServer.sendAllPlayerBoard(playersBoard);
+
+
+        System.out.println("TEST 1: common goal just scored");
+        //send to client the value of the common goal just scored
+        JsonObject scored = new JsonObject();
+        scored.addProperty("playerID", "marco");
+        scored.addProperty("value", 8);
+        testServer.sendLastCommonScored(scored);
+
+        assert(testClient.getCommonGoalScored().length == 1);
 
         System.out.println("\nEND TEST\n");
     }
@@ -86,7 +98,7 @@ public class ConnectionControllerManagerTest extends TestCase {
         PlayingPlayer testClient1  = new PlayingPlayer("antonio", "antonio", ConnectionType.RMI, 1236, "127.0.0.1");
         assert (!controller.isPlayerOffline("antonio"));
         PlayingPlayer testClient3  = new PlayingPlayer("paolo", "antonio", ConnectionType.RMI, 1236, "127.0.0.1");
-        assert (!controller.isPlayerOffline("antonio"));
+        assert (!controller.isPlayerOffline("paolo"));
 
         assert(controller.getCurrentPlayer()==-1);
 
@@ -95,6 +107,9 @@ public class ConnectionControllerManagerTest extends TestCase {
         assert(controller.getCurrentPlayer()==-1);
         assert (testClient1.startGame());       // authorized player try to start the game
         assert(controller.getCurrentPlayer()==0);
+        assert (testClient1.getActivePlayer().equals(testClient2.getActivePlayer()));
+        assert (testClient3.getActivePlayer().equals(testClient2.getActivePlayer()));
+        assert (testClient3.getActivePlayer().equals(controller.getCurrentPlayerID()));
 
         controller.setNotRandomPlayerOrder(players);
 
@@ -102,10 +117,14 @@ public class ConnectionControllerManagerTest extends TestCase {
         Position[] pos = new Position[2];
         pos[0] = new Position(3,8);
         pos[1] = new Position(3,7);
+
         assert (testClient1.takeCard(0,pos));
         assert(controller.getCurrentPlayer()==1);
         assert (!testClient3.takeCard(0,pos));
         assert(controller.getCurrentPlayer()==1);
+        assert (testClient1.getActivePlayer().equals(testClient2.getActivePlayer()));
+        assert (testClient3.getActivePlayer().equals(testClient2.getActivePlayer()));
+        assert (testClient3.getActivePlayer().equals(controller.getCurrentPlayerID()));
 
         System.out.println("test1: quit game");
         assert (testClient2.quitGame());

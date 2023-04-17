@@ -105,7 +105,7 @@ public class PlayingPlayer extends Player{
      */
     public void addCommonGoalScored(JsonObject scored){
         ArrayList<JsonObject> tmpScored = new ArrayList<>();
-        Collections.addAll(tmpScored, commonGoalScored);
+        if(commonGoalScored != null) Collections.addAll(tmpScored, commonGoalScored);
         tmpScored.add(scored);
         commonGoalScored = tmpScored.toArray(new JsonObject[0]);
     }
