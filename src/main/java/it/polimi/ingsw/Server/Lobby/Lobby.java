@@ -241,6 +241,7 @@ public class Lobby {
         while(tempActiveGames.get(j) != null){
 
             for(String s : tempPlayersInGames.get(j)){
+                //TODO ID not found exception
                 if(s.equals(searchID)){
 
                     try {

@@ -9,4 +9,7 @@ public interface LobbyRemoteInterface extends Remote {
 
     public boolean signUp(String ID, String pwd) throws RemoteException;
 
+
+
+
 }

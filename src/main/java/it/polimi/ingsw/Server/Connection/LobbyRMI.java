@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Server.Connection;
 
-import it.polimi.ingsw.Server.Controller;
 import it.polimi.ingsw.Server.Lobby.Lobby;
+import it.polimi.ingsw.Shared.Connection.ConnectionType;
 
 import javax.security.auth.login.LoginException;
 import java.rmi.AlreadyBoundException;
@@ -56,7 +56,7 @@ public class LobbyRMI implements LobbyRemoteInterface{
     public int login(String ID, String pwd) throws RemoteException {
 
         int msg;
-        System.out.println(ID + " on port: "+ PORT);
+        System.out.println(ID + " on port: "+ PORT + ", logging in");
         try {
             msg = lobby.login(ID, pwd);
         } catch (LoginException e) {
@@ -76,4 +76,56 @@ public class LobbyRMI implements LobbyRemoteInterface{
         }
         return false;
     }
+
+    public int joinGame(String ID, ConnectionType connectionType){
+
+        int msg;
+
+        System.out.println(ID + " on port: "+ PORT + ", trying to join a random game");
+
+        msg = lobby.joinGame(ID, connectionType);
+
+        return msg;
+    }
+    public int joinGame(String ID, ConnectionType connectionType, String searchID){
+
+        int msg;
+
+        System.out.println(ID + " on port: "+ PORT + ", trying to join a game with player " + searchID);
+
+        msg = lobby.joinGame(ID, connectionType, searchID);
+
+        return msg;
+    }
+
+    public int createGame(String ID, ConnectionType connectionType){
+
+        int msg;
+
+        System.out.println(ID + " on port: "+ PORT + ", trying to create a game");
+
+        msg = lobby.createGame(ID, connectionType);
+
+        return msg;
+    }
+
+    public int createGame(String ID, ConnectionType connectionType, int maxPlayerNumber)
+    {
+
+        int msg;
+
+        System.out.println(ID + " on port: "+ PORT + ", trying to create a game with " + maxPlayerNumber + " players");
+
+        msg = lobby.createGame(ID, connectionType, maxPlayerNumber);
+
+        return msg;
+    }
+
+    /*
+
+    RMI PORT 1234
+    SOCKET PORT 1235
+
+     */
+
 }

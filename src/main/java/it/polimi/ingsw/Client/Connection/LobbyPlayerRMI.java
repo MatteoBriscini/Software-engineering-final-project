@@ -1,4 +1,4 @@
-package it.polimi.ingsw.client.Connection;
+package it.polimi.ingsw.Client.Connection;
 
 import it.polimi.ingsw.Server.Connection.LobbyRemoteInterface;
 import it.polimi.ingsw.Server.Lobby.PlayerLogin;

@@ -1,9 +1,6 @@
 package it.polimi.ingsw.Client;
 
-import it.polimi.ingsw.Client.Connection.PlayingPlayerRMI;
-import it.polimi.ingsw.client.Connection.LobbyPlayerRMI;
-
-import java.rmi.RemoteException;
+import it.polimi.ingsw.Client.Connection.LobbyPlayerRMI;
 
 public class ClientMain {
     static String serverIP = "127.0.0.1";
