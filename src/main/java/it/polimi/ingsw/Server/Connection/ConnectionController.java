@@ -10,8 +10,8 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 public abstract class ConnectionController {
-    protected final Controller controller;
-    protected final int PORT;
+    protected Controller controller;
+    protected int PORT;
 
     public ConnectionController (Controller controller, int port){
         this.controller = controller;
@@ -42,6 +42,7 @@ public abstract class ConnectionController {
     public abstract void sendWinner(JsonObject winner);
     public abstract void sendLastCommonScored(JsonObject scored);
     public abstract void sendError(JsonObject error, String playerID);
+    public abstract void forceClientDisconnection();
 
     /************************************************************************
      ************************************************** IN method ***********
@@ -63,7 +64,6 @@ public abstract class ConnectionController {
      * @throws RemoteException if server is offline
      */
     public boolean takeCard (int column, String cards , String playerID){
-        Gson gson = new Gson();
         PositionWithColor[] cardsArray = new Gson().fromJson(cards, PositionWithColor[].class);
         return controller.takeCard(column, cardsArray, playerID);
     }

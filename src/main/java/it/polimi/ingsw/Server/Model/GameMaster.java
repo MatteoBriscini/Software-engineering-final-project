@@ -75,6 +75,12 @@ public class GameMaster {
         return players;
     }
 
+    public void setBoardNonRandomBoard(Card[][] board,String playerID){
+        for(Player p: players){
+            if(p.getPlayerID().equals(playerID))p.setBoardNonRandomBoard(board);
+        }
+    }
+
     public void setPlayersArray(ArrayList<Player> players){
         this.players = players;
     }
@@ -155,9 +161,9 @@ public class GameMaster {
         }
 
         //Iterate over players and assign the private goal
-         for (int i = 0; i < players.size(); i++) {
-             players.get(i).setPlayerTarget(privateGoalID[i]);  //call the method in Player
-         }
+        for (int i = 0; i < players.size(); i++) {
+            players.get(i).setPlayerTarget(privateGoalID[i]);  //call the method in Player
+        }
     }
 
     /**
@@ -187,7 +193,7 @@ public class GameMaster {
      * @param currentPlayer player that need the points added
      */
     public void playerAddPoint(int point, int currentPlayer){
-            players.get(currentPlayer).updatePointSum(point);
+        players.get(currentPlayer).updatePointSum(point);
     }
 
     /**
@@ -211,7 +217,7 @@ public class GameMaster {
     }
 
 
-   /**
+    /**
      * @param cards is the reference to the cards I need to delete from the main board
      * @return the main board without the cards eleted
      */

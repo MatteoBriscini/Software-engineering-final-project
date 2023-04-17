@@ -37,7 +37,7 @@ public class StairsPatternGoal extends CommonGoal {
          this.maxY = stair.get("y").getAsInt()-1;
 
      }
-
+    @Override
     public boolean check(Card[][] board){
         int x=0;
         int y=maxY;

@@ -1,7 +1,10 @@
 package it.polimi.ingsw;
 
 import com.google.gson.Gson;
+import it.polimi.ingsw.Server.Exceptions.ConstructorException;
+import it.polimi.ingsw.Server.Exceptions.LengthException;
 import it.polimi.ingsw.Server.Exceptions.addPlayerToGameException;
+import it.polimi.ingsw.Shared.Cards.CardColor;
 import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
 import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 import it.polimi.ingsw.Server.Controller;
@@ -36,25 +39,43 @@ public class ControllerTest extends TestCase {
         test.fixMainBoard(this.jsonCreate(url));
     }
 
+    private  Card[][] setNotRandomPlayerBoard(String url) throws FileNotFoundException{
+        Card[][] board = new Card[5][6];
+        PositionWithColor[] pos = this.jsonCreate(url);
+        for(int i=0; i<5;i++){
+            for (int j=0; j<6;j++){
+                board[i][j]= new Card(EMPTY);
+            }
+        }
+        for(PositionWithColor p : pos){
+            board[p.getX()][p.getY()]= new Card(p.getColor());
+        }
+        return board;
+    }
+
 
     public void testStartGame() throws addPlayerToGameException {
         System.out.println("START TEST StartGame\n");
 
         boolean ex = false;
         //test 1
-        System.out.println("3 playerr entry test:\n");
+        System.out.println("3 player entry test:\n");
         test = new Controller();
 
         assert (test.getMaxPlayerNumber() == 4);
         assert (!test.startGame("piero"));
+
         assert (test.getPlayerNumber() == 0);
         assert (test.getCurrentPlayer() == -1);
 
         test.addNewPlayer("piero");     //3 player join the game
+        test.setPlayerOnline("piero");
         assert (test.getPlayerNumber() == 1);
         test.addNewPlayer("pino");
+        test.setPlayerOnline("pino");
         assert (test.getPlayerNumber() == 2);
         test.addNewPlayer("pierino");
+        test.setPlayerOnline("pierino");
         assert (test.getPlayerNumber() == 3);
 
         assert (!test.startGame("pino"));       //not allowed player try to start the game
@@ -77,12 +98,16 @@ public class ControllerTest extends TestCase {
         assert (test.getCurrentPlayer() == -1);
 
         test.addNewPlayer("piero");     //4 player join the game
+        test.setPlayerOnline("piero");
         assert (test.getPlayerNumber() == 1);
         test.addNewPlayer("pino");
+        test.setPlayerOnline("pino");
         assert (test.getPlayerNumber() == 2);
         test.addNewPlayer("pierino");
+        test.setPlayerOnline("pierino");
         assert (test.getPlayerNumber() == 3);
         test.addNewPlayer("pinuccia");
+        test.setPlayerOnline("pinuccia");
         assert (test.getPlayerNumber() == 4);   //the game is full it will be start autonomous
 
         assert (test.getCurrentPlayer() == 0);
@@ -107,11 +132,14 @@ public class ControllerTest extends TestCase {
         //test 3
         System.out.println("3 player entry test:\n");
         test = new Controller(3);                        //create new game with max 3 players
-        test.addNewPlayer("piero");     //4 player join the game
+        test.addNewPlayer("piero");     //3 player join the game
+        test.setPlayerOnline("piero");
         assert (test.getPlayerNumber() == 1);
         test.addNewPlayer("pino");
+        test.setPlayerOnline("pino");
         assert (test.getPlayerNumber() == 2);
         test.addNewPlayer("pierino");
+        test.setPlayerOnline("pierino");
         assert (test.getPlayerNumber() == 3);   //the game is full it will be start autonomous
 
         assert (test.getCurrentPlayer() == 0);
@@ -134,10 +162,13 @@ public class ControllerTest extends TestCase {
 
         test.addNewPlayer("piero");     //4 player join the game
         assert (test.getPlayerNumber() == 1);
+        test.setPlayerOnline("piero");
         test.addNewPlayer("pino");
         assert (test.getPlayerNumber() == 2);
+        test.setPlayerOnline("pino");
         test.addNewPlayer("pierino");
         assert (test.getPlayerNumber() == 3);   //the game is full it will be start autonomous
+        test.setPlayerOnline("pierino");
 
         assert (test.getCurrentPlayer() == 0);
 
@@ -180,6 +211,7 @@ public class ControllerTest extends TestCase {
         cards[1] =new PositionWithColor(5,1,0, BLUE);
 
         assert (test.takeCard(0,cards,  test.getCurrentPlayerID()));
+        System.out.println(test.getCurrentPlayer());
         assert (test.getCurrentPlayer() == 2);
 
 
@@ -230,14 +262,22 @@ public class ControllerTest extends TestCase {
         test = new Controller(4);                        //create new game with max 4 players
         test.setTimeout(timeout);                   //set timeout at 2 seconds
 
+
+
         test.addNewPlayer("piero");     //4 player join the game
+        test.setPlayerOnline("piero");
         assert (test.getPlayerNumber() == 1);
         test.addNewPlayer("pino");
+        test.setPlayerOnline("pino");
         assert (test.getPlayerNumber() == 2);
         test.addNewPlayer("pierino");
+        test.setPlayerOnline("pierino");
         assert (test.getPlayerNumber() == 3);
         test.addNewPlayer("pierina");
+
+        test.setPlayerOnline("pierina");
         assert (test.getPlayerNumber() == 4);   //the game is full it will be start autonomous
+
 
         test.setNotRandomPlayerOrder(players);
 
@@ -261,8 +301,7 @@ public class ControllerTest extends TestCase {
 
         Thread.sleep((timeout*1000)+5);         //wait player time limit to make a move
         assert (test.getCurrentPlayer() == 1);
-
-        Thread.sleep((timeout*1000)+5);         //wait player time limit to make a move
+        Thread.sleep((timeout*1000)+2);         //wait player time limit to make a move
         assert (test.getCurrentPlayer() == 3);
 
         //test 2
@@ -272,12 +311,16 @@ public class ControllerTest extends TestCase {
         test.setTimeout(timeout);                   //set timeout at 2 seconds
 
         test.addNewPlayer("piero");     //4 player join the game
+        test.setPlayerOnline("piero");
         assert (test.getPlayerNumber() == 1);
         test.addNewPlayer("pino");
+        test.setPlayerOnline("pino");
         assert (test.getPlayerNumber() == 2);
         test.addNewPlayer("pierino");
+        test.setPlayerOnline("pierino");
         assert (test.getPlayerNumber() == 3);
         test.addNewPlayer("pierina");
+        test.setPlayerOnline("pierina");
         assert (test.getPlayerNumber() == 4);   //the game is full it will be start autonomous
 
         test.setNotRandomPlayerOrder(players);
@@ -289,10 +332,12 @@ public class ControllerTest extends TestCase {
         test.setPlayerOffline("pino");               //pino lost  connection
         test.setPlayerOffline("pierina");            //pierina lost  connection
 
+
         Thread.sleep((timeout*1000)+5);         //wait player time limit to make a move
         assert (test.getCurrentPlayer() == 2);
 
         Thread.sleep((timeout*1000)+5);         //wait player time limit to make a move
+
         assert (test.getCurrentPlayer() == 0);
 
         test.setPlayerOnline("pino");               //pino reconnect
@@ -316,8 +361,10 @@ public class ControllerTest extends TestCase {
 
         test = new Controller(2);
         test.addNewPlayer("piero");     //2 player join the game
+        test.setPlayerOnline("piero");
         assert (test.getPlayerNumber() == 1);
         test.addNewPlayer("pino");
+        test.setPlayerOnline("pino");
         assert (test.getPlayerNumber() == 2);   //the game is full it will be start autonomous
         assert (test.getCurrentPlayer() == 0);
 
@@ -341,10 +388,14 @@ public class ControllerTest extends TestCase {
         System.out.println("\n\n");
 
         //test 1
+
         PositionWithColor[] cards = new PositionWithColor[2];
         cards[0] =new PositionWithColor(4,4,0,  BLUE);
         cards[1] =new PositionWithColor(4,3,0, LIGHTBLUE);
-        test.takeCard(0, cards, test.getCurrentPlayerID());
+        //System.out.println(test.isPlayerOffline(test.getCurrentPlayerID()));
+        assert(test.takeCard(0, cards, test.getCurrentPlayerID()));
+
+
         assert (test.getCurrentPlayer() == 1);
         board = test.getMainBoard();
         Card empty = new Card(EMPTY);
@@ -360,17 +411,79 @@ public class ControllerTest extends TestCase {
         System.out.println("\nEND TEST\n");
     }
 
-    public void testCalcEndGamePoint() throws addPlayerToGameException {
-        test = new Controller(4);
+    public void testCalcEndGamePoint() throws addPlayerToGameException, FileNotFoundException, ConstructorException, InterruptedException, LengthException {
+        System.out.println("START TEST testCalcEndGamePoint\n");
 
-        test.addNewPlayer("piero");     //4 player join the game
+        PositionWithColor[] cards = new PositionWithColor[2];
+
+        ArrayList<Player> players = new ArrayList<>();      //gaming order array list for this test
+        players.add(new Player("piero"));
+        players.add(new Player("pino"));
+        players.add(new Player("pierino"));
+
+        test = new Controller(3);
+
+        test.addNewPlayer("piero");     //3 player join the game
+        test.setPlayerOnline("piero");
         assert (test.getPlayerNumber() == 1);
         test.addNewPlayer("pino");
+        test.setPlayerOnline("pino");
         assert (test.getPlayerNumber() == 2);
         test.addNewPlayer("pierino");
-        assert (test.getPlayerNumber() == 3);
-        test.addNewPlayer("pierina");
-        assert (test.getPlayerNumber() == 4);   //the game is full it will be start autonomous
-        test.endGame();
+        test.setPlayerOnline("pierino");
+        assert (test.getPlayerNumber() == 3);  //the game is full it will be start autonomous
+
+        test.setNotRandomPlayerOrder(players);
+        this.setNotRandomBoard("mainBoard3Players");                       //fill the main board with predetermined colors
+
+        test.setNotRandomPrivateGaol(new int[]{0, 1, 2});
+
+        test.setBoardNonRandomBoard(this.setNotRandomPlayerBoard("personalBoard3"), players.get(0).getPlayerID());                       //fill the players board with predetermined colors
+        test.setBoardNonRandomBoard(this.setNotRandomPlayerBoard("personalBoard2"), players.get(1).getPlayerID());
+        test.setBoardNonRandomBoard(this.setNotRandomPlayerBoard("personalBoard1"), players.get(2).getPlayerID());
+
+        test.setNonRandomCommonGoal(3,0);
+        test.setNonRandomCommonGoal(2,1);
+
+        System.out.println("test1: (start testing common goal point && end game)");
+        cards = new PositionWithColor[2];
+        cards[0] =new PositionWithColor(5,1,0, BLUE);
+        cards[1] =new PositionWithColor(5,0,0, GREEN);
+        assert (test.takeCard(0, cards, "piero"));
+        assert (test.getPlayerPoint("piero")==8);
+        assert (test.getPlayerPoint("pino")==0);
+        assert (test.getPlayerPoint("pierino")==0);
+
+        System.out.println("test2:");
+        cards = new PositionWithColor[2];
+        cards[0] =new PositionWithColor(3,8,0, BLUE);
+        cards[1] =new PositionWithColor(3,7,0, PINK);
+        assert (test.takeCard(4, cards, "pino"));
+        assert (test.getPlayerPoint("piero")==8);
+        assert (test.getPlayerPoint("pino")==6);
+        assert (test.getPlayerPoint("pierino")==0);
+
+        System.out.println("test3:");
+        cards = new PositionWithColor[2];
+        cards[0] =new PositionWithColor(5,6,0, PINK);
+        cards[1] =new PositionWithColor(6,6,0, GREEN);
+        assert (test.takeCard(0, cards, "pierino"));
+        assert (test.getPlayerPoint("piero")==8);
+        assert (test.getPlayerPoint("pino")==6);
+        assert (test.getPlayerPoint("pierino")==9);
+
+        assert (!test.takeCard(0, cards, "pino"));//pino can't play the game is finished
+
+        Thread.sleep((timeout*1000)+5);         //wait for end game
+
+        System.out.println(test.getPlayerPoint("piero"));
+        System.out.println(test.getPlayerPoint("pino"));
+        System.out.println(test.getPlayerPoint("pierino"));
+
+        assert (test.getPlayerPoint("piero")>=10);      //verify final point except for private goal
+        assert (test.getPlayerPoint("pino")>=8);
+        assert (test.getPlayerPoint("pierino")>=12);
+
+        System.out.println("\nEND TEST\n");
     }
 }

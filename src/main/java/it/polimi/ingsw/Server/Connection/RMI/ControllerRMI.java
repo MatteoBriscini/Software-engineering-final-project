@@ -37,17 +37,12 @@ public class ControllerRMI extends ConnectionController implements ControllerRem
         try {
             registry = LocateRegistry.createRegistry(PORT);
         } catch (RemoteException e) {
-            // finire ********************************************************
             e.printStackTrace();
         }
 
         try {
             registry.bind("ControllerRemoteInterface", stub);
-        } catch (RemoteException e) {
-            // finire ********************************************************
-            e.printStackTrace();
-        } catch (AlreadyBoundException e) {
-            // finire ********************************************************
+        } catch (RemoteException | AlreadyBoundException e) {
             e.printStackTrace();
         }
         System.err.println("\u001B[32m" + "Server (rmi) for newGame ready on port: " + PORT + "\u001B[0m");
@@ -63,7 +58,7 @@ public class ControllerRMI extends ConnectionController implements ControllerRem
      * @throws RemoteException if the server isn't available
      */
     public synchronized boolean joinRMIControllerConnection(PlayingPlayerRemoteInterface client_ref,String playerID) throws RemoteException{
-        if(!clients.contains(client_ref)){
+        if(!clients.contains(client_ref) && (controller.getCurrentPlayer()==-1 || controller.isPlayerOffline(playerID))){
             System.out.println("\u001B[36m"+"client: " + playerID + " join the game on port(RMI): " + PORT +"\u001B[0m");
 
             clients.add(client_ref);
@@ -173,6 +168,12 @@ public class ControllerRMI extends ConnectionController implements ControllerRem
 
     public void sendError(JsonObject error, String playerID){
         Command command = new ErrorCommand(error, playerID);
+        sendCommand(command);
+    }
+
+    @Override
+    public void forceClientDisconnection() {
+        Command command = new ClientDisconnectionCommand();
         sendCommand(command);
     }
 }

@@ -2,6 +2,8 @@ package it.polimi.ingsw.Server.Model.PlayerClasses;
 
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import it.polimi.ingsw.Shared.Cards.Card;
 import it.polimi.ingsw.Server.Exceptions.NoSpaceException;
 import it.polimi.ingsw.Server.SupportClasses.NColorsGroup;
@@ -10,6 +12,7 @@ import it.polimi.ingsw.Server.SupportClasses.RecursiveUsedSupport;
 import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
 
 import java.io.*;
+import java.util.Arrays;
 
 public class Player {
 
@@ -25,8 +28,13 @@ public class Player {
     private int elementCombo;
     private final NColorsGroup equal = new NColorsGroup();
     private final RecursiveUsed recursiveUsed = new RecursiveUsed();
+    //json
     private JsonUrl jsonUrl;
-
+    private int rowSize;
+    private int columnSize;
+    private int maxElement;
+    private int minElement;
+    private JsonArray pt = new JsonArray();
 
     //Constructor
 
@@ -36,17 +44,48 @@ public class Player {
         pointSum = 0;
         board = new PlayerBoard();
 
+
+        try {
+            jsonCreate();
+        } catch (FileNotFoundException e) {
+            System.out.println("Player: JSON FILE NOT FOUND");
+            throw new RuntimeException(e);
+        }
     }
 
     public boolean addCard(int column, Card[] cards) throws NoSpaceException {
-       return board.addCard(column, cards);
+        return board.addCard(column, cards);
     }
 
+    private void jsonCreate() throws FileNotFoundException {  //download json data
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("playerBoardConfig"));
+        if(inputStream == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        InputStream inputStream1 = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("checkSpotConfig"));
+        if(inputStream1 == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader1 = new BufferedReader(new InputStreamReader(inputStream1));
+
+        JsonObject jsonObject = new Gson().fromJson(bufferedReader , JsonObject.class);
+        this.rowSize = jsonObject.get("x").getAsInt();
+        this.columnSize = jsonObject.get("y").getAsInt();
+        jsonObject = new Gson().fromJson( bufferedReader1, JsonObject.class);
+        this.pt =  jsonObject.get("pt").getAsJsonArray();
+        this.maxElement =  jsonObject.get("maxElement").getAsInt();
+        this.minElement =  jsonObject.get("minElement").getAsInt();
+    }
 
     //Set Methods
 
     public void setBoard(PlayerBoard board) {
         this.board = board;
+    }
+
+    /**
+     * set the board from a matrix of Card
+     * @param board matrix of Card
+     */
+    public void setBoardNonRandomBoard(Card[][] board) {
+        this.board = new PlayerBoard(board);
     }
 
     /**
@@ -101,31 +140,21 @@ public class Player {
     public void checkSpots() {
         Card[][] tmpBoard = board.getBoard();
         int i, j;
-        alreadyUsed1 = new boolean[5][6];
-        for (i = 0; i < 5; i++) {
-            for (j = 0; j < 6; j++) {
-                if (!alreadyUsed1[i][j] && (i + 1 < 5 && (equal.nColorsCheck(new Card[]{tmpBoard[i][j], tmpBoard[i + 1][j]},1,1)) || (j + 1 < 6 && equal.nColorsCheck(new Card[]{tmpBoard[i][j], tmpBoard[i][j + 1]},1,1)))) {
+        alreadyUsed1 = new boolean[rowSize][columnSize];
+        for (i = 0; i < rowSize; i++) {
+            for (j = 0; j < columnSize; j++) {
+                if (!alreadyUsed1[i][j] && (i + 1 < rowSize && (equal.nColorsCheck(new Card[]{tmpBoard[i][j], tmpBoard[i + 1][j]},1,1)) || (j + 1 < columnSize && equal.nColorsCheck(new Card[]{tmpBoard[i][j], tmpBoard[i][j + 1]},1,1)))) {
                     RecursiveUsedSupport used = recursiveUsed.used(tmpBoard, i, j, alreadyUsed1, 0);
                     alreadyUsed1 = used.getAlreadyUsed();
                     elementCombo = used.getElementCombo();
 
+                    if (elementCombo >= maxElement) {        //assign points for exception spots bigger than maxElement cards
+                        this.elementCombo = maxElement;
+                    }
                     //assign points for the spots
-                    switch (elementCombo) {
-                        case 3:
-                            this.updatePointSum(2);
-                            break;
-                        case 4:
-                            this.updatePointSum(3);
-                            break;
-                        case 5:
-                            this.updatePointSum(5);
-                            break;
+                    if(elementCombo >= minElement) {
+                        this.updatePointSum(pt.get(elementCombo - minElement).getAsInt());
                     }
-
-                    if (elementCombo >= 6) {        //assign points for exception spots bigger than 6 cards
-                        this.updatePointSum(8);
-                    }
-
                     elementCombo = 0;
 
                 }

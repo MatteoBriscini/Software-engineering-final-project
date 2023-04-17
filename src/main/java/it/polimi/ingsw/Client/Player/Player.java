@@ -1,14 +1,22 @@
 package it.polimi.ingsw.Client.Player;
 
-public abstract class Player {
-    String playerID;
-    String pwd;
+import it.polimi.ingsw.Client.ClientMain;
 
-    public void setPlayerID(String playerID) {
+public abstract class Player {
+    protected String playerID;
+    protected String pwd;
+    protected ClientMain clientMain;
+
+    public Player(String playerID, String pwd, ClientMain clientMain){
         this.playerID = playerID;
+        this.pwd = pwd;
     }
 
     public String getPlayerID() {
         return playerID;
+    }
+
+    public String getPwd(){
+        return pwd;
     }
 }

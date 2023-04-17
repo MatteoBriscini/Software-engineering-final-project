@@ -13,10 +13,8 @@ public class SendAllPlayerBoardCommand implements Command{
     String playerBoards;
 
     public SendAllPlayerBoardCommand(ArrayList<Card[][]> playerBoards){
-        Gson gson = new Gson();
         JsonArray jsonArray = new Gson().toJsonTree(playerBoards).getAsJsonArray();
-
-        this.playerBoards = playerBoards.toString();
+        this.playerBoards = jsonArray.toString();
     }
     @Override
     public boolean execute(PlayingPlayerRemoteInterface client) {

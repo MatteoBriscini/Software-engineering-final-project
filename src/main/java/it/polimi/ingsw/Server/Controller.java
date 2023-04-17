@@ -102,7 +102,7 @@ public class Controller implements Runnable {
     /**
      * for debugging
      */
-    public int getCurrentPlayer() {
+    public synchronized int getCurrentPlayer() {
         return currentPlayer;
     }
     public String getCurrentPlayerID() {
@@ -117,20 +117,30 @@ public class Controller implements Runnable {
     public int getMaxPlayerNumber(){
         return maxPlayerNumber;
     }
-
     public void setNotRandomPlayerOrder(ArrayList<Player> players){
         game.setPlayersArray(players);
+    }
+    public void setNotRandomPrivateGaol(int[] privateGoalID) throws FileNotFoundException, LengthException {
+        game.setPrivateGoal(privateGoalID);
     }
     public int getPlayerNumber(){
         return playerNum;
     }
-
     public void setTimeout(int timeout){
         this.timeout = timeout;
     }
-
     public void fixMainBoard(PositionWithColor[] cards){
         game.fixBoard(cards);
+    }
+    public void setBoardNonRandomBoard(Card[][] board,String playerID){game.setBoardNonRandomBoard(board, playerID);}
+    public int getPlayerPoint(String playerID){
+        for(Player p : game.getPlayerArray()){
+            if (p.getPlayerID().equals(playerID))return p.getPointSum();
+        }
+        return 0;
+    }
+    public void setNonRandomCommonGoal (int commonGoalID, int n) throws ConstructorException{
+        game.setCommonGoal(commonGoalID, n);
     }
     public Card[][] getMainBoard(){return game.getMainBoard();}
     /**************************************************************************
@@ -144,7 +154,7 @@ public class Controller implements Runnable {
      * @throws ConnectionControllerManagerException if connection type has an invalid parameters
      */
     public int addClient(int PORT, ConnectionType connectionType) throws ConnectionControllerManagerException {
-       return controllerManager.addClient(PORT, connectionType, this);
+        return controllerManager.addClient(PORT, connectionType, this);
     }
 
     /**
@@ -157,7 +167,7 @@ public class Controller implements Runnable {
         }
         return false;
     }
-    synchronized public void setPlayerOffline(String playerID){
+    synchronized public void setPlayerOffline(String playerID){  //TODO when only one player is online
         ArrayList<Player> players = game.getPlayerArray();
         for (int i = 0; i<players.size(); i++){
             if(players.get(i).getPlayerID().equals(playerID)){
@@ -187,6 +197,7 @@ public class Controller implements Runnable {
                     //update main board to all clients
                     controllerManager.sendMainBoard(game.getMainBoard());
 
+                    System.out.println("\u001B[36m" + "recreate client data after "+ playerID+ " reconnection after a crash" + "\u001B[0m");
                     return;
                 }
             }
@@ -421,7 +432,7 @@ public class Controller implements Runnable {
         JsonObject error = new JsonObject();
         if(!endGame && alreadyStarted && game.getPlayerArray().get(currentPlayer).getPlayerID().equals(playerID)){
             //verify the numbers of cards
-            if (cards.length < minTakeCard || cards.length > maxTakeCard){                       //TODO
+            if (cards.length < minTakeCard || cards.length > maxTakeCard){
                 error.addProperty("errorID", "invalid move");
                 error.addProperty("errorMSG", "taken none ore to many cards");
                 controllerManager.sendError(error, playerID);
@@ -429,12 +440,19 @@ public class Controller implements Runnable {
                 return false;
             }
 
+
+
             //remove the cards from main board
+            PositionWithColor[] tmpCards = new PositionWithColor[cards.length];
+            for (int i = 0; i<cards.length;i++){
+                tmpCards[i] = new PositionWithColor(cards[i].getX(), cards[i].getY(), cards[i].getSketch(),cards[i].getColor());
+            }
             try {
-                if (game.removeCards(cards)){
+                if (game.removeCards(tmpCards)){
                     if(!game.fillMainBoard(allowedPositionArray)) this.endGame();
                 }
             } catch (InvalidPickException e) {
+                System.out.println(e.toString());
                 //send error msg to the client
                 error.addProperty("errorID", "invalid move");
                 error.addProperty("errorMSG", e.toString());
@@ -445,9 +463,11 @@ public class Controller implements Runnable {
                 return false;
             }
 
+
             //add card to player board
             ArrayList<Card> tmp = new ArrayList<>();
-            for (PositionWithColor p : cards){
+
+            for (PositionWithColor p: cards){
                 tmp.add(new Card(p.getColor()));
             }
             try {
@@ -456,6 +476,7 @@ public class Controller implements Runnable {
                     this.waitForEndGame();
                 }
             } catch (NoSpaceException e) {
+
                 //send error msg to the client
                 error.addProperty("errorID", "invalid move");
                 error.addProperty("errorMSG", "not enough space on the player board");
@@ -481,7 +502,6 @@ public class Controller implements Runnable {
             error.addProperty("errorID", "invalid move");
             error.addProperty("errorMSG", game.getPlayerArray().get(currentPlayer).getPlayerID() + "'s turn, you can't take cards");
             controllerManager.sendError(error, playerID);
-
             return false;
         }
     }
@@ -490,25 +510,26 @@ public class Controller implements Runnable {
      * verify if a player score a commonGoal and save it
      */
     private void updateAllCommonGoal(){
+
         for(int i = 0; i<commonGoalNumber ; i+=1){
             ArrayList<String> alreadyScored = game.getAlreadyScored(i);
-
             if (!alreadyScored.contains(game.getPlayerArray().get(currentPlayer).getPlayerID()) && game.checkCommonGoal(i, currentPlayer)){
 
-                    //update the list of player has already reached the goal
-                    alreadyScored.add(game.getPlayerArray().get(currentPlayer).getPlayerID());
-                    game.setAlreadyScored(alreadyScored, i);
+                //update the list of player has already reached the goal
+                alreadyScored.add(game.getPlayerArray().get(currentPlayer).getPlayerID());
+                game.setAlreadyScored(alreadyScored, i);
 
-                    //calculate point && add to the player points
-                    int point = maxPointCommonGoals - alreadyScored.size() * 2;
-                    if (playerNum == 2 && point == 6) point = 4;
-                    game.playerAddPoint(point, currentPlayer);
+                //calculate point && add to the player points
+                int point = maxPointCommonGoals - (alreadyScored.size()-1) * 2;
+                if (playerNum == 2 && point == 6) point = 4;
+                game.playerAddPoint(point, currentPlayer);
 
-                    //send to client the value of the common goal just scored
-                    JsonObject scored = new JsonObject();
-                    scored.addProperty("playerID", game.getPlayerArray().get(currentPlayer).getPlayerID());
-                    scored.addProperty("value", point);
-                    controllerManager.sendLastCommonScored(scored);
+                //send to client the value of the common goal just scored
+                JsonObject scored = new JsonObject();
+                scored.addProperty("playerID", game.getPlayerArray().get(currentPlayer).getPlayerID());
+                scored.addProperty("value", point);
+                controllerManager.sendLastCommonScored(scored);
+                System.out.println("\u001B[36m" + "send new CommonGoal scorer" + "\u001B[0m");
             }
 
         }
@@ -522,14 +543,15 @@ public class Controller implements Runnable {
 
         currentPlayer += 1;
         if(currentPlayer >= playerNum) currentPlayer = 0;
-
         //if a player is market as offline skip him
         synchronized (activePlayers) {
-            if (!activePlayers.get(currentPlayer)) {
-                turn();
-                return;
+            while (!activePlayers.get(currentPlayer)) {
+
+                currentPlayer+=1;
+                if(currentPlayer >= playerNum) currentPlayer = 0;
             }
         }
+
 
         //send current player to client
         controllerManager.notifyActivePlayer(game.getPlayerArray().get(currentPlayer).getPlayerID());

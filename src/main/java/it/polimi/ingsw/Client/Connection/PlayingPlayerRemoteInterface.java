@@ -81,4 +81,10 @@ public interface PlayingPlayerRemoteInterface extends Remote {
      * @throws RemoteException if the players is offline
      */
     void errorMSG(String error, String playerID) throws RemoteException;
+
+    /**
+     * the client is forced by the server to quit the game
+     * @throws RemoteException if the players is offline
+     */
+    void forceDisconnection()throws RemoteException;
 }
