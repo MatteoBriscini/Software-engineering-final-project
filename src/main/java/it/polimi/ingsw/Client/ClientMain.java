@@ -1,39 +1,31 @@
 package it.polimi.ingsw.Client;
 
-import it.polimi.ingsw.Client.Connection.PlayingPlayerRMI;
 import it.polimi.ingsw.Client.Player.Player;
 import it.polimi.ingsw.Client.Player.PlayingPlayer;
 import it.polimi.ingsw.Shared.Connection.ConnectionType;
-import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 
 import java.rmi.RemoteException;
-import java.util.Arrays;
-
-import static it.polimi.ingsw.Shared.Cards.CardColor.*;
+import java.util.Scanner;
 
 public class ClientMain {
     static String serverIP = "127.0.0.1";
+    private Player player;
+    private ConnectionType connectionType;
 
-
-
+    public void setPlayerAsPlaying(int PORT){
+        String playerID = player.getPlayerID();
+        String pwd = player.getPwd();
+        try {
+            player = new PlayingPlayer(playerID, pwd, this, connectionType, PORT, serverIP);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public static void main(String[] args) {
-        Player tmp;
-        Player tmp2;
-        PositionWithColor[] pos = new PositionWithColor[2];
-        pos[0] = new PositionWithColor(2,3,0,WHITE);
-        pos[1] = new PositionWithColor(3,6,1,YELLOW);
-
-        try {
-            tmp = new PlayingPlayer("antonio", "antonio", ConnectionType.RMI, 1234, serverIP);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-
-        try {
-            tmp2 = new PlayingPlayer("emma", "antonio", ConnectionType.RMI, 1233, serverIP);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
+        System.out.println("choose your connection type (RMI/socket):");
+        Scanner scanner = new Scanner(System.in);
+        String name = scanner.nextLine();
+        System.out.println(name);
     }
 
 }

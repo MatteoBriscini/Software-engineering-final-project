@@ -2,6 +2,7 @@ package it.polimi.ingsw.Server.Connection;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import it.polimi.ingsw.Client.ClientMain;
 import it.polimi.ingsw.Client.Player.Player;
 import it.polimi.ingsw.Client.Player.PlayingPlayer;
 import it.polimi.ingsw.Server.Controller;
@@ -29,6 +30,7 @@ public class ConnectionControllerManagerTest extends TestCase {
     Controller controller = new Controller();
     private JsonUrl jsonUrl;
     private final int timeout = 2;
+    private ClientMain clientMain = new ClientMain();
 
     private PositionWithColor[] jsonCreate(String name) throws FileNotFoundException {
         Gson gson = new Gson();
@@ -58,7 +60,7 @@ public class ConnectionControllerManagerTest extends TestCase {
         assert(testServer.isRmiActive());
         assert(testServer.getInterfaces().size()==1);
 
-        PlayingPlayer testClient  = new PlayingPlayer("antonio", "antonio", ConnectionType.RMI, 1234, "127.0.0.1");
+        Player testClient  = new PlayingPlayer("antonio", "antonio", clientMain,ConnectionType.RMI, 1234, "127.0.0.1");
 
         ArrayList<Card[][]> playersBoard = new ArrayList<>();
         playersBoard.add(this.setNotRandomPlayerBoard("personalBoard3"));
@@ -76,7 +78,7 @@ public class ConnectionControllerManagerTest extends TestCase {
         scored.addProperty("value", 8);
         testServer.sendLastCommonScored(scored);
 
-        assert(testClient.getCommonGoalScored().length == 1);
+        assert(((PlayingPlayer) testClient).getCommonGoalScored().length == 1);
 
         System.out.println("\nEND TEST\n");
     }
@@ -93,11 +95,11 @@ public class ConnectionControllerManagerTest extends TestCase {
         controller.addNewPlayer("marco");
         controller.addNewPlayer("paolo");
 
-        PlayingPlayer testClient2  = new PlayingPlayer("marco", "antonio", ConnectionType.RMI, 1236, "127.0.0.1");
+        PlayingPlayer testClient2  = new PlayingPlayer("marco", "antonio", clientMain, ConnectionType.RMI, 1236, "127.0.0.1");
         assert (!controller.isPlayerOffline("marco"));
-        PlayingPlayer testClient1  = new PlayingPlayer("antonio", "antonio", ConnectionType.RMI, 1236, "127.0.0.1");
+        PlayingPlayer testClient1  = new PlayingPlayer("antonio", "antonio", clientMain, ConnectionType.RMI, 1236, "127.0.0.1");
         assert (!controller.isPlayerOffline("antonio"));
-        PlayingPlayer testClient3  = new PlayingPlayer("paolo", "antonio", ConnectionType.RMI, 1236, "127.0.0.1");
+        PlayingPlayer testClient3  = new PlayingPlayer("paolo", "antonio", clientMain, ConnectionType.RMI, 1236, "127.0.0.1");
         assert (!controller.isPlayerOffline("paolo"));
 
         assert(controller.getCurrentPlayer()==-1);
@@ -130,7 +132,7 @@ public class ConnectionControllerManagerTest extends TestCase {
         assert (testClient2.quitGame());
         assert (controller.isPlayerOffline("marco"));
         assert (!testClient2.quitGame());
-        testClient2  = new PlayingPlayer("marco", "antonio", ConnectionType.RMI, 1236, "127.0.0.1");  //marco rejoin a game after the crash
+        testClient2  = new PlayingPlayer("marco", "antonio", clientMain, ConnectionType.RMI, 1236, "127.0.0.1");  //marco rejoin a game after the crash
         assert (!controller.isPlayerOffline("marco"));
 
     }

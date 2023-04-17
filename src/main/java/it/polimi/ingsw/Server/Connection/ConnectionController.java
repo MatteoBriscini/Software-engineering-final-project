@@ -42,6 +42,7 @@ public abstract class ConnectionController {
     public abstract void sendWinner(JsonObject winner);
     public abstract void sendLastCommonScored(JsonObject scored);
     public abstract void sendError(JsonObject error, String playerID);
+    public abstract void forceClientDisconnection();
 
     /************************************************************************
      ************************************************** IN method ***********

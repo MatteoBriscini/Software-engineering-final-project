@@ -114,7 +114,8 @@ public abstract class PlayingPlayerConnectionManager extends UnicastRemoteObject
      * @param scored json object with point for each client
      */
     public void receiveLastCommonScored(String scored){
-        //TODO
+        JsonObject json= new Gson().fromJson(scored, JsonObject.class);
+        playingPlayer.addCommonGoalScored(json);
     }
     /**
      * @param error json object with errorID && errorMSG
@@ -126,6 +127,13 @@ public abstract class PlayingPlayerConnectionManager extends UnicastRemoteObject
             playingPlayer.errMsg(json);
         }
 
+    }
+    /**
+     * the client is forced by the server to quit the game
+     * @throws RemoteException if the players is offline
+     */
+    public void forceDisconnection(){
+            //TODO
     }
 
 }

@@ -54,7 +54,7 @@ public class Player {
     }
 
     public boolean addCard(int column, Card[] cards) throws NoSpaceException {
-       return board.addCard(column, cards);
+        return board.addCard(column, cards);
     }
 
     private void jsonCreate() throws FileNotFoundException {  //download json data

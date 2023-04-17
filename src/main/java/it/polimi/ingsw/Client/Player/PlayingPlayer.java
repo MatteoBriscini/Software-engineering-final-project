@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Client.Player;
 
 import com.google.gson.JsonObject;
+import it.polimi.ingsw.Client.ClientMain;
 import it.polimi.ingsw.Client.Connection.PlayingPlayerConnectionManager;
 import it.polimi.ingsw.Client.Connection.PlayingPlayerRMI;
 import it.polimi.ingsw.Client.Game.MainBoard;
@@ -30,8 +31,8 @@ public class PlayingPlayer extends Player{
      * @param serverIP to reach the server
      * @throws RemoteException if the server do not response (wrong port or ip)
      */
-    public PlayingPlayer(String playerID, String pwd, ConnectionType connectionType, int port, String serverIP) throws RemoteException {
-        super(playerID, pwd);
+    public PlayingPlayer(String playerID, String pwd, ClientMain clientMain, ConnectionType connectionType, int port, String serverIP) throws RemoteException {
+        super(playerID, pwd, clientMain);
         switch (connectionType){
             case RMI:
                 connectionManager = new PlayingPlayerRMI(port, serverIP, playerID, this);

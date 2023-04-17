@@ -211,6 +211,7 @@ public class ControllerTest extends TestCase {
         cards[1] =new PositionWithColor(5,1,0, BLUE);
 
         assert (test.takeCard(0,cards,  test.getCurrentPlayerID()));
+        System.out.println(test.getCurrentPlayer());
         assert (test.getCurrentPlayer() == 2);
 
 
@@ -261,14 +262,22 @@ public class ControllerTest extends TestCase {
         test = new Controller(4);                        //create new game with max 4 players
         test.setTimeout(timeout);                   //set timeout at 2 seconds
 
+
+
         test.addNewPlayer("piero");     //4 player join the game
+        test.setPlayerOnline("piero");
         assert (test.getPlayerNumber() == 1);
         test.addNewPlayer("pino");
+        test.setPlayerOnline("pino");
         assert (test.getPlayerNumber() == 2);
         test.addNewPlayer("pierino");
+        test.setPlayerOnline("pierino");
         assert (test.getPlayerNumber() == 3);
         test.addNewPlayer("pierina");
+
+        test.setPlayerOnline("pierina");
         assert (test.getPlayerNumber() == 4);   //the game is full it will be start autonomous
+
 
         test.setNotRandomPlayerOrder(players);
 
@@ -284,7 +293,6 @@ public class ControllerTest extends TestCase {
 
         test.setPlayerOffline("pierina");             //pierina lost connection
 
-        //System.out.println(test.isPlayerOffline("pierina"));
         Thread.sleep((timeout*1000)+5);         //wait player time limit to make a move
         assert (test.getCurrentPlayer() == 0);
 
@@ -303,12 +311,16 @@ public class ControllerTest extends TestCase {
         test.setTimeout(timeout);                   //set timeout at 2 seconds
 
         test.addNewPlayer("piero");     //4 player join the game
+        test.setPlayerOnline("piero");
         assert (test.getPlayerNumber() == 1);
         test.addNewPlayer("pino");
+        test.setPlayerOnline("pino");
         assert (test.getPlayerNumber() == 2);
         test.addNewPlayer("pierino");
+        test.setPlayerOnline("pierino");
         assert (test.getPlayerNumber() == 3);
         test.addNewPlayer("pierina");
+        test.setPlayerOnline("pierina");
         assert (test.getPlayerNumber() == 4);   //the game is full it will be start autonomous
 
         test.setNotRandomPlayerOrder(players);
@@ -320,10 +332,12 @@ public class ControllerTest extends TestCase {
         test.setPlayerOffline("pino");               //pino lost  connection
         test.setPlayerOffline("pierina");            //pierina lost  connection
 
+
         Thread.sleep((timeout*1000)+5);         //wait player time limit to make a move
         assert (test.getCurrentPlayer() == 2);
 
         Thread.sleep((timeout*1000)+5);         //wait player time limit to make a move
+
         assert (test.getCurrentPlayer() == 0);
 
         test.setPlayerOnline("pino");               //pino reconnect

@@ -123,6 +123,11 @@ public class ControllerSOCKET extends ConnectionController {
 
     }
 
+    @Override
+    public void forceClientDisconnection() {
+
+    }
+
     /***********************************************************************************
      ************************************************** MultiClientSocketGame **********
      * *********************************************************************************
