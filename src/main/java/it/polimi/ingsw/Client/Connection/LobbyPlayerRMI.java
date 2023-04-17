@@ -2,6 +2,7 @@ package it.polimi.ingsw.Client.Connection;
 
 import it.polimi.ingsw.Server.Connection.LobbyRemoteInterface;
 import it.polimi.ingsw.Server.Lobby.PlayerLogin;
+import it.polimi.ingsw.Shared.Connection.ConnectionType;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -56,12 +57,19 @@ public class LobbyPlayerRMI {
         }
     }
 
-    public void joinGame(){
-
+    public static int joinGame(String ID, ConnectionType connectionType){
+        return stub.joinGame(ID, connectionType); //TODO exception
+    }
+    public static int joinGame(String ID, ConnectionType connectionType, String searchID){
+        return stub.joinGame(ID, connectionType, searchID); //TODO exception
     }
 
-    public void createGame(){
+    public static int createGame(String ID, ConnectionType connectionType){
+        return stub.createGame(ID, connectionType);
+    }
 
+    public static int createGame(String ID, ConnectionType connectionType, int maxPlayerNumber){
+        return stub.createGame(ID, connectionType, maxPlayerNumber);
     }
 
 
