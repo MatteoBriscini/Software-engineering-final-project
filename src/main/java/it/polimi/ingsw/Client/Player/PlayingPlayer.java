@@ -35,7 +35,12 @@ public class PlayingPlayer extends Player{
         super(playerID, pwd, clientMain);
         switch (connectionType){
             case RMI:
-                connectionManager = new PlayingPlayerRMI(port, serverIP, playerID, this);
+                try {
+                    connectionManager = new PlayingPlayerRMI(port, serverIP, playerID, this);
+                } catch (Exception e) {
+                    this.disconnectError("invalid connection config received from server");
+                    return;
+                }
                 break;
             case SOCKET: //TODO
                 break;
@@ -114,7 +119,8 @@ public class PlayingPlayer extends Player{
         try {
             return connectionManager.startGame(this.playerID);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);//TODO come va gestita questa eccezione?
+            this.disconnectError("server don't respond");
+            return false;
         }
     }
 
@@ -122,7 +128,8 @@ public class PlayingPlayer extends Player{
         try {
             return connectionManager.quitGame(this.playerID);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);//TODO come va gestita questa eccezione?
+            this.disconnectError("server don't respond");
+            return false;
         }
     }
 
@@ -134,8 +141,17 @@ public class PlayingPlayer extends Player{
         try {
             return connectionManager.takeCard(column, pos);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);//TODO come va gestita questa eccezione?
+            this.disconnectError("server don't respond");
+            return false;
         }
+    }
+
+    private void disconnectError(String msg){
+        JsonObject err = new JsonObject();
+        err.addProperty("playerID", "connection error");
+        err.addProperty("value", msg);
+        //TODO il player deve tornare allo stato di lobby
+        this.errMsg(err);
     }
 
     public void errMsg(JsonObject err){

@@ -7,6 +7,7 @@ import it.polimi.ingsw.Client.Player.PlayingPlayer;
 import it.polimi.ingsw.Shared.Cards.Card;
 import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public abstract class PlayingPlayerConnectionManager extends UnicastRemoteObject
      ************************************************** OUT method ***********
      * ***********************************************************************
      */
-    public abstract void connection(int PORT, String serverIP);
+    public abstract void connection(int PORT, String serverIP) throws RemoteException, NotBoundException;
     public abstract boolean takeCard(int column, PositionWithColor[] cards) throws RemoteException;
     public abstract boolean startGame(String playerID) throws RemoteException;
     public abstract boolean quitGame(String  playerID) throws RemoteException;

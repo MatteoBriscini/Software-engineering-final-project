@@ -6,6 +6,7 @@ import it.polimi.ingsw.Client.Player.PlayingPlayer;
 import it.polimi.ingsw.Server.Connection.RMI.ControllerRemoteInterface;
 import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -16,30 +17,15 @@ public class PlayingPlayerRMI extends PlayingPlayerConnectionManager implements 
 
     private final String playerID;
 
-    public PlayingPlayerRMI(int PORT, String serverIP, String playerID, PlayingPlayer playingPlayer) throws RemoteException{
+    public PlayingPlayerRMI(int PORT, String serverIP, String playerID, PlayingPlayer playingPlayer) throws Exception {
         super(playingPlayer);
         this.playerID = playerID;
         this.connection(PORT, serverIP);
     }
-    public void connection(int PORT, String serverIP){
-        try {
+    public void connection(int PORT, String serverIP) throws RemoteException, NotBoundException {
             Registry registry = LocateRegistry.getRegistry(serverIP , PORT);
             stub = (ControllerRemoteInterface) registry.lookup("ControllerRemoteInterface");
-
-
-        } catch (Exception e) {
-            System.err.println("Client exception: " + e.toString());
-            e.printStackTrace();
-        }
-
-
-        //send remote ref to server
-        try {
             stub.joinRMIControllerConnection(this, playerID);
-        } catch (RemoteException e) {
-
-            throw new RuntimeException(e);
-        }
     }
 
     /*************************************************************************
