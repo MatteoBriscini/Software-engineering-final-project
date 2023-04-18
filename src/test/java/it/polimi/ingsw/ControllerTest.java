@@ -474,11 +474,7 @@ public class ControllerTest extends TestCase {
 
         assert (!test.takeCard(0, cards, "pino"));//pino can't play the game is finished
 
-        Thread.sleep((timeout*1000)+5);         //wait for end game
-
-        System.out.println(test.getPlayerPoint("piero"));
-        System.out.println(test.getPlayerPoint("pino"));
-        System.out.println(test.getPlayerPoint("pierino"));
+        Thread.sleep((timeout*1000)+25);         //wait for end game
 
         assert (test.getPlayerPoint("piero")>=10);      //verify final point except for private goal
         assert (test.getPlayerPoint("pino")>=8);

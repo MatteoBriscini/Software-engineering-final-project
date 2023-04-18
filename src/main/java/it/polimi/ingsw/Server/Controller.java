@@ -385,7 +385,15 @@ public class Controller {
      */
     synchronized public void waitForEndGame() {
         endGameThread = new Thread(() -> {
-            while (currentPlayer != 0 && !endGame) ;
+            while (currentPlayer != playerNum-1  && !endGame){  // && !endGame
+                synchronized (endGameThread) {
+                    try {
+                        endGameThread.wait();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
             if (!endGame) endGame();
         });
         endGameThread.setName("endGameThread");
@@ -395,7 +403,11 @@ public class Controller {
     synchronized public void endGame(){
         endGame = true;
         System.out.println("\u001B[36m" + "the game is ended" + "\u001B[0m");
-        if(endGameThread!=null)endGameThread.interrupt();
+        if(endGameThread!=null){
+            synchronized (endGameThread){
+                endGameThread.notify();
+            }
+        }
 
         for(int i=0; i<playerNum; i++) {
             game.endGameCalcPoint(i);
@@ -490,7 +502,9 @@ public class Controller {
             //calc real time points and add it to current player
             this.updateAllCommonGoal();
             this.updateClientData(cards, tmp.toArray(new Card[0]), column); //update data in clients
-            waitForPlayerResponse.interrupt();
+            synchronized (waitForPlayerResponse) {
+                waitForPlayerResponse.notify();
+            }
             this.turn(); //skip to next player
             return true;
         } else {
@@ -534,6 +548,11 @@ public class Controller {
      * this method increment the currentPlayer and verify the player do not exceed time limit to make a move
      */
     synchronized public void turn(){
+        if(endGameThread!=null){
+            synchronized (endGameThread){
+                endGameThread.notify();
+            }
+        }
         if(endGame) return;         //if game is finish
 
         currentPlayer += 1;
@@ -541,12 +560,10 @@ public class Controller {
         //if a player is market as offline skip him
         synchronized (activePlayers) {
             while (!activePlayers.get(currentPlayer)) {
-
                 currentPlayer+=1;
                 if(currentPlayer >= playerNum) currentPlayer = 0;
             }
         }
-
 
         //send current player to client
         controllerManager.notifyActivePlayer(game.getPlayerArray().get(currentPlayer).getPlayerID());
@@ -554,10 +571,16 @@ public class Controller {
         //time limit for player response and action
         waitForPlayerResponse = new Thread(() -> {
             int tmp = currentPlayer;
-            try {
-                Thread.sleep((long)timeout*1000);
-            } catch (InterruptedException e) {}
-            if (currentPlayer == tmp){turn();} //skip to next player
+            synchronized (waitForPlayerResponse) {
+                try {
+                    waitForPlayerResponse.wait(timeout* 1000L);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            if (currentPlayer == tmp){
+                turn();
+            } //skip to next player
         });
         waitForPlayerResponse.start();
         waitForPlayerResponse.setName("waitForPlayerResponse");

@@ -7,10 +7,12 @@ import it.polimi.ingsw.Shared.Connection.ConnectionType;
 import java.rmi.RemoteException;
 import java.util.Scanner;
 
+import static it.polimi.ingsw.Shared.Connection.ConnectionType.*;
+
 public class ClientMain {
     static String serverIP = "127.0.0.1";
     private Player player;
-    private ConnectionType connectionType;
+    private static ConnectionType connectionType;
 
     public void setPlayerAsPlaying(int PORT){
         String playerID = player.getPlayerID();
@@ -24,8 +26,14 @@ public class ClientMain {
     public static void main(String[] args) {
         System.out.println("choose your connection type (RMI/socket):");
         Scanner scanner = new Scanner(System.in);
-        String name = scanner.nextLine();
-        System.out.println(name);
+        String cT = scanner.nextLine();
+        cT= cT.toUpperCase();
+        if(cT.equals("SOCKET")){
+            connectionType =  connectionType.SOCKET;
+        }else {
+            connectionType = connectionType.RMI;
+        }
+        //System.out.println(connectionType.toString());
     }
 
 }
