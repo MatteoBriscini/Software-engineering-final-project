@@ -141,4 +141,10 @@ public class ConnectionControllerManager {
             c.sendError(error, playerID);
         }
     }
+
+    public void forceClientDisconnection(){
+        for (ConnectionController c: interfaces){
+            c.forceClientDisconnection();
+        }
+    }
 }

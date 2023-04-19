@@ -7,6 +7,7 @@ import it.polimi.ingsw.Client.Player.PlayingPlayer;
 import it.polimi.ingsw.Shared.Cards.Card;
 import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 
+import java.io.IOException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -22,9 +23,8 @@ public abstract class PlayingPlayerConnectionManager extends UnicastRemoteObject
      ************************************************** OUT method ***********
      * ***********************************************************************
      */
-    public abstract void connection(int PORT, String serverIP) throws RemoteException, NotBoundException;
     public abstract boolean takeCard(int column, PositionWithColor[] cards) throws RemoteException;
-    public abstract boolean startGame(String playerID) throws RemoteException;
+    public abstract boolean startGame(String playerID) throws IOException;
     public abstract boolean quitGame(String  playerID) throws RemoteException;
 
 
@@ -106,13 +106,13 @@ public abstract class PlayingPlayerConnectionManager extends UnicastRemoteObject
      * @param points map playerID + point for each game
      */
     public void endGameValue(String points){
-        //TODO
+        playingPlayer.endGameValue(points);
     }
     /**
      * @param winner json object with playerID and points of the winner
      */
     public void receiveWinner(String winner){
-        //TODO
+        playingPlayer.endGameValue(winner);
     }
     /**
      * @param scored json object with point for each client
@@ -136,7 +136,7 @@ public abstract class PlayingPlayerConnectionManager extends UnicastRemoteObject
      * the client is forced by the server to quit the game
      */
     public void forceDisconnection(){
-            //TODO
+         playingPlayer.disconnectError("disconnection forced by the server");
     }
 
 }

@@ -42,9 +42,19 @@ public class PlayingPlayerRMI extends PlayingPlayerConnectionManager implements 
     @Override
 
     public boolean takeCard(int column, PositionWithColor[] cards) throws RemoteException {
-        Gson gson = new Gson();
         JsonArray jsonArray = new Gson().toJsonTree(cards).getAsJsonArray();
         return stub.takeCard(column,jsonArray.toString(), playerID);
+    }
+
+    @Override
+    public void forceDisconnection(){
+        try {
+            this.quitGame(playingPlayer.getPlayerID());
+        } catch (RemoteException e) {
+            playingPlayer.disconnectError("server don't respond");
+            return;
+        }
+        playingPlayer.disconnectError("disconnection forced by the server");
     }
 
 

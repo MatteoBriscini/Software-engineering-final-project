@@ -77,6 +77,7 @@ public class ControllerRMI extends ConnectionController implements ControllerRem
      */
     public synchronized boolean quitRMIControllerConnection(PlayingPlayerRemoteInterface client_ref,String playerID) throws RemoteException{
         if(clients.contains(client_ref)){
+            System.out.println("\u001B[36m"+"client: " + playerID + " quit the game on port(RMI): " + PORT +"\u001B[0m");
             clients.remove(client_ref);
             clientsID.remove(playerID);
             controller.setPlayerOffline(playerID);
@@ -102,7 +103,7 @@ public class ControllerRMI extends ConnectionController implements ControllerRem
                     throw new RuntimeException(ex);
                 }
             }else {
-                controller.setPlayerOnline(clientsID.get(i));
+                if(clientsID.size()>0)controller.setPlayerOnline(clientsID.get(i));
             }
         }
     }

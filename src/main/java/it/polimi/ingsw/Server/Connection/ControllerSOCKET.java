@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Server.Connection;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Controller;
 import it.polimi.ingsw.Shared.Cards.Card;
@@ -127,6 +128,14 @@ public class ControllerSOCKET extends ConnectionController {
     public void forceClientDisconnection() {
 
     }
+    /*************************************************************************
+     ************************************************** IN method ************
+     * ***********************************************************************
+     */
+    public boolean startGame(JsonObject data){
+        this.startGame(data.get("playerID").getAsString());
+        return true;
+    }
 
     /***********************************************************************************
      ************************************************** MultiClientSocketGame **********
@@ -143,35 +152,43 @@ public class ControllerSOCKET extends ConnectionController {
         public void run(){
             //go here when players connect to the server
             try {
-                boolean bool;
+                Boolean bool;
+                JsonObject response = new JsonObject();
+                response.addProperty("service", "receiveResponse");
+                JsonObject sendData = new JsonObject();
+
                 Scanner in = new Scanner(socket.getInputStream());
                 PrintWriter out = new PrintWriter(socket.getOutputStream());
                 while (true){
                     String line = in.nextLine();
                     if (line.equals("quit")) {
+                        bool = true; //TODO friendly quit
+                        out.flush();
                         break;
                     } else {
                         bool = true;
 
-                        //da finire method name non dovra essere line ma un solo parametro di line
-                        String methodName = line;
+
+                        JsonObject jsonObject = new Gson().fromJson(line, JsonObject.class);
+                        String methodName = jsonObject.get("service").getAsString();
                         Method getNameMethod = null;
                         try {
-                            getNameMethod = ControllerSOCKET.this.getClass().getMethod(methodName, String.class);
+                            getNameMethod = ControllerSOCKET.this.getClass().getMethod(methodName, JsonObject.class);
                         } catch (NoSuchMethodException e) {
                             bool = false;
                         }
-
-                        if(bool == true) {
+                        JsonObject data = jsonObject.get("data").getAsJsonObject();
+                        if(getNameMethod != null) {
                             try {
-                                boolean name = (boolean) getNameMethod.invoke(ControllerSOCKET.this, "Mishka");
+                                boolean name = (boolean) getNameMethod.invoke(ControllerSOCKET.this, data);
                             } catch (IllegalAccessException | InvocationTargetException e) {
                                 bool = false;
                                 System.out.println(bool);
                             }
                         }
-
-                        out.println(bool); //response{
+                        sendData.addProperty("response", bool);
+                        response.add("data", sendData);
+                        out.println(response);
                         out.flush();
                     }
                 }

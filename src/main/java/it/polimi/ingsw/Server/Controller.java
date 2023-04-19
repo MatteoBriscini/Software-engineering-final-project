@@ -32,8 +32,8 @@ public class Controller {
     private Thread endGameThread = new Thread();
     boolean firstPlayer;
     //connection
-    ConnectionControllerManager controllerManager = new ConnectionControllerManager();
-    final ArrayList<Boolean> activePlayers = new ArrayList<>();
+    private ConnectionControllerManager controllerManager = new ConnectionControllerManager();
+    private final ArrayList<Boolean> activePlayers = new ArrayList<>();
 
     //configuration value for controller
     private JsonUrl jsonUrl;
@@ -165,18 +165,31 @@ public class Controller {
         }
         return false;
     }
-    synchronized public void setPlayerOffline(String playerID){  //TODO when only one player is online
+    synchronized public void setPlayerOffline(String playerID){
         ArrayList<Player> players = game.getPlayerArray();
         for (int i = 0; i<players.size(); i++){
             if(players.get(i).getPlayerID().equals(playerID)){
                 if(activePlayers.get(i)) {
                     System.err.println(players.get(i).getPlayerID() + " lost connection");
                     activePlayers.set(i, false);
+                    this.checkConnectedPlayerNumbers();
                     return;
                 }
             }
         }
+
     }
+
+    private void checkConnectedPlayerNumbers(){
+        int i=0;
+        for (boolean b: activePlayers){
+            if (b)i++;
+        }
+        if(i<=1){
+            controllerManager.forceClientDisconnection();
+        }
+    }
+
     synchronized public void setPlayerOnline(String playerID){
         ArrayList<Player> players = game.getPlayerArray();
         for (int i = 0; i<players.size(); i++){
