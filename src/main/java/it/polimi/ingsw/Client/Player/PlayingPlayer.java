@@ -4,6 +4,8 @@ import com.google.gson.JsonObject;
 import it.polimi.ingsw.Client.ClientMain;
 import it.polimi.ingsw.Client.Connection.PlayingPlayerConnectionManager;
 import it.polimi.ingsw.Client.Connection.PlayingPlayerRMI;
+import it.polimi.ingsw.Client.Connection.PlayingPlayerSOCKET;
+import it.polimi.ingsw.Client.Exceptions.InvalidPickException;
 import it.polimi.ingsw.Client.Game.MainBoard;
 import it.polimi.ingsw.Client.Game.PlayerBoard;
 import it.polimi.ingsw.Shared.Cards.Card;
@@ -43,8 +45,15 @@ public class PlayingPlayer extends Player{
                     return;
                 }
                 break;
-            case SOCKET: //TODO
+            case SOCKET:
+                try {
+                    connectionManager = new PlayingPlayerSOCKET(port, serverIP, playerID, this);
+                } catch (Exception e) {
+                    this.disconnectError("invalid connection config received from server");
+                    return;
+                }
                 break;
+            case DEBUG: return;
         }
     }
 
@@ -127,7 +136,7 @@ public class PlayingPlayer extends Player{
     public boolean startGame(){
         try {
             return connectionManager.startGame(this.playerID);
-        } catch (RemoteException e) {
+        } catch (Exception e) {
             this.disconnectError("server don't respond");
             return false;
         }
@@ -143,10 +152,21 @@ public class PlayingPlayer extends Player{
     }
 
     public boolean takeCard(int column, Position[] cards){
+        try {
+            mainBoard.validPick(cards);
+        } catch (InvalidPickException e) {
+            JsonObject err = new JsonObject();
+            err.addProperty("playerID", "invalid move");
+            err.addProperty("value", e.toString());
+            return false;
+        }
+        //TODO for valid pick player board
+
         PositionWithColor[] pos = new  PositionWithColor[cards.length];
         for(int i = 0; i<cards.length; i++){
             pos[i] = new PositionWithColor(cards[i].getX(), cards[i].getY(), mainBoard.getSketch(cards[i].getX(), cards[i].getY()) , mainBoard.getColor(cards[i].getX(), cards[i].getY()));
         }
+
         try {
             return connectionManager.takeCard(column, pos);
         } catch (RemoteException e) {
@@ -164,13 +184,19 @@ public class PlayingPlayer extends Player{
     }
 
     public void removeCardFromMainBoard(PositionWithColor[] position){
-        //TODO
+        mainBoard.removeCard(position);
     }
 
-    private void disconnectError(String msg){
+    public void endGameValue(String points){
+        //TODO necessita metodo lato grafico
+    }
+    public void receiveWinner(String winner){
+        //TODO necessita metodo lato grafico
+    }
+    public void disconnectError(String msg){
         JsonObject err = new JsonObject();
-        err.addProperty("playerID", "connection error");
-        err.addProperty("value", msg);
+        err.addProperty("errorID", "connection error");
+        err.addProperty("errorMSG", msg);
         //TODO il player deve tornare allo stato di lobby
         this.errMsg(err);
     }
