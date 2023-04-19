@@ -25,9 +25,14 @@ public class MainBoard {
     }
 
 
+    /**
+     * @param positions contains all the usable positions on the board
+     * @throws InvalidPickException if one or more tiles do not have at least one side free, the pick is neither a row nor a column, or the tiles are not adjacent
+     */
     public void validPick(Position[] positions) throws InvalidPickException {
         int valid=1;
 
+        /** check by rows **/
         Arrays.asList(positions).sort(Comparator.comparing(Position::getX));
         for( int i = 0; i< positions.length && valid==1;i++){
             if(positions[i].getX()-positions[0].getX()!=i || positions[i].getY()!=positions[0].getY())
@@ -39,6 +44,8 @@ public class MainBoard {
 
         }
         if(valid==0) {
+
+            /** check by columns **/
             Arrays.asList(positions).sort(Comparator.comparing(Position::getY));
             for (int i = 0; i < positions.length; i++) {
                 if (positions[i].getY() - positions[0].getY() != i || positions[i].getX()!=positions[0].getX())
@@ -50,6 +57,10 @@ public class MainBoard {
         }
     }
 
+    /**
+     * @param positions contains the positions of the cards that have to me removed from the board
+     * This method substitute the removed cards with EMPTY cards
+     */
     public void removeCard(PositionWithColor[] positions){
         for(PositionWithColor p: positions)
             board[p.getX()][p.getY()]=new Card(EMPTY);

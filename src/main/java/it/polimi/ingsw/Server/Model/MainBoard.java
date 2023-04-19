@@ -15,7 +15,7 @@ import java.util.*;
 import static it.polimi.ingsw.Shared.Cards.CardColor.*;
 
 /**
- * this class is used to make all the checks on the MainBoard, removing or inserting the cards
+ * This class is used to make all the checks on the MainBoard and remove or insert the cards
  */
 public class MainBoard {
 
@@ -45,6 +45,10 @@ public class MainBoard {
         this.rows = controller.get("rows").getAsInt();
     }
 
+    /**
+     * Creates a new bord (take the sizes from the Json configuration file) and fills it with EMPTY cards
+     * Creates and fill colorList with the required cards (numbers of colors and cards by color are specified into the Json file)
+     */
     public MainBoard(){
 
         try {
@@ -82,6 +86,9 @@ public class MainBoard {
         }
     }
 
+    /**
+     * @return a copy of the board
+     */
     public Card[][] getBoard() {
         Card[][] tmpBoard=new Card[columns][rows];
 
@@ -99,6 +106,8 @@ public class MainBoard {
      */
     public boolean fillBoard(Position[] positions){
         boolean remainingCards=false;
+
+        /** substitute all the cards with EMPTY cards and add them to the colors list **/
             for (Position a : positions) {
                 if (!board[a.getX()][a.getY()].getColor().equals(EMPTY)) {
                     PositionWithColor p = new PositionWithColor(a.getX(), a.getY(), 0, board[a.getX()][a.getY()].getColor());
@@ -106,6 +115,7 @@ public class MainBoard {
                 }
             }
 
+            /** insert new cards in the board **/
             for(Position a : positions){
                 if(colorsList.size()>0) {
                     remainingCards = true;
@@ -140,6 +150,7 @@ public class MainBoard {
     private void validPick(PositionWithColor[] positions) throws InvalidPickException{
         int valid=1;
 
+        /** check by rows **/
         Arrays.asList(positions).sort(Comparator.comparing(Position::getX));
         for( int i = 0; i< positions.length && valid==1;i++){
             if(positions[i].getX()-positions[0].getX()!=i || positions[i].getY()!=positions[0].getY())
@@ -155,6 +166,8 @@ public class MainBoard {
 
         }
         if(valid==0) {
+
+            /** check by columns **/
             Arrays.asList(positions).sort(Comparator.comparing(Position::getY));
             for (int i = 0; i < positions.length; i++) {
                 if (positions[i].getY() - positions[0].getY() != i || positions[i].getX()!=positions[0].getX())
