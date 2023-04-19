@@ -145,7 +145,7 @@ public class MainBoard {
             if(positions[i].getX()-positions[0].getX()!=i || positions[i].getY()!=positions[0].getY())
                 valid = 0;
 
-            if(DeprecatedBoard(positions[i]))
+            if(deprecatedBoard(positions[i]))
                 throw new InvalidPickException("Client board is deprecated");
 
 
@@ -160,7 +160,7 @@ public class MainBoard {
                 if (positions[i].getY() - positions[0].getY() != i || positions[i].getX()!=positions[0].getX())
                     throw new InvalidPickException("The pick is neither a row nor a column, or the tiles are not adjacent");
 
-                if(DeprecatedBoard(positions[i]))
+                if(deprecatedBoard(positions[i]))
                     throw new InvalidPickException("Client board is deprecated");
 
 
@@ -174,7 +174,7 @@ public class MainBoard {
      * @param position contains the information about the position and the color of the card that has to be checked
      * @return true if the color of the selected card and the one of the expected card don't match
      */
-    private boolean DeprecatedBoard(PositionWithColor position){
+    private boolean deprecatedBoard(PositionWithColor position){
         return(!(board[position.getX()][position.getY()].getColor().equals(position.getColor())));
     }
 
