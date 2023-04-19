@@ -428,7 +428,7 @@ public class Controller {
     /*************************************************************************
      ************************************************** in game method *******
      * ***********************************************************************
-     * *
+     *  *
      * called from client when player want to take cards from mainBoard to add it to him board
      * @param column number of column in the playerBoard
      * @param cards array of card the player want to take, contains color and position on mainBoard
