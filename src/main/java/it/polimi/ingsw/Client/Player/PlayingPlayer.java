@@ -24,6 +24,7 @@ public class PlayingPlayer extends Player{
     boolean myTurn;
     int playersNumber;
     int[]CommonGoalID;
+    PositionWithColor[] privateGoal;
     JsonObject[] commonGoalScored;
     /**
      * @param connectionType rmi or socket
@@ -74,6 +75,10 @@ public class PlayingPlayer extends Player{
         return CommonGoalID;
     }
 
+    public PositionWithColor[] getPrivateGoal() {
+        return privateGoal;
+    }
+
     public JsonObject[] getCommonGoalScored() {
         return commonGoalScored;
     }
@@ -103,6 +108,10 @@ public class PlayingPlayer extends Player{
             tmpBoards.add(new PlayerBoard(c));
         }
         playerBoards = tmpBoards.toArray(new PlayerBoard[0]);
+    }
+
+    public void setPrivateGoal(PositionWithColor[] privateGoal) {
+        this.privateGoal = privateGoal;
     }
 
     /*************************************************************************
@@ -144,6 +153,18 @@ public class PlayingPlayer extends Player{
             this.disconnectError("server don't respond");
             return false;
         }
+    }
+
+    public void addCardToPlayerBoard(String playerID, int column,Card[] cards){
+        for(int i=0; i<playersID.length; i++){
+            if(playersID[i].equals(playerID)){
+                //TODO
+            }
+        }
+    }
+
+    public void removeCardFromMainBoard(PositionWithColor[] position){
+        //TODO
     }
 
     private void disconnectError(String msg){

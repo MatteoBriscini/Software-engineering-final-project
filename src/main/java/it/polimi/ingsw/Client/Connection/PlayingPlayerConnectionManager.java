@@ -74,13 +74,15 @@ public abstract class PlayingPlayerConnectionManager extends UnicastRemoteObject
      * @param cards card array to add at the board
      */
     public void addCardToPlayerBoard(String playerID, int column,String cards){//Card[] (cards)
-        //TODO
+        Card[] cardArray = new Gson().fromJson(cards, Card[].class);
+        playingPlayer.addCardToPlayerBoard(playerID, column, cardArray);
     }
     /**
      * @param cards position with color array, position have to remove from the mainBoard;
      */
-    public void dellCardFromMainBoard(String cards){//PositionWithColor[]
-        //TODO
+    public void removeCardFromMainBoard(String cards){//PositionWithColor[]
+        PositionWithColor[] position = new Gson().fromJson(cards, PositionWithColor[].class);
+        playingPlayer.removeCardFromMainBoard(position);
     }
     /*
      * @param commonGoalID number unique identify the common goal
@@ -94,7 +96,8 @@ public abstract class PlayingPlayerConnectionManager extends UnicastRemoteObject
      */
     public void receivePrivateGoal(String cards,String playerID){//PositionWithColor[] (cards)
         if(playerID.equals(playingPlayer.getPlayerID())){
-            //TODO
+            PositionWithColor[] privateGoal = new Gson().fromJson(cards, PositionWithColor[].class);
+            playingPlayer.setPrivateGoal(privateGoal);
         }
 
     }
@@ -131,7 +134,6 @@ public abstract class PlayingPlayerConnectionManager extends UnicastRemoteObject
     }
     /**
      * the client is forced by the server to quit the game
-     * @throws RemoteException if the players is offline
      */
     public void forceDisconnection(){
             //TODO

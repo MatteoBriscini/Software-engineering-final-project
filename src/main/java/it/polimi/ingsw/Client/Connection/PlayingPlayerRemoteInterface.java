@@ -41,7 +41,7 @@ public interface PlayingPlayerRemoteInterface extends Remote {
      * @param cards position with color array, position have to remove from the mainBoard (used in game start phase and when a player reconnect after a crash)
      * @throws RemoteException if the client is offline
      */
-    void dellCardFromMainBoard(String cards) throws RemoteException;//PositionWithColor[]
+    void removeCardFromMainBoard(String cards) throws RemoteException;//PositionWithColor[]
     /**
      * @param playerBoards all players bord in the game (used in game start phase and when a player reconnect after a crash)
      * @throws RemoteException if the client is offline

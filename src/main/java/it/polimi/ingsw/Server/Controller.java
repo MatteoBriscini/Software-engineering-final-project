@@ -29,8 +29,8 @@ public class Controller {
     JsonObject mainBoardConfig = new JsonObject();
     private Position[] allowedPositionArray;    //array of allowed position fill based on main board and player number (in start game method)
     private Thread waitForPlayerResponse;
-    private Thread endGameThread;
-
+    private Thread endGameThread = new Thread();
+    boolean firstPlayer;
     //connection
     ConnectionControllerManager controllerManager = new ConnectionControllerManager();
     final ArrayList<Boolean> activePlayers = new ArrayList<>();
@@ -99,6 +99,9 @@ public class Controller {
      */
     public synchronized int getCurrentPlayer() {
         return currentPlayer;
+    }
+    public boolean isEndGame(){
+        return endGame;
     }
     public String getCurrentPlayerID() {
         return game.getPlayerArray().get(currentPlayer).getPlayerID();
@@ -385,8 +388,8 @@ public class Controller {
      */
     synchronized public void waitForEndGame() {
         endGameThread = new Thread(() -> {
-            while (currentPlayer != playerNum-1  && !endGame){  // && !endGame
-                synchronized (endGameThread) {
+            synchronized (endGameThread) {
+                while (!firstPlayer  && !endGame){  // && !endGame
                     try {
                         endGameThread.wait();
                     } catch (InterruptedException e) {
@@ -398,11 +401,18 @@ public class Controller {
         });
         endGameThread.setName("endGameThread");
         endGameThread.start();
+
     }
 
     synchronized public void endGame(){
         endGame = true;
         System.out.println("\u001B[36m" + "the game is ended" + "\u001B[0m");
+
+        synchronized (waitForPlayerResponse) {
+            waitForPlayerResponse.notify();
+        }
+
+
         if(endGameThread!=null){
             synchronized (endGameThread){
                 endGameThread.notify();
@@ -548,15 +558,18 @@ public class Controller {
      * this method increment the currentPlayer and verify the player do not exceed time limit to make a move
      */
     synchronized public void turn(){
-        if(endGameThread!=null){
-            synchronized (endGameThread){
-                endGameThread.notify();
+        if(endGame) return;         //if game is finish
+        firstPlayer = false;
+
+        synchronized (endGameThread){
+            endGameThread.notify();
+
+            currentPlayer += 1;
+            if(currentPlayer >= playerNum) {
+                currentPlayer = 0;
+                firstPlayer = true;
             }
         }
-        if(endGame) return;         //if game is finish
-
-        currentPlayer += 1;
-        if(currentPlayer >= playerNum) currentPlayer = 0;
         //if a player is market as offline skip him
         synchronized (activePlayers) {
             while (!activePlayers.get(currentPlayer)) {

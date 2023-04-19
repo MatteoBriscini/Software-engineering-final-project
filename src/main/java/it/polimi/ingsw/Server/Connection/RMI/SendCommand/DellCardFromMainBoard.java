@@ -18,7 +18,7 @@ public class DellCardFromMainBoard implements Command{
     @Override
     public boolean execute(PlayingPlayerRemoteInterface client) {
         try {
-            client.dellCardFromMainBoard(cards);
+            client.removeCardFromMainBoard(cards);
         } catch (RemoteException e) {
             return false;
         }

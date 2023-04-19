@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import it.polimi.ingsw.Server.Exceptions.ConstructorException;
 import it.polimi.ingsw.Server.Exceptions.LengthException;
 import it.polimi.ingsw.Server.Exceptions.addPlayerToGameException;
-import it.polimi.ingsw.Shared.Cards.CardColor;
 import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
 import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 import it.polimi.ingsw.Server.Controller;
@@ -474,8 +473,9 @@ public class ControllerTest extends TestCase {
 
         assert (!test.takeCard(0, cards, "pino"));//pino can't play the game is finished
 
-        Thread.sleep((timeout*1000)+25);         //wait for end game
+        Thread.sleep(timeout*1000);
 
+        System.out.println();
         assert (test.getPlayerPoint("piero")>=10);      //verify final point except for private goal
         assert (test.getPlayerPoint("pino")>=8);
         assert (test.getPlayerPoint("pierino")>=12);
