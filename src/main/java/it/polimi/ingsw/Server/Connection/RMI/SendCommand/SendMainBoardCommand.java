@@ -11,7 +11,6 @@ import java.rmi.RemoteException;
 public class SendMainBoardCommand implements Command {
     String mainBoard;
     public SendMainBoardCommand(Card[][] mainBoard){
-        Gson gson = new Gson();
         JsonArray jsonArray = new Gson().toJsonTree(mainBoard).getAsJsonArray();
         this.mainBoard = jsonArray.toString();
     }

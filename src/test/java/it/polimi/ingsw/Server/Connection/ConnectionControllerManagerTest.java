@@ -26,7 +26,6 @@ import static it.polimi.ingsw.Shared.Cards.CardColor.EMPTY;
 
 public class ConnectionControllerManagerTest extends TestCase {
     ConnectionControllerManager testServer = new ConnectionControllerManager();
-
     Controller controller = new Controller();
     private JsonUrl jsonUrl;
     private final int timeout = 2;
@@ -58,6 +57,7 @@ public class ConnectionControllerManagerTest extends TestCase {
 
         testServer.addClient(7234, ConnectionType.RMI, controller);
         assert(testServer.isRmiActive());
+        assert(!testServer.isSocketActive());
         assert(testServer.getInterfaces().size()==1);
 
         Player testClient  = new PlayingPlayer("antonio", "antonio", clientMain,ConnectionType.RMI, 7234, "127.0.0.1");
@@ -71,7 +71,7 @@ public class ConnectionControllerManagerTest extends TestCase {
         testServer.sendAllPlayerBoard(playersBoard);
 
 
-        System.out.println("TEST 1: common goal just scored");
+        System.out.println("TEST 2: common goal just scored");
         //send to client the value of the common goal just scored
         JsonObject scored = new JsonObject();
         scored.addProperty("playerID", "marco");
@@ -86,6 +86,8 @@ public class ConnectionControllerManagerTest extends TestCase {
     }
 
     public void testServerRMIIn() throws ConnectionControllerManagerException, RemoteException, addPlayerToGameException, InterruptedException {
+        System.out.println("START TEST testServerRMIIn\n");
+
         controller.addClient(7236, ConnectionType.RMI);
 
         ArrayList<it.polimi.ingsw.Server.Model.PlayerClasses.Player> players = new ArrayList<>();      //gaming order array list for this test
@@ -122,20 +124,21 @@ public class ConnectionControllerManagerTest extends TestCase {
         pos[0] = new Position(3,8);
         pos[1] = new Position(3,7);
 
-        assert (testClient1.takeCard(0,pos));
+        assert (testClient1.takeCard(0,pos)); // authorized player try to take card
         assert(controller.getCurrentPlayer()==1);
-        assert (!testClient3.takeCard(0,pos));
+        assert (!testClient3.takeCard(0,pos));//not authorized player try to take card
         assert(controller.getCurrentPlayer()==1);
         assert (testClient1.getActivePlayer().equals(testClient2.getActivePlayer()));
         assert (testClient3.getActivePlayer().equals(testClient2.getActivePlayer()));
         assert (testClient3.getActivePlayer().equals(controller.getCurrentPlayerID()));
 
-        System.out.println("test1: quit game");
+        System.out.println("test1: friendly quit game");
         assert (testClient2.quitGame());
         assert (controller.isPlayerOffline("marco"));
         assert (!testClient2.quitGame());
         testClient2  = new PlayingPlayer("marco", "antonio", clientMain, ConnectionType.RMI, 7236, "127.0.0.1");  //marco rejoin a game after the crash
         assert (!controller.isPlayerOffline("marco"));
 
+        System.out.println("\nEND TEST\n");
     }
 }

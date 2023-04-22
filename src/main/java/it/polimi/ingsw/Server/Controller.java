@@ -459,6 +459,7 @@ public class Controller {
      * @return true if the move is valid false in all other case
      */
     synchronized public boolean takeCard(int column, PositionWithColor[] cards, String playerID){
+
         JsonObject error = new JsonObject();
         if(!endGame && alreadyStarted && game.getPlayerArray().get(currentPlayer).getPlayerID().equals(playerID)){
             //verify the numbers of cards

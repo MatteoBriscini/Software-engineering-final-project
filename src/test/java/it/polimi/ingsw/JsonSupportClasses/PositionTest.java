@@ -82,16 +82,23 @@ public class PositionTest extends TestCase {
                 if(k>=9)k=4; //the rest of the matrix is full blue
             }
         }
+        board[8][3] = new Card(EMPTY);
+        for(int y=8;y>=0;y--){
+            System.out.println(board[0][y].getColor().toString()+"\t"+board[1][y].getColor().toString()+"\t"+board[2][y].getColor().toString()+"\t"+board[3][y].getColor().toString()+"\t"+board[4][y].getColor().toString()+"\t"+board[5][y].getColor().toString()+"\t"+board[6][y].getColor().toString()+"\t"+board[7][y].getColor().toString()+"\t"+board[8][y].getColor().toString());
+        }
         assert (!test.pickable(board));
 
         test = new Position(8,8);
-        assert (!test.pickable(board));
+        assert (test.pickable(board));
 
         test = new Position(1,1);
         assert (test.pickable(board));
 
         test = new Position(0,3);
         assert (test.pickable(board));
+
+        test = new Position(8,3);
+        assert (!test.pickable(board));
 
         System.out.println("\nEND TEST\n");
     }

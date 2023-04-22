@@ -8,6 +8,7 @@ import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public abstract class ConnectionController {
     protected Controller controller;
@@ -65,7 +66,8 @@ public abstract class ConnectionController {
      */
     public boolean takeCard (int column, String cards , String playerID){
         PositionWithColor[] cardsArray = new Gson().fromJson(cards, PositionWithColor[].class);
-        return controller.takeCard(column, cardsArray, playerID);
+        boolean bool = controller.takeCard(column, cardsArray, playerID);
+        return bool;
     }
 
 }

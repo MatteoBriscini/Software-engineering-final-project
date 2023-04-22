@@ -23,10 +23,10 @@ public abstract class PlayingPlayerConnectionManager extends UnicastRemoteObject
      ************************************************** OUT method ***********
      * ***********************************************************************
      */
-    public abstract boolean takeCard(int column, PositionWithColor[] cards) throws RemoteException;
-    public abstract boolean startGame(String playerID) throws IOException;
-    public abstract boolean quitGame(String  playerID) throws RemoteException;
-
+    public abstract boolean takeCard(int column, PositionWithColor[] cards) throws Exception;
+    public abstract boolean startGame(String playerID) throws Exception;
+    public abstract boolean quitGame(String  playerID) throws Exception;
+    public abstract void connection(int PORT, String serverIP) throws Exception;
 
     /************************************************************************
      ************************************************** IN method ***********

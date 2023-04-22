@@ -20,7 +20,7 @@ public class ConnectionControllerManager {
      * debug
      */
     public ArrayList<ConnectionController> getInterfaces() {
-        return interfaces;
+            return interfaces;
     }
 
     public boolean isRmiActive() {
@@ -55,7 +55,10 @@ public class ConnectionControllerManager {
             case SOCKET:
                 if(!socketActive) {
                     socketActive = true;
-                    interfaces.add(new ControllerSOCKET(controller, PORT));
+                    ControllerSOCKET controllerSOCKET = new ControllerSOCKET(controller, PORT);
+                    interfaces.add(controllerSOCKET);
+                    Thread thread = new Thread(controllerSOCKET::acceptConnection);
+                    thread.start();
                     return PORT;
                 } else {
                     for (ConnectionController c : interfaces){

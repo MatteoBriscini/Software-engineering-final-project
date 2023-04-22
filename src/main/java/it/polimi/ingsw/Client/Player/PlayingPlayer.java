@@ -49,6 +49,7 @@ public class PlayingPlayer extends Player{
                 try {
                     connectionManager = new PlayingPlayerSOCKET(port, serverIP, playerID, this);
                 } catch (Exception e) {
+                    System.out.println(e.toString());
                     this.disconnectError("invalid connection config received from server");
                     return;
                 }
@@ -145,21 +146,29 @@ public class PlayingPlayer extends Player{
     public boolean quitGame(){
         try {
             return connectionManager.quitGame(this.playerID);
-        } catch (RemoteException e) {
+            //TODO il player deve tornare allo stato di lobby
+        } catch (Exception e) {
             this.disconnectError("server don't respond");
             return false;
         }
     }
 
     public boolean takeCard(int column, Position[] cards){
+
+        Position[] tmpCards = new Position[cards.length];
+        for (int i = 0; i<cards.length;i++){
+            tmpCards[i] = new Position(cards[i].getX(), cards[i].getY());
+        }
         try {
-            mainBoard.validPick(cards);
+            mainBoard.validPick(tmpCards);
         } catch (InvalidPickException e) {
             JsonObject err = new JsonObject();
-            err.addProperty("playerID", "invalid move");
-            err.addProperty("value", e.toString());
+            err.addProperty("errorID", "invalid move");
+            err.addProperty("errorMSG", e.toString());
+            this.errMsg(err);
             return false;
         }
+
         //TODO for valid pick player board
 
         PositionWithColor[] pos = new  PositionWithColor[cards.length];
@@ -169,7 +178,7 @@ public class PlayingPlayer extends Player{
 
         try {
             return connectionManager.takeCard(column, pos);
-        } catch (RemoteException e) {
+        } catch (Exception e) {
             this.disconnectError("server don't respond");
             return false;
         }
