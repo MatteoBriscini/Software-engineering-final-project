@@ -1,9 +1,12 @@
 package it.polimi.ingsw.Client;
 
-import it.polimi.ingsw.Client.Connection.PlayingPlayerSOCKET;
 import it.polimi.ingsw.Client.Player.Player;
 import it.polimi.ingsw.Client.Player.PlayingPlayer;
+import it.polimi.ingsw.Shared.Cards.Card;
+import it.polimi.ingsw.Shared.Cards.CardColor;
 import it.polimi.ingsw.Shared.Connection.ConnectionType;
+import it.polimi.ingsw.Shared.JsonSupportClasses.Position;
+import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 
 import java.rmi.RemoteException;
 import java.util.Scanner;
@@ -19,8 +22,6 @@ public class ClientMain {
     public void setPlayerAsPlaying(int PORT){
         String playerID = player.getPlayerID();
         String pwd = player.getPwd();
-
-        ((PlayingPlayer)player).getMainBoard();
 
         try {
             player = new PlayingPlayer(playerID, pwd, this, connectionType, PORT, serverIP);
@@ -42,12 +43,32 @@ public class ClientMain {
 
 
         //testing socket
+/*
         ClientMain clientMain= new ClientMain();
         try {
             Player player2 = new PlayingPlayer("marco", "addwa", clientMain, SOCKET, 1245, serverIP);
+
+            ((PlayingPlayer)player2).startGame();
+
+            Card[][] board = new Card[3][2];
+            board[0][0] = new Card(CardColor.BLUE);
+            board[1][0] = new Card(CardColor.BLUE);
+            board[2][0] = new Card(CardColor.BLUE);
+            board[0][1] = new Card(CardColor.BLUE);
+            board[1][1] = new Card(CardColor.BLUE);
+            board[2][1] = new Card(CardColor.BLUE);
+            ((PlayingPlayer)player2).createMainBoard(board);
+            Position[] pos = new Position[2];
+            pos[0] = new Position(0,0);
+            pos[1] = new Position(1,0);
+            ((PlayingPlayer)player2).takeCard(0,pos);
+
+            ((PlayingPlayer)player2).quitGame();
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
+*/
+
 
     }
 

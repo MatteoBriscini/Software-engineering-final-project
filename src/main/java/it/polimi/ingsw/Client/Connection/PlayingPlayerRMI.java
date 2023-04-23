@@ -33,6 +33,7 @@ public class PlayingPlayerRMI extends PlayingPlayerConnectionManager implements 
      * ***********************************************************************
      */
     public boolean quitGame(String  playerID) throws RemoteException{
+        System.out.println(stub);
         return stub.quitRMIControllerConnection(this, playerID);
     }
     public boolean startGame(String  playerID) throws RemoteException {
@@ -48,12 +49,6 @@ public class PlayingPlayerRMI extends PlayingPlayerConnectionManager implements 
 
     @Override
     public void forceDisconnection(){
-        try {
-            this.quitGame(playingPlayer.getPlayerID());
-        } catch (RemoteException e) {
-            playingPlayer.disconnectError("server don't respond");
-            return;
-        }
         playingPlayer.disconnectError("disconnection forced by the server");
     }
 

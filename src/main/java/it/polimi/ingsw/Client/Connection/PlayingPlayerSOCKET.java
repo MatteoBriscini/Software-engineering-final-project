@@ -168,7 +168,7 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
 
                     throw new RuntimeException(e);
             }
-            if(!validResponse) System.out.println("server can't response");//TODO server can't response
+            if(!validResponse) playingPlayer.disconnectError("server don't respond");
         }
         return response;
     }

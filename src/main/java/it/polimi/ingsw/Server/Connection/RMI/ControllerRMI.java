@@ -15,6 +15,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ControllerRMI extends ConnectionController implements ControllerRemoteInterface {
 
@@ -58,7 +59,7 @@ public class ControllerRMI extends ConnectionController implements ControllerRem
      * @throws RemoteException if the server isn't available
      */
     public synchronized boolean joinRMIControllerConnection(PlayingPlayerRemoteInterface client_ref,String playerID) throws RemoteException{
-        if(!clients.contains(client_ref) && (controller.getCurrentPlayer()==-1 || controller.isPlayerOffline(playerID))){
+        if(!clients.contains(client_ref) && (controller.getCurrentPlayer()==-1 || controller.isPlayerOffline(playerID)) && !controller.isEndGame()){
             System.out.println("\u001B[36m"+"client: " + playerID + " join the game on port(RMI): " + PORT +"\u001B[0m");
 
             clients.add(client_ref);
@@ -176,5 +177,6 @@ public class ControllerRMI extends ConnectionController implements ControllerRem
     public void forceClientDisconnection() {
         Command command = new ClientDisconnectionCommand();
         sendCommand(command);
+        clients = new ArrayList<>();
     }
 }

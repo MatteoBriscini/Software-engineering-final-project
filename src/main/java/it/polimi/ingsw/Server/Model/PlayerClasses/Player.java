@@ -24,7 +24,7 @@ public class Player {
     //private int pointArray;
     private PlayerBoard board;
     private PlayerTarget personalTarget;
-    private boolean alreadyUsed1[][]= new boolean[5][6];
+    private boolean[][] alreadyUsed1= new boolean[5][6];
     private int elementCombo;
     private final NColorsGroup equal = new NColorsGroup();
     private final RecursiveUsed recursiveUsed = new RecursiveUsed();
@@ -43,8 +43,6 @@ public class Player {
         this.playerID = playerID;
         pointSum = 0;
         board = new PlayerBoard();
-
-
         try {
             jsonCreate();
         } catch (FileNotFoundException e) {

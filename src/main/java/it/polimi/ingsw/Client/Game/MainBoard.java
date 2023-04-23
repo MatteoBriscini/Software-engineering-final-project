@@ -38,10 +38,9 @@ public class MainBoard {
             if(positions[i].getX()-positions[0].getX()!=i || positions[i].getY()!=positions[0].getY())
                 valid = 0;
 
-            if(!positions[i].pickable(board))
+            if(!positions[i].pickable(board)){
                 throw new it.polimi.ingsw.Client.Exceptions.InvalidPickException("One or more tiles do not have one side free");
-
-
+                }
         }
         if(valid==0) {
 

@@ -172,7 +172,7 @@ public class Controller {
                 if(activePlayers.get(i)) {
                     System.err.println(players.get(i).getPlayerID() + " lost connection");
                     activePlayers.set(i, false);
-                    this.checkConnectedPlayerNumbers();
+                    if(!endGame)this.checkConnectedPlayerNumbers();
                     return;
                 }
             }
@@ -180,12 +180,16 @@ public class Controller {
 
     }
 
-    private void checkConnectedPlayerNumbers(){
+    synchronized private void checkConnectedPlayerNumbers(){
         int i=0;
         for (boolean b: activePlayers){
             if (b)i++;
         }
         if(i<=1){
+            this.currentPlayer = -1;
+            this.endGame = true;
+        }
+        if(i==1){
             controllerManager.forceClientDisconnection();
         }
     }
