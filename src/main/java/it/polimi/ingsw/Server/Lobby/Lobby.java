@@ -2,7 +2,6 @@ package it.polimi.ingsw.Server.Lobby;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import it.polimi.ingsw.Server.Controller;
@@ -26,7 +25,7 @@ public class Lobby {
     //Attributes
 
 
-    private LobbyRMI RMI = new LobbyRMI(1234, this);
+    private final LobbyRMI lobbyRMI;
 
     private ArrayList<Controller> activeGames = new ArrayList<>();
 
@@ -35,6 +34,21 @@ public class Lobby {
     private ArrayList<String[]> playersInGames = new ArrayList<>();
 
     private ArrayList<Integer> allocatedPORT;
+
+    private ExecutorService executor;
+
+
+    public Lobby(){
+
+        System.out.println("test");
+        allocatedPORT = new ArrayList<>();
+        this.lobbyRMI = new LobbyRMI(9000, this);
+
+    }
+    public Lobby(int PORT){
+        allocatedPORT = new ArrayList<>();
+        this.lobbyRMI = new LobbyRMI(PORT, this);
+    }
 
     //Methods
 
@@ -197,21 +211,19 @@ public class Lobby {
                     }
                     if(i == 1256){} //TODO aggiungere eccezione massimo porte
 
-                    try {
-                        port = tempActiveGames.get(j).addClient(i, connectionType);
-                    } catch (ConnectionControllerManagerException e) {
-                        throw new RuntimeException(e);
-                    }
-
                     Collections.addAll(temp, tempPlayersInGames.get(j));
                     temp.add(ID);
                     playersInGames.set(j, temp.toArray(new String[0]));
 
-                    System.out.println(playersInGames.get(j)[0]);
-                    System.out.println(playersInGames.get(j)[1]);
+                    try {
+                        return tempActiveGames.get(j).addClient(i, connectionType);
+                    } catch (ConnectionControllerManagerException e) {
+                        throw new RuntimeException(e);
+                    }
 
                 } catch (addPlayerToGameException e) {
                 }
+                break;
             }
             j++;
         }
@@ -223,6 +235,8 @@ public class Lobby {
 
         ArrayList<String[]> tempPlayersInGames;
         ArrayList<Controller> tempActiveGames;
+        ArrayList<String> temp = new ArrayList<>();
+
         int j = 0, i = 0;
 
         synchronized (playersInGames){
@@ -246,19 +260,26 @@ public class Lobby {
 
                     try {
                         tempActiveGames.get(j).addNewPlayer(ID); //TODO full game || already started exception
-                    } catch (addPlayerToGameException e) {
-                        throw new RuntimeException(e);
-                    }
-                    for(i = 1236; i < 1256; i++){
-                        if(allocatedPORT == null || !allocatedPORT.contains(i)) break;
-                    }
-                    if(i == 1256){} //TODO aggiungere eccezione massimo porte
+                        for(i = 1236; i < 1256; i++){
+                            if(allocatedPORT == null || !allocatedPORT.contains(i)) break;
+                        }
+                        if(i == 1256){} //TODO aggiungere eccezione massimo porte
+
+                        Collections.addAll(temp, tempPlayersInGames.get(j));
+                        temp.add(ID);
+                        playersInGames.set(j, temp.toArray(new String[0]));
 
                         try {
                             return tempActiveGames.get(j).addClient(i, connectionType);
                         } catch (ConnectionControllerManagerException e) {
                             throw new RuntimeException(e);
                         }
+
+
+                    } catch (addPlayerToGameException e) {
+                        throw new RuntimeException(e);
+                    }
+
 
                 }
             }
@@ -288,7 +309,7 @@ public class Lobby {
 
 
         activeGames.add(controller);
-        ExecutorService executor = Executors.newCachedThreadPool();
+        executor = Executors.newCachedThreadPool();
 
         executor.submit(controller);
 
@@ -297,11 +318,13 @@ public class Lobby {
         }
         if(i == 1256){} //TODO aggiungere eccezione massimo porte
 
-            try {
-                port = controller.addClient(i, connectionType);
-            } catch (ConnectionControllerManagerException e) {
-                throw new RuntimeException(e);
-            }
+        allocatedPORT.add(i);
+
+        try {
+            port = controller.addClient(i, connectionType);
+        } catch (ConnectionControllerManagerException e) {
+            throw new RuntimeException(e);
+        }
 
         try {
             controller.addNewPlayer(ID);
@@ -317,6 +340,14 @@ public class Lobby {
 
     public ArrayList<Controller> getActiveGames() {
         return activeGames;
+    }
+
+    public ArrayList<String[]> getPlayersInGames() {
+        return playersInGames;
+    }
+
+    public void closeAllGames(){
+        executor.shutdown();
     }
 }
 

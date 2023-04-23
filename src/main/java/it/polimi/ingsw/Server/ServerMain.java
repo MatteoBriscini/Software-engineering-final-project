@@ -8,7 +8,7 @@ public class ServerMain {
 
     public static void main(String[] args) {
 
-        Lobby lobby1 = new Lobby();
+        //Lobby lobby1 = new Lobby();
 
         /*
 

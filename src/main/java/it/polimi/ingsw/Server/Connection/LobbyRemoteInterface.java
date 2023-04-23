@@ -7,17 +7,17 @@ import java.rmi.RemoteException;
 
 public interface LobbyRemoteInterface extends Remote {
 
-    public int login(String ID, String pwd) throws RemoteException;
+    int login(String ID, String pwd) throws RemoteException;
 
-    public boolean signUp(String ID, String pwd) throws RemoteException;
+    boolean signUp(String ID, String pwd) throws RemoteException;
 
-    public int joinGame(String ID, ConnectionType connectionType);
+    int joinGame(String ID, ConnectionType connectionType) throws RemoteException;
 
-    public int joinGame(String ID, ConnectionType connectionType, String searchID);
+    int joinGame(String ID, ConnectionType connectionType, String searchID) throws RemoteException;
 
-    public int createGame(String ID, ConnectionType connectionType);
+    int createGame(String ID, ConnectionType connectionType) throws RemoteException;
 
-    public int createGame(String ID, ConnectionType connectionType, int maxPlayerNumber);
+    int createGame(String ID, ConnectionType connectionType, int maxPlayerNumber) throws RemoteException;
 
 
 }

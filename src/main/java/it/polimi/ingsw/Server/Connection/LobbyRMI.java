@@ -14,7 +14,7 @@ import java.rmi.server.UnicastRemoteObject;
 public class LobbyRMI implements LobbyRemoteInterface{
 
     protected final Lobby lobby;
-    protected final int PORT;
+    protected int PORT;
 
     protected final String cntType;
 
@@ -22,24 +22,28 @@ public class LobbyRMI implements LobbyRemoteInterface{
         this.lobby = lobby;
         this.PORT = port;
         this.cntType = "RMI";
+        System.out.println("connection");
         this.connection();
 
     }
 
     synchronized public void connection(){
         LobbyRemoteInterface stub = null;
-
+        System.out.println(PORT);
         try {
-            stub = (LobbyRemoteInterface) UnicastRemoteObject.exportObject((Remote) this, PORT);
+
+            stub = (LobbyRemoteInterface) UnicastRemoteObject.exportObject((Remote) this, this.PORT);
         }catch (RemoteException e){
             System.out.println(e.toString());
+            throw new RuntimeException(e);
         }
 
         Registry registry = null;
         try {
-            registry = LocateRegistry.createRegistry(PORT);
+            registry = LocateRegistry.createRegistry(this.PORT);
         } catch (RemoteException e) {
             System.out.println(e.toString());
+            throw new RuntimeException(e);
         }
 
         try {
@@ -47,6 +51,7 @@ public class LobbyRMI implements LobbyRemoteInterface{
         } catch (RemoteException | AlreadyBoundException e) {
             // finire ********************************************************
             System.out.println(e.toString());
+            throw new RuntimeException(e);
         }
 
         System.err.println("Server (rmi) for lobby ready on port: " + PORT);
