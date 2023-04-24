@@ -1,0 +1,10 @@
+{
+  "minRows": 1,
+  "minColumns": 1,
+  "maxRows": 3,
+  "maxColumns": 3,
+  "totRows": 4,
+  "totColumns": 3,
+  "totRainbowRows" : 2,
+  "totRainbowColumns" : 2
+}

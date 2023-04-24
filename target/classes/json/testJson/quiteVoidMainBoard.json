@@ -1,0 +1,32 @@
+[
+  {
+    "x": 2,
+    "y": 6,
+    "color": "BLUE"
+  },
+  {
+    "x": 1,
+    "y": 3,
+    "color": "YELLOW"
+  },
+  {
+    "x": 4,
+    "y": 4,
+    "color": "BLUE"
+  },
+  {
+    "x": 4,
+    "y": 3,
+    "color": "LIGHTBLUE"
+  },
+  {
+    "x": 4,
+    "y": 2,
+    "color": "LIGHTBLUE"
+  },
+  {
+    "x": 6,
+    "y": 5,
+    "color": "PINK"
+  }
+]
