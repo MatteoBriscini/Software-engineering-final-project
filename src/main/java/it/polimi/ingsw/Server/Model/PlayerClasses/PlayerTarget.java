@@ -58,7 +58,6 @@ public class PlayerTarget {
     }
 
 
-
     //Methods
     private void jsonCreate() throws FileNotFoundException {
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("playerBoardConfig"));
