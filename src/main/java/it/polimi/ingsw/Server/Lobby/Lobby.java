@@ -40,7 +40,6 @@ public class Lobby {
 
     public Lobby(){
 
-        System.out.println("test");
         allocatedPORT = new ArrayList<>();
         this.lobbyRMI = new LobbyRMI(9000, this);
 
@@ -181,12 +180,11 @@ public class Lobby {
 
     }
 
-    public int joinGame(String ID, ConnectionType connectionType){
+    public synchronized int joinGame(String ID, ConnectionType connectionType) throws addPlayerToGameException {
 
         ArrayList<String[]> tempPlayersInGames;
         ArrayList<Controller> tempActiveGames;
-        ArrayList<String> temp = new ArrayList<>();
-        int j = 0, i = 0, port = -1;
+        int j = 0;
 
 
         synchronized (playersInGames){
@@ -204,40 +202,22 @@ public class Lobby {
         while(j < tempActiveGames.size()){
 
             if(tempActiveGames.get(j).getMaxPlayerNumber() > tempPlayersInGames.get(j).length && tempActiveGames.get(j).getCurrentPlayer() == -1){
-                try {
-                    tempActiveGames.get(j).addNewPlayer(ID); //TODO exception
-                    for(i = 1236; i < 1256; i++){
-                        if(allocatedPORT == null || !allocatedPORT.contains(i)) break;
-                    }
-                    if(i == 1256){} //TODO aggiungere eccezione massimo porte
 
-                    Collections.addAll(temp, tempPlayersInGames.get(j));
-                    temp.add(ID);
-                    playersInGames.set(j, temp.toArray(new String[0]));
+                return addPlayerToGame(ID, connectionType, j);
 
-                    try {
-                        return tempActiveGames.get(j).addClient(i, connectionType);
-                    } catch (ConnectionControllerManagerException e) {
-                        throw new RuntimeException(e);
-                    }
-
-                } catch (addPlayerToGameException e) {
-                }
-                break;
             }
             j++;
         }
 
-        return port;
+        return -1;
     }
 
-    public int joinGame(String ID, ConnectionType connectionType, String searchID){
+    public synchronized int joinGame(String ID, ConnectionType connectionType, String searchID) throws addPlayerToGameException {
 
         ArrayList<String[]> tempPlayersInGames;
         ArrayList<Controller> tempActiveGames;
-        ArrayList<String> temp = new ArrayList<>();
 
-        int j = 0, i = 0;
+        int j = 0;
 
         synchronized (playersInGames){
 
@@ -255,51 +235,66 @@ public class Lobby {
         while(tempActiveGames.get(j) != null){
 
             for(String s : tempPlayersInGames.get(j)){
-                //TODO ID not found exception
+
                 if(s.equals(searchID)){
 
-                    try {
-                        tempActiveGames.get(j).addNewPlayer(ID); //TODO full game || already started exception
-                        for(i = 1236; i < 1256; i++){
-                            if(allocatedPORT == null || !allocatedPORT.contains(i)) break;
-                        }
-                        if(i == 1256){} //TODO aggiungere eccezione massimo porte
-
-                        Collections.addAll(temp, tempPlayersInGames.get(j));
-                        temp.add(ID);
-                        playersInGames.set(j, temp.toArray(new String[0]));
-
-                        try {
-                            return tempActiveGames.get(j).addClient(i, connectionType);
-                        } catch (ConnectionControllerManagerException e) {
-                            throw new RuntimeException(e);
-                        }
-
-
-                    } catch (addPlayerToGameException e) {
-                        throw new RuntimeException(e);
-                    }
-
+                    return addPlayerToGame(ID, connectionType, j);
 
                 }
             }
             j++;
         }
+        throw new addPlayerToGameException("ID not found");
 
-        return -1;
     }
 
-    public int createGame(String ID, ConnectionType connectionType){
+    public synchronized int addPlayerToGame(String ID, ConnectionType connectionType, int gameNumber) throws addPlayerToGameException {
+        ArrayList<String[]> tempPlayersInGames;
+        ArrayList<Controller> tempActiveGames;
+        ArrayList<String> temp = new ArrayList<>();
+        int j = gameNumber, i = 0;
+
+        synchronized (playersInGames){
+
+            tempPlayersInGames = playersInGames;
+
+        }
+
+        synchronized (activeGames){
+
+            tempActiveGames = activeGames;
+
+        }
+
+        tempActiveGames.get(j).addNewPlayer(ID);
+        for(i = 1236; i < 1256; i++){
+            if(allocatedPORT == null || !allocatedPORT.contains(i)) break;
+        }
+        if(i == 1256){throw new addPlayerToGameException("All ports are full");}
+
+        Collections.addAll(temp, tempPlayersInGames.get(j));
+        temp.add(ID);
+        playersInGames.set(j, temp.toArray(new String[0]));
+
+        try {
+            return tempActiveGames.get(j).addClient(i, connectionType);
+        } catch (ConnectionControllerManagerException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public synchronized int createGame(String ID, ConnectionType connectionType) throws addPlayerToGameException {
         Controller controller = new Controller();
         return createGameSupport(ID, connectionType, controller);
     }
 
-    public int createGame(String ID, ConnectionType connectionType, int maxPlayerNumber){
+    public synchronized int createGame(String ID, ConnectionType connectionType, int maxPlayerNumber) throws addPlayerToGameException {
         Controller controller = new Controller(maxPlayerNumber);
         return createGameSupport(ID, connectionType, controller);
     }
 
-    private int createGameSupport(String ID, ConnectionType connectionType, Controller controller){
+    private synchronized int createGameSupport(String ID, ConnectionType connectionType, Controller controller) throws addPlayerToGameException {
 
         int i = 0;
         int port = -1;
@@ -316,8 +311,9 @@ public class Lobby {
         for(i = 1236; i < 1256; i++){
             if(allocatedPORT == null || !allocatedPORT.contains(i)) break;
         }
-        if(i == 1256){} //TODO aggiungere eccezione massimo porte
+        if(i == 1256){throw new addPlayerToGameException("All ports are full");}
 
+        assert allocatedPORT != null;
         allocatedPORT.add(i);
 
         try {
@@ -326,11 +322,7 @@ public class Lobby {
             throw new RuntimeException(e);
         }
 
-        try {
-            controller.addNewPlayer(ID);
-        } catch (addPlayerToGameException e) {
-            throw new RuntimeException(e);
-        }
+        controller.addNewPlayer(ID);
 
         playersInGames.add(temp.toArray(new String[0]));
 

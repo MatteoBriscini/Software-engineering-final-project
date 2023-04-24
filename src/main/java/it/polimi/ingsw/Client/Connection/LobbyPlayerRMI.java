@@ -1,9 +1,11 @@
 package it.polimi.ingsw.Client.Connection;
 
 import it.polimi.ingsw.Server.Connection.LobbyRemoteInterface;
+import it.polimi.ingsw.Server.Exceptions.addPlayerToGameException;
 import it.polimi.ingsw.Server.Lobby.PlayerLogin;
 import it.polimi.ingsw.Shared.Connection.ConnectionType;
 
+import javax.security.auth.login.LoginException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -41,7 +43,7 @@ public class LobbyPlayerRMI {
 
     }
 
-    public static int login(String ID, String pwd){
+    public static int login(String ID, String pwd) throws LoginException{
         try {
             return stub.login(ID, pwd);
         } catch (RemoteException e) {
@@ -49,7 +51,7 @@ public class LobbyPlayerRMI {
         }
     }
 
-    public static boolean signUp(String ID, String pwd){
+    public static boolean signUp(String ID, String pwd) throws LoginException{
         try {
             return stub.signUp(ID, pwd);
         } catch (RemoteException e) {
@@ -57,35 +59,43 @@ public class LobbyPlayerRMI {
         }
     }
 
-    public static int joinGame(String ID, ConnectionType connectionType){
+    public static int joinGame(String ID, ConnectionType connectionType) throws addPlayerToGameException {
+
         try {
-            return stub.joinGame(ID, connectionType); //TODO exception
+            return stub.joinGame(ID, connectionType);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
+
     }
-    public static int joinGame(String ID, ConnectionType connectionType, String searchID){
+    public static int joinGame(String ID, ConnectionType connectionType, String searchID) throws addPlayerToGameException {
+
         try {
-            return stub.joinGame(ID, connectionType, searchID); //TODO exception
+            return stub.joinGame(ID, connectionType, searchID);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
+
     }
 
-    public static int createGame(String ID, ConnectionType connectionType){
+    public static int createGame(String ID, ConnectionType connectionType) throws addPlayerToGameException {
+
         try {
             return stub.createGame(ID, connectionType);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
+
     }
 
-    public static int createGame(String ID, ConnectionType connectionType, int maxPlayerNumber){
+    public static int createGame(String ID, ConnectionType connectionType, int maxPlayerNumber) throws addPlayerToGameException {
+
         try {
             return stub.createGame(ID, connectionType, maxPlayerNumber);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
+
     }
 
 

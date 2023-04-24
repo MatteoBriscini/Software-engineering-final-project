@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Server.Connection;
 
+import it.polimi.ingsw.Server.Exceptions.addPlayerToGameException;
 import it.polimi.ingsw.Server.Lobby.Lobby;
 import it.polimi.ingsw.Shared.Connection.ConnectionType;
 
@@ -22,19 +23,16 @@ public class LobbyRMI implements LobbyRemoteInterface{
         this.lobby = lobby;
         this.PORT = port;
         this.cntType = "RMI";
-        System.out.println("connection");
         this.connection();
 
     }
 
     synchronized public void connection(){
         LobbyRemoteInterface stub = null;
-        System.out.println(PORT);
         try {
 
             stub = (LobbyRemoteInterface) UnicastRemoteObject.exportObject((Remote) this, this.PORT);
         }catch (RemoteException e){
-            System.out.println(e.toString());
             throw new RuntimeException(e);
         }
 
@@ -42,7 +40,7 @@ public class LobbyRMI implements LobbyRemoteInterface{
         try {
             registry = LocateRegistry.createRegistry(this.PORT);
         } catch (RemoteException e) {
-            System.out.println(e.toString());
+            System.out.println(e);
             throw new RuntimeException(e);
         }
 
@@ -58,31 +56,23 @@ public class LobbyRMI implements LobbyRemoteInterface{
     }
 
     @Override
-    public int login(String ID, String pwd) throws RemoteException {
+    public int login(String ID, String pwd) throws LoginException {
 
         int msg;
         System.out.println(ID + " on port: "+ PORT + ", logging in");
-        try {
-            msg = lobby.login(ID, pwd);
-        } catch (LoginException e) {
-            throw new RuntimeException(e);
-        }
+        msg = lobby.login(ID, pwd);
         return msg;
     }
 
     @Override
-    public boolean signUp(String ID, String pwd) throws RemoteException {
+    public boolean signUp(String ID, String pwd) throws LoginException {
 
         System.out.println(ID + " on port: "+ PORT + ", trying to sign up");
-        try {
-            lobby.signUp(ID, pwd);
-        } catch (LoginException e) {
-            throw new RuntimeException(e);
-        }
+        lobby.signUp(ID, pwd);
         return false;
     }
 
-    public int joinGame(String ID, ConnectionType connectionType){
+    public int joinGame(String ID, ConnectionType connectionType) throws addPlayerToGameException {
 
         int msg;
 
@@ -92,7 +82,7 @@ public class LobbyRMI implements LobbyRemoteInterface{
 
         return msg;
     }
-    public int joinGame(String ID, ConnectionType connectionType, String searchID){
+    public int joinGame(String ID, ConnectionType connectionType, String searchID) throws addPlayerToGameException {
 
         int msg;
 
@@ -103,7 +93,7 @@ public class LobbyRMI implements LobbyRemoteInterface{
         return msg;
     }
 
-    public int createGame(String ID, ConnectionType connectionType){
+    public int createGame(String ID, ConnectionType connectionType) throws addPlayerToGameException {
 
         int msg;
 
@@ -114,8 +104,7 @@ public class LobbyRMI implements LobbyRemoteInterface{
         return msg;
     }
 
-    public int createGame(String ID, ConnectionType connectionType, int maxPlayerNumber)
-    {
+    public int createGame(String ID, ConnectionType connectionType, int maxPlayerNumber) throws addPlayerToGameException {
 
         int msg;
 
