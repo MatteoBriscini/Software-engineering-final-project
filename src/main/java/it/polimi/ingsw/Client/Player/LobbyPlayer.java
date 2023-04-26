@@ -5,8 +5,6 @@ public class LobbyPlayer {
     private String ID;
     private String pwd;
 
-    private
-
     public LobbyPlayer(){
 
     }
