@@ -13,10 +13,12 @@ import java.rmi.registry.Registry;
 
 
 public class PlayingPlayerRMI extends PlayingPlayerConnectionManager implements PlayingPlayerRemoteInterface{
-    static ControllerRemoteInterface stub;
-
+    private static ControllerRemoteInterface stub;
+    private boolean inGame = true;
+    private int pingPongTime = 5000;
     private final String playerID;
 
+    //constructor for testing
     public PlayingPlayerRMI(int PORT, String serverIP, String playerID, PlayingPlayer playingPlayer) throws Exception {
         super(playingPlayer);
         this.playerID = playerID;
@@ -26,6 +28,31 @@ public class PlayingPlayerRMI extends PlayingPlayerConnectionManager implements 
             Registry registry = LocateRegistry.getRegistry(serverIP , PORT);
             stub = (ControllerRemoteInterface) registry.lookup("ControllerRemoteInterface");
             stub.joinRMIControllerConnection(this, playerID);
+
+        Thread thread = new Thread(this::pong);       //start ping pong
+        thread.start();
+    }
+    public void ping(){}
+
+    private void pong(){
+        synchronized (this) {
+            try {
+                this.wait(pingPongTime);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        try {
+            if(inGame) {
+                stub.ping();
+            }else {//if the player do a friendly quit
+                return;
+            }
+        } catch (RemoteException e) {
+            playingPlayer.disconnectError("server can't respond");
+            return;
+        }
+        this.pong();
     }
 
     /*************************************************************************
@@ -33,7 +60,10 @@ public class PlayingPlayerRMI extends PlayingPlayerConnectionManager implements 
      * ***********************************************************************
      */
     public boolean quitGame(String  playerID) throws RemoteException{
-        System.out.println(stub);
+        synchronized (this) {
+            this.notifyAll();
+        }
+        inGame = false;
         return stub.quitRMIControllerConnection(this, playerID);
     }
     public boolean startGame(String  playerID) throws RemoteException {

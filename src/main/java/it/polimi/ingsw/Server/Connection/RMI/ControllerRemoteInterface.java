@@ -8,6 +8,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface ControllerRemoteInterface  extends Remote {
+    void ping() throws RemoteException;
     /**
      * new client join the party :)
      * @param client_ref ref to remote obj

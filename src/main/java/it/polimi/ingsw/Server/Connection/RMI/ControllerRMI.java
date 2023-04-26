@@ -15,12 +15,13 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
-import java.util.Collections;
+
 
 public class ControllerRMI extends ConnectionController implements ControllerRemoteInterface {
 
-    ArrayList<PlayingPlayerRemoteInterface> clients = new ArrayList<>();
-    ArrayList<String> clientsID = new ArrayList<>();
+    private ArrayList<PlayingPlayerRemoteInterface> clients = new ArrayList<>();
+    private int pingPongTime = 5000;
+    private ArrayList<String> clientsID = new ArrayList<>();
 
     public ControllerRMI(Controller controller, int port){
         super(controller, port);
@@ -49,6 +50,27 @@ public class ControllerRMI extends ConnectionController implements ControllerRem
         System.err.println("\u001B[32m" + "Server (rmi) for newGame ready on port: " + PORT + "\u001B[0m");
     }
 
+    public void ping(){}
+    private void pong(PlayingPlayerRemoteInterface client_ref, String playerID){
+        synchronized (this) {
+            try {
+                this.wait(pingPongTime);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        try {
+            if(clients.contains(client_ref)) {
+                client_ref.ping();
+            }else {//if the player do a friendly quit
+                return;
+            }
+        } catch (RemoteException e) {
+            this.quitRMIControllerConnection(client_ref, playerID);
+        }
+        this.pong(client_ref, playerID);
+    }
+
     /************************************************************************
      ************************************************** IN method ***********
      * ***********************************************************************
@@ -58,13 +80,17 @@ public class ControllerRMI extends ConnectionController implements ControllerRem
      * @return true if the ref can be added false in all other case
      * @throws RemoteException if the server isn't available
      */
-    public synchronized boolean joinRMIControllerConnection(PlayingPlayerRemoteInterface client_ref,String playerID) throws RemoteException{
+    public synchronized boolean joinRMIControllerConnection(PlayingPlayerRemoteInterface client_ref,String playerID){
         if(!clients.contains(client_ref) && (controller.getCurrentPlayer()==-1 || controller.isPlayerOffline(playerID)) && !controller.isEndGame()){
             System.out.println("\u001B[36m"+"client: " + playerID + " join the game on port(RMI): " + PORT +"\u001B[0m");
 
             clients.add(client_ref);
             clientsID.add(playerID);
             controller.setPlayerOnline(playerID);
+
+            Thread thread = new Thread(() -> {this.pong(client_ref, playerID);});       //start ping pong
+            thread.start();
+
             return true;
         }
         return false;
@@ -74,14 +100,17 @@ public class ControllerRMI extends ConnectionController implements ControllerRem
      * client left the party :(
      * @param client_ref  ref to remote obj
      * @return true if the ref can be removed false in all other case
-     * @throws RemoteException if the server isn't available
+
      */
-    public synchronized boolean quitRMIControllerConnection(PlayingPlayerRemoteInterface client_ref,String playerID) throws RemoteException{
+    public synchronized boolean quitRMIControllerConnection(PlayingPlayerRemoteInterface client_ref,String playerID){
         if(clients.contains(client_ref)){
-            System.out.println("\u001B[36m"+"client: " + playerID + " quit the game on port(RMI): " + PORT +"\u001B[0m");
+            System.out.println("\u001B[33m"+"client: " + playerID + " quit the game on port(RMI): " + PORT +"\u001B[0m");
             clients.remove(client_ref);
             clientsID.remove(playerID);
             controller.setPlayerOffline(playerID);
+            synchronized (this) {
+                this.notifyAll(); //reset ping pong
+            }
             return true;
         }
         return false;
@@ -98,11 +127,7 @@ public class ControllerRMI extends ConnectionController implements ControllerRem
         for(int i = 0; i<clients.size(); i ++){
             boolean bool= command.execute(clients.get(i));
             if(!bool) {
-                try {
-                    this.quitRMIControllerConnection(clients.get(i), clientsID.get(i));
-                } catch (RemoteException ex) {
-                    throw new RuntimeException(ex);
-                }
+                this.quitRMIControllerConnection(clients.get(i), clientsID.get(i));
             }else {
                 if(clientsID.size()>0)controller.setPlayerOnline(clientsID.get(i));
             }

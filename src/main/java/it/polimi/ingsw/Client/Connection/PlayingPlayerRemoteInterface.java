@@ -10,6 +10,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 public interface PlayingPlayerRemoteInterface extends Remote {
+    void ping() throws RemoteException;
     /**
      * @param activePlayerID PLayerID of the player have to play now
      * @throws RemoteException if the client is offline
