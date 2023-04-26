@@ -14,14 +14,9 @@ public class PlayerBoard {
     private int y;
 
     public PlayerBoard(Card[][] board){
-
-        this.board = new Card[x][y];
-        for (int i = 0; i < x; i++){
-            for (int j = 0; j < y; j++){
-                this.board[i][j] = board[i][j];
-            }
-        }
-
+        this.board = board;
+        this.x = board.length;
+        this.y = board[0].length;
     }
 
     public boolean checkSpace(int column, int cards){
