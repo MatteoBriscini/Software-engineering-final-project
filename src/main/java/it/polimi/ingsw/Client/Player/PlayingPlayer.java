@@ -202,7 +202,9 @@ public class PlayingPlayer extends Player{
     public void addCardToPlayerBoard(String playerID, int column,Card[] cards){
         for(int i=0; i<playersID.length; i++){
             if(playersID[i].equals(playerID)){
-                //TODO addCardToPlayerBoard
+                System.out.println("test0");
+                playerBoards[i].addCard(column, cards);
+                System.out.println("test1");
             }
         }
     }

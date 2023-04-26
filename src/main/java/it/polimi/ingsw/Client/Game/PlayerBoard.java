@@ -26,8 +26,7 @@ public class PlayerBoard {
 
     }
 
-    public void addCard(int column, ArrayList<Card> cards){
-
+    public void addCard(int column,Card[] cards){
         int i = y-1, j = 0;
 
         while(board[column][i].getColor().equals(EMPTY) && i != 0){
@@ -36,9 +35,9 @@ public class PlayerBoard {
 
         if(!board[column][i].getColor().equals(EMPTY)) i++;
 
-        while(j < cards.size()){
+        while(j < cards.length){
 
-            board[column][i] = cards.get(j);
+            board[column][i] = cards[j];
             j++;
             i++;
 

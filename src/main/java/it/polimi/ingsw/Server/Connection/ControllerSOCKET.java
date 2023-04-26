@@ -46,7 +46,7 @@ public class ControllerSOCKET extends ConnectionController {
                 executor.submit(client);
             } catch (IOException e) {
                 System.out.println(e.toString()); //go here if socket is closed
-                break;//TODO
+                break;
             }
         }
         executor.shutdown();
@@ -62,7 +62,7 @@ public class ControllerSOCKET extends ConnectionController {
                 client.sendMSG(msg);
             } catch (IOException e) {
                 throw new RuntimeException(e);
-                //TODO
+
             }
         }
     }
