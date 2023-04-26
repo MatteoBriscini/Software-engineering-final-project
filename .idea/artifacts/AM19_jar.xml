@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="AM19:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/AM19_jar</output-path>
+    <root id="archive" name="AM19.jar">
+      <element id="module-output" name="AM19" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/google/code/gson/gson/2.8.9/gson-2.8.9.jar" path-in-jar="/" />
+      <element id="dir-copy" path="$USER_HOME$/.jdks/corretto-19.0.2/bin" />
+    </root>
+  </artifact>
+</component>
