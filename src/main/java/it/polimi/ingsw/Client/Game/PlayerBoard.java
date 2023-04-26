@@ -33,11 +33,20 @@ public class PlayerBoard {
 
     public void addCard(int column, ArrayList<Card> cards){
 
-        int j = 0;
+        int i = y-1, j = 0;
 
-        for(int i = cards.size(); i > 0; i++){
-            board[column][y-i] = cards.get(j);
+        while(board[column][i].getColor().equals(EMPTY) && i != 0){
+            i--;
+        }
+
+        if(!board[column][i].getColor().equals(EMPTY)) i++;
+
+        while(j < cards.size()){
+
+            board[column][i] = cards.get(j);
             j++;
+            i++;
+
         }
 
     }
