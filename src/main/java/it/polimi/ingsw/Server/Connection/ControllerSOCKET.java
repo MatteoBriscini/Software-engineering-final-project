@@ -262,7 +262,7 @@ public class ControllerSOCKET extends ConnectionController {
         }
 
         public void setPlayerOffline(String playerID){
-            System.out.println("\u001B[36m"+"client: " + playerID + " quit the game on port(SOCKET): " + PORT +"\u001B[0m");
+            System.out.println("\u001B[33m"+"client: " + playerID + " quit the game on port(SOCKET): " + PORT +"\u001B[0m");
             controller.setPlayerOffline(playerID);
         }
         public void setPlayerOnline(String playerID){

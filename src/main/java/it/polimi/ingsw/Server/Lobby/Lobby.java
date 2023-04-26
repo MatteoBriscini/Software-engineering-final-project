@@ -39,10 +39,8 @@ public class Lobby {
 
 
     public Lobby(){
-
         allocatedPORT = new ArrayList<>();
         this.lobbyRMI = new LobbyRMI(9000, this);
-
     }
     public Lobby(int PORT){
         allocatedPORT = new ArrayList<>();

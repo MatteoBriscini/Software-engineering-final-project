@@ -148,6 +148,7 @@ public class PlayingPlayer extends Player{
             return connectionManager.quitGame(this.playerID);
             //TODO il player deve tornare allo stato di lobby
         } catch (Exception e) {
+            System.out.println(e.toString());
             this.disconnectError("server don't respond");
             return false;
         }

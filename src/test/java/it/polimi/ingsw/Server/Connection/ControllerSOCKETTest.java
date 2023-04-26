@@ -54,7 +54,7 @@ public class ControllerSOCKETTest extends TestCase {
 
         controller.setNotRandomPlayerOrder(players);
 
-        System.out.println("test1: take card");
+        System.out.println("test2: take card");
         Position[] pos = new Position[2];
         pos[0] = new Position(3,8);
         pos[1] = new Position(3,7);
@@ -67,7 +67,7 @@ public class ControllerSOCKETTest extends TestCase {
         assert (testClient3.getActivePlayer().equals(testClient2.getActivePlayer()));
         assert (testClient3.getActivePlayer().equals(controller.getCurrentPlayerID()));
 
-        System.out.println("test1: friendly quit game");
+        System.out.println("test3: friendly quit game");
         assert (testClient2.quitGame());
         assert (controller.isPlayerOffline("marco"));
         testClient2  = new PlayingPlayer("marco", "antonio", clientMain, ConnectionType.SOCKET, 8000, "127.0.0.1");  //marco rejoin a game after the crash

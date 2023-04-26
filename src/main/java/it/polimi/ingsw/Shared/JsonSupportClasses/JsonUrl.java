@@ -28,6 +28,7 @@ public class JsonUrl {
             case "personalBoard1": return "json/testJson/personalBoard1.json";
             case "personalBoard2": return "json/testJson/personalBoard2.json";
             case "personalBoard3": return "json/testJson/personalBoard3.json";
+            case "netConfig": return "json/config/netConfig.json";
             default: return "invalid";
         }
     }

@@ -10,9 +10,11 @@ import java.util.ArrayList;
 
 public class LobbyTest extends TestCase {
 
-    private final Lobby testLobby = new Lobby();
+    private Lobby testLobby;
 
     public void testLobby(){
+
+        testLobby = new Lobby(2000);
 
         System.out.println("Test 1");
         String ID = "john";
