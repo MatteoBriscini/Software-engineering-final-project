@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Client.Player;
 
+import com.google.gson.JsonObject;
 import it.polimi.ingsw.Client.ClientMain;
 
 public abstract class Player {
@@ -18,5 +19,9 @@ public abstract class Player {
 
     public String getPwd(){
         return pwd;
+    }
+
+    public void errMsg(JsonObject err){
+        System.err.println(err.get("errorID").toString().toUpperCase() + ": " + err.get("errorMSG")); //TODO necessita metodo lato grafico
     }
 }

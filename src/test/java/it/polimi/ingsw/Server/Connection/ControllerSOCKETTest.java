@@ -43,7 +43,9 @@ public class ControllerSOCKETTest extends TestCase {
 
         System.out.println("test1: start game");
 
-        assert (!testClient2.startGame());      //not authorized player try to start the game
+        boolean bool = testClient2.startGame();
+        //System.out.println(bool);
+        assert (!bool);      //not authorized player try to start the game
         assert(controller.getCurrentPlayer()==-1);
         assert (testClient1.startGame());       // authorized player try to start the game
         assert(controller.getCurrentPlayer()==0);

@@ -15,19 +15,21 @@ import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class PlayingPlayer extends Player{
-    PlayingPlayerConnectionManager connectionManager;
-    MainBoard mainBoard;
-    PlayerBoard[] playerBoards;
-    String[] playersID;
-    String activePlayer;
-    boolean myTurn;
-    int playersNumber;
-    int[]CommonGoalID;
-    PositionWithColor[] privateGoal;
-    JsonObject[] commonGoalScored;
+    private PlayingPlayerConnectionManager connectionManager;
+    private MainBoard mainBoard;
+    private PlayerBoard[] playerBoards;
+    private String[] playersID;
+    private int myTurnNumber;
+    private String activePlayer;
+    private boolean myTurn;
+    private int playersNumber;
+    private int[]CommonGoalID;
+    private PositionWithColor[] privateGoal;
+    private JsonObject[] commonGoalScored;
     /**
      * @param connectionType rmi or socket
      * @param port for the specific game on the server
@@ -105,6 +107,12 @@ public class PlayingPlayer extends Player{
     }
     public void setPlayersID(String[] playersID) {
         this.playersID = playersID;
+        for(int i=0; i<playersID.length; i++){
+            if(this.playerID.equals(playersID[i])){
+                this.myTurnNumber = i;
+                break;
+            }
+        }
     }
     public void setPlayersNumber(int playersNumber) {
         this.playersNumber = playersNumber;
@@ -170,7 +178,13 @@ public class PlayingPlayer extends Player{
             return false;
         }
 
-        //TODO for valid pick player board
+        if(!playerBoards[myTurnNumber].checkSpace(column, cards.length)){
+            JsonObject err = new JsonObject();
+            err.addProperty("errorID", "invalid move");
+            err.addProperty("errorMSG", "not enough space on your shelf");
+            this.errMsg(err);
+            return false;
+        }
 
         PositionWithColor[] pos = new  PositionWithColor[cards.length];
         for(int i = 0; i<cards.length; i++){
@@ -188,7 +202,7 @@ public class PlayingPlayer extends Player{
     public void addCardToPlayerBoard(String playerID, int column,Card[] cards){
         for(int i=0; i<playersID.length; i++){
             if(playersID[i].equals(playerID)){
-                //TODO
+                //TODO addCardToPlayerBoard
             }
         }
     }
@@ -211,7 +225,5 @@ public class PlayingPlayer extends Player{
         this.errMsg(err);
     }
 
-    public void errMsg(JsonObject err){
-        System.err.println(err.get("errorID").toString().toUpperCase() + ": " + err.get("errorMSG")); //TODO necessita metodo lato grafico
-    }
+
 }

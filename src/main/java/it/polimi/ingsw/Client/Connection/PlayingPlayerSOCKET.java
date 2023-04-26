@@ -4,16 +4,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Client.Player.PlayingPlayer;
+import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
 import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.Socket;
-import java.rmi.RemoteException;
 
 public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
     private final String playerID;
@@ -25,14 +22,24 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
     private final BufferedReader stdIn;
     private boolean validResponse;
     private boolean response;
+    private JsonUrl jsonUrl;
     private int timeout;
     private Thread receiveMsgThread;
-
+    private int pingPongTime;
+    private Boolean pingPongResponse = true;
+    Thread pingPongThread;
 
     public PlayingPlayerSOCKET(int PORT, String serverIP, String playerID, PlayingPlayer playingPlayer) throws Exception {
         super(playingPlayer);
 
         this.playerID = playerID;
+
+        try {
+            jsonCreate();
+        } catch (FileNotFoundException e) {
+            System.out.println("PlayingPlayerSOCKET: JSON FILE NOT FOUND");
+            throw new RuntimeException(e);
+        }
 
         this.PORT = PORT;
         this.serverIP = serverIP;
@@ -44,6 +51,15 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
         this.receiveMSG();
         this.connection(PORT, serverIP);
     }
+
+    private void jsonCreate() throws FileNotFoundException {  //download json data
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("netConfig"));
+        if(inputStream == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        JsonObject jsonObject = new Gson().fromJson(bufferedReader , JsonObject.class);
+        this.pingPongTime = jsonObject.get("pingPongTime").getAsInt();
+        this.timeout = jsonObject.get("socketTimeout").getAsInt();
+    }
     @Override
     public void connection(int PORT, String serverIP) throws IOException {
         JsonObject data = new JsonObject();
@@ -52,8 +68,41 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
         msg.addProperty("service", "join");
         msg.add("data", data);
         this.sendMSG(msg);
-    }
 
+        pingPongThread = new Thread(this::pingPong);       //start ping pong
+        pingPongThread.start();
+    }
+    public void pingResponse(JsonObject data){
+        synchronized (pingPongThread) {
+            pingPongResponse = true;
+            pingPongThread.notifyAll();
+        }
+    }
+    private void pingPong(){
+        try {
+            Thread.sleep(pingPongTime);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        JsonObject data = new JsonObject();
+        JsonObject msg = new JsonObject();
+        msg.addProperty("service", "pingPong");
+        msg.add("data", data);
+        out.println(msg.toString());  //send socket message
+        synchronized (pingPongThread) {
+            try {
+                pingPongThread.wait(timeout);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            if(!pingPongResponse){
+                playingPlayer.disconnectError("server can't respond");
+                return;
+            }
+        }
+        pingPongResponse = false;
+        this.pingPong();
+    }
     /*************************************************************************
      *                           IN method
      * ***********************************************************************
@@ -63,20 +112,31 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
             String serverMsg;
             try {
                 while ((serverMsg = in.readLine()) != null){//receive socket message
+
                     JsonObject jsonObject = new Gson().fromJson(serverMsg, JsonObject.class);
                     String methodName = jsonObject.get("service").getAsString();
-                    Method getNameMethod = null;
-                    try {
-                        getNameMethod = this.getClass().getMethod(methodName, JsonObject.class);
-                    } catch (NoSuchMethodException e) {
-                        throw new RuntimeException("server try to call not existing client's method");
-                    }
-                    JsonObject data = jsonObject.get("data").getAsJsonObject();
-                    if(getNameMethod != null) {
+                    if(methodName.equals("pingPong")){
+                        JsonObject data = new JsonObject();
+
+                        JsonObject msg = new JsonObject();
+                        msg.addProperty("service", "pingResponse");
+                        msg.add("data", data);
+
+                        out.println(msg.toString());  //send socket message
+                    }else {
+                        Method getNameMethod = null;
                         try {
-                            getNameMethod.invoke(this, data);
-                        } catch (IllegalAccessException | InvocationTargetException e) {
-                            throw new RuntimeException("can't find method on server");
+                            getNameMethod = this.getClass().getMethod(methodName, JsonObject.class);
+                        } catch (NoSuchMethodException e) {
+                            throw new RuntimeException("server try to call not existing client's method");
+                        }
+                        JsonObject data = jsonObject.get("data").getAsJsonObject();
+                        if(getNameMethod != null) {
+                            try {
+                                getNameMethod.invoke(this, data);
+                            } catch (IllegalAccessException | InvocationTargetException e) {
+                                throw new RuntimeException("can't find method on server");
+                            }
                         }
                     }
                 }
@@ -88,10 +148,10 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
     }
     public void receiveResponse(JsonObject data){
         if (!data.get("existingMethod").getAsBoolean()) throw new RuntimeException("can't find method on server");
-        synchronized (this){
+        synchronized (echoSocket){
             this.validResponse= true;
             this.response = data.get("response").getAsBoolean();
-            this.notify();
+            echoSocket.notifyAll();
         }
     }
 
@@ -161,14 +221,13 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
             this.validResponse=false;
         }
         out.println(msg.toString());  //send socket message
-        synchronized (this) {
+        synchronized (echoSocket) {
             try {
-                    this.wait(timeout * 1000L);
+                echoSocket.wait(timeout);
             } catch (InterruptedException e) {
-
-                    throw new RuntimeException(e);
+                throw new RuntimeException(e);
             }
-            if(!validResponse) playingPlayer.disconnectError("server don't respond");
+            if(!validResponse) playingPlayer.disconnectError("server can't respond");
         }
         return response;
     }
@@ -187,7 +246,6 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
         boolean bool = this.sendMSG(msg);
         return bool;
     }
-
     @Override
     public boolean startGame(String playerID) throws IOException {
         JsonObject data = new JsonObject();
@@ -200,8 +258,6 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
         boolean bool = this.sendMSG(msg);
         return bool;
     }
-
-
     @Override
     public boolean quitGame(String playerID) throws IOException {
         JsonObject data = new JsonObject();

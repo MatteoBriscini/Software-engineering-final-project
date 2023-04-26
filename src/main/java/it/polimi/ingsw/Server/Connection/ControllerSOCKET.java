@@ -5,10 +5,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Controller;
 import it.polimi.ingsw.Shared.Cards.Card;
+import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
 import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 
 import java.lang.reflect.*;
 import java.net.ServerSocket;
@@ -26,6 +26,7 @@ public class ControllerSOCKET extends ConnectionController {
         super(controller, port);
         this.connection();
     }
+    private int pingPongTime = 5000;
     synchronized public void connection(){
         try {
             serverSocket = new ServerSocket(PORT);  //throw exception if unavailable port
@@ -250,17 +251,73 @@ public class ControllerSOCKET extends ConnectionController {
 
     private class MultiClientSocketGame implements Runnable{
         private final Socket socket;
+        private JsonUrl jsonUrl;
+        private String clientID;
         private Scanner in;
         private PrintWriter out;
+        private int timeout;
+        private int pingPongTime;
+        private Boolean pingPongResponse = false;
+        Thread pingPongThread;
         public MultiClientSocketGame(Socket socket){
             this.socket = socket;
+
+            try {
+                jsonCreate();
+            } catch (FileNotFoundException e) {
+                System.out.println("MultiClientSocketGame: JSON FILE NOT FOUND");
+                throw new RuntimeException(e);
+            }
+
+
+            pingPongThread = new Thread(this::pingPong);       //start ping pong
+            pingPongThread.start();
         }
 
+        private void jsonCreate() throws FileNotFoundException {  //download json data
+            InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("netConfig"));
+            if(inputStream == null) throw new FileNotFoundException();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+            JsonObject jsonObject = new Gson().fromJson(bufferedReader , JsonObject.class);
+            this.pingPongTime = jsonObject.get("pingPongTime").getAsInt();
+            this.timeout = jsonObject.get("socketTimeout").getAsInt();
+        }
+
+        public void pingResponse(){
+            synchronized (pingPongThread) {
+                pingPongResponse = true;
+                pingPongThread.notifyAll();
+            }
+        }
+        private void pingPong(){
+            try {
+                Thread.sleep(pingPongTime);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            JsonObject data = new JsonObject();
+            JsonObject msg = new JsonObject();
+            msg.addProperty("service", "pingPong");
+            msg.add("data", data);
+            synchronized (pingPongThread) {
+                try {
+                    this.sendMSG(msg);  //send socket message
+                    pingPongThread.wait(timeout);
+                } catch (IOException | InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            if(!pingPongResponse){
+                setPlayerOffline(clientID);
+                return;
+            }
+            pingPongResponse = false;
+            this.pingPong();
+        }
         public void sendMSG (JsonObject msg) throws IOException {
             out.println(msg);
             out.flush();
         }
-
         public void setPlayerOffline(String playerID){
             System.out.println("\u001B[33m"+"client: " + playerID + " quit the game on port(SOCKET): " + PORT +"\u001B[0m");
             controller.setPlayerOffline(playerID);
@@ -290,9 +347,20 @@ public class ControllerSOCKET extends ConnectionController {
                 } else if(methodName.equals("join")){
                     sendData.addProperty("existingMethod", true);
                     sendData.addProperty("response",true);
+                    this.clientID = data.get("playerID").getAsString();
                     this.setPlayerOnline(data.get("playerID").getAsString());
                     response.add("data", sendData);
                     this.sendMSG(response);
+                } else if(methodName.equals("pingPong")){
+                    data = new JsonObject();
+
+                    JsonObject msg = new JsonObject();
+                    msg.addProperty("service", "pingResponse");
+                    msg.add("data", data);
+
+                    this.sendMSG(msg);
+                } else if(methodName.equals("pingResponse")){
+                    this.pingResponse();
                 } else {
                     existingMethod = true;
                     Method getNameMethod = null;
