@@ -1,13 +1,19 @@
 package it.polimi.ingsw.Server.Connection.RMI;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Connection.ConnectionController;
 import it.polimi.ingsw.Server.Connection.RMI.SendCommand.*;
 import it.polimi.ingsw.Server.Controller;
 import it.polimi.ingsw.Client.Connection.PlayingPlayerRemoteInterface;
 import it.polimi.ingsw.Shared.Cards.Card;
+import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
 import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.rmi.AlreadyBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -20,12 +26,26 @@ import java.util.ArrayList;
 public class ControllerRMI extends ConnectionController implements ControllerRemoteInterface {
 
     private ArrayList<PlayingPlayerRemoteInterface> clients = new ArrayList<>();
-    private int pingPongTime = 5000;
+    private int pingPongTime;
     private ArrayList<String> clientsID = new ArrayList<>();
-
+    private JsonUrl jsonUrl;
     public ControllerRMI(Controller controller, int port){
         super(controller, port);
         this.connection();
+
+        try {
+            jsonCreate();
+        } catch (FileNotFoundException e) {
+            System.out.println("ControllerRMI: JSON FILE NOT FOUND");
+            throw new RuntimeException(e);
+        }
+    }
+    private void jsonCreate() throws FileNotFoundException {  //download json data
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("netConfig"));
+        if(inputStream == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        JsonObject jsonObject = new Gson().fromJson(bufferedReader , JsonObject.class);
+        this.pingPongTime = jsonObject.get("pingPongTime").getAsInt();
     }
     synchronized public void connection(){
         ControllerRemoteInterface stub = null;
