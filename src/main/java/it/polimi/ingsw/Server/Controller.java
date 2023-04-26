@@ -17,7 +17,7 @@ import java.io.*;
 import java.util.*;
 
 
-public class Controller {
+public class Controller implements Runnable {
     /**
      * parameters
      */
@@ -64,6 +64,11 @@ public class Controller {
             throw new RuntimeException(e);
         }
     }
+
+    public void run() {
+        while(true);
+    }
+
 
     /**
      * download json file
