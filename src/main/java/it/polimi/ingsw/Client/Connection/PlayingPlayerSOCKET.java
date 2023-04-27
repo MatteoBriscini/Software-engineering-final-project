@@ -210,6 +210,7 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
         }
         playingPlayer.disconnectError("disconnection forced by the server");
     }
+
     /*************************************************************************
      *                          OUT method
      * ***********************************************************************
@@ -227,7 +228,9 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            if(!validResponse) playingPlayer.disconnectError("server can't respond");
+            if(!validResponse){
+                playingPlayer.disconnectError("server can't respond");
+            }
         }
         return response;
     }
@@ -278,7 +281,34 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
      ************************************************** chat ******************
      * ************************************************************************
      */
-    public void sendBroadcastMsg(String msg, String sender){}
-    public void sendPrivateMSG(String userID, String msg, String sender){}
+    public void sendBroadcastMsg(String MSG, String sender) throws IOException {
+        JsonObject data = new JsonObject();
+        data.addProperty("msg", MSG);
+        data.addProperty("sender", sender);
 
+        JsonObject msg = new JsonObject();
+        msg.addProperty("service", "receiveBroadcastMsg");
+        msg.add("data", data);
+
+        out.println(msg.toString());
+    }
+    public void sendPrivateMSG(String userID, String MSG, String sender){
+        JsonObject data = new JsonObject();
+        data.addProperty("userID", userID);
+        data.addProperty("msg", MSG);
+        data.addProperty("sender", sender);
+
+        JsonObject msg = new JsonObject();
+        msg.addProperty("service", "receivePrivateMSG");
+        msg.add("data", data);
+
+        out.println(msg.toString());
+    }
+
+    public void receiveBroadcastMsg(JsonObject data){
+        this.receiveBroadcastMsg(data.get("msg").getAsString(), data.get("sender").getAsString());
+    }
+    public void receivePrivateMSG(JsonObject data){
+        this.receivePrivateMSG(data.get("userID").getAsString(), data.get("msg").getAsString(), data.get("sender").getAsString());
+    }
 }

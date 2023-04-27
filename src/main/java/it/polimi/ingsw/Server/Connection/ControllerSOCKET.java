@@ -235,15 +235,44 @@ public class ControllerSOCKET extends ConnectionController {
      * ************************************************************************
      */
     @Override
-    public void sendBroadcastMsg(String msg, String sender) {
+    public void sendBroadcastMsg(String MSG, String sender) {
+        JsonObject data = new JsonObject();
+        data.addProperty("msg", MSG);
+        data.addProperty("sender", sender);
 
+        JsonObject msg = new JsonObject();
+        msg.addProperty("service", "receiveBroadcastMsg");
+        msg.add("data", data);
+
+        this.sendCommand(msg);
     }
 
     @Override
-    public void sendPrivateMSG(String userID, String msg, String sender) {
+    public void sendPrivateMSG(String userID, String MSG, String sender) {
+        JsonObject data = new JsonObject();
+        data.addProperty("userID", userID);
+        data.addProperty("msg", MSG);
+        data.addProperty("sender", sender);
 
+        JsonObject msg = new JsonObject();
+        msg.addProperty("service", "receivePrivateMSG");
+        msg.add("data", data);
+
+        for(MultiClientSocketGame client: clients){
+            try {
+                client.privateChat(msg, userID);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+
+            }
+        }
     }
-
+    public void receiveBroadcastMsg(JsonObject data){
+        this.receiveBroadcastMsg(data.get("msg").getAsString(), data.get("sender").getAsString());
+    }
+    public void receivePrivateMSG(JsonObject data){
+        this.receivePrivateMSG(data.get("userID").getAsString(), data.get("msg").getAsString(), data.get("sender").getAsString());
+    }
     /*************************************************************************
      ************************************************** IN method ************
      * ***********************************************************************
@@ -265,6 +294,7 @@ public class ControllerSOCKET extends ConnectionController {
 
     private class MultiClientSocketGame implements Runnable{
         private final Socket socket;
+        private boolean cntOn = true;
         private JsonUrl jsonUrl;
         private String clientID;
         private Scanner in;
@@ -328,6 +358,9 @@ public class ControllerSOCKET extends ConnectionController {
             pingPongResponse = false;
             this.pingPong();
         }
+        public void privateChat(JsonObject msg, String playerID) throws IOException {
+            if (playerID.equals(this.clientID))this.sendMSG(msg);
+        }
         public void sendMSG (JsonObject msg) throws IOException {
             out.println(msg);
             out.flush();
@@ -345,18 +378,18 @@ public class ControllerSOCKET extends ConnectionController {
             JsonObject response = new JsonObject();
             response.addProperty("service", "receiveResponse");
             JsonObject sendData = new JsonObject();
-            while (true){   //LOOP receive message
+            while (cntOn){   //LOOP receive message
                 String line = in.nextLine();
                 JsonObject jsonObject = new Gson().fromJson(line, JsonObject.class);
                 String methodName = jsonObject.get("service").getAsString();
                 JsonObject data = jsonObject.get("data").getAsJsonObject();
                 if (methodName.equals("quit")) {
-                    //TODO friendly quit
                     sendData.addProperty("existingMethod", true);
                     sendData.addProperty("response",true);
                     this.setPlayerOffline(data.get("playerID").getAsString());
                     response.add("data", sendData);
                     this.sendMSG(response);
+                    cntOn = false;
                     break;
                 } else if(methodName.equals("join")){
                     sendData.addProperty("existingMethod", true);
@@ -396,7 +429,9 @@ public class ControllerSOCKET extends ConnectionController {
 
                     sendData.addProperty("existingMethod", existingMethod);
                     response.add("data", sendData);
-                    this.sendMSG(response);
+                    if(!methodName.equals("receiveBroadcastMsg") && !methodName.equals("receivePrivateMSG")){
+                        this.sendMSG(response);
+                    }
                 }
             }
             in.close();
