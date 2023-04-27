@@ -223,7 +223,16 @@ public class Controller implements Runnable {
             }
         }
     }
-
+    /**************************************************************************
+     ************************************************** chat ******************
+     * ************************************************************************
+     */
+    synchronized public void broadcastMsg(String msg, String sender){
+        controllerManager.broadcastMsg(msg, sender);
+    }
+    synchronized public void privateMSG(String userID, String msg, String sender){
+        controllerManager.privateMSG(userID, msg, sender);
+    }
     /************************************************************************
      ************************************************** start game method ****
      * ***********************************************************************

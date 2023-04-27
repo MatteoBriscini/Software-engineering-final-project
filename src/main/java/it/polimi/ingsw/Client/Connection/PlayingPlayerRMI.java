@@ -10,6 +10,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.Objects;
 
 
 public class PlayingPlayerRMI extends PlayingPlayerConnectionManager implements PlayingPlayerRemoteInterface{
@@ -77,10 +78,22 @@ public class PlayingPlayerRMI extends PlayingPlayerConnectionManager implements 
         return stub.takeCard(column,jsonArray.toString(), playerID);
     }
 
+    public String getPlayerID(){
+        return playingPlayer.getPlayerID();
+    }
     @Override
     public void forceDisconnection(){
         playingPlayer.disconnectError("disconnection forced by the server");
     }
 
-
+    /**************************************************************************
+     ************************************************** chat ******************
+     * ************************************************************************
+     */
+    public void sendBroadcastMsg(String msg, String sender) throws RemoteException {
+        stub.receiveBroadcastMsg(msg, sender);
+    }
+    public void sendPrivateMSG(String userID, String msg, String sender) throws RemoteException {
+        stub.receivePrivateMSG(userID, msg, sender);
+    }
 }

@@ -41,6 +41,6 @@ public interface ControllerRemoteInterface  extends Remote {
      * @throws RemoteException if server is offline
      */
     boolean takeCard(int column, String cards, String playerID) throws RemoteException; //PositionWithColor[]
-
-
+    void receiveBroadcastMsg(String msg, String sender) throws RemoteException;
+    void receivePrivateMSG(String userID, String msg, String sender) throws RemoteException;
 }

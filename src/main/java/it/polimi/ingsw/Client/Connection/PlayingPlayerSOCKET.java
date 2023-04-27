@@ -206,7 +206,7 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
         try {
             this.quitGame(this.playerID);
         } catch (IOException e) {
-            throw new RuntimeException(e);//TODO
+            throw new RuntimeException(e);
         }
         playingPlayer.disconnectError("disconnection forced by the server");
     }
@@ -274,6 +274,11 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
 
         return bool;
     }
-
+    /**************************************************************************
+     ************************************************** chat ******************
+     * ************************************************************************
+     */
+    public void sendBroadcastMsg(String msg, String sender){}
+    public void sendPrivateMSG(String userID, String msg, String sender){}
 
 }

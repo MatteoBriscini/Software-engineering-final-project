@@ -88,4 +88,7 @@ public interface PlayingPlayerRemoteInterface extends Remote {
      * @throws RemoteException if the players is offline
      */
     void forceDisconnection()throws RemoteException;
+    void receiveBroadcastMsg(String msg, String sender)throws RemoteException;
+    void receivePrivateMSG(String userID, String msg, String sender)throws RemoteException;
+    String getPlayerID()throws RemoteException;
 }

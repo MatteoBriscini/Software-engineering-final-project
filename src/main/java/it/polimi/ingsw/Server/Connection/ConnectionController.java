@@ -44,6 +44,8 @@ public abstract class ConnectionController {
     public abstract void sendLastCommonScored(JsonObject scored);
     public abstract void sendError(JsonObject error, String playerID);
     public abstract void forceClientDisconnection();
+    public abstract void sendBroadcastMsg(String msg, String sender);
+    public abstract void sendPrivateMSG(String userID, String msg, String sender);
 
     /************************************************************************
      ************************************************** IN method ***********
@@ -70,4 +72,14 @@ public abstract class ConnectionController {
         return bool;
     }
 
+    /**************************************************************************
+     ************************************************** chat ******************
+     * ************************************************************************
+     */
+    public void receiveBroadcastMsg(String msg, String sender){
+        controller.broadcastMsg(msg,sender);
+    }
+    public void receivePrivateMSG(String userID, String msg, String sender){
+        controller.privateMSG(userID, msg, sender);
+    }
 }

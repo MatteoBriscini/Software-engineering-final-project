@@ -222,6 +222,19 @@ public class ControllerRMI extends ConnectionController implements ControllerRem
     public void forceClientDisconnection() {
         Command command = new ClientDisconnectionCommand();
         sendCommand(command);
-        clients = new ArrayList<>();
+        if(clients.size()>0)clients = new ArrayList<>();
+    }
+    /**************************************************************************
+     ************************************************** chat ******************
+     * ************************************************************************
+     */
+
+    public void sendBroadcastMsg(String msg, String sender){
+        Command command = new BroadcastChatCommand(msg,sender);
+        sendCommand(command);
+    }
+    public void sendPrivateMSG(String userID, String msg, String sender){
+        Command command = new PrivateChatCommand(userID, msg,sender);
+        sendCommand(command);
     }
 }

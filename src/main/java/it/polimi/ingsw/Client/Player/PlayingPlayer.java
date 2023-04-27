@@ -17,6 +17,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Objects;
 
 public class PlayingPlayer extends Player{
     private PlayingPlayerConnectionManager connectionManager;
@@ -146,7 +147,7 @@ public class PlayingPlayer extends Player{
         try {
             return connectionManager.startGame(this.playerID);
         } catch (Exception e) {
-            this.disconnectError("server don't respond");
+            this.disconnectError("server can't respond");
             return false;
         }
     }
@@ -157,7 +158,7 @@ public class PlayingPlayer extends Player{
             //TODO il player deve tornare allo stato di lobby
         } catch (Exception e) {
             System.out.println(e.toString());
-            this.disconnectError("server don't respond");
+            this.disconnectError("server can't respond");
             return false;
         }
     }
@@ -194,7 +195,7 @@ public class PlayingPlayer extends Player{
         try {
             return connectionManager.takeCard(column, pos);
         } catch (Exception e) {
-            this.disconnectError("server don't respond");
+            this.disconnectError("server can't respond");
             return false;
         }
     }
@@ -226,6 +227,32 @@ public class PlayingPlayer extends Player{
         //TODO il player deve tornare allo stato di lobby
         this.errMsg(err);
     }
+    /**************************************************************************
+     ************************************************** chat ******************
+     * ************************************************************************
+     */
 
-
+    public void sendBroadcastMsg(String msg){
+        try{
+            connectionManager.sendBroadcastMsg(msg, this.playerID);
+        } catch (Exception e) {
+            this.disconnectError("server can't respond");
+        }
+    }
+    public void receiveBroadcastMsg(String msg, String sender){
+        System.out.println(sender + ": " +msg);              //TODO necessita metodo lato grafico
+    }
+    public void sendPrivateMSG(String userID, String msg){
+        //TODO controllo che il player sia nella lista
+        try{
+            connectionManager.sendPrivateMSG(userID, msg, this.playerID);
+        } catch (Exception e) {
+            this.disconnectError("server can't respond");
+        }
+    }
+    public void receivePrivateMSG(String userID, String msg, String sender){
+        if(Objects.equals(userID, this.playerID)){
+            System.out.println(sender + ": " + msg + " receiverID: " + this.playerID);              //TODO necessita metodo lato grafico
+        }
+    }
 }

@@ -27,6 +27,8 @@ public abstract class PlayingPlayerConnectionManager extends UnicastRemoteObject
     public abstract boolean startGame(String playerID) throws Exception;
     public abstract boolean quitGame(String  playerID) throws Exception;
     public abstract void connection(int PORT, String serverIP) throws Exception;
+    public abstract void sendBroadcastMsg(String msg, String sender) throws Exception;
+    public abstract void sendPrivateMSG(String userID, String msg, String sender) throws Exception;
 
     /************************************************************************
      ************************************************** IN method ***********
@@ -137,6 +139,18 @@ public abstract class PlayingPlayerConnectionManager extends UnicastRemoteObject
      */
     public void forceDisconnection(){
          playingPlayer.disconnectError("disconnection forced by the server");
+    }
+
+    /**************************************************************************
+     ************************************************** chat ******************
+     * ************************************************************************
+     */
+
+    public void receiveBroadcastMsg(String msg, String sender){
+        playingPlayer.receiveBroadcastMsg(msg, sender);
+    }
+    public void receivePrivateMSG(String userID, String msg, String sender){
+        playingPlayer.receivePrivateMSG(userID, msg, sender);
     }
 
 }

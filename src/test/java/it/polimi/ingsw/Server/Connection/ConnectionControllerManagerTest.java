@@ -53,6 +53,8 @@ public class ConnectionControllerManagerTest extends TestCase {
     }
 
     public void testServerRMIOut() throws ConnectionControllerManagerException, RemoteException, FileNotFoundException {
+        controller = new Controller();
+
         System.out.println("START TEST testServerRMIOut\n");
 
         testServer.addClient(7234, ConnectionType.RMI, controller);
@@ -86,6 +88,8 @@ public class ConnectionControllerManagerTest extends TestCase {
     }
 
     public void testServerRMIIn() throws ConnectionControllerManagerException, RemoteException, addPlayerToGameException, InterruptedException {
+        controller = new Controller();
+
         System.out.println("START TEST testServerRMIIn\n");
 
         controller.addClient(7236, ConnectionType.RMI);
@@ -138,6 +142,26 @@ public class ConnectionControllerManagerTest extends TestCase {
         assert (!testClient2.quitGame());
         testClient2  = new PlayingPlayer("marco", "antonio", clientMain, ConnectionType.RMI, 7236, "127.0.0.1");  //marco rejoin a game after the crash
         assert (!controller.isPlayerOffline("marco"));
+
+        System.out.println("\nEND TEST\n");
+    }
+
+    public void testRMIchat() throws ConnectionControllerManagerException, RemoteException {
+        controller = new Controller();
+
+        System.out.println("START TEST testServerRMIIn\n");
+
+        controller.addClient(7237, ConnectionType.RMI);
+
+        PlayingPlayer testClient2  = new PlayingPlayer("marco", "antonio", clientMain, ConnectionType.RMI, 7237, "127.0.0.1");
+        assert (!controller.isPlayerOffline("marco"));
+        PlayingPlayer testClient1  = new PlayingPlayer("antonio", "antonio", clientMain, ConnectionType.RMI, 7237, "127.0.0.1");
+        assert (!controller.isPlayerOffline("antonio"));
+        PlayingPlayer testClient3  = new PlayingPlayer("paolo", "antonio", clientMain, ConnectionType.RMI, 7237, "127.0.0.1");
+        assert (!controller.isPlayerOffline("paolo"));
+
+        testClient1.sendBroadcastMsg("test broadcast message");
+        testClient2.sendPrivateMSG("paolo", "test private message");
 
         System.out.println("\nEND TEST\n");
     }

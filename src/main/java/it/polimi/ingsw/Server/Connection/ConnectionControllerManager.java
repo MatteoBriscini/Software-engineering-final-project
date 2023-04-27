@@ -150,4 +150,19 @@ public class ConnectionControllerManager {
             c.forceClientDisconnection();
         }
     }
+
+    /**************************************************************************
+     ************************************************** chat ******************
+     * ************************************************************************
+     */
+    public void broadcastMsg(String msg, String sender){
+        for (ConnectionController c: interfaces){
+            c.sendBroadcastMsg(msg, sender);
+        }
+    }
+    public void privateMSG(String userID, String msg, String sender){
+        for (ConnectionController c: interfaces){
+            c.sendPrivateMSG(userID, msg, sender);
+        }
+    }
 }
