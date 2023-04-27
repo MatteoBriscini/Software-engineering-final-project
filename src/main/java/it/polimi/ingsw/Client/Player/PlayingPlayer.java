@@ -6,6 +6,7 @@ import it.polimi.ingsw.Client.Connection.PlayingPlayerConnectionManager;
 import it.polimi.ingsw.Client.Connection.PlayingPlayerRMI;
 import it.polimi.ingsw.Client.Connection.PlayingPlayerSOCKET;
 import it.polimi.ingsw.Client.Exceptions.InvalidPickException;
+import it.polimi.ingsw.Client.Exceptions.PlayerNotFoundException;
 import it.polimi.ingsw.Client.Game.MainBoard;
 import it.polimi.ingsw.Client.Game.PlayerBoard;
 import it.polimi.ingsw.Shared.Cards.Card;
@@ -240,10 +241,14 @@ public class PlayingPlayer extends Player{
         }
     }
     public void receiveBroadcastMsg(String msg, String sender){
-        System.out.println(sender + ": " +msg);              //TODO necessita metodo lato grafico
+        String sout = sender + ": " + msg;
+        System.out.println(sout);              //TODO necessita metodo lato grafico
     }
-    public void sendPrivateMSG(String userID, String msg){
-        //TODO controllo che il player sia nella lista
+    public void sendPrivateMSG(String userID, String msg) throws PlayerNotFoundException {
+        ArrayList<String> tmpPlayers = new ArrayList<>();
+        if (playersID == null) throw new PlayerNotFoundException("game not started yet");
+        Collections.addAll(tmpPlayers, playersID);
+        if (!tmpPlayers.contains(userID)) throw new PlayerNotFoundException("player not found");
         try{
             connectionManager.sendPrivateMSG(userID, msg, this.playerID);
         } catch (Exception e) {
@@ -252,7 +257,8 @@ public class PlayingPlayer extends Player{
     }
     public void receivePrivateMSG(String userID, String msg, String sender){
         if(Objects.equals(userID, this.playerID)){
-            System.out.println(sender + ": " + msg + " receiverID: " + this.playerID);              //TODO necessita metodo lato grafico
+            String sout = sender + ": [PRIVATE] " + msg;
+            System.out.println(sout);              //TODO necessita metodo lato grafico
         }
     }
 }

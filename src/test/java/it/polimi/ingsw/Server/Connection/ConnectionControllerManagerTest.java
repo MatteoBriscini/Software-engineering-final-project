@@ -3,6 +3,7 @@ package it.polimi.ingsw.Server.Connection;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Client.ClientMain;
+import it.polimi.ingsw.Client.Exceptions.PlayerNotFoundException;
 import it.polimi.ingsw.Client.Player.Player;
 import it.polimi.ingsw.Client.Player.PlayingPlayer;
 import it.polimi.ingsw.Server.Controller;
@@ -146,22 +147,43 @@ public class ConnectionControllerManagerTest extends TestCase {
         System.out.println("\nEND TEST\n");
     }
 
-    public void testRMIchat() throws ConnectionControllerManagerException, RemoteException {
+    public void testRMIchat() throws ConnectionControllerManagerException, RemoteException, addPlayerToGameException {
         controller = new Controller();
 
         System.out.println("START TEST testServerRMIIn\n");
 
         controller.addClient(7237, ConnectionType.RMI);
 
-        PlayingPlayer testClient2  = new PlayingPlayer("marco", "antonio", clientMain, ConnectionType.RMI, 7237, "127.0.0.1");
-        assert (!controller.isPlayerOffline("marco"));
+        controller.addNewPlayer("antonio");
+        controller.addNewPlayer("marco");
+        controller.addNewPlayer("paolo");
+
         PlayingPlayer testClient1  = new PlayingPlayer("antonio", "antonio", clientMain, ConnectionType.RMI, 7237, "127.0.0.1");
         assert (!controller.isPlayerOffline("antonio"));
+        PlayingPlayer testClient2  = new PlayingPlayer("marco", "antonio", clientMain, ConnectionType.RMI, 7237, "127.0.0.1");
+        assert (!controller.isPlayerOffline("marco"));
         PlayingPlayer testClient3  = new PlayingPlayer("paolo", "antonio", clientMain, ConnectionType.RMI, 7237, "127.0.0.1");
         assert (!controller.isPlayerOffline("paolo"));
 
+        testClient3.sendBroadcastMsg("test broadcast message");
+
+        boolean bool = false;
+        try {
+            testClient2.sendPrivateMSG("paolo", "test private message");
+        } catch (PlayerNotFoundException e) {
+            System.out.println(e.toString());
+            bool = true;
+        }
+        assert (bool);
+
+        assert (testClient1.startGame());       // authorized player try to start the game
+
         testClient1.sendBroadcastMsg("test broadcast message");
-        testClient2.sendPrivateMSG("paolo", "test private message");
+        try {
+            testClient2.sendPrivateMSG("paolo", "test private message");
+        } catch (PlayerNotFoundException e) {
+            throw new RuntimeException(e);
+        }
 
         System.out.println("\nEND TEST\n");
     }
