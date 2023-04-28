@@ -9,12 +9,11 @@ import it.polimi.ingsw.Server.Connection.LobbyRMI;
 import it.polimi.ingsw.Server.Exceptions.ConnectionControllerManagerException;
 import it.polimi.ingsw.Server.Exceptions.addPlayerToGameException;
 import it.polimi.ingsw.Shared.Connection.ConnectionType;
+import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
 
 import javax.security.auth.login.LoginException;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.ExecutorService;
@@ -36,6 +35,8 @@ public class Lobby {
 
     private static String loginJSONURL = "src/main/json/config/registeredPlayers.json";
 
+    private JsonUrl jsonConfigUrl;
+
     private ArrayList<String[]> playersInGames = new ArrayList<>();
 
     private ArrayList<Integer> allocatedPORT;
@@ -44,10 +45,20 @@ public class Lobby {
 
 
     public Lobby(){
+        try {
+            jsonCreate();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         allocatedPORT = new ArrayList<>();
         this.lobbyRMI = new LobbyRMI(standardPORT, this);
     }
     public Lobby(int PORT){
+        try {
+            jsonCreate();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         allocatedPORT = new ArrayList<>();
         this.lobbyRMI = new LobbyRMI(PORT, this);
     }
@@ -332,6 +343,23 @@ public class Lobby {
         return port;
 
     }
+
+    private void jsonCreate() throws FileNotFoundException {  //download json data
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(jsonConfigUrl.getUrl("netConfig"));
+        if(inputStream == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        JsonObject jsonObject = new Gson().fromJson(bufferedReader , JsonObject.class);
+        this.maxPORT = jsonObject.get("maxUsablePort").getAsInt();
+        int portRMI = jsonObject.get("defRmiPort").getAsInt();
+        int portSOCKET = jsonObject.get("defSocketPort").getAsInt();
+        if(portRMI > portSOCKET){
+            this.minPORT = portRMI + 1;
+        }else{
+            this.minPORT = portSOCKET + 1;
+        }
+        this.standardPORT = portRMI;
+    }
+
 
     public ArrayList<Controller> getActiveGames() {
         return activeGames;
