@@ -165,7 +165,7 @@ public class ControllerTest extends TestCase {
         test = new Controller(3);                        //create new game with max 3 players
         test.setTimeout(timeout);                   //set timeout at 2 seconds
 
-        test.addNewPlayer("piero");     //4 player join the game
+        test.addNewPlayer("piero");     //4 players join the game
         assert (test.getPlayerNumber() == 1);
         test.setPlayerOnline("piero");
         test.addNewPlayer("pino");

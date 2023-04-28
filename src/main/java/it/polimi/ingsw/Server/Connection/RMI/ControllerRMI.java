@@ -226,7 +226,6 @@ public class ControllerRMI extends ConnectionController implements ControllerRem
         Command command = new SendAllPlayerBoardCommand(playerBoards);
         sendCommand(command);
     }
-
     /**
      * @param commonGoalID array of id of the common goal id
      */
@@ -234,7 +233,6 @@ public class ControllerRMI extends ConnectionController implements ControllerRem
         Command command = new SendAllCommonGoalCommand(commonGoalID);
         sendCommand(command);
     }
-
     /**
      * @param cards position with color to create on UI the images of common goals
      * @param playerID name of the player
@@ -257,7 +255,6 @@ public class ControllerRMI extends ConnectionController implements ControllerRem
         Command command = new WinnerCommand(winner);
         sendCommand(command);
     }
-
     /**
      * @param scored contains name and points of the last common goal scored
      */
@@ -265,7 +262,6 @@ public class ControllerRMI extends ConnectionController implements ControllerRem
         Command command = new SendLastCommonScored(scored);
         sendCommand(command);
     }
-
     /**
      * @param error contains errorId and errorMsg
      * @param playerID id of the clients the error is for
