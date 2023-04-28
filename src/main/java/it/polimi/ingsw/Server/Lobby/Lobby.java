@@ -26,6 +26,11 @@ public class Lobby {
 
 
     private final LobbyRMI lobbyRMI;
+    private int standardPORT;
+
+    private int minPORT;
+    private int maxPORT;
+
 
     private ArrayList<Controller> activeGames = new ArrayList<>();
 
@@ -40,7 +45,7 @@ public class Lobby {
 
     public Lobby(){
         allocatedPORT = new ArrayList<>();
-        this.lobbyRMI = new LobbyRMI(9000, this);
+        this.lobbyRMI = new LobbyRMI(standardPORT, this);
     }
     public Lobby(int PORT){
         allocatedPORT = new ArrayList<>();
@@ -130,7 +135,7 @@ public class Lobby {
         String path = loginJSONURL;   //file path
 
         if(ID.charAt(0) < 65 || (ID.charAt(0) > 90 && ID.charAt(0) < 97) || ID.charAt(0) > 122){
-            throw new LoginException("ID already taken");
+            throw new LoginException("Illegal characters in ID");
         }
 
         FileReader fileJsonRead = null;      //file executable
@@ -265,10 +270,10 @@ public class Lobby {
         }
 
         tempActiveGames.get(j).addNewPlayer(ID);
-        for(i = 1236; i < 1256; i++){
+        for(i = minPORT; i < maxPORT; i++){
             if(allocatedPORT == null || !allocatedPORT.contains(i)) break;
         }
-        if(i == 1256){throw new addPlayerToGameException("All ports are full");}
+        if(i == maxPORT){throw new addPlayerToGameException("All ports are full");}
 
         Collections.addAll(temp, tempPlayersInGames.get(j));
         temp.add(ID);
@@ -306,10 +311,10 @@ public class Lobby {
 
         executor.submit(controller);
 
-        for(i = 1236; i < 1256; i++){
+        for(i = minPORT; i < maxPORT; i++){
             if(allocatedPORT == null || !allocatedPORT.contains(i)) break;
         }
-        if(i == 1256){throw new addPlayerToGameException("All ports are full");}
+        if(i == maxPORT){throw new addPlayerToGameException("All ports are full");}
 
         assert allocatedPORT != null;
         allocatedPORT.add(i);

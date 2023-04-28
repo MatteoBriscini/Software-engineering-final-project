@@ -16,19 +16,15 @@ public class LobbyPlayerRMI {
     private String serverIP;
     static LobbyRemoteInterface stub;
 
-    //temp for testing
-
-    private String ID = new String("Papa");
-    private String pwd = new String("caspiterina");
 
 
-    public LobbyPlayerRMI(int PORT, String serverIP){
+    public LobbyPlayerRMI(int PORT, String serverIP) throws Exception {
         this.PORT = PORT;
         this.serverIP = serverIP;
         this.connection();
     }
 
-    public void connection(){
+    public void connection() throws Exception {
 
         try{
 
@@ -37,8 +33,7 @@ public class LobbyPlayerRMI {
 
 
         }catch(Exception e){
-            System.err.println("Client exception: " + e.toString());
-            e.printStackTrace();
+            throw new Exception();
         }
 
     }
