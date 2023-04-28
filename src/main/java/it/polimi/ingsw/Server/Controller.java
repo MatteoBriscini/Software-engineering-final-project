@@ -170,6 +170,10 @@ public class Controller implements Runnable {
         }
         return false;
     }
+    /**
+     * mark a player as offline
+     * @param playerID id of the player
+     */
     synchronized public void setPlayerOffline(String playerID){
         ArrayList<Player> players = game.getPlayerArray();
         for (int i = 0; i<players.size(); i++){
@@ -185,6 +189,9 @@ public class Controller implements Runnable {
 
     }
 
+    /**
+     * if there is only one player online the game can't continue and it will be ended
+     */
     synchronized private void checkConnectedPlayerNumbers(){
         int i=0;
         for (boolean b: activePlayers){
@@ -199,6 +206,10 @@ public class Controller implements Runnable {
         }
     }
 
+    /**
+     * mark a player as online
+     * @param playerID id of the player
+     */
     synchronized public void setPlayerOnline(String playerID){
         ArrayList<Player> players = game.getPlayerArray();
         for (int i = 0; i<players.size(); i++){
@@ -226,10 +237,21 @@ public class Controller implements Runnable {
     /**************************************************************************
      ************************************************** chat ******************
      * ************************************************************************
+     * *
+     * send message in broadcast to all clients
+     * @param msg message to send
+     * @param sender name of the player who send the message
      */
     synchronized public void broadcastMsg(String msg, String sender){
         controllerManager.broadcastMsg(msg, sender);
     }
+
+    /**
+     * send message in private to only one client
+     * @param userID id of the player the message is for
+     * @param msg message to send
+     * @param sender name of the player who send the message
+     */
     synchronized public void privateMSG(String userID, String msg, String sender){
         controllerManager.privateMSG(userID, msg, sender);
     }
@@ -371,6 +393,10 @@ public class Controller implements Runnable {
         }
     }
 
+    /**
+     * send all data to clients in start game or after a client reconnection
+     * @param commonGoalIDArray ids for common goal
+     */
     synchronized private void createClientData(int[] commonGoalIDArray){
         System.out.println("\u001B[36m" + "create client data" + "\u001B[0m");
 
@@ -435,6 +461,9 @@ public class Controller implements Runnable {
 
     }
 
+    /**
+     * this method is called when the game is ended, it's calc points
+     */
     synchronized public void endGame(){
         endGame = true;
         System.out.println("\u001B[36m" + "the game is ended" + "\u001B[0m");
@@ -631,6 +660,12 @@ public class Controller implements Runnable {
         waitForPlayerResponse.setName("waitForPlayerResponse");
     }
 
+    /**
+     * update data in all client after each turn
+     * @param positions have to dell card from main boards
+     * @param cards have to add card on player board
+     * @param column card on player boards need to insert in a specific column
+     */
     synchronized private void updateClientData(PositionWithColor[] positions, Card[] cards, int column){
         System.out.println("\u001B[36m" + "update client data" + "\u001B[0m");
 
