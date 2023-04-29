@@ -32,7 +32,7 @@ public class Controller implements Runnable {
     private Thread endGameThread = new Thread();
     boolean firstPlayer;
     //connection
-    private ConnectionControllerManager controllerManager = new ConnectionControllerManager();
+    private final ConnectionControllerManager controllerManager = new ConnectionControllerManager();
     private final ArrayList<Boolean> activePlayers = new ArrayList<>();
 
     //configuration value for controller
@@ -65,9 +65,7 @@ public class Controller implements Runnable {
         }
     }
 
-    public void run() {
-        while(true);
-    }
+    public void run() {}
 
 
     /**
@@ -154,15 +152,15 @@ public class Controller implements Runnable {
      * @param PORT available port
      * @param connectionType rmi or socket
      * @return number of the used port
-     * @throws ConnectionControllerManagerException if connection type has an invalid parameters
+     * @throws ConnectionControllerManagerException if a connection type has an invalid parameters
      */
     public int addClient(int PORT, ConnectionType connectionType) throws ConnectionControllerManagerException {
         return controllerManager.addClient(PORT, connectionType, this);
     }
 
     /**
-     * @param playerID name of the player want to check the status
-     * @return true if the player is the game and his status is offline false in all other case
+     * @param playerID the name of the player wants to check the status
+     * @return true if the player is the game and his status is offline false in all other cases
      */
     public boolean isPlayerOffline(String playerID){
         for(int i=0; i<activePlayers.size();i++){
@@ -170,6 +168,10 @@ public class Controller implements Runnable {
         }
         return false;
     }
+    /**
+     * mark a player as offline
+     * @param playerID id of the player
+     */
     synchronized public void setPlayerOffline(String playerID){
         ArrayList<Player> players = game.getPlayerArray();
         for (int i = 0; i<players.size(); i++){
@@ -185,6 +187,9 @@ public class Controller implements Runnable {
 
     }
 
+    /**
+     * if there is only one player online, the game can't continue and it will be ended
+     */
     synchronized private void checkConnectedPlayerNumbers(){
         int i=0;
         for (boolean b: activePlayers){
@@ -199,6 +204,10 @@ public class Controller implements Runnable {
         }
     }
 
+    /**
+     * mark a player as online
+     * @param playerID id of the player
+     */
     synchronized public void setPlayerOnline(String playerID){
         ArrayList<Player> players = game.getPlayerArray();
         for (int i = 0; i<players.size(); i++){
@@ -214,7 +223,7 @@ public class Controller implements Runnable {
                     }
                     controllerManager.sendAllPlayerBoard(playersBoard);
 
-                    //update main board to all clients
+                    //update the main board to all clients
                     controllerManager.sendMainBoard(game.getMainBoard());
 
                     System.out.println("\u001B[36m" + "recreate client data after "+ playerID+ " reconnection after a crash" + "\u001B[0m");
@@ -226,10 +235,21 @@ public class Controller implements Runnable {
     /**************************************************************************
      ************************************************** chat ******************
      * ************************************************************************
+     * *
+     * send message in broadcast to all clients
+     * @param msg message to send
+     * @param sender name of the player who sends the message
      */
     synchronized public void broadcastMsg(String msg, String sender){
         controllerManager.broadcastMsg(msg, sender);
     }
+
+    /**
+     * send a message in private to only one client
+     * @param userID id of the player the message is for
+     * @param msg message to send
+     * @param sender name of the player who send the message
+     */
     synchronized public void privateMSG(String userID, String msg, String sender){
         controllerManager.privateMSG(userID, msg, sender);
     }
@@ -254,7 +274,7 @@ public class Controller implements Runnable {
     }
 
     /**
-     * this method start the game
+     * this method starts the game
      * @param playerID playerID of the client call the method
      * @return true if the players can start the game false in all other case
      */
@@ -328,10 +348,10 @@ public class Controller implements Runnable {
     }
 
     /**
-     * this method create random private goal for all players
+     * this method creates a random private goal for all players
      * @param numberList shuffle array list of int
      * @param m random start index in the numberList
-     * @return the array containing id for all private goal
+     * @return the array containing id for all private goals
      */
     private int[] setPrivateGoals(ArrayList<Integer> numberList,int m){
         int[] privateGoalIDArray = new int[game.getPlayerArray().size()];
@@ -351,7 +371,7 @@ public class Controller implements Runnable {
     }
 
     /**
-     * random fill the player board for first time based on players number
+     * random fill the player board for the first time based on player number
      */
     private void fillMainBoard(){
         ArrayList<Position> tmp = new ArrayList<>();
@@ -371,6 +391,10 @@ public class Controller implements Runnable {
         }
     }
 
+    /**
+     * send all data to clients in start game or after a client reconnection
+     * @param commonGoalIDArray ids for common goal
+     */
     synchronized private void createClientData(int[] commonGoalIDArray){
         System.out.println("\u001B[36m" + "create client data" + "\u001B[0m");
 
@@ -435,6 +459,9 @@ public class Controller implements Runnable {
 
     }
 
+    /**
+     * this method is called when the game is ended, it's calc points
+     */
     synchronized public void endGame(){
         endGame = true;
         System.out.println("\u001B[36m" + "the game is ended" + "\u001B[0m");
@@ -471,10 +498,10 @@ public class Controller implements Runnable {
      * ***********************************************************************
      *  *
      * called from client when player want to take cards from mainBoard to add it to him board
-     * @param column number of column in the playerBoard
-     * @param cards array of card the player want to take, contains color and position on mainBoard
+     * @param column number of columns in the playerBoard
+     * @param cards array of card the player wants to take, contains color and position on the mainBoard
      * @param playerID playerID of the client call the method
-     * @return true if the move is valid false in all other case
+     * @return true if the move is validly false in all other cases
      */
     synchronized public boolean takeCard(int column, PositionWithColor[] cards, String playerID){
 
@@ -558,7 +585,7 @@ public class Controller implements Runnable {
     }
 
     /**
-     * verify if a player score a commonGoal and save it
+     * verify if a player scores a commonGoal and saves it
      */
     private void updateAllCommonGoal(){
 
@@ -587,7 +614,7 @@ public class Controller implements Runnable {
     }
 
     /**
-     * this method increment the currentPlayer and verify the player do not exceed time limit to make a move
+     * this method increments the currentPlayer and verifies the player doesn't exceed the time limit to make a move
      */
     synchronized public void turn(){
         if(endGame) return;         //if game is finish
@@ -631,6 +658,12 @@ public class Controller implements Runnable {
         waitForPlayerResponse.setName("waitForPlayerResponse");
     }
 
+    /**
+     * update data in all clients after each turn
+     * @param positions have to dell card from main boards
+     * @param cards have to add card on player board
+     * @param column card on player boards needs to insert in a specific column
+     */
     synchronized private void updateClientData(PositionWithColor[] positions, Card[] cards, int column){
         System.out.println("\u001B[36m" + "update client data" + "\u001B[0m");
 

@@ -9,12 +9,11 @@ import it.polimi.ingsw.Server.Connection.LobbyRMI;
 import it.polimi.ingsw.Server.Exceptions.ConnectionControllerManagerException;
 import it.polimi.ingsw.Server.Exceptions.addPlayerToGameException;
 import it.polimi.ingsw.Shared.Connection.ConnectionType;
+import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
 
 import javax.security.auth.login.LoginException;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.ExecutorService;
@@ -26,10 +25,17 @@ public class Lobby {
 
 
     private final LobbyRMI lobbyRMI;
+    private int standardPORT;
+
+    private int minPORT;
+    private int maxPORT;
+
 
     private ArrayList<Controller> activeGames = new ArrayList<>();
 
     private static String loginJSONURL = "src/main/json/config/registeredPlayers.json";
+
+    private JsonUrl jsonConfigUrl;
 
     private ArrayList<String[]> playersInGames = new ArrayList<>();
 
@@ -39,10 +45,20 @@ public class Lobby {
 
 
     public Lobby(){
+        try {
+            jsonCreate();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         allocatedPORT = new ArrayList<>();
-        this.lobbyRMI = new LobbyRMI(9000, this);
+        this.lobbyRMI = new LobbyRMI(standardPORT, this);
     }
     public Lobby(int PORT){
+        try {
+            jsonCreate();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         allocatedPORT = new ArrayList<>();
         this.lobbyRMI = new LobbyRMI(PORT, this);
     }
@@ -130,7 +146,7 @@ public class Lobby {
         String path = loginJSONURL;   //file path
 
         if(ID.charAt(0) < 65 || (ID.charAt(0) > 90 && ID.charAt(0) < 97) || ID.charAt(0) > 122){
-            throw new LoginException("ID already taken");
+            throw new LoginException("Illegal characters in ID");
         }
 
         FileReader fileJsonRead = null;      //file executable
@@ -265,10 +281,10 @@ public class Lobby {
         }
 
         tempActiveGames.get(j).addNewPlayer(ID);
-        for(i = 1236; i < 1256; i++){
+        for(i = minPORT; i < maxPORT; i++){
             if(allocatedPORT == null || !allocatedPORT.contains(i)) break;
         }
-        if(i == 1256){throw new addPlayerToGameException("All ports are full");}
+        if(i == maxPORT){throw new addPlayerToGameException("All ports are full");}
 
         Collections.addAll(temp, tempPlayersInGames.get(j));
         temp.add(ID);
@@ -306,10 +322,10 @@ public class Lobby {
 
         executor.submit(controller);
 
-        for(i = 1236; i < 1256; i++){
+        for(i = minPORT; i < maxPORT; i++){
             if(allocatedPORT == null || !allocatedPORT.contains(i)) break;
         }
-        if(i == 1256){throw new addPlayerToGameException("All ports are full");}
+        if(i == maxPORT){throw new addPlayerToGameException("All ports are full");}
 
         assert allocatedPORT != null;
         allocatedPORT.add(i);
@@ -327,6 +343,23 @@ public class Lobby {
         return port;
 
     }
+
+    private void jsonCreate() throws FileNotFoundException {  //download json data
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(jsonConfigUrl.getUrl("netConfig"));
+        if(inputStream == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        JsonObject jsonObject = new Gson().fromJson(bufferedReader , JsonObject.class);
+        this.maxPORT = jsonObject.get("maxUsablePort").getAsInt();
+        int portRMI = jsonObject.get("defRmiPort").getAsInt();
+        int portSOCKET = jsonObject.get("defSocketPort").getAsInt();
+        if(portRMI > portSOCKET){
+            this.minPORT = portRMI + 1;
+        }else{
+            this.minPORT = portSOCKET + 1;
+        }
+        this.standardPORT = portRMI;
+    }
+
 
     public ArrayList<Controller> getActiveGames() {
         return activeGames;
