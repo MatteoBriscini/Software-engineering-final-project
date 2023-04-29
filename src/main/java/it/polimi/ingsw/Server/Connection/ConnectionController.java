@@ -142,7 +142,7 @@ public abstract class ConnectionController {
      * receive a message in private to only one client
      * @param userID id of the player the message is for
      * @param msg message to send
-     * @param sender name of the player who send the message
+     * @param sender name of the player who sends the message
      */
     public void receivePrivateMSG(String userID, String msg, String sender){
         controller.privateMSG(userID, msg, sender);

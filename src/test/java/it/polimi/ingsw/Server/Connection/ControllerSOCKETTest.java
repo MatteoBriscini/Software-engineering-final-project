@@ -75,8 +75,10 @@ public class ControllerSOCKETTest extends TestCase {
         assert (controller.isPlayerOffline("marco"));
         testClient2  = new PlayingPlayer("marco", "antonio", clientMain, ConnectionType.SOCKET, 8000, "127.0.0.1");  //marco rejoin a game after the crash
         assert (!controller.isPlayerOffline("marco"));
+        testClient1.quitGame();
+        testClient2.quitGame();
 
-
+        Thread.sleep(2000);
         System.out.println("\nEND TEST\n");
     }
     public void testSOCKETchat() throws ConnectionControllerManagerException, RemoteException, addPlayerToGameException, InterruptedException {
@@ -108,7 +110,9 @@ public class ControllerSOCKETTest extends TestCase {
         }
         assert (bool);
 
+
         assert (testClient1.startGame());       // authorized player try to start the game
+        Thread.sleep(1000);
 
         testClient1.sendBroadcastMsg("test broadcast message");
         try {
@@ -117,8 +121,7 @@ public class ControllerSOCKETTest extends TestCase {
             throw new RuntimeException(e);
         }
 
-
-        Thread.sleep(500);
+        Thread.sleep(2000);
         System.out.println("\nEND TEST\n");
     }
 }

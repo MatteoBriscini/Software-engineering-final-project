@@ -67,7 +67,7 @@ public class PlayingPlayer extends Player{
      * ***********************************************************************
     */
     public MainBoard getMainBoard() {
-        return mainBoard;
+        return new MainBoard(mainBoard.getBoard());
     }
     public int getPlayersNumber() {
         return playersNumber;
@@ -77,7 +77,7 @@ public class PlayingPlayer extends Player{
         for (i= 0; i<playersID.length; i++){
             if (playersID[i].equals(playerID)) break;
         }
-        return playerBoards[i];
+        return new PlayerBoard(playerBoards[i].getBoard());
     }
     public String[] getPlayersID() {
         return playersID;
@@ -90,6 +90,10 @@ public class PlayingPlayer extends Player{
     }
 
     public PositionWithColor[] getPrivateGoal() {
+        PositionWithColor[] tmpPrivateGoal = new PositionWithColor[privateGoal.length];
+        for(int i=0; i<privateGoal.length; i++){
+            tmpPrivateGoal[i] = new PositionWithColor(privateGoal[i].getX(), privateGoal[i].getY(), privateGoal[i].getSketch(), privateGoal[i].getColor());
+        }
         return privateGoal;
     }
 
@@ -241,8 +245,10 @@ public class PlayingPlayer extends Player{
         }
     }
     public void receiveBroadcastMsg(String msg, String sender){
-        String sout = sender + ": " + msg;
-        System.out.println(sout);              //TODO necessita metodo lato grafico
+        if(!sender.equals(this.playerID)) {
+            String sout = sender + ": " + msg;
+            System.out.println(sout);              //TODO necessita metodo lato grafico
+        }
     }
     public void sendPrivateMSG(String userID, String msg) throws PlayerNotFoundException {
         ArrayList<String> tmpPlayers = new ArrayList<>();
@@ -256,7 +262,7 @@ public class PlayingPlayer extends Player{
         }
     }
     public void receivePrivateMSG(String userID, String msg, String sender){
-        if(Objects.equals(userID, this.playerID)){
+        if(!sender.equals(this.playerID) && Objects.equals(userID, this.playerID)){
             String sout = sender + ": [PRIVATE] " + msg;
             System.out.println(sout);              //TODO necessita metodo lato grafico
         }

@@ -7,8 +7,6 @@ import it.polimi.ingsw.Client.Player.PlayingPlayer;
 import it.polimi.ingsw.Shared.Cards.Card;
 import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 
-import java.io.IOException;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -129,6 +127,7 @@ public abstract class PlayingPlayerConnectionManager extends UnicastRemoteObject
      */
     public void errorMSG(String error, String playerID){
         JsonObject json= new Gson().fromJson(error, JsonObject.class);
+
         if(playerID.equals(playingPlayer.getPlayerID())){
             playingPlayer.errMsg(json);
         }

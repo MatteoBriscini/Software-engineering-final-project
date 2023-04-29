@@ -41,6 +41,18 @@ public interface ControllerRemoteInterface  extends Remote {
      * @throws RemoteException if server is offline
      */
     boolean takeCard(int column, String cards, String playerID) throws RemoteException; //PositionWithColor[]
+    /**
+     * send message in broadcast to all clients
+     * @param msg message to send
+     * @param sender name of the player who sends the message
+     */
+
     void receiveBroadcastMsg(String msg, String sender) throws RemoteException;
+    /**
+     * send a message in private to only one client
+     * @param userID id of the player the message is for
+     * @param msg message to send
+     * @param sender name of the player who sends the message
+     */
     void receivePrivateMSG(String userID, String msg, String sender) throws RemoteException;
 }

@@ -16,9 +16,6 @@ public class ConnectionControllerManager {
     boolean rmiActive = false;
     boolean socketActive = false;
 
-    /**
-     * debug
-     */
     public ArrayList<ConnectionController> getInterfaces() {
             return interfaces;
     }
@@ -154,12 +151,22 @@ public class ConnectionControllerManager {
     /**************************************************************************
      ************************************************** chat ******************
      * ************************************************************************
+     * *
+     * send message in broadcast to all clients
+     * @param msg message to send
+     * @param sender name of the player who sends the message
      */
     public void broadcastMsg(String msg, String sender){
         for (ConnectionController c: interfaces){
             c.sendBroadcastMsg(msg, sender);
         }
     }
+    /**
+     * send a message in private to only one client
+     * @param userID id of the player the message is for
+     * @param msg message to send
+     * @param sender name of the player who sends the message
+     */
     public void privateMSG(String userID, String msg, String sender){
         for (ConnectionController c: interfaces){
             c.sendPrivateMSG(userID, msg, sender);

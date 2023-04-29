@@ -147,7 +147,7 @@ public class ConnectionControllerManagerTest extends TestCase {
         System.out.println("\nEND TEST\n");
     }
 
-    public void testRMIchat() throws ConnectionControllerManagerException, RemoteException, addPlayerToGameException {
+    public void testRMIchat() throws ConnectionControllerManagerException, RemoteException, addPlayerToGameException, InterruptedException {
         controller = new Controller();
 
         System.out.println("START TEST testServerRMIIn\n");
@@ -185,6 +185,7 @@ public class ConnectionControllerManagerTest extends TestCase {
             throw new RuntimeException(e);
         }
 
+        Thread.sleep(2000);
         System.out.println("\nEND TEST\n");
     }
 }

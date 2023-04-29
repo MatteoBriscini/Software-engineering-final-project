@@ -18,6 +18,16 @@ public class PlayerBoard {
         this.x = board.length;
         this.y = board[0].length;
     }
+    public Card[][] getBoard(){
+        Card[][] tmpBoard=new Card[x][y];
+
+        for(int x=0;x<this.x;x++) {
+            for (int y = 0; y < this.x; y++) {
+                tmpBoard[x][y] = new Card(board[x][y].getColor());
+            }
+        }
+        return tmpBoard;
+    }
 
     public boolean checkSpace(int column, int cards){
 

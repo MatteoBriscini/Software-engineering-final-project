@@ -27,6 +27,7 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
     private Thread receiveMsgThread;
     private int pingPongTime;
     private Boolean pingPongResponse = true;
+    private boolean quit = false;
     Thread pingPongThread;
 
     public PlayingPlayerSOCKET(int PORT, String serverIP, String playerID, PlayingPlayer playingPlayer) throws Exception {
@@ -84,11 +85,16 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+        if(quit){
+            return;
+        }
         JsonObject data = new JsonObject();
         JsonObject msg = new JsonObject();
         msg.addProperty("service", "pingPong");
         msg.add("data", data);
-        out.println(msg.toString());  //send socket message
+        out.println(msg.toString());
+        out.flush();
+        //System.out.println(this.playerID + ":  "+ msg);
         synchronized (pingPongThread) {
             try {
                 pingPongThread.wait(timeout);
@@ -107,12 +113,12 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
      *                           IN method
      * ***********************************************************************
      */
-    private void receiveMSG() throws IOException {
+    synchronized private void receiveMSG() throws IOException {
         receiveMsgThread = new Thread(() ->{
             String serverMsg;
             try {
-                while ((serverMsg = in.readLine()) != null){//receive socket message
-
+                while ((serverMsg = in.readLine()) != null ){//receive socket message
+                    //System.out.println("\u001B[32m"+ this.playerID + ":  "+ serverMsg + "\u001B[0m");
                     JsonObject jsonObject = new Gson().fromJson(serverMsg, JsonObject.class);
                     String methodName = jsonObject.get("service").getAsString();
                     if(methodName.equals("pingPong")){
@@ -121,8 +127,8 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
                         JsonObject msg = new JsonObject();
                         msg.addProperty("service", "pingResponse");
                         msg.add("data", data);
-
-                        out.println(msg.toString());  //send socket message
+                        out.println(msg.toString());
+                        out.flush();
                     }else {
                         Method getNameMethod = null;
                         try {
@@ -141,7 +147,7 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
                     }
                 }
             } catch (IOException e) {
-                throw new RuntimeException(e); //TODO
+                if(!quit) throw new RuntimeException(e); //TODO
             }
         });
         receiveMsgThread.start();
@@ -172,6 +178,7 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
     }
     public void errorMSG(JsonObject data){
         this.errorMSG(data.get("error").toString(), data.get("playerID").getAsString());
+
     }
     public void receiveAllPlayerBoard(JsonObject data){
         this.receiveAllPlayerBoard(data.get("playerBoards").toString());
@@ -202,12 +209,11 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
     public void receiveLastCommonScored(JsonObject data){
         this.receiveLastCommonScored(data.get("scored").toString());
     }
-    public void forceDisconnection(JsonObject data){
-        try {
-            this.quitGame(this.playerID);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public void forceDisconnection(JsonObject data) throws IOException {
+        validResponse = true;
+        quit = true;
+        in.close();
+        out.close();
         playingPlayer.disconnectError("disconnection forced by the server");
     }
 
@@ -217,11 +223,14 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
      */
 
 
-    private boolean sendMSG (JsonObject msg) throws IOException {
+    private boolean sendMSG (JsonObject msg) {
+        //System.out.println(this.playerID + ":  "+ msg);
         synchronized (this){
             this.validResponse=false;
         }
         out.println(msg.toString());  //send socket message
+        out.flush();
+        if(msg.get("service").getAsString().equals("pingPong") || msg.get("service").getAsString().equals("pingResponse")) return true;
         synchronized (echoSocket) {
             try {
                 echoSocket.wait(timeout);
@@ -253,16 +262,15 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
     public boolean startGame(String playerID) throws IOException {
         JsonObject data = new JsonObject();
         data.addProperty("playerID", playerID);
-
         JsonObject msg = new JsonObject();
         msg.addProperty("service", "startGame");
         msg.add("data", data);
-
         boolean bool = this.sendMSG(msg);
         return bool;
     }
     @Override
     public boolean quitGame(String playerID) throws IOException {
+        quit = true;
         JsonObject data = new JsonObject();
         data.addProperty("playerID", playerID);
         JsonObject msg = new JsonObject();
@@ -290,7 +298,7 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
         msg.addProperty("service", "receiveBroadcastMsg");
         msg.add("data", data);
 
-        out.println(msg.toString());
+        this.sendMSG(msg);
     }
     public void sendPrivateMSG(String userID, String MSG, String sender){
         JsonObject data = new JsonObject();
@@ -302,7 +310,7 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
         msg.addProperty("service", "receivePrivateMSG");
         msg.add("data", data);
 
-        out.println(msg.toString());
+        this.sendMSG(msg);
     }
 
     public void receiveBroadcastMsg(JsonObject data){

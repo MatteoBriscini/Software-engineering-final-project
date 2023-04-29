@@ -12,9 +12,22 @@ import static it.polimi.ingsw.Shared.Cards.CardColor.EMPTY;
 
 public class MainBoard {
     Card[][] board;
-
+    private int rows;
+    private int columns;
     public MainBoard(Card[][] board){
         this.board = board;
+        this.columns = board.length;
+        this.rows = board[0].length;
+    }
+    public Card[][] getBoard(){
+        Card[][] tmpBoard=new Card[columns][rows];
+
+        for(int x=0;x<columns;x++) {
+            for (int y = 0; y < rows; y++) {
+                tmpBoard[x][y] = new Card(board[x][y].getColor());
+            }
+        }
+        return tmpBoard;
     }
     public CardColor getColor(int x, int y){
         return board[x][y].getColor();

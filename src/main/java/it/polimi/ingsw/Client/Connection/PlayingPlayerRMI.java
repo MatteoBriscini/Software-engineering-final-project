@@ -110,7 +110,7 @@ public class PlayingPlayerRMI extends PlayingPlayerConnectionManager implements 
      * start the game only the creator can
      * @param playerID this client player id
      * @return true if the method goes in the correct way
-     * @throws RemoteException if server is offline
+     * @throws RemoteException if server are offline
      */
     public boolean startGame(String  playerID) throws RemoteException {
         return stub.startGame( playerID);
@@ -120,7 +120,7 @@ public class PlayingPlayerRMI extends PlayingPlayerConnectionManager implements 
      * @param column column on the current player board
      * @param cards array of taken cards
      * @return true if the method goes in the correct way
-     * @throws RemoteException if server is offline
+     * @throws RemoteException if server are offline
      */
     @Override
     public boolean takeCard(int column, PositionWithColor[] cards) throws RemoteException {

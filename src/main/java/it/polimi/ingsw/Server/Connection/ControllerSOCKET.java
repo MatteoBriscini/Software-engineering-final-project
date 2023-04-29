@@ -225,10 +225,17 @@ public class ControllerSOCKET extends ConnectionController {
         JsonObject data = new JsonObject();
 
         JsonObject msg = new JsonObject();
-        msg.addProperty("service", "errorMSG");
+        msg.addProperty("service", "forceDisconnection");
         msg.add("data", data);
-
         this.sendCommand(msg);
+
+        for(MultiClientSocketGame client: clients){
+            try {
+                client.forceClientDisconnection();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
     /**************************************************************************
      ************************************************** chat ******************
@@ -258,20 +265,23 @@ public class ControllerSOCKET extends ConnectionController {
         msg.addProperty("service", "receivePrivateMSG");
         msg.add("data", data);
 
+
         for(MultiClientSocketGame client: clients){
             try {
-                client.privateChat(msg, userID);
+                client.privateChat(msg, userID, sender);
             } catch (IOException e) {
                 throw new RuntimeException(e);
 
             }
         }
     }
-    public void receiveBroadcastMsg(JsonObject data){
+    public boolean receiveBroadcastMsg(JsonObject data){
         this.receiveBroadcastMsg(data.get("msg").getAsString(), data.get("sender").getAsString());
+        return true;
     }
-    public void receivePrivateMSG(JsonObject data){
+    public boolean receivePrivateMSG(JsonObject data){
         this.receivePrivateMSG(data.get("userID").getAsString(), data.get("msg").getAsString(), data.get("sender").getAsString());
+        return true;
     }
     /*************************************************************************
      ************************************************** IN method ************
@@ -351,15 +361,25 @@ public class ControllerSOCKET extends ConnectionController {
                     throw new RuntimeException(e);
                 }
             }
+            if(!cntOn) return;
             if(!pingPongResponse){
+                System.err.println("ping pong false");
                 setPlayerOffline(clientID);
                 return;
             }
             pingPongResponse = false;
             this.pingPong();
         }
-        public void privateChat(JsonObject msg, String playerID) throws IOException {
-            if (playerID.equals(this.clientID))this.sendMSG(msg);
+        public void forceClientDisconnection() throws IOException {
+            if(cntOn)this.setPlayerOffline(this.clientID);
+
+            cntOn = false;
+            in.close();
+            out.close();
+            socket.close();
+        }
+        public void privateChat(JsonObject msg, String playerID, String sender) throws IOException {
+            if (!sender.equals(this.clientID) &&playerID.equals(this.clientID))this.sendMSG(msg);
         }
         public void sendMSG (JsonObject msg) throws IOException {
             out.println(msg);
@@ -370,7 +390,7 @@ public class ControllerSOCKET extends ConnectionController {
             controller.setPlayerOffline(playerID);
         }
         public void setPlayerOnline(String playerID){
-            System.out.println("\u001B[36m"+"client: " + playerID + " join the game on port(SOCKET): " + PORT +"\u001B[0m");
+            System.out.println("\u001B[36m"+"client: " + playerID + " join the game on port(SOCKET): " + PORT  +"\u001B[0m");
             controller.setPlayerOnline(playerID);
         }
         private void receiveMSG()  throws IOException {
@@ -380,18 +400,20 @@ public class ControllerSOCKET extends ConnectionController {
             JsonObject sendData = new JsonObject();
             while (cntOn){   //LOOP receive message
                 String line = in.nextLine();
+                //System.err.println(this.clientID + ":  "+ line);
                 JsonObject jsonObject = new Gson().fromJson(line, JsonObject.class);
                 String methodName = jsonObject.get("service").getAsString();
                 JsonObject data = jsonObject.get("data").getAsJsonObject();
                 if (methodName.equals("quit")) {
+                    cntOn = false;
                     sendData.addProperty("existingMethod", true);
                     sendData.addProperty("response",true);
                     this.setPlayerOffline(data.get("playerID").getAsString());
                     response.add("data", sendData);
                     this.sendMSG(response);
-                    cntOn = false;
                     break;
                 } else if(methodName.equals("join")){
+                    cntOn = true;
                     sendData.addProperty("existingMethod", true);
                     sendData.addProperty("response",true);
                     this.clientID = data.get("playerID").getAsString();
@@ -399,16 +421,16 @@ public class ControllerSOCKET extends ConnectionController {
                     response.add("data", sendData);
                     this.sendMSG(response);
                 } else if(methodName.equals("pingPong")){
-                    data = new JsonObject();
 
+                    data = new JsonObject();
                     JsonObject msg = new JsonObject();
                     msg.addProperty("service", "pingResponse");
                     msg.add("data", data);
-
                     this.sendMSG(msg);
                 } else if(methodName.equals("pingResponse")){
                     this.pingResponse();
                 } else {
+                    System.out.println(methodName);
                     existingMethod = true;
                     Method getNameMethod = null;
 
@@ -429,9 +451,7 @@ public class ControllerSOCKET extends ConnectionController {
 
                     sendData.addProperty("existingMethod", existingMethod);
                     response.add("data", sendData);
-                    if(!methodName.equals("receiveBroadcastMsg") && !methodName.equals("receivePrivateMSG")){
-                        this.sendMSG(response);
-                    }
+                    this.sendMSG(response);
                 }
             }
             in.close();

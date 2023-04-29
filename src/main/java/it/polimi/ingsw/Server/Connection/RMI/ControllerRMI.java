@@ -283,7 +283,7 @@ public class ControllerRMI extends ConnectionController implements ControllerRem
      * *
      * send message in broadcast to all clients
      * @param msg message to send
-     * @param sender name of the player who send the message
+     * @param sender name of the player who sends the message
      */
     public void sendBroadcastMsg(String msg, String sender){
         Command command = new BroadcastChatCommand(msg,sender);
@@ -293,7 +293,7 @@ public class ControllerRMI extends ConnectionController implements ControllerRem
      * send a message in private to only one client
      * @param userID id of the player the message is for
      * @param msg message to send
-     * @param sender name of the player who send the message
+     * @param sender name of the player who sends the message
      */
     public void sendPrivateMSG(String userID, String msg, String sender){
         Command command = new PrivateChatCommand(userID, msg,sender);

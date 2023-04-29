@@ -79,16 +79,19 @@ public interface PlayingPlayerRemoteInterface extends Remote {
     /**
      * @param error json object with errorID && errorMSG
      * @param playerID name of the player the message is intended for
-     * @throws RemoteException if the players is offline
+     * @throws RemoteException if the players are offline
      */
     void errorMSG(String error, String playerID) throws RemoteException;
 
     /**
      * the client is forced by the server to quit the game
-     * @throws RemoteException if the players is offline
+     * @throws RemoteException if the players are offline
      */
     void forceDisconnection()throws RemoteException;
     void receiveBroadcastMsg(String msg, String sender)throws RemoteException;
     void receivePrivateMSG(String userID, String msg, String sender)throws RemoteException;
+    /**
+     * @return the player id of this client (called by server when necessary)
+     */
     String getPlayerID()throws RemoteException;
 }
