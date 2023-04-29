@@ -2,10 +2,10 @@ package it.polimi.ingsw.Server.Connection;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import it.polimi.ingsw.Client.ClientMain;
-import it.polimi.ingsw.Client.Exceptions.PlayerNotFoundException;
-import it.polimi.ingsw.Client.Player.Player;
-import it.polimi.ingsw.Client.Player.PlayingPlayer;
+import it.polimi.ingsw.client.ClientMain;
+import it.polimi.ingsw.client.Exceptions.PlayerNotFoundException;
+import it.polimi.ingsw.client.Player.Player;
+import it.polimi.ingsw.client.Player.PlayingPlayer;
 import it.polimi.ingsw.Server.Controller;
 import it.polimi.ingsw.Server.Exceptions.ConnectionControllerManagerException;
 import it.polimi.ingsw.Server.Exceptions.addPlayerToGameException;

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Server.Connection.RMI.SendCommand;
 
 import com.google.gson.JsonObject;
-import it.polimi.ingsw.Client.Connection.PlayingPlayerRemoteInterface;
+import it.polimi.ingsw.client.Connection.PlayingPlayerRemoteInterface;
 
 import java.rmi.RemoteException;
 

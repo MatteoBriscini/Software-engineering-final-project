@@ -2,7 +2,7 @@ package it.polimi.ingsw.Server.Connection.RMI.SendCommand;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import it.polimi.ingsw.Client.Connection.PlayingPlayerRemoteInterface;
+import it.polimi.ingsw.client.Connection.PlayingPlayerRemoteInterface;
 
 import it.polimi.ingsw.Shared.Cards.Card;
 

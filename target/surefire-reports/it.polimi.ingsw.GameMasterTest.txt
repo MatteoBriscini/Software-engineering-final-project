@@ -1,14 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: it.polimi.ingsw.GameMasterTest
 -------------------------------------------------------------------------------
-Tests run: 9, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.043 sec <<< FAILURE!
-testAddCard(it.polimi.ingsw.GameMasterTest)  Time elapsed: 0.005 sec  <<< ERROR!
-java.lang.IndexOutOfBoundsException: Index 0 out of bounds for length 0
-	at java.base/jdk.internal.util.Preconditions.outOfBounds(Preconditions.java:64)
-	at java.base/jdk.internal.util.Preconditions.outOfBoundsCheckIndex(Preconditions.java:70)
-	at java.base/jdk.internal.util.Preconditions.checkIndex(Preconditions.java:248)
-	at java.base/java.util.Objects.checkIndex(Objects.java:372)
-	at java.base/java.util.ArrayList.get(ArrayList.java:459)
-	at it.polimi.ingsw.Server.Model.GameMaster.addCard(GameMaster.java:178)
-	at it.polimi.ingsw.GameMasterTest.testAddCard(GameMasterTest.java:131)
-
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.034 sec
