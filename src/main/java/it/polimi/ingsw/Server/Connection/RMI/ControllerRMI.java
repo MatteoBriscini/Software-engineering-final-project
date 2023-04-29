@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Connection.ConnectionController;
 import it.polimi.ingsw.Server.Connection.RMI.SendCommand.*;
 import it.polimi.ingsw.Server.Controller;
-import it.polimi.ingsw.Client.Connection.PlayingPlayerRemoteInterface;
+import it.polimi.ingsw.client.Connection.PlayingPlayerRemoteInterface;
 import it.polimi.ingsw.Shared.Cards.Card;
 import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
 import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;

@@ -1,8 +1,6 @@
 package it.polimi.ingsw;
 
 import com.google.gson.Gson;
-import it.polimi.ingsw.Client.ClientMain;
-import it.polimi.ingsw.Client.Player.PlayingPlayer;
 import it.polimi.ingsw.Server.Exceptions.ConnectionControllerManagerException;
 import it.polimi.ingsw.Server.Exceptions.ConstructorException;
 import it.polimi.ingsw.Server.Exceptions.LengthException;
@@ -14,6 +12,8 @@ import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 import it.polimi.ingsw.Server.Controller;
 import it.polimi.ingsw.Shared.Cards.Card;
 import it.polimi.ingsw.Server.Model.PlayerClasses.Player;
+import it.polimi.ingsw.client.ClientMain;
+import it.polimi.ingsw.client.Player.PlayingPlayer;
 import junit.framework.TestCase;
 
 import java.io.*;
