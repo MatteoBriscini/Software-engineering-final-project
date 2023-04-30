@@ -26,44 +26,10 @@ public class ClientMain {
         }
     }
     public static void main(String[] args) {
-        System.out.println("choose your connection type (RMI/socket):");
-        Scanner scanner = new Scanner(System.in);
-        String cT = scanner.nextLine();
-        cT= cT.toUpperCase();
-        if(cT.equals("SOCKET")){
-            connectionType =  SOCKET;
-        }else {
-            connectionType = RMI;
-        }
+        System.out.println("test");
 
 
 
-        //testing socket
-/*
-        ClientMain clientMain= new ClientMain();
-        try {
-            Player player2 = new PlayingPlayer("marco", "addwa", clientMain, SOCKET, 1245, serverIP);
-
-            ((PlayingPlayer)player2).startGame();
-
-            Card[][] board = new Card[3][2];
-            board[0][0] = new Card(CardColor.BLUE);
-            board[1][0] = new Card(CardColor.BLUE);
-            board[2][0] = new Card(CardColor.BLUE);
-            board[0][1] = new Card(CardColor.BLUE);
-            board[1][1] = new Card(CardColor.BLUE);
-            board[2][1] = new Card(CardColor.BLUE);
-            ((PlayingPlayer)player2).createMainBoard(board);
-            Position[] pos = new Position[2];
-            pos[0] = new Position(0,0);
-            pos[1] = new Position(1,0);
-            ((PlayingPlayer)player2).takeCard(0,pos);
-
-            ((PlayingPlayer)player2).quitGame();
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-*/
 
 
     }

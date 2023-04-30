@@ -1,9 +1,9 @@
 package it.polimi.ingsw.client.Player;
 
 import com.google.gson.JsonObject;
-import it.polimi.ingsw.Client.ClientMain;
-import it.polimi.ingsw.Client.Connection.LobbyPlayerRMI;
-import it.polimi.ingsw.Server.Exceptions.addPlayerToGameException;
+import it.polimi.ingsw.client.ClientMain;
+import it.polimi.ingsw.client.Connection.LobbyPlayerRMI;
+import it.polimi.ingsw.server.Exceptions.addPlayerToGameException;
 import it.polimi.ingsw.Shared.Connection.ConnectionType;
 
 import javax.security.auth.login.LoginException;

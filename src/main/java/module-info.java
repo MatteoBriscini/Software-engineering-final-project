@@ -9,8 +9,14 @@ module AM19 {
     //Method/exception InvocationTargetException;
 
     opens it.polimi.ingsw.client.userinterface to com.google.gson, java.rmi;
-    opens it.polimi.ingsw.Server  to com.google.gson, java.rmi;
+    opens it.polimi.ingsw.server to com.google.gson, java.rmi;
+
     opens it.polimi.ingsw.client to com.google.gson, java.rmi;
+
+    opens it.polimi.ingsw.Shared.Cards to com.google.gson, java.rmi;
+    opens it.polimi.ingsw.Shared.Connection to com.google.gson, java.rmi;
+    opens it.polimi.ingsw.Shared.JsonSupportClasses to com.google.gson, java.rmi;
+
     opens it.polimi.ingsw.gui to com.google.gson, java.rmi, javafx.fxml;
 
     exports it.polimi.ingsw.gui;

@@ -1,13 +1,13 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.Server.Exceptions.ConstructorException;
+import it.polimi.ingsw.server.Exceptions.ConstructorException;
 import it.polimi.ingsw.Shared.Cards.Card;
-import it.polimi.ingsw.Server.Exceptions.NoSpaceException;
-import it.polimi.ingsw.Server.Model.GameMaster;
-import it.polimi.ingsw.Server.Model.GroupGoals.CommonGoal;
+import it.polimi.ingsw.server.Exceptions.NoSpaceException;
+import it.polimi.ingsw.server.Model.GameMaster;
+import it.polimi.ingsw.server.Model.GroupGoals.CommonGoal;
 import it.polimi.ingsw.Shared.JsonSupportClasses.Position;
-import it.polimi.ingsw.Server.Model.MainBoard;
-import it.polimi.ingsw.Server.Model.PlayerClasses.Player;
+import it.polimi.ingsw.server.Model.MainBoard;
+import it.polimi.ingsw.server.Model.PlayerClasses.Player;
 import junit.framework.TestCase;
 
 import java.io.FileNotFoundException;

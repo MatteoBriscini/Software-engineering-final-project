@@ -1,17 +1,17 @@
 package it.polimi.ingsw;
 
 import com.google.gson.Gson;
-import it.polimi.ingsw.Server.Exceptions.ConnectionControllerManagerException;
-import it.polimi.ingsw.Server.Exceptions.ConstructorException;
-import it.polimi.ingsw.Server.Exceptions.LengthException;
-import it.polimi.ingsw.Server.Exceptions.addPlayerToGameException;
+import it.polimi.ingsw.server.Exceptions.ConnectionControllerManagerException;
+import it.polimi.ingsw.server.Exceptions.ConstructorException;
+import it.polimi.ingsw.server.Exceptions.LengthException;
+import it.polimi.ingsw.server.Exceptions.addPlayerToGameException;
 import it.polimi.ingsw.Shared.Connection.ConnectionType;
 import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
 import it.polimi.ingsw.Shared.JsonSupportClasses.Position;
 import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
-import it.polimi.ingsw.Server.Controller;
+import it.polimi.ingsw.server.Controller;
 import it.polimi.ingsw.Shared.Cards.Card;
-import it.polimi.ingsw.Server.Model.PlayerClasses.Player;
+import it.polimi.ingsw.server.Model.PlayerClasses.Player;
 import it.polimi.ingsw.client.ClientMain;
 import it.polimi.ingsw.client.Player.PlayingPlayer;
 import junit.framework.TestCase;
@@ -643,10 +643,10 @@ public class ControllerTest extends TestCase {
 
         test.addClient(7515, ConnectionType.RMI);
 
-        ArrayList<it.polimi.ingsw.Server.Model.PlayerClasses.Player> players = new ArrayList<>();      //gaming order array list for this test
-        players.add(new it.polimi.ingsw.Server.Model.PlayerClasses.Player("antonio"));
-        players.add(new it.polimi.ingsw.Server.Model.PlayerClasses.Player("marco"));
-        players.add(new it.polimi.ingsw.Server.Model.PlayerClasses.Player("paolo"));
+        ArrayList<it.polimi.ingsw.server.Model.PlayerClasses.Player> players = new ArrayList<>();      //gaming order array list for this test
+        players.add(new it.polimi.ingsw.server.Model.PlayerClasses.Player("antonio"));
+        players.add(new it.polimi.ingsw.server.Model.PlayerClasses.Player("marco"));
+        players.add(new it.polimi.ingsw.server.Model.PlayerClasses.Player("paolo"));
 
         test.addNewPlayer("antonio");
         test.addNewPlayer("marco");

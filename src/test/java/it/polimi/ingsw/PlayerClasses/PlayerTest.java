@@ -1,10 +1,10 @@
 package it.polimi.ingsw.PlayerClasses;
 
 import it.polimi.ingsw.Shared.Cards.Card;
-import it.polimi.ingsw.Server.Exceptions.NoSpaceException;
-import it.polimi.ingsw.Server.Model.PlayerClasses.Player;
-import it.polimi.ingsw.Server.Model.PlayerClasses.PlayerBoard;
-import it.polimi.ingsw.Server.Model.PlayerClasses.PlayerTarget;
+import it.polimi.ingsw.server.Exceptions.NoSpaceException;
+import it.polimi.ingsw.server.Model.PlayerClasses.Player;
+import it.polimi.ingsw.server.Model.PlayerClasses.PlayerBoard;
+import it.polimi.ingsw.server.Model.PlayerClasses.PlayerTarget;
 import junit.framework.TestCase;
 
 import java.io.FileNotFoundException;

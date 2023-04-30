@@ -1,9 +1,9 @@
-package it.polimi.ingsw.Client.Connection;
+package it.polimi.ingsw.client.Connection;
 
 import com.google.gson.Gson;
 import com.google.gson.*;
-import it.polimi.ingsw.Client.Player.PlayingPlayer;
-import it.polimi.ingsw.Server.Connection.RMI.ControllerRemoteInterface;
+import it.polimi.ingsw.client.Player.PlayingPlayer;
+import it.polimi.ingsw.server.Connection.RMI.ControllerRemoteInterface;
 import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
 import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
 

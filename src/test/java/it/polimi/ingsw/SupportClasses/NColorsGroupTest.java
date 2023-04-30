@@ -1,7 +1,7 @@
 package it.polimi.ingsw.SupportClasses;
 
 import it.polimi.ingsw.Shared.Cards.Card;
-import it.polimi.ingsw.Server.SupportClasses.NColorsGroup;
+import it.polimi.ingsw.server.SupportClasses.NColorsGroup;
 import junit.framework.TestCase;
 
 import static it.polimi.ingsw.Shared.Cards.CardColor.*;

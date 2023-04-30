@@ -1,9 +1,6 @@
 package it.polimi.ingsw.Shared.JsonSupportClasses;
 
-import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 public class JsonUrl {
     public static String getUrl(String fName) throws FileNotFoundException {
