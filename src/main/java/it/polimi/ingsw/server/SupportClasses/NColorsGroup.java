@@ -1,11 +1,11 @@
 package it.polimi.ingsw.server.SupportClasses;
 
-import it.polimi.ingsw.Shared.Cards.Card;
+import it.polimi.ingsw.shared.Cards.Card;
 
 import java.util.Arrays;
 import java.util.HashSet;
 
-import static it.polimi.ingsw.Shared.Cards.CardColor.EMPTY;
+import static it.polimi.ingsw.shared.Cards.CardColor.EMPTY;
 
 public class NColorsGroup {
     public boolean nColorsCheck(Card[] cards, int min, int max) {

@@ -3,8 +3,8 @@ package it.polimi.ingsw.server.Model.PlayerClasses;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import it.polimi.ingsw.Shared.Cards.Card;
-import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
+import it.polimi.ingsw.shared.Cards.Card;
+import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -12,12 +12,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class PlayerTarget {
-
     //Attributes
-
-    private int[] x;
-    private int[] y;
-    private String[] color;
+    private final int[] x;
+    private final int[] y;
+    private final String[] color;
     //json value
     private JsonUrl jsonUrl;
     private boolean config = false;

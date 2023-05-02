@@ -1,6 +1,6 @@
-package it.polimi.ingsw.Shared.JsonSupportClasses;
+package it.polimi.ingsw.shared.JsonSupportClasses;
 
-import it.polimi.ingsw.Shared.Cards.CardColor;
+import it.polimi.ingsw.shared.Cards.CardColor;
 
 public class PositionWithColor extends Position{
     private final int sketch;

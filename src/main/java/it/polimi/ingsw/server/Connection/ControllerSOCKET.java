@@ -4,9 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.server.Controller;
-import it.polimi.ingsw.Shared.Cards.Card;
-import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
-import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
+import it.polimi.ingsw.shared.Cards.Card;
+import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
+import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
 
 import java.io.*;
 

@@ -9,10 +9,10 @@ import it.polimi.ingsw.client.Exceptions.InvalidPickException;
 import it.polimi.ingsw.client.Exceptions.PlayerNotFoundException;
 import it.polimi.ingsw.client.Game.MainBoard;
 import it.polimi.ingsw.client.Game.PlayerBoard;
-import it.polimi.ingsw.Shared.Cards.Card;
-import it.polimi.ingsw.Shared.Connection.ConnectionType;
-import it.polimi.ingsw.Shared.JsonSupportClasses.Position;
-import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
+import it.polimi.ingsw.shared.Cards.Card;
+import it.polimi.ingsw.shared.Connection.ConnectionType;
+import it.polimi.ingsw.shared.JsonSupportClasses.Position;
+import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;

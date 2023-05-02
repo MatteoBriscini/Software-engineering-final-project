@@ -5,16 +5,17 @@ import it.polimi.ingsw.server.Exceptions.ConnectionControllerManagerException;
 import it.polimi.ingsw.server.Exceptions.ConstructorException;
 import it.polimi.ingsw.server.Exceptions.LengthException;
 import it.polimi.ingsw.server.Exceptions.addPlayerToGameException;
-import it.polimi.ingsw.Shared.Connection.ConnectionType;
-import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
-import it.polimi.ingsw.Shared.JsonSupportClasses.Position;
-import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
+import it.polimi.ingsw.shared.Connection.ConnectionType;
+import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
+import it.polimi.ingsw.shared.JsonSupportClasses.Position;
+import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
 import it.polimi.ingsw.server.Controller;
-import it.polimi.ingsw.Shared.Cards.Card;
+import it.polimi.ingsw.shared.Cards.Card;
 import it.polimi.ingsw.server.Model.PlayerClasses.Player;
 import it.polimi.ingsw.client.ClientMain;
 import it.polimi.ingsw.client.Player.PlayingPlayer;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.io.*;
 import java.rmi.RemoteException;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 
 import java.util.Objects;
 
-import static it.polimi.ingsw.Shared.Cards.CardColor.*;
+import static it.polimi.ingsw.shared.Cards.CardColor.*;
 
 public class ControllerTest extends TestCase {
 
@@ -58,7 +59,7 @@ public class ControllerTest extends TestCase {
         return board;
     }
 
-
+    @Test
     public void testStartGame() throws addPlayerToGameException {
         System.out.println("START TEST StartGame\n");
 
@@ -158,6 +159,7 @@ public class ControllerTest extends TestCase {
 
         System.out.println("\nEND TEST\n");
     }
+    @Test
     public void testTakeCard() throws addPlayerToGameException, InterruptedException, FileNotFoundException {
         System.out.println("START TEST TakeCard\n");
 
@@ -253,7 +255,7 @@ public class ControllerTest extends TestCase {
 
         System.out.println("\nEND TEST\n");
     }
-
+    @Test
     public void testOffline_OnlinePlayer() throws addPlayerToGameException, InterruptedException {
         System.out.println("START TEST Offline_OnlinePlayer\n");
 
@@ -360,7 +362,7 @@ public class ControllerTest extends TestCase {
 
         System.out.println("\nEND TEST\n");
     }
-
+    @Test
     public void testRefil() throws addPlayerToGameException, FileNotFoundException {
         System.out.println("START TEST testRefil\n");
 
@@ -415,7 +417,7 @@ public class ControllerTest extends TestCase {
         System.out.println("\n\n");
         System.out.println("\nEND TEST\n");
     }
-
+    @Test
     public void testCalcEndGamePoint() throws addPlayerToGameException, FileNotFoundException, ConstructorException, InterruptedException, LengthException {
         System.out.println("START TEST testCalcEndGamePoint\n");
 
@@ -455,38 +457,38 @@ public class ControllerTest extends TestCase {
         cards[0] =new PositionWithColor(5,1,0, BLUE);
         cards[1] =new PositionWithColor(5,0,0, GREEN);
         assertTrue(test.takeCard(0, cards, "piero"));
-        assertTrue(test.getPlayerPoint("piero")==8);
-        assert (test.getPlayerPoint("pino")==0);
-        assert (test.getPlayerPoint("pierino")==0);
+        assertEquals(8, test.getPlayerPoint("piero"));
+        assertEquals(0, test.getPlayerPoint("pino"));
+        assertEquals(0, test.getPlayerPoint("pierino"));
 
         System.out.println("test2:");
         cards = new PositionWithColor[2];
         cards[0] =new PositionWithColor(3,8,0, BLUE);
         cards[1] =new PositionWithColor(3,7,0, PINK);
-        assert (test.takeCard(4, cards, "pino"));
-        assert (test.getPlayerPoint("piero")==8);
-        assert (test.getPlayerPoint("pino")==6);
-        assert (test.getPlayerPoint("pierino")==0);
+        assertTrue(test.takeCard(4, cards, "pino"));
+        assertEquals(8, test.getPlayerPoint("piero"));
+        assertEquals(6, test.getPlayerPoint("pino"));
+        assertEquals(0, test.getPlayerPoint("pierino"));
 
         System.out.println("test3:");
         cards = new PositionWithColor[2];
         cards[0] =new PositionWithColor(5,6,0, PINK);
         cards[1] =new PositionWithColor(6,6,0, GREEN);
-        assert (test.takeCard(0, cards, "pierino"));
-        assert (test.getPlayerPoint("piero")==8);
-        assert (test.getPlayerPoint("pino")==6);
-        assert (test.getPlayerPoint("pierino")==9);
+        assertTrue(test.takeCard(0, cards, "pierino"));
+        assertEquals(8, test.getPlayerPoint("piero"));
+        assertEquals(6, test.getPlayerPoint("pino"));
+        assertEquals(9, test.getPlayerPoint("pierino"));
 
-        assert (!test.takeCard(0, cards, "pino"));//pino can't play the game is finished
+        assertFalse(test.takeCard(0, cards, "pino"));//pino can't play the game is finished
 
         Thread.sleep(timeout*1000);
 
         System.out.println("test4:");
         System.out.println();
-        assert (test.isEndGame());
-        assert (test.getPlayerPoint("piero")>=10);      //verify final point except for private goal
-        assert (test.getPlayerPoint("pino")>=8);
-        assert (test.getPlayerPoint("pierino")>=12);
+        assertTrue(test.isEndGame());
+        assertTrue(test.getPlayerPoint("piero")>=10);      //verify final point except for private goal
+        assertTrue(test.getPlayerPoint("pino")>=8);
+        assertTrue(test.getPlayerPoint("pierino")>=12);
 
         System.out.println("test5: (first player will full the shelf)");
         test = new Controller(3);
@@ -497,13 +499,13 @@ public class ControllerTest extends TestCase {
 
         test.addNewPlayer("piero");     //3 player join the game
         test.setPlayerOnline("piero");
-        assert (test.getPlayerNumber() == 1);
+        assertEquals(1, test.getPlayerNumber());
         test.addNewPlayer("pino");
         test.setPlayerOnline("pino");
-        assert (test.getPlayerNumber() == 2);
+        assertEquals(2, test.getPlayerNumber());
         test.addNewPlayer("pierino");
         test.setPlayerOnline("pierino");
-        assert (test.getPlayerNumber() == 3);  //the game is full it will be start autonomous
+        assertEquals(3, test.getPlayerNumber());  //the game is full it will be start autonomous
 
         test.setNotRandomPlayerOrder(players);
         this.setNotRandomBoard("mainBoard3Players");                       //fill the main board with predetermined colors
@@ -521,42 +523,43 @@ public class ControllerTest extends TestCase {
         cards = new PositionWithColor[2];
         cards[0] =new PositionWithColor(5,6,0, PINK);
         cards[1] =new PositionWithColor(6,6,0, GREEN);
-        assert (test.takeCard(0, cards, "piero"));
-        assert (test.getPlayerPoint("piero")==9);
-        assert (test.getPlayerPoint("pino")==0);
-        assert (test.getPlayerPoint("pierino")==0);
+        assertTrue(test.takeCard(0, cards, "piero"));
+        assertEquals(9, test.getPlayerPoint("piero"));
+        assertEquals(0, test.getPlayerPoint("pino"));
+        assertEquals(0, test.getPlayerPoint("pierino"));
 
         System.out.println("test7:");
         cards = new PositionWithColor[2];
         cards[0] =new PositionWithColor(3,8,0, BLUE);
         cards[1] =new PositionWithColor(3,7,0, PINK);
-        assert (test.takeCard(4, cards, "pino"));
-        assert (test.getPlayerPoint("piero")==9);
-        assert (test.getPlayerPoint("pino")==8);
-        assert (test.getPlayerPoint("pierino")==0);
+        assertTrue(test.takeCard(4, cards, "pino"));
+        assertEquals(9, test.getPlayerPoint("piero"));
+        assertEquals(8, test.getPlayerPoint("pino"));
+        assertEquals(0, test.getPlayerPoint("pierino"));
 
         System.out.println("test8:");
         cards = new PositionWithColor[2];
         cards[0] =new PositionWithColor(5,1,0, BLUE);
         cards[1] =new PositionWithColor(5,0,0, GREEN);
-        assert (test.takeCard(0, cards, "pierino"));
-        assert (test.getPlayerPoint("piero")==9);
-        assert (test.getPlayerPoint("pino")==8);
-        assert (test.getPlayerPoint("pierino")==6);
+        assertTrue(test.takeCard(0, cards, "pierino"));
+        assertEquals(9, test.getPlayerPoint("piero"));
+        assertEquals(8, test.getPlayerPoint("pino"));
+        assertEquals(6, test.getPlayerPoint("pierino"));
 
-        assert (!test.takeCard(0, cards, "pino"));//pino can't play the game is finished
+        assertTrue(!test.takeCard(0, cards, "pino"));//pino can't play the game is finished
 
         Thread.sleep(timeout*1000);
 
         System.out.println("test4:");
         System.out.println();
-        assert (test.isEndGame());
-        assert (test.getPlayerPoint("piero")>=11);      //verify final point except for private goal
-        assert (test.getPlayerPoint("pino")>=10);
-        assert (test.getPlayerPoint("pierino")>=8);
+        assertTrue(test.isEndGame());
+        assertTrue(test.getPlayerPoint("piero")>=11);      //verify final point except for private goal
+        assertTrue(test.getPlayerPoint("pino")>=10);
+        assertTrue(test.getPlayerPoint("pierino")>=8);
 
         System.out.println("\nEND TEST\n");
     }
+    @Test
     public void testPlayerCrashedEndGame() throws InterruptedException, ConstructorException, FileNotFoundException, LengthException, addPlayerToGameException {
         System.out.println("START TEST testPlayerCrashedEndGame\n");
 
@@ -571,13 +574,13 @@ public class ControllerTest extends TestCase {
 
         test.addNewPlayer("piero");     //3 player join the game
         test.setPlayerOnline("piero");
-        assert (test.getPlayerNumber() == 1);
+        assertEquals(1, test.getPlayerNumber());
         test.addNewPlayer("pino");
         test.setPlayerOnline("pino");
-        assert (test.getPlayerNumber() == 2);
+        assertEquals(2, test.getPlayerNumber());
         test.addNewPlayer("pierino");
         test.setPlayerOnline("pierino");
-        assert (test.getPlayerNumber() == 3);  //the game is full it will be start autonomous
+        assertEquals(3, test.getPlayerNumber());  //the game is full it will be start autonomous
 
         test.setNotRandomPlayerOrder(players);
         this.setNotRandomBoard("mainBoard3Players");                       //fill the main board with predetermined colors
@@ -595,10 +598,10 @@ public class ControllerTest extends TestCase {
         cards = new PositionWithColor[2];
         cards[0] =new PositionWithColor(5,1,0, BLUE);
         cards[1] =new PositionWithColor(5,0,0, GREEN);
-        assert (test.takeCard(0, cards, "piero"));
-        assert (test.getPlayerPoint("piero")==8);
-        assert (test.getPlayerPoint("pino")==0);
-        assert (test.getPlayerPoint("pierino")==0);
+        assertTrue(test.takeCard(0, cards, "piero"));
+        assertEquals(8, test.getPlayerPoint("piero"));
+        assertEquals(0, test.getPlayerPoint("pino"));
+        assertEquals(0, test.getPlayerPoint("pierino"));
 
         test.setPlayerOffline("piero");             //piero lost connection
 
@@ -606,34 +609,34 @@ public class ControllerTest extends TestCase {
         cards = new PositionWithColor[2];
         cards[0] =new PositionWithColor(3,8,0, BLUE);
         cards[1] =new PositionWithColor(3,7,0, PINK);
-        assert (test.takeCard(4, cards, "pino"));
-        assert (test.getPlayerPoint("piero")==8);
-        assert (test.getPlayerPoint("pino")==6);
-        assert (test.getPlayerPoint("pierino")==0);
+        assertTrue(test.takeCard(4, cards, "pino"));
+        assertEquals(8, test.getPlayerPoint("piero"));
+        assertEquals(6, test.getPlayerPoint("pino"));
+        assertEquals(0, test.getPlayerPoint("pierino"));
 
         System.out.println("test3:");
         cards = new PositionWithColor[2];
         cards[0] =new PositionWithColor(5,6,0, PINK);
         cards[1] =new PositionWithColor(6,6,0, GREEN);
-        assert (test.takeCard(0, cards, "pierino"));
-        assert (test.getPlayerPoint("piero")==8);
-        assert (test.getPlayerPoint("pino")==6);
-        assert (test.getPlayerPoint("pierino")==9);
+        assertTrue(test.takeCard(0, cards, "pierino"));
+        assertEquals(8, test.getPlayerPoint("piero"));
+        assertEquals(6, test.getPlayerPoint("pino"));
+        assertEquals(9, test.getPlayerPoint("pierino"));
 
-        assert (!test.takeCard(0, cards, "pino"));//pino can't play the game is finished
+        assertFalse(test.takeCard(0, cards, "pino"));//pino can't play the game is finished
 
         Thread.sleep(timeout*1000);
 
         System.out.println("test4:");
         System.out.println();
-        assert (test.isEndGame());
-        assert (test.getPlayerPoint("piero")>=10);      //verify final point except for private goal
-        assert (test.getPlayerPoint("pino")>=8);
-        assert (test.getPlayerPoint("pierino")>=12);
+        assertTrue(test.isEndGame());
+        assertTrue(test.getPlayerPoint("piero")>=10);      //verify final point except for private goal
+        assertTrue(test.getPlayerPoint("pino")>=8);
+        assertTrue(test.getPlayerPoint("pierino")>=12);
 
         System.out.println("\nEND TEST\n");
     }
-
+    @Test
     public void testOnlyOnePlayerOnline() throws ConnectionControllerManagerException, addPlayerToGameException, RemoteException {
         ClientMain clientMain = new ClientMain();
 
@@ -653,24 +656,24 @@ public class ControllerTest extends TestCase {
         test.addNewPlayer("paolo");
 
         PlayingPlayer testClient2  = new PlayingPlayer("marco", "antonio", clientMain, ConnectionType.RMI, 7515, "127.0.0.1");
-        assert (!test.isPlayerOffline("marco"));
+        assertFalse(test.isPlayerOffline("marco"));
         PlayingPlayer testClient1  = new PlayingPlayer("antonio", "antonio", clientMain, ConnectionType.RMI, 7515, "127.0.0.1");
-        assert (!test.isPlayerOffline("antonio"));
+        assertFalse(test.isPlayerOffline("antonio"));
         PlayingPlayer testClient3  = new PlayingPlayer("paolo", "antonio", clientMain, ConnectionType.RMI, 7515, "127.0.0.1");
-        assert (!test.isPlayerOffline("paolo"));
+        assertFalse(test.isPlayerOffline("paolo"));
 
         assert(testClient1 .startGame());
 
         testClient1.quitGame();
         testClient3.quitGame();
-        assert (test.isEndGame());
+        assertTrue(test.isEndGame());
 
         System.out.println("test1: take card after end of the game");
         Position[] pos = new Position[2];
         pos[0] = new Position(3,8);
         pos[1] = new Position(3,7);
 
-        assert (!testClient2.takeCard(0,pos)); //not authorized take card (game is ended and server can't respond)
+        assertFalse(testClient2.takeCard(0, pos)); //not authorized take card (game is ended and server can't respond)
 
         System.out.println("\nEND TEST\n");
     }

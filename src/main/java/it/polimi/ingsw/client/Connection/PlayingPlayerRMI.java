@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.*;
 import it.polimi.ingsw.client.Player.PlayingPlayer;
 import it.polimi.ingsw.server.Connection.RMI.ControllerRemoteInterface;
-import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
-import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
+import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
+import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

@@ -3,7 +3,7 @@ package it.polimi.ingsw.server.Connection.RMI.SendCommand;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import it.polimi.ingsw.client.Connection.PlayingPlayerRemoteInterface;
-import it.polimi.ingsw.Shared.Cards.Card;
+import it.polimi.ingsw.shared.Cards.Card;
 
 import java.rmi.RemoteException;
 

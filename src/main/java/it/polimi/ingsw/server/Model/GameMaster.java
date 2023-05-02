@@ -6,10 +6,10 @@ import it.polimi.ingsw.server.Exceptions.ConstructorException;
 import it.polimi.ingsw.server.Exceptions.InvalidPickException;
 import it.polimi.ingsw.server.Exceptions.LengthException;
 import it.polimi.ingsw.server.Exceptions.NoSpaceException;
-import it.polimi.ingsw.Shared.Cards.Card;
-import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
-import it.polimi.ingsw.Shared.JsonSupportClasses.Position;
-import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
+import it.polimi.ingsw.shared.Cards.Card;
+import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
+import it.polimi.ingsw.shared.JsonSupportClasses.Position;
+import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
 import it.polimi.ingsw.server.Model.GroupGoals.*;
 import it.polimi.ingsw.server.Model.PlayerClasses.Player;
 import it.polimi.ingsw.server.Model.PlayerClasses.PlayerTarget;
@@ -43,7 +43,7 @@ public class GameMaster {
     private void jsonCreate() throws FileNotFoundException{
         Gson gson = new Gson();
 
-        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("controllerConfig"));
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(JsonUrl.getUrl("controllerConfig"));
         if(inputStream == null) throw new FileNotFoundException();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         InputStream inputStream1 = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("gameMasterConfig"));

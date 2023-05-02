@@ -1,9 +1,9 @@
 package it.polimi.ingsw.server.Model.GroupGoals;
 
-import it.polimi.ingsw.Shared.Cards.Card;
+import it.polimi.ingsw.shared.Cards.Card;
 import it.polimi.ingsw.server.Exceptions.ConstructorException;
-import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
-import it.polimi.ingsw.Shared.JsonSupportClasses.Position;
+import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
+import it.polimi.ingsw.shared.JsonSupportClasses.Position;
 
 import java.io.*;
 

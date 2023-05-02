@@ -3,13 +3,14 @@ package it.polimi.ingsw.server.Model.PlayerClasses;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import it.polimi.ingsw.Shared.Cards.Card;
+import it.polimi.ingsw.shared.Cards.Card;
 import it.polimi.ingsw.server.Exceptions.NoSpaceException;
 import it.polimi.ingsw.server.SupportClasses.NColorsGroup;
 import it.polimi.ingsw.server.SupportClasses.RecursiveUsed;
 import it.polimi.ingsw.server.SupportClasses.RecursiveUsedSupport;
-import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
+import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
 
 import java.io.*;
 
@@ -28,7 +29,6 @@ public class Player {
     private final NColorsGroup equal = new NColorsGroup();
     private final RecursiveUsed recursiveUsed = new RecursiveUsed();
     //json
-    private JsonUrl jsonUrl;
     private int rowSize;
     private int columnSize;
     private int maxElement;
@@ -55,10 +55,10 @@ public class Player {
     }
 
     private void jsonCreate() throws FileNotFoundException {  //download json data
-        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("playerBoardConfig"));
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(JsonUrl.getUrl("playerBoardConfig"));
         if(inputStream == null) throw new FileNotFoundException();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-        InputStream inputStream1 = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("checkSpotConfig"));
+        InputStream inputStream1 = this.getClass().getClassLoader().getResourceAsStream(JsonUrl.getUrl("checkSpotConfig"));
         if(inputStream1 == null) throw new FileNotFoundException();
         BufferedReader bufferedReader1 = new BufferedReader(new InputStreamReader(inputStream1));
 
@@ -92,12 +92,18 @@ public class Player {
      * @throws FileNotFoundException
      */
     public void setPlayerTarget(int targetNumber) throws FileNotFoundException {  //exception file not found
-        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("playerTarget"));
-        if(inputStream == null) throw new FileNotFoundException();
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(JsonUrl.getUrl("playerTarget"));
 
-        Gson gson = new Gson();
-        PlayerTarget[] targets = gson.fromJson(bufferedReader, PlayerTarget[].class);       //Call constructor on PlayerTarget array by passing the json file attributes
+        if(inputStream == null) {
+            throw new FileNotFoundException();
+        }
+
+
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        //JsonArray jsonArray = new Gson().fromJson(bufferedReader , JsonArray.class);
+
+
+        PlayerTarget[] targets = new Gson().fromJson(bufferedReader, PlayerTarget[].class);       //Call constructor on PlayerTarget array by passing the json file attributes
 
         this.personalTarget = targets[targetNumber];
     }

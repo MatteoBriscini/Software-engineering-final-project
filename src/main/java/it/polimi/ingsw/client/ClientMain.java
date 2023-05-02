@@ -2,12 +2,9 @@ package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.client.Player.Player;
 import it.polimi.ingsw.client.Player.PlayingPlayer;
-import it.polimi.ingsw.Shared.Connection.ConnectionType;
+import it.polimi.ingsw.shared.Connection.ConnectionType;
 
 import java.rmi.RemoteException;
-import java.util.Scanner;
-
-import static it.polimi.ingsw.Shared.Connection.ConnectionType.*;
 
 public class ClientMain {
     static String serverIP = "127.0.0.1";
@@ -26,11 +23,23 @@ public class ClientMain {
         }
     }
     public static void main(String[] args) {
-        System.out.println("test");
 
 
-
-
+        try {
+            PlayingPlayer player1 = new PlayingPlayer("marco", "adsdwd", new ClientMain(), ConnectionType.RMI, 1200, serverIP);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            PlayingPlayer player2 = new PlayingPlayer("paolo", "adsdwd", new ClientMain(), ConnectionType.RMI, 1200, serverIP);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            PlayingPlayer player3 = new PlayingPlayer("paolo", "adsdwd", new ClientMain(), ConnectionType.SOCKET, 1202, serverIP);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 

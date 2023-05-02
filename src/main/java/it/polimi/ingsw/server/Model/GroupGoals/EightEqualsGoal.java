@@ -2,13 +2,13 @@ package it.polimi.ingsw.server.Model.GroupGoals;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import it.polimi.ingsw.Shared.Cards.Card;
-import it.polimi.ingsw.Shared.Cards.CardColor;
-import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
+import it.polimi.ingsw.shared.Cards.Card;
+import it.polimi.ingsw.shared.Cards.CardColor;
+import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
 
 import java.io.*;
 
-import static it.polimi.ingsw.Shared.Cards.CardColor.*;
+import static it.polimi.ingsw.shared.Cards.CardColor.*;
 
 //this class is used to check that there are 8 cards having the same color on the player's board
 public class EightEqualsGoal extends CommonGoal {

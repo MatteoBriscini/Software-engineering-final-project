@@ -8,8 +8,8 @@ import it.polimi.ingsw.server.Controller;
 import it.polimi.ingsw.server.Connection.LobbyRMI;
 import it.polimi.ingsw.server.Exceptions.ConnectionControllerManagerException;
 import it.polimi.ingsw.server.Exceptions.addPlayerToGameException;
-import it.polimi.ingsw.Shared.Connection.ConnectionType;
-import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
+import it.polimi.ingsw.shared.Connection.ConnectionType;
+import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
 
 import javax.security.auth.login.LoginException;
 import java.io.*;

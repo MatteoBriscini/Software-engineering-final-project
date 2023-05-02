@@ -1,8 +1,8 @@
-package it.polimi.ingsw.Shared.JsonSupportClasses;
+package it.polimi.ingsw.shared.JsonSupportClasses;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import it.polimi.ingsw.Shared.Cards.Card;
+import it.polimi.ingsw.shared.Cards.Card;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -11,7 +11,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import static it.polimi.ingsw.Shared.Cards.CardColor.EMPTY;
+import static it.polimi.ingsw.shared.Cards.CardColor.EMPTY;
 
 public class Position {
     private final int x;

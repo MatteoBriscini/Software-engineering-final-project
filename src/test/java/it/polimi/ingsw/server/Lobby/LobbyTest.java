@@ -2,7 +2,7 @@ package it.polimi.ingsw.server.Lobby;
 
 import it.polimi.ingsw.server.Controller;
 import it.polimi.ingsw.server.Exceptions.addPlayerToGameException;
-import it.polimi.ingsw.Shared.Connection.ConnectionType;
+import it.polimi.ingsw.shared.Connection.ConnectionType;
 import junit.framework.TestCase;
 
 import javax.security.auth.login.LoginException;

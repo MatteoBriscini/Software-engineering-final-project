@@ -6,9 +6,9 @@ import it.polimi.ingsw.server.Connection.ConnectionController;
 import it.polimi.ingsw.server.Connection.RMI.SendCommand.*;
 import it.polimi.ingsw.server.Controller;
 import it.polimi.ingsw.client.Connection.PlayingPlayerRemoteInterface;
-import it.polimi.ingsw.Shared.Cards.Card;
-import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
-import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
+import it.polimi.ingsw.shared.Cards.Card;
+import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
+import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

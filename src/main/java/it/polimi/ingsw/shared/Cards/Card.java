@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Shared.Cards;
+package it.polimi.ingsw.shared.Cards;
 
 /**
  * this class is used to represent the cards

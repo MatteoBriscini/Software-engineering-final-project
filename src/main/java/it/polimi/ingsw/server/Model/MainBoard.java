@@ -2,39 +2,33 @@ package it.polimi.ingsw.server.Model;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import it.polimi.ingsw.Shared.Cards.Card;
-import it.polimi.ingsw.Shared.Cards.CardColor;
+import it.polimi.ingsw.shared.Cards.Card;
+import it.polimi.ingsw.shared.Cards.CardColor;
 import it.polimi.ingsw.server.Exceptions.InvalidPickException;
-import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
-import it.polimi.ingsw.Shared.JsonSupportClasses.Position;
-import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
+import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
+import it.polimi.ingsw.shared.JsonSupportClasses.Position;
+import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
 
 import java.io.*;
 import java.util.*;
 
-import static it.polimi.ingsw.Shared.Cards.CardColor.*;
+import static it.polimi.ingsw.shared.Cards.CardColor.*;
 
 /**
  * This class is used to make all the checks on the MainBoard and remove or insert the cards
  */
 public class MainBoard {
-
     private final List<Card> colorsList;
     private final Card[][] board;
     Random rand = new Random();
-    private JsonUrl jsonUrl;
     private int nColors;
     private int cardsByColor;
     private int rows;
     private int columns;
-
-
-
     private void jsonCreate() throws FileNotFoundException {
         Gson gson = new Gson();
 
-        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("mainBoardConfig"));
-        System.out.println(inputStream);
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(JsonUrl.getUrl("mainBoardConfig"));
         if(inputStream == null) throw new FileNotFoundException();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 

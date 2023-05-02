@@ -3,7 +3,7 @@ package it.polimi.ingsw.server.Connection.RMI.SendCommand;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import it.polimi.ingsw.client.Connection.PlayingPlayerRemoteInterface;
-import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
+import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
 
 import java.rmi.RemoteException;
 

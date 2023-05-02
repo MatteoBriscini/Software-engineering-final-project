@@ -7,8 +7,8 @@ import it.polimi.ingsw.server.Controller;
 import it.polimi.ingsw.server.Exceptions.ConnectionControllerManagerException;
 import it.polimi.ingsw.server.Exceptions.addPlayerToGameException;
 import it.polimi.ingsw.server.Model.PlayerClasses.Player;
-import it.polimi.ingsw.Shared.Connection.ConnectionType;
-import it.polimi.ingsw.Shared.JsonSupportClasses.Position;
+import it.polimi.ingsw.shared.Connection.ConnectionType;
+import it.polimi.ingsw.shared.JsonSupportClasses.Position;
 import junit.framework.TestCase;
 
 import java.rmi.RemoteException;

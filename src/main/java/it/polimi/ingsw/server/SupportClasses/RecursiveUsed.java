@@ -2,8 +2,8 @@ package it.polimi.ingsw.server.SupportClasses;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import it.polimi.ingsw.Shared.Cards.Card;
-import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
+import it.polimi.ingsw.shared.Cards.Card;
+import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
 
 import java.io.*;
 

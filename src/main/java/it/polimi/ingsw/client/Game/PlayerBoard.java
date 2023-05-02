@@ -1,8 +1,8 @@
 package it.polimi.ingsw.client.Game;
 
-import it.polimi.ingsw.Shared.Cards.Card;
+import it.polimi.ingsw.shared.Cards.Card;
 
-import static it.polimi.ingsw.Shared.Cards.CardColor.*;
+import static it.polimi.ingsw.shared.Cards.CardColor.*;
 
 public class PlayerBoard {
 

@@ -9,11 +9,11 @@ import it.polimi.ingsw.client.Player.PlayingPlayer;
 import it.polimi.ingsw.server.Controller;
 import it.polimi.ingsw.server.Exceptions.ConnectionControllerManagerException;
 import it.polimi.ingsw.server.Exceptions.addPlayerToGameException;
-import it.polimi.ingsw.Shared.Cards.Card;
-import it.polimi.ingsw.Shared.Connection.ConnectionType;
-import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
-import it.polimi.ingsw.Shared.JsonSupportClasses.Position;
-import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
+import it.polimi.ingsw.shared.Cards.Card;
+import it.polimi.ingsw.shared.Connection.ConnectionType;
+import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
+import it.polimi.ingsw.shared.JsonSupportClasses.Position;
+import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
 import junit.framework.TestCase;
 
 import java.io.BufferedReader;
@@ -23,7 +23,7 @@ import java.io.InputStreamReader;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
-import static it.polimi.ingsw.Shared.Cards.CardColor.EMPTY;
+import static it.polimi.ingsw.shared.Cards.CardColor.EMPTY;
 
 public class ConnectionControllerManagerTest extends TestCase {
     ConnectionControllerManager testServer = new ConnectionControllerManager();

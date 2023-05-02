@@ -4,9 +4,9 @@ import com.google.gson.JsonObject;
 import it.polimi.ingsw.server.Connection.RMI.ControllerRMI;
 import it.polimi.ingsw.server.Controller;
 import it.polimi.ingsw.server.Exceptions.ConnectionControllerManagerException;
-import it.polimi.ingsw.Shared.Cards.Card;
-import it.polimi.ingsw.Shared.Connection.ConnectionType;
-import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
+import it.polimi.ingsw.shared.Cards.Card;
+import it.polimi.ingsw.shared.Connection.ConnectionType;
+import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
 
 import java.util.ArrayList;
 

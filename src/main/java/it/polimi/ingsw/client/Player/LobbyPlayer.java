@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import it.polimi.ingsw.client.ClientMain;
 import it.polimi.ingsw.client.Connection.LobbyPlayerRMI;
 import it.polimi.ingsw.server.Exceptions.addPlayerToGameException;
-import it.polimi.ingsw.Shared.Connection.ConnectionType;
+import it.polimi.ingsw.shared.Connection.ConnectionType;
 
 import javax.security.auth.login.LoginException;
 

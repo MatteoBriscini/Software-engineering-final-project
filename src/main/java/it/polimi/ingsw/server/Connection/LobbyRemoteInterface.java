@@ -1,7 +1,7 @@
 package it.polimi.ingsw.server.Connection;
 
 import it.polimi.ingsw.server.Exceptions.addPlayerToGameException;
-import it.polimi.ingsw.Shared.Connection.ConnectionType;
+import it.polimi.ingsw.shared.Connection.ConnectionType;
 
 import javax.security.auth.login.LoginException;
 import java.rmi.Remote;

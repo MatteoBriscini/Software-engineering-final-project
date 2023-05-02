@@ -1,11 +1,11 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.server.Exceptions.ConstructorException;
-import it.polimi.ingsw.Shared.Cards.Card;
+import it.polimi.ingsw.shared.Cards.Card;
 import it.polimi.ingsw.server.Exceptions.NoSpaceException;
 import it.polimi.ingsw.server.Model.GameMaster;
 import it.polimi.ingsw.server.Model.GroupGoals.CommonGoal;
-import it.polimi.ingsw.Shared.JsonSupportClasses.Position;
+import it.polimi.ingsw.shared.JsonSupportClasses.Position;
 import it.polimi.ingsw.server.Model.MainBoard;
 import it.polimi.ingsw.server.Model.PlayerClasses.Player;
 import junit.framework.TestCase;
@@ -13,8 +13,8 @@ import junit.framework.TestCase;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-import static it.polimi.ingsw.Shared.Cards.CardColor.*;
-import static it.polimi.ingsw.Shared.Cards.CardColor.LIGHTBLUE;
+import static it.polimi.ingsw.shared.Cards.CardColor.*;
+import static it.polimi.ingsw.shared.Cards.CardColor.LIGHTBLUE;
 
 public class GameMasterTest extends TestCase {
 

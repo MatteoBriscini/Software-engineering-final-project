@@ -3,8 +3,8 @@ package it.polimi.ingsw.server.Connection;
 import com.google.gson.Gson;
 import com.google.gson.*;
 import it.polimi.ingsw.server.Controller;
-import it.polimi.ingsw.Shared.Cards.Card;
-import it.polimi.ingsw.Shared.JsonSupportClasses.PositionWithColor;
+import it.polimi.ingsw.shared.Cards.Card;
+import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.server.Model.GroupGoals;
 
-import it.polimi.ingsw.Shared.Cards.Card;
+import it.polimi.ingsw.shared.Cards.Card;
 
 import java.util.ArrayList;
 

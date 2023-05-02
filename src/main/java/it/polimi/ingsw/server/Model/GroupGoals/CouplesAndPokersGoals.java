@@ -3,12 +3,12 @@ package it.polimi.ingsw.server.Model.GroupGoals;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import it.polimi.ingsw.Shared.Cards.Card;
+import it.polimi.ingsw.shared.Cards.Card;
 import it.polimi.ingsw.server.Exceptions.ConstructorException;
 import it.polimi.ingsw.server.SupportClasses.NColorsGroup;
 import it.polimi.ingsw.server.SupportClasses.RecursiveUsed;
 import it.polimi.ingsw.server.SupportClasses.RecursiveUsedSupport;
-import it.polimi.ingsw.Shared.JsonSupportClasses.JsonUrl;
+import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
 
 import java.io.*;
 

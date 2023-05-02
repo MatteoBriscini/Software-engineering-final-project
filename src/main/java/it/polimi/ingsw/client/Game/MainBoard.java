@@ -1,13 +1,13 @@
 package it.polimi.ingsw.client.Game;
 
 import it.polimi.ingsw.client.Exceptions.InvalidPickException;
-import it.polimi.ingsw.Shared.Cards.*;
-import it.polimi.ingsw.Shared.JsonSupportClasses.*;
+import it.polimi.ingsw.shared.Cards.*;
+import it.polimi.ingsw.shared.JsonSupportClasses.*;
 
 import java.util.Arrays;
 import java.util.Comparator;
 
-import static it.polimi.ingsw.Shared.Cards.CardColor.EMPTY;
+import static it.polimi.ingsw.shared.Cards.CardColor.EMPTY;
 
 
 public class MainBoard {

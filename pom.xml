@@ -60,8 +60,20 @@
 
   </dependencies>
 
-    <build>
 
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources/json/config</directory>
+            </resource>
+            <resource>
+                <directory>src/main/resources/json/testJson</directory>
+            </resource>
+            <resource>
+                <directory>src/main/resources/json/goal</directory>
+            </resource>
+        </resources>
 
         <plugins>
             <plugin>
