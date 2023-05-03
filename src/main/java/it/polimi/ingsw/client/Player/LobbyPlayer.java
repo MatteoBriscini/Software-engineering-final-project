@@ -10,14 +10,12 @@ import javax.security.auth.login.LoginException;
 
 public class LobbyPlayer extends Player{
 
-    private final ConnectionType connectionType;
     private LobbyPlayerRMI lobbyPlayerRMI;
     private int PORT;
 
 
     public LobbyPlayer(String playerID, String pwd, ClientMain clientMain, ConnectionType connectionType, int PORT, String serverIP){
         super(playerID, pwd, clientMain);
-        this.connectionType = connectionType;
         switch (connectionType){
             case RMI:
 
@@ -106,7 +104,7 @@ public class LobbyPlayer extends Player{
 
     public void joinGame(){
         try {
-            this.PORT = lobbyPlayerRMI.joinGame(playerID, connectionType);
+            this.PORT = lobbyPlayerRMI.joinGame(playerID);
         } catch (addPlayerToGameException e) {
             addPlayerToGameError(e.getMessage());
         }
@@ -120,7 +118,7 @@ public class LobbyPlayer extends Player{
 
     public void joinGame(String searchID){
         try {
-            this.PORT = lobbyPlayerRMI.joinGame(playerID, connectionType, searchID);
+            this.PORT = lobbyPlayerRMI.joinGame(playerID, searchID);
         } catch (addPlayerToGameException e) {
             addPlayerToGameError(e.getMessage());
         }
@@ -134,7 +132,7 @@ public class LobbyPlayer extends Player{
 
     public void createGame(){
         try {
-            this.PORT = lobbyPlayerRMI.createGame(playerID, connectionType);
+            this.PORT = lobbyPlayerRMI.createGame(playerID);
         } catch (addPlayerToGameException e) {
             addPlayerToGameError(e.getMessage());
         }
@@ -148,7 +146,7 @@ public class LobbyPlayer extends Player{
 
     public void createGame(int maxPlayerNumber){
         try {
-            this.PORT = lobbyPlayerRMI.createGame(playerID, connectionType, maxPlayerNumber);
+            this.PORT = lobbyPlayerRMI.createGame(playerID, maxPlayerNumber);
         } catch (addPlayerToGameException e) {
             addPlayerToGameError(e.getMessage());
         }

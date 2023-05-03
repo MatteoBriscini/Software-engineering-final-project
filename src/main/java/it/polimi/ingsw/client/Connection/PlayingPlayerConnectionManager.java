@@ -3,6 +3,7 @@ package it.polimi.ingsw.client.Connection;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import it.polimi.ingsw.client.Player.Player;
 import it.polimi.ingsw.client.Player.PlayingPlayer;
 import it.polimi.ingsw.shared.Cards.Card;
 import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
@@ -12,10 +13,10 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
 public abstract class PlayingPlayerConnectionManager extends UnicastRemoteObject {
-    PlayingPlayer playingPlayer;
+    Player player;
 
-    protected PlayingPlayerConnectionManager(PlayingPlayer playingPlayer) throws RemoteException {
-        this.playingPlayer=playingPlayer;
+    protected PlayingPlayerConnectionManager(Player player) throws RemoteException {
+        this.player=player;
     }
     /*************************************************************************
      ************************************************** OUT method ***********
@@ -35,26 +36,26 @@ public abstract class PlayingPlayerConnectionManager extends UnicastRemoteObject
      * @param activePlayerID PLayerID of the player have to play now
      */
     public void notifyActivePlayer(String activePlayerID){
-        playingPlayer.setActivePlayer(activePlayerID);
+        ((PlayingPlayer)player).setActivePlayer(activePlayerID);
     }
     /**
      * @param playersID all players ID
      */
     public void receivePlayerList(String[] playersID){
-        playingPlayer.setPlayersID(playersID);
+        ((PlayingPlayer)player).setPlayersID(playersID);
     }
     /**
      * @param playersNumber total amount of players in the game
      */
     public void receivePlayersNumber(int playersNumber){
-        playingPlayer.setPlayersNumber(playersNumber);
+        ((PlayingPlayer)player).setPlayersNumber(playersNumber);
     }
     /**
      * @param mainBoard json array represent the main board
      */
     public void receiveMainBoard(String mainBoard){ //Card[][]
         Card[][] board = new Gson().fromJson(mainBoard, Card[][].class);
-        playingPlayer.createMainBoard(board);
+        ((PlayingPlayer)player).createMainBoard(board);
     }
     /**
      * @param playerBoards all players bord in the game (used in game start phase and when a player reconnect after a crash)
@@ -65,7 +66,7 @@ public abstract class PlayingPlayerConnectionManager extends UnicastRemoteObject
         for (int i = 0; i<jsonArray.size();i++){
             boards.add(new Gson().fromJson(jsonArray.get(0), Card[][].class));
         }
-        playingPlayer.createAllClientBoard(boards);
+        ((PlayingPlayer)player).createAllClientBoard(boards);
     }
     /**
     /**
@@ -75,29 +76,29 @@ public abstract class PlayingPlayerConnectionManager extends UnicastRemoteObject
      */
     public void addCardToPlayerBoard(String playerID, int column,String cards){//Card[] (cards)
         Card[] cardArray = new Gson().fromJson(cards, Card[].class);
-        playingPlayer.addCardToPlayerBoard(playerID, column, cardArray);
+        ((PlayingPlayer)player).addCardToPlayerBoard(playerID, column, cardArray);
     }
     /**
      * @param cards position with color array, position have to remove from the mainBoard;
      */
     public void removeCardFromMainBoard(String cards){//PositionWithColor[]
         PositionWithColor[] position = new Gson().fromJson(cards, PositionWithColor[].class);
-        playingPlayer.removeCardFromMainBoard(position);
+        ((PlayingPlayer)player).removeCardFromMainBoard(position);
     }
     /*
      * @param commonGoalID number unique identify the common goal
      */
     public void receiveAllCommonGoal(int[] commonGoalID){
-        playingPlayer.setCommonGoalID(commonGoalID);
+        ((PlayingPlayer)player).setCommonGoalID(commonGoalID);
     }
     /**
      * @param cards PositionWithColor[] settings to recreate the image for private goal
      * @param playerID player's name for the private goal
      */
     public void receivePrivateGoal(String cards,String playerID){//PositionWithColor[] (cards)
-        if(playerID.equals(playingPlayer.getPlayerID())){
+        if(playerID.equals(((PlayingPlayer)player).getPlayerID())){
             PositionWithColor[] privateGoal = new Gson().fromJson(cards, PositionWithColor[].class);
-            playingPlayer.setPrivateGoal(privateGoal);
+            ((PlayingPlayer)player).setPrivateGoal(privateGoal);
         }
 
     }
@@ -106,20 +107,20 @@ public abstract class PlayingPlayerConnectionManager extends UnicastRemoteObject
      * @param points map playerID + point for each game
      */
     public void endGameValue(String points){
-        playingPlayer.endGameValue(points);
+        ((PlayingPlayer)player).endGameValue(points);
     }
     /**
      * @param winner json object with playerID and points of the winner
      */
     public void receiveWinner(String winner){
-        playingPlayer.endGameValue(winner);
+        ((PlayingPlayer)player).endGameValue(winner);
     }
     /**
      * @param scored json object with point for each client
      */
     public void receiveLastCommonScored(String scored){
         JsonObject json= new Gson().fromJson(scored, JsonObject.class);
-        playingPlayer.addCommonGoalScored(json);
+        ((PlayingPlayer)player).addCommonGoalScored(json);
     }
     /**
      * @param error json object with errorID && errorMSG
@@ -128,8 +129,8 @@ public abstract class PlayingPlayerConnectionManager extends UnicastRemoteObject
     public void errorMSG(String error, String playerID){
         JsonObject json= new Gson().fromJson(error, JsonObject.class);
 
-        if(playerID.equals(playingPlayer.getPlayerID())){
-            playingPlayer.errMsg(json);
+        if(playerID.equals(((PlayingPlayer)player).getPlayerID())){
+            ((PlayingPlayer)player).errMsg(json);
         }
 
     }
@@ -137,7 +138,7 @@ public abstract class PlayingPlayerConnectionManager extends UnicastRemoteObject
      * the client is forced by the server to quit the game
      */
     public void forceDisconnection(){
-         playingPlayer.disconnectError("disconnection forced by the server");
+        ((PlayingPlayer)player).disconnectError("disconnection forced by the server");
     }
 
     /**************************************************************************
@@ -146,10 +147,10 @@ public abstract class PlayingPlayerConnectionManager extends UnicastRemoteObject
      */
 
     public void receiveBroadcastMsg(String msg, String sender){
-        playingPlayer.receiveBroadcastMsg(msg, sender);
+        ((PlayingPlayer)player).receiveBroadcastMsg(msg, sender);
     }
     public void receivePrivateMSG(String userID, String msg, String sender){
-        playingPlayer.receivePrivateMSG(userID, msg, sender);
+        ((PlayingPlayer)player).receivePrivateMSG(userID, msg, sender);
     }
 
 }

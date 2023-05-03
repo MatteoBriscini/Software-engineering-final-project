@@ -6,7 +6,9 @@ import it.polimi.ingsw.server.Connection.ConnectionController;
 import it.polimi.ingsw.server.Connection.RMI.SendCommand.*;
 import it.polimi.ingsw.server.Controller;
 import it.polimi.ingsw.client.Connection.PlayingPlayerRemoteInterface;
+import it.polimi.ingsw.server.Lobby.Lobby;
 import it.polimi.ingsw.shared.Cards.Card;
+import it.polimi.ingsw.shared.Connection.ConnectionType;
 import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
 import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
 
@@ -32,7 +34,7 @@ public class ControllerRMI extends ConnectionController implements ControllerRem
     private final ArrayList<String> clientsID = new ArrayList<>();
     private JsonUrl jsonUrl;
     public ControllerRMI(Controller controller, int port){
-        super(controller, port);
+        super(new Lobby(), port, ConnectionType.RMI);
         this.connection();
 
         try {

@@ -83,7 +83,7 @@ public class PlayingPlayerRMI extends PlayingPlayerConnectionManager implements 
                 return;
             }
         } catch (RemoteException e) {
-            playingPlayer.disconnectError("server can't respond");
+            ((PlayingPlayer)player).disconnectError("server can't respond");
             return;
         }
         this.pong();
@@ -132,7 +132,7 @@ public class PlayingPlayerRMI extends PlayingPlayerConnectionManager implements 
      * @return the player id of this client (called by server when necessary)
      */
     public String getPlayerID(){
-        return playingPlayer.getPlayerID();
+        return ((PlayingPlayer)player).getPlayerID();
     }
 
     /**
@@ -140,7 +140,7 @@ public class PlayingPlayerRMI extends PlayingPlayerConnectionManager implements 
      */
     @Override
     public void forceDisconnection(){
-        playingPlayer.disconnectError("disconnection forced by the server");
+        ((PlayingPlayer)player).disconnectError("disconnection forced by the server");
     }
 
     /**************************************************************************

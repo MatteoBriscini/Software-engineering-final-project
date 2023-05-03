@@ -1,8 +1,11 @@
 package it.polimi.ingsw.server.Connection;
 
+import com.google.gson.JsonObject;
 import it.polimi.ingsw.server.Exceptions.addPlayerToGameException;
 import it.polimi.ingsw.server.Lobby.Lobby;
+import it.polimi.ingsw.shared.Cards.Card;
 import it.polimi.ingsw.shared.Connection.ConnectionType;
+import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
 
 import javax.security.auth.login.LoginException;
 import java.rmi.AlreadyBoundException;
@@ -11,28 +14,25 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 
-public class LobbyRMI implements LobbyRemoteInterface{
-
-    protected final Lobby lobby;
-    protected int PORT;
+public class LobbyRMI extends ConnectionController  implements LobbyRemoteInterface {
 
     protected final String cntType;
 
-    public LobbyRMI(int port, Lobby lobby){
-        this.lobby = lobby;
-        this.PORT = port;
+    public LobbyRMI(int port, Lobby lobby) {
+        super(lobby, port, ConnectionType.RMI);
         this.cntType = "RMI";
         this.connection();
 
     }
 
-    synchronized public void connection(){
+    synchronized public void connection() {
         LobbyRemoteInterface stub = null;
         try {
 
             stub = (LobbyRemoteInterface) UnicastRemoteObject.exportObject((Remote) this, this.PORT);
-        }catch (RemoteException e){
+        } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
 
@@ -56,64 +56,87 @@ public class LobbyRMI implements LobbyRemoteInterface{
     }
 
     @Override
-    public int login(String ID, String pwd) throws LoginException {
+    public void notifyActivePlayer(String activePlayerID) {
 
-        int msg;
-        System.out.println(ID + " on port: "+ PORT + ", logging in");
-        msg = lobby.login(ID, pwd);
-        return msg;
     }
 
     @Override
-    public boolean signUp(String ID, String pwd) throws LoginException {
+    public void sendPlayerList(String[] players) {
 
-        System.out.println(ID + " on port: "+ PORT + ", trying to sign up");
-        lobby.signUp(ID, pwd);
-        return false;
     }
 
-    public int joinGame(String ID, ConnectionType connectionType) throws addPlayerToGameException {
+    @Override
+    public void sendPlayersNUmber(int playersNumber) {
 
-        int msg;
-
-        System.out.println(ID + " on port: "+ PORT + ", trying to join a random game");
-
-        msg = lobby.joinGame(ID, connectionType);
-
-        return msg;
-    }
-    public int joinGame(String ID, ConnectionType connectionType, String searchID) throws addPlayerToGameException {
-
-        int msg;
-
-        System.out.println(ID + " on port: "+ PORT + ", trying to join a game with player " + searchID);
-
-        msg = lobby.joinGame(ID, connectionType, searchID);
-
-        return msg;
     }
 
-    public int createGame(String ID, ConnectionType connectionType) throws addPlayerToGameException {
+    @Override
+    public void sendMainBoard(Card[][] mainBoard) {
 
-        int msg;
-
-        System.out.println(ID + " on port: "+ PORT + ", trying to create a game");
-
-        msg = lobby.createGame(ID, connectionType);
-
-        return msg;
     }
 
-    public int createGame(String ID, ConnectionType connectionType, int maxPlayerNumber) throws addPlayerToGameException {
+    @Override
+    public void addCardToClientBoard(String playerID, int column, Card[] cards) {
 
-        int msg;
-
-        System.out.println(ID + " on port: "+ PORT + ", trying to create a game with " + maxPlayerNumber + " players");
-
-        msg = lobby.createGame(ID, connectionType, maxPlayerNumber);
-
-        return msg;
     }
+
+    @Override
+    public void dellCardFromMainBoard(PositionWithColor[] cards) {
+
+    }
+
+    @Override
+    public void sendAllPlayerBoard(ArrayList<Card[][]> playerBoards) {
+
+    }
+
+    @Override
+    public void sendAllCommonGoal(int[] commonGoalID) {
+
+    }
+
+    @Override
+    public void sendPrivateGoal(PositionWithColor[] cards, String playerID) {
+
+    }
+
+    @Override
+    public void sendEndGamePoint(JsonObject points) {
+
+    }
+
+    @Override
+    public void sendWinner(JsonObject winner) {
+
+    }
+
+    @Override
+    public void sendLastCommonScored(JsonObject scored) {
+
+    }
+
+    @Override
+    public void sendError(JsonObject error, String playerID) {
+
+    }
+
+    @Override
+    public void forceClientDisconnection() {
+
+    }
+
+    @Override
+    public void sendBroadcastMsg(String msg, String sender) {
+
+    }
+
+    @Override
+    public void sendPrivateMSG(String userID, String msg, String sender) {
+
+    }
+
+
+
 
     /*
 

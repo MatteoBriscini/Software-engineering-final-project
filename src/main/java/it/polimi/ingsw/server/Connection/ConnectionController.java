@@ -3,19 +3,26 @@ package it.polimi.ingsw.server.Connection;
 import com.google.gson.Gson;
 import com.google.gson.*;
 import it.polimi.ingsw.server.Controller;
+import it.polimi.ingsw.server.Exceptions.addPlayerToGameException;
+import it.polimi.ingsw.server.Lobby.Lobby;
 import it.polimi.ingsw.shared.Cards.Card;
+import it.polimi.ingsw.shared.Connection.ConnectionType;
 import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
 
+import javax.security.auth.login.LoginException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 public abstract class ConnectionController {
-    protected Controller controller;
+    protected Controller controller = new Controller();
     protected int PORT;
+    protected Lobby lobby;
+    protected ConnectionType connectionType;
 
-    public ConnectionController (Controller controller, int port){
-        this.controller = controller;
+    public ConnectionController (Lobby lobby, int port, ConnectionType connectionType){
+        this.lobby = lobby;
         this.PORT = port;
+        this.connectionType = connectionType;
     }
 
     public abstract void connection();
@@ -25,7 +32,7 @@ public abstract class ConnectionController {
     }
 
     /*************************************************************************
-     ************************************************** OUT method ***********
+     ************************************************** OUT playing methods ***********
      * ***********************************************************************
      * *
      * @param activePlayerID player's id of the client have to play in this turn
@@ -102,8 +109,8 @@ public abstract class ConnectionController {
      */
     public abstract void sendPrivateMSG(String userID, String msg, String sender);
 
-    /************************************************************************
-     ************************************************** IN method ***********
+    /*************************************************************************
+     ************************************************** IN playing methods ******
      * ***********************************************************************
      * method to start game, only the creator of the game can start the game in every moment
      * @param playerID ID of the player call the method
@@ -145,5 +152,68 @@ public abstract class ConnectionController {
      */
     public void receivePrivateMSG(String userID, String msg, String sender){
         controller.privateMSG(userID, msg, sender);
+    }
+/*************************************************************************
+ ************************************************** IN lobby methods ********
+ * ***********************************************************************
+ * */
+
+    public int login(String ID, String pwd) throws LoginException {
+
+        int msg;
+        System.out.println(ID + " on port: "+ PORT + ", logging in");
+        msg = lobby.login(ID, pwd);
+        return msg;
+    }
+
+
+    public boolean signUp(String ID, String pwd) throws LoginException {
+
+        System.out.println(ID + " on port: "+ PORT + ", trying to sign up");
+        lobby.signUp(ID, pwd);
+        return false;
+    }
+
+    public int joinGame(String ID) throws addPlayerToGameException {
+
+        int msg;
+
+        System.out.println(ID + " on port: "+ PORT + ", trying to join a random game");
+
+        msg = lobby.joinGame(ID, this.connectionType);
+
+        return msg;
+    }
+    public int joinGame(String ID, String searchID) throws addPlayerToGameException {
+
+        int msg;
+
+        System.out.println(ID + " on port: "+ PORT + ", trying to join a game with player " + searchID);
+
+        msg = lobby.joinGame(ID, this.connectionType, searchID);
+
+        return msg;
+    }
+
+    public int createGame(String ID) throws addPlayerToGameException {
+
+        int msg;
+
+        System.out.println(ID + " on port: "+ PORT + ", trying to create a game");
+
+        msg = lobby.createGame(ID, this.connectionType);
+
+        return msg;
+    }
+
+    public int createGame(String ID, int maxPlayerNumber) throws addPlayerToGameException {
+
+        int msg;
+
+        System.out.println(ID + " on port: "+ PORT + ", trying to create a game with " + maxPlayerNumber + " players");
+
+        msg = lobby.createGame(ID, this.connectionType, maxPlayerNumber);
+
+        return msg;
     }
 }
