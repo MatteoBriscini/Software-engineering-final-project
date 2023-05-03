@@ -13,13 +13,13 @@ public interface LobbyRemoteInterface extends Remote {
 
     boolean signUp(String ID, String pwd) throws LoginException, RemoteException;
 
-    int joinGame(String ID, ConnectionType connectionType) throws addPlayerToGameException, RemoteException;
+    int joinGame(String ID) throws addPlayerToGameException, RemoteException;
 
-    int joinGame(String ID, ConnectionType connectionType, String searchID) throws addPlayerToGameException, RemoteException;
+    int joinGame(String ID, String searchID) throws addPlayerToGameException, RemoteException;
 
-    int createGame(String ID, ConnectionType connectionType) throws addPlayerToGameException, RemoteException;
+    int createGame(String ID) throws addPlayerToGameException, RemoteException;
 
-    int createGame(String ID, ConnectionType connectionType, int maxPlayerNumber) throws addPlayerToGameException, RemoteException;
+    int createGame(String ID, int maxPlayerNumber) throws addPlayerToGameException, RemoteException;
 
 
 }

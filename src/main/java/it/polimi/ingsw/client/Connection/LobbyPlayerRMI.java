@@ -53,39 +53,39 @@ public class LobbyPlayerRMI {
         }
     }
 
-    public static int joinGame(String ID, ConnectionType connectionType) throws addPlayerToGameException {
+    public static int joinGame(String ID) throws addPlayerToGameException {
 
         try {
-            return stub.joinGame(ID, connectionType);
+            return stub.joinGame(ID);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
 
     }
-    public static int joinGame(String ID, ConnectionType connectionType, String searchID) throws addPlayerToGameException {
+    public static int joinGame(String ID, String searchID) throws addPlayerToGameException {
 
         try {
-            return stub.joinGame(ID, connectionType, searchID);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
-    public static int createGame(String ID, ConnectionType connectionType) throws addPlayerToGameException {
-
-        try {
-            return stub.createGame(ID, connectionType);
+            return stub.joinGame(ID, searchID);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
 
     }
 
-    public static int createGame(String ID, ConnectionType connectionType, int maxPlayerNumber) throws addPlayerToGameException {
+    public static int createGame(String ID) throws addPlayerToGameException {
 
         try {
-            return stub.createGame(ID, connectionType, maxPlayerNumber);
+            return stub.createGame(ID);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public static int createGame(String ID, int maxPlayerNumber) throws addPlayerToGameException {
+
+        try {
+            return stub.createGame(ID, maxPlayerNumber);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }

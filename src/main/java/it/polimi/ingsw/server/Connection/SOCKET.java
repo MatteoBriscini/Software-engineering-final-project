@@ -1,15 +1,17 @@
 package it.polimi.ingsw.server.Connection;
 
+
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import it.polimi.ingsw.server.Controller;
+import it.polimi.ingsw.server.Exceptions.addPlayerToGameException;
 import it.polimi.ingsw.server.Lobby.Lobby;
 import it.polimi.ingsw.shared.Cards.Card;
 import it.polimi.ingsw.shared.Connection.ConnectionType;
 import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
 import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
 
+import javax.security.auth.login.LoginException;
 import java.io.*;
 
 import java.lang.reflect.*;
@@ -21,11 +23,11 @@ import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ControllerSOCKET extends ConnectionController {
+public class SOCKET extends ConnectionController{
     private ServerSocket serverSocket;
     private ArrayList<MultiClientSocketGame> clients = new ArrayList<>();
-    public ControllerSOCKET(Controller controller, int port){
-        super(new Lobby(), port, ConnectionType.SOCKET);
+    public SOCKET(Lobby lobby, int port){
+        super(lobby, port, ConnectionType.SOCKET);
         this.connection();
     }
     private int pingPongTime = 5000;
@@ -54,7 +56,7 @@ public class ControllerSOCKET extends ConnectionController {
         executor.shutdown();
     }
     /*************************************************************************
-     ************************************************** OUT method ***********
+     ************************************************** OUT playing methods ***********
      * ***********************************************************************
      */
 
@@ -286,7 +288,7 @@ public class ControllerSOCKET extends ConnectionController {
         return true;
     }
     /*************************************************************************
-     ************************************************** IN method ************
+     ************************************************** IN playing methods ************
      * ***********************************************************************
      */
     public boolean startGame(JsonObject data){
@@ -298,6 +300,70 @@ public class ControllerSOCKET extends ConnectionController {
         return bool;
 
     }
+
+    /*************************************************************************
+     ************************************************** IN lobby methods ********
+     * ***********************************************************************
+     * */
+
+    public boolean login(JsonObject data){
+
+        try {
+            this.login(data.get("ID").getAsString(), data.get("pwd").getAsString());
+        } catch (LoginException e) {
+            return false;
+        }
+        return true;
+    }
+
+
+    public boolean signUp(JsonObject data){
+
+        try {
+            this.signUp(data.get("ID").getAsString(), data.get("pwd").getAsString());
+        } catch (LoginException e) {
+            return false;
+        }
+        return true;
+
+    }
+
+    public boolean joinGame(JsonObject data){
+        if(!data.get("searchID").getAsString().equals("null")){
+            try {
+                this.joinGame(data.get("ID").getAsString(), data.get("searchID").getAsString());
+            } catch (addPlayerToGameException e) {
+                return false;
+            }
+        }else{
+            try {
+                this.joinGame(data.get("ID").getAsString());
+            } catch (addPlayerToGameException e) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public boolean createGame(JsonObject data){
+
+        if(data.get("maxPlayerNumber").getAsInt() != 0){
+            try {
+                this.createGame(data.get("ID").getAsString(), data.get("maxPlayerNumber").getAsInt());
+            } catch (addPlayerToGameException e) {
+                return false;
+            }
+        }else{
+            try {
+                this.createGame(data.get("ID").getAsString());
+            } catch (addPlayerToGameException e) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     /***********************************************************************************
      ************************************************** MultiClientSocketGame **********
@@ -326,8 +392,8 @@ public class ControllerSOCKET extends ConnectionController {
             }
 
 
-            pingPongThread = new Thread(this::pingPong);       //start ping pong
-            pingPongThread.start();
+            //pingPongThread = new Thread(this::pingPong);       //start ping pong
+            //pingPongThread.start();
         }
 
         private void jsonCreate() throws FileNotFoundException {  //download json data
@@ -406,6 +472,7 @@ public class ControllerSOCKET extends ConnectionController {
                 JsonObject jsonObject = new Gson().fromJson(line, JsonObject.class);
                 String methodName = jsonObject.get("service").getAsString();
                 JsonObject data = jsonObject.get("data").getAsJsonObject();
+
                 if (methodName.equals("quit")) {
                     cntOn = false;
                     sendData.addProperty("existingMethod", true);
@@ -432,19 +499,18 @@ public class ControllerSOCKET extends ConnectionController {
                 } else if(methodName.equals("pingResponse")){
                     this.pingResponse();
                 } else {
-                    System.out.println(methodName);
                     existingMethod = true;
                     Method getNameMethod = null;
 
                     try {
-                        getNameMethod = ControllerSOCKET.this.getClass().getMethod(methodName, JsonObject.class);
+                        getNameMethod = SOCKET.this.getClass().getMethod(methodName, JsonObject.class);
                     } catch (NoSuchMethodException e) {
                         existingMethod = false;
                     }
-
+                    System.out.println(existingMethod);
                     if(getNameMethod != null) {
                         try {
-                            Boolean booleanResponse = (boolean) getNameMethod.invoke(ControllerSOCKET.this, data);
+                            Boolean booleanResponse = (boolean) getNameMethod.invoke(SOCKET.this, data);
                             sendData.addProperty("response", booleanResponse);
                         } catch (IllegalAccessException | InvocationTargetException e) {
                             existingMethod = false;

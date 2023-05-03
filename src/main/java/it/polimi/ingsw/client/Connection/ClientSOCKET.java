@@ -1,9 +1,11 @@
 package it.polimi.ingsw.client.Connection;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import it.polimi.ingsw.client.ClientMain;
+import it.polimi.ingsw.client.Player.LobbyPlayer;
 import it.polimi.ingsw.client.Player.PlayingPlayer;
+import it.polimi.ingsw.shared.Connection.ConnectionType;
 import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
 import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
 
@@ -12,7 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.Socket;
 
-public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
+public class ClientSOCKET extends PlayingPlayerConnectionManager{
     private final String playerID;
     int PORT;
     private final String serverIP;
@@ -22,7 +24,6 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
     private final BufferedReader stdIn;
     private boolean validResponse;
     private boolean response;
-    private JsonUrl jsonUrl;
     private int timeout;
     private Thread receiveMsgThread;
     private int pingPongTime;
@@ -30,8 +31,8 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
     private boolean quit = false;
     Thread pingPongThread;
 
-    public PlayingPlayerSOCKET(int PORT, String serverIP, String playerID, PlayingPlayer playingPlayer) throws Exception {
-        super(playingPlayer);
+    public ClientSOCKET(int PORT, String serverIP, String playerID) throws Exception {
+        super(new LobbyPlayer("marco", "hola", new ClientMain(), ConnectionType.SOCKET, 1234, "127.0.0.1"));//TODO
 
         this.playerID = playerID;
 
@@ -54,7 +55,7 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
     }
 
     private void jsonCreate() throws FileNotFoundException {  //download json data
-        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("netConfig"));
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(JsonUrl.getUrl("netConfig"));
         if(inputStream == null) throw new FileNotFoundException();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         JsonObject jsonObject = new Gson().fromJson(bufferedReader , JsonObject.class);
@@ -70,8 +71,8 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
         msg.add("data", data);
         this.sendMSG(msg);
 
-        pingPongThread = new Thread(this::pingPong);       //start ping pong
-        pingPongThread.start();
+        //pingPongThread = new Thread(this::pingPong);       //start ping pong
+        //pingPongThread.start();
     }
     public void pingResponse(JsonObject data){
         synchronized (pingPongThread) {
@@ -216,7 +217,35 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
         out.close();
         ((PlayingPlayer)player).disconnectError("disconnection forced by the server");
     }
+    /*************************************************************************
+     *                          OUT lobby method
+     * ***********************************************************************
+     */
+    public boolean joinGame(String ID, String searchID){
+        JsonObject data = new JsonObject();
+        data.addProperty("ID", ID);
+        data.addProperty("searchID" ,searchID);
+        JsonObject msg = new JsonObject();
+        msg.addProperty("service", "joinGame");
+        msg.add("data" ,data);
 
+        out.println(msg.toString());  //send socket message TODO
+        out.flush();
+        return false;
+    }
+    public boolean joinGame(String ID){
+        JsonObject data = new JsonObject();
+        data.addProperty("ID", ID);
+        data.addProperty("searchID" , "null");
+        JsonObject msg = new JsonObject();
+        msg.addProperty("service", "joinGame");
+
+        msg.add("data" ,data);
+
+        out.println(msg.toString());  //send socket message TODO
+        out.flush();
+        return false;
+    }
     /*************************************************************************
      *                          OUT method
      * ***********************************************************************
@@ -238,7 +267,8 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
                 throw new RuntimeException(e);
             }
             if(!validResponse){
-                ((PlayingPlayer)player).disconnectError("server can't respond");
+                //System.out.println("errore"); TODO
+                //((PlayingPlayer)player).disconnectError("server can't respond");
             }
         }
         return response;
@@ -319,4 +349,5 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
     public void receivePrivateMSG(JsonObject data){
         this.receivePrivateMSG(data.get("userID").getAsString(), data.get("msg").getAsString(), data.get("sender").getAsString());
     }
+
 }
