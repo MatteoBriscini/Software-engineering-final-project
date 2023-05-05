@@ -77,7 +77,26 @@ public class RMI extends ConnectionController implements LobbyRemoteInterface {
      * method called from a client in ping pong
      */
     public void ping(){}
+    private void pong(PlayingPlayerRemoteInterface client_ref, String playerID, Controller controller){
 
+        synchronized (this) {
+            try {
+                this.wait(pingPongTime);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        try {
+            if(controller.getClientsRMImap().containsValue(client_ref)) {
+                client_ref.ping();
+            }else {//if the player does a friendly, quit
+                return;
+            }
+        } catch (RemoteException e) {
+            this.quitGameConnection(client_ref, playerID, controller);
+        }
+        this.pong(client_ref, playerID, controller);
+    }
 
     /************************************************************************
      ************************************************** IN method ***********
@@ -95,7 +114,8 @@ public class RMI extends ConnectionController implements LobbyRemoteInterface {
             controller.addClientRMI(client_ref, playerID);
             controller.setPlayerOnline(playerID);
 
-//TODO star ping pong time
+            Thread thread = new Thread(() -> this.pong(client_ref, playerID, controller));       //start ping pong
+            thread.start();
 
             return true;
         }
@@ -103,7 +123,11 @@ public class RMI extends ConnectionController implements LobbyRemoteInterface {
     }
     public synchronized boolean quitGameConnection(PlayingPlayerRemoteInterface client_ref,String playerID, String connectionInterface){
         Controller controller = this.getActualController(connectionInterface);
+        synchronized (this) {
+            this.notifyAll(); //reset ping pong
+        }
         return this.quitGameConnection(client_ref, playerID, controller);
+
     }
     /**
      * client left the party :(

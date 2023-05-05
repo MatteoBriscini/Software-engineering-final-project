@@ -36,8 +36,8 @@ public abstract class Player {
         JsonObject err = new JsonObject();
         err.addProperty("errorID", "connection error");
         err.addProperty("errorMSG", msg);
-        //TODO deve chiudere client
         this.errMsg(err);
+        System.exit(0);
     }
     public void errMsg(JsonObject err){
         System.err.println(err.get("errorID").toString().toUpperCase() + ": " + err.get("errorMSG")); //TODO necessita metodo lato grafico

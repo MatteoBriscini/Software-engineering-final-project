@@ -6,11 +6,16 @@ import com.google.gson.JsonObject;
 import it.polimi.ingsw.client.Player.LobbyPlayer;
 import it.polimi.ingsw.client.Player.Player;
 import it.polimi.ingsw.client.Player.PlayingPlayer;
+import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
 import it.polimi.ingsw.shared.exceptions.addPlayerToGameException;
 import it.polimi.ingsw.shared.Cards.Card;
 import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
 
 import javax.security.auth.login.LoginException;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -19,8 +24,22 @@ public abstract class ConnectionManager extends UnicastRemoteObject {
     protected Player player;
     protected String playerID;
     protected boolean inGame = false;
-    protected ConnectionManager() throws RemoteException {}
-
+    protected int pingPongTime;
+    protected ConnectionManager() throws RemoteException {
+        try {
+            jsonCreate();
+        } catch (FileNotFoundException e) {
+            System.out.println("PlayingPlayerRMI: JSON FILE NOT FOUND");
+            throw new RuntimeException(e);
+        }
+    }
+    private void jsonCreate() throws FileNotFoundException {  //download json data
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(JsonUrl.getUrl("netConfig"));
+        if(inputStream == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        JsonObject jsonObject = new Gson().fromJson(bufferedReader , JsonObject.class);
+        this.pingPongTime = jsonObject.get("pingPongTime").getAsInt();
+    }
     public void setPlayer(Player player, String playerID){
         this.playerID = playerID;
         this.player = player;
