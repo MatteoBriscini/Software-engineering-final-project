@@ -1,24 +1,32 @@
 package it.polimi.ingsw.server.Connection;
 
 import com.google.gson.JsonObject;
-import it.polimi.ingsw.server.Connection.RMI.ControllerRMI;
+import it.polimi.ingsw.client.Connection.PlayingPlayerRemoteInterface;
+import it.polimi.ingsw.server.Connection.RMI.RMI;
 import it.polimi.ingsw.server.Controller;
-import it.polimi.ingsw.server.Exceptions.ConnectionControllerManagerException;
 import it.polimi.ingsw.shared.Cards.Card;
-import it.polimi.ingsw.shared.Connection.ConnectionType;
 import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ConnectionControllerManager {
 
-    private final ArrayList<ConnectionController> interfaces = new ArrayList<>();
-    boolean rmiActive = false;
-    boolean socketActive = false;
-
-    public ArrayList<ConnectionController> getInterfaces() {
-            return interfaces;
+    //private final ArrayList<ConnectionController> interfaces = new ArrayList<>();
+    private boolean rmiActive = false;
+    private boolean socketActive = false;
+    private final Map<String, PlayingPlayerRemoteInterface> clientsRMImap = new HashMap<String, PlayingPlayerRemoteInterface>();  //PlayerID + remote interface
+    private final ArrayList<SOCKET.MultiClientSocketGame> clientsSOCKET= new ArrayList<>();
+    private RMI rmi;
+    private Controller controller;
+    private SOCKET socket;
+    public ConnectionControllerManager(RMI rmi, SOCKET socket, Controller controller){
+        this.rmi = rmi;
+        this.socket = socket;
+        this.controller=controller;
     }
+    public ConnectionControllerManager(){}
 
     public boolean isRmiActive() {
         return rmiActive;
@@ -28,44 +36,23 @@ public class ConnectionControllerManager {
         return socketActive;
     }
 
-    /**
-     * create new connection class for controller when necessary
-     * @param PORT available port
-     * @param connectionType rmi or socket
-     * @param controller game reference
-     * @return number of the used port
-     * @throws ConnectionControllerManagerException if connection type has an invalid parameters
-     */
-    public int addClient(int PORT, ConnectionType connectionType, Controller controller) throws ConnectionControllerManagerException {
-        switch (connectionType){
-            case RMI:
-                if(!rmiActive) {
-                    rmiActive = true;
-                    interfaces.add(new ControllerRMI(controller, PORT));
-                    return PORT;
-                } else {
-                    for (ConnectionController c : interfaces){
-                        if (c instanceof ControllerRMI) return c.getPORT();
-                    }
-                }
-                break;
-            case SOCKET:
-                if(!socketActive) {
-                    socketActive = true;
-                    ControllerSOCKET controllerSOCKET = new ControllerSOCKET(controller, PORT);
-                    interfaces.add(controllerSOCKET);
-                    Thread thread = new Thread(controllerSOCKET::acceptConnection);
-                    thread.start();
-                    return PORT;
-                } else {
-                    for (ConnectionController c : interfaces){
-                        if (c instanceof ControllerSOCKET) return c.getPORT();
-                    }
-                }
-                break;
-            default: throw new ConnectionControllerManagerException("invalid connectionType (use: RMI or SOCKET)");
+    public void addClientRMI(PlayingPlayerRemoteInterface client, String playerID){
+        rmiActive = true;
+        clientsRMImap.put(playerID, client);
+    }
+    public boolean removeClientRMI(PlayingPlayerRemoteInterface client, String playerID){
+        if(clientsRMImap.get(playerID).equals(client)){
+            clientsRMImap.remove(playerID);
+            return true;
         }
-        return -1;
+        return false;
+    }
+    public Map<String, PlayingPlayerRemoteInterface> getClientsRMImap(){
+        return clientsRMImap;
+    }
+    public void addClientSOCKET(SOCKET.MultiClientSocketGame client){
+        socketActive = true;
+        clientsSOCKET.add(client);
     }
 
     /*************************************************************************
@@ -73,79 +60,97 @@ public class ConnectionControllerManager {
      * ***********************************************************************
      */
     public void notifyActivePlayer(String activePlayerID){
-        for (ConnectionController c: interfaces) {
-            c.notifyActivePlayer(activePlayerID);
+        if (clientsRMImap.size() > 0) {
+            rmi.notifyActivePlayer(activePlayerID, clientsRMImap, controller);
+        }
+        if (clientsSOCKET.size() > 0){
+            socket.notifyActivePlayer(activePlayerID, clientsSOCKET);
         }
     }
     public void sendPlayerList(String[] players){
-        for (ConnectionController c: interfaces) {
-            c.sendPlayerList(players);
-        }
+        if (clientsRMImap.size() > 0) {
+            rmi.sendPlayerList(players, clientsRMImap, controller);
+        }/*
+        if (clientsSOCKET.size() > 0){
+            socket.sendPlayerList(players, clientsSOCKET);
+        }*/
     }
     public void sendPlayersNUmber(int playersNumber){
-        for (ConnectionController c: interfaces) {
-            c.sendPlayersNUmber(playersNumber);
+        if (clientsRMImap.size() > 0) {
+            rmi.sendPlayersNUmber(playersNumber, clientsRMImap, controller);
         }
+
     }
     public void sendMainBoard(Card[][] mainBoard){
-        for (ConnectionController c: interfaces) {
-            c.sendMainBoard(mainBoard);
+        if (clientsRMImap.size() > 0) {
+            rmi.sendMainBoard(mainBoard, clientsRMImap, controller);
         }
+
     }
     public void addCardToClientBoard(String playerID, int column, Card[] cards){
-        for (ConnectionController c: interfaces) {
-            c.addCardToClientBoard(playerID,column,cards);
+        if (clientsRMImap.size() > 0) {
+            rmi.addCardToClientBoard(playerID,column,cards, clientsRMImap, controller);
         }
+
     }
     public void dellCardFromMainBoard(PositionWithColor[] cards){
-        for (ConnectionController c: interfaces) {
-            c.dellCardFromMainBoard(cards);
+        if (clientsRMImap.size() > 0) {
+            rmi.dellCardFromMainBoard(cards, clientsRMImap, controller);
         }
+
     }
     public void sendAllPlayerBoard(ArrayList<Card[][]> playerBoards){
-        for (ConnectionController c: interfaces) {
-            c.sendAllPlayerBoard(playerBoards);
+        if (clientsRMImap.size() > 0) {
+            rmi.sendAllPlayerBoard(playerBoards, clientsRMImap, controller);
         }
+
     }
     public void sendAllCommonGoal(int[] commonGoalID){
-        for (ConnectionController c: interfaces) {
-            c.sendAllCommonGoal(commonGoalID);
+        if (clientsRMImap.size() > 0) {
+            rmi.sendAllCommonGoal(commonGoalID, clientsRMImap, controller);
         }
+
     }
     public void sendPrivateGoal(PositionWithColor[] cards,String playerID){
-        for (ConnectionController c: interfaces) {
-            c.sendPrivateGoal(cards,playerID);
+        if (clientsRMImap.size() > 0) {
+            rmi.sendPrivateGoal(cards,playerID, clientsRMImap, controller);
         }
+
     }
 
     public void sendEndGamePoint(JsonObject points){
-        for (ConnectionController c: interfaces) {
-            c.sendEndGamePoint(points);
+        if (clientsRMImap.size() > 0) {
+            rmi.sendEndGamePoint(points, clientsRMImap, controller);
         }
+
     }
 
     public void sendWinner(JsonObject winner){
-        for (ConnectionController c: interfaces) {
-            c.sendWinner(winner);
+        if (clientsRMImap.size() > 0) {
+            rmi.sendWinner(winner, clientsRMImap, controller);
         }
+
     }
 
     public void sendLastCommonScored(JsonObject scored){
-        for (ConnectionController c: interfaces){
-            c.sendLastCommonScored(scored);
+        if (clientsRMImap.size() > 0) {
+            rmi.sendLastCommonScored(scored, clientsRMImap, controller);
         }
+
     }
 
     public void sendError(JsonObject error, String playerID){
-        for (ConnectionController c: interfaces){
-            c.sendError(error, playerID);
+        if (clientsRMImap.size() > 0) {
+            rmi.sendError(error, playerID, clientsRMImap, controller);
         }
+
     }
 
     public void forceClientDisconnection(){
-        for (ConnectionController c: interfaces){
-            c.forceClientDisconnection();
+        if (clientsRMImap.size() > 0) {
+            rmi.forceClientDisconnection(clientsRMImap, controller);
         }
+
     }
 
     /**************************************************************************
@@ -157,9 +162,10 @@ public class ConnectionControllerManager {
      * @param sender name of the player who sends the message
      */
     public void broadcastMsg(String msg, String sender){
-        for (ConnectionController c: interfaces){
-            c.sendBroadcastMsg(msg, sender);
+        if (clientsRMImap.size() > 0) {
+            rmi.sendBroadcastMsg(msg, sender, clientsRMImap, controller);
         }
+
     }
     /**
      * send a message in private to only one client
@@ -168,8 +174,9 @@ public class ConnectionControllerManager {
      * @param sender name of the player who sends the message
      */
     public void privateMSG(String userID, String msg, String sender){
-        for (ConnectionController c: interfaces){
-            c.sendPrivateMSG(userID, msg, sender);
+        if (clientsRMImap.size() > 0) {
+            rmi.sendPrivateMSG(userID, msg, sender, clientsRMImap, controller);
         }
+
     }
 }

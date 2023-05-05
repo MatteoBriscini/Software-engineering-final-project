@@ -3,20 +3,52 @@ package it.polimi.ingsw.client.Connection;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import it.polimi.ingsw.client.Player.LobbyPlayer;
 import it.polimi.ingsw.client.Player.Player;
 import it.polimi.ingsw.client.Player.PlayingPlayer;
+import it.polimi.ingsw.shared.exceptions.addPlayerToGameException;
 import it.polimi.ingsw.shared.Cards.Card;
 import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
 
+import javax.security.auth.login.LoginException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
-public abstract class PlayingPlayerConnectionManager extends UnicastRemoteObject {
-    Player player;
+public abstract class ConnectionManager extends UnicastRemoteObject {
+    protected Player player;
+    protected String playerID;
+    protected boolean inGame = false;
+    protected ConnectionManager() throws RemoteException {}
 
-    protected PlayingPlayerConnectionManager(Player player) throws RemoteException {
-        this.player=player;
+    public void setPlayer(Player player, String playerID){
+        this.playerID = playerID;
+        this.player = player;
+    }
+    public Player getPlayer(){
+        return player;
+    }
+    public void setInGame(boolean inGame) {
+        this.inGame = inGame;
+    }
+    public void setPlayerAsPlaying(){
+        String playerID = player.getPlayerID();
+        ConnectionManager connectionManager = player.getConnection();
+        connectionManager.setInGame(true);
+        String pwd = player.getPwd();
+        try {
+            this.player = new PlayingPlayer(playerID, pwd, this);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public void setPlayerAsLobby(){
+        String playerID = player.getPlayerID();
+        ConnectionManager connectionManager = player.getConnection();
+        connectionManager.setInGame(false);
+        String pwd = player.getPwd();
+        this.player = new LobbyPlayer(playerID, pwd, this);
+        System.out.println("test");
     }
     /*************************************************************************
      ************************************************** OUT method ***********
@@ -25,9 +57,15 @@ public abstract class PlayingPlayerConnectionManager extends UnicastRemoteObject
     public abstract boolean takeCard(int column, PositionWithColor[] cards) throws Exception;
     public abstract boolean startGame(String playerID) throws Exception;
     public abstract boolean quitGame(String  playerID) throws Exception;
-    public abstract void connection(int PORT, String serverIP) throws Exception;
+    public abstract void connection() throws Exception;
     public abstract void sendBroadcastMsg(String msg, String sender) throws Exception;
     public abstract void sendPrivateMSG(String userID, String msg, String sender) throws Exception;
+    public abstract void login(String ID, String pwd) throws LoginException;
+    public abstract boolean signUp(String ID, String pwd) throws LoginException;
+    public abstract void joinGame(String ID) throws addPlayerToGameException;
+    public abstract void joinGame(String ID, String searchID) throws addPlayerToGameException;
+    public abstract void createGame(String ID) throws addPlayerToGameException;
+    public abstract void createGame(String ID, int maxPlayerNumber) throws addPlayerToGameException;
 
     /************************************************************************
      ************************************************** IN method ***********
@@ -58,7 +96,7 @@ public abstract class PlayingPlayerConnectionManager extends UnicastRemoteObject
         ((PlayingPlayer)player).createMainBoard(board);
     }
     /**
-     * @param playerBoards all players bord in the game (used in game start phase and when a player reconnect after a crash)
+     * @param playerBoards all players bord in the game (used in game start phase and when a player reconnects after a crash)
      */
     public void receiveAllPlayerBoard(String playerBoards){//Card[][]
         JsonArray jsonArray = new Gson().fromJson(playerBoards, JsonArray.class);

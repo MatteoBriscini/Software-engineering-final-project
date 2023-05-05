@@ -8,7 +8,7 @@ public class SOCKETTest extends TestCase {
 
     public void testJoinGame() throws InterruptedException {
 
-        SOCKET socket = new SOCKET(new Lobby(2345), 2346);
+        SOCKET socket = new SOCKET(new Lobby(2345, 2344), 2346);
         Thread thread = new Thread(socket::acceptConnection);
         thread.start();
         try {

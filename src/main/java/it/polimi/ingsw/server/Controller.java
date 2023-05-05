@@ -2,8 +2,10 @@ package it.polimi.ingsw.server;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import it.polimi.ingsw.client.Connection.PlayingPlayerRemoteInterface;
 import it.polimi.ingsw.server.Connection.ConnectionControllerManager;
-import it.polimi.ingsw.shared.Connection.ConnectionType;
+import it.polimi.ingsw.server.Connection.RMI.RMI;
+import it.polimi.ingsw.server.Connection.SOCKET;
 import it.polimi.ingsw.server.Exceptions.*;
 import it.polimi.ingsw.shared.Cards.Card;
 import it.polimi.ingsw.server.Model.GameMaster;
@@ -12,6 +14,7 @@ import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
 import it.polimi.ingsw.shared.JsonSupportClasses.Position;
 import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
 import it.polimi.ingsw.server.Model.PlayerClasses.Player;
+import it.polimi.ingsw.shared.exceptions.addPlayerToGameException;
 
 import java.io.*;
 import java.util.*;
@@ -32,7 +35,7 @@ public class Controller implements Runnable {
     private Thread endGameThread = new Thread();
     boolean firstPlayer;
     //connection
-    private final ConnectionControllerManager controllerManager = new ConnectionControllerManager();
+    private ConnectionControllerManager controllerManager = new ConnectionControllerManager();
     private final ArrayList<Boolean> activePlayers = new ArrayList<>();
 
     //configuration value for controller
@@ -147,15 +150,25 @@ public class Controller implements Runnable {
     /**************************************************************************
      ************************************************** connection management *
      * ************************************************************************
-     * *
-     * create new connection class for controller when necessary
-     * @param PORT available port
-     * @param connectionType rmi or socket
-     * @return number of the used port
-     * @throws ConnectionControllerManagerException if a connection type has an invalid parameters
      */
-    public int addClient(int PORT, ConnectionType connectionType) throws ConnectionControllerManagerException {
-        return controllerManager.addClient(PORT, connectionType, this);
+
+    public void turnOnCnt(SOCKET socket, RMI rmi){
+        controllerManager = new ConnectionControllerManager(rmi, socket, this);
+    }
+    public ConnectionControllerManager getControllerManager(){
+        return controllerManager;
+    }
+    public Map<String, PlayingPlayerRemoteInterface> getClientsRMImap(){return controllerManager.getClientsRMImap();}
+
+
+    public void addClientRMI(PlayingPlayerRemoteInterface client, String playerID){
+        controllerManager.addClientRMI(client,playerID);
+    }
+    public boolean removeClientRMI(PlayingPlayerRemoteInterface client, String playerID){
+        return controllerManager.removeClientRMI(client, playerID);
+    }
+    public void addClientSOCKET(SOCKET.MultiClientSocketGame client){
+        controllerManager.addClientSOCKET(client);
     }
 
     /**
@@ -504,7 +517,6 @@ public class Controller implements Runnable {
      * @return true if the move is validly false in all other cases
      */
     synchronized public boolean takeCard(int column, PositionWithColor[] cards, String playerID){
-
         JsonObject error = new JsonObject();
         if(!endGame && alreadyStarted && game.getPlayerArray().get(currentPlayer).getPlayerID().equals(playerID)){
             //verify the numbers of cards

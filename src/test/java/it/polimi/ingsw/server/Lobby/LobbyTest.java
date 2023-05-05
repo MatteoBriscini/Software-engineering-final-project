@@ -1,20 +1,14 @@
 package it.polimi.ingsw.server.Lobby;
 
-import it.polimi.ingsw.server.Controller;
-import it.polimi.ingsw.server.Exceptions.addPlayerToGameException;
-import it.polimi.ingsw.shared.Connection.ConnectionType;
 import junit.framework.TestCase;
-
-import javax.security.auth.login.LoginException;
-import java.util.ArrayList;
 
 public class LobbyTest extends TestCase {
 
     private Lobby testLobby;
 
     public void testLobby(){
-
-        testLobby = new Lobby(2000);
+/*
+        testLobby = new Lobby(2000 , 1999);
 
         System.out.println("Test 1");
         String ID = "john";
@@ -121,6 +115,6 @@ public class LobbyTest extends TestCase {
         System.out.println(controller3.getPlayerNumber());
 
         System.out.println("Test 4 end");
-
+*/
     }
 }

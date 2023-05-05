@@ -68,7 +68,6 @@ public class ControllerSOCKET extends ConnectionController {
             }
         }
     }
-    @Override
     public void notifyActivePlayer(String activePlayerID) {
         JsonObject data = new JsonObject();
         data.addProperty("playerID", activePlayerID);
@@ -79,7 +78,6 @@ public class ControllerSOCKET extends ConnectionController {
 
         this.sendCommand(msg);
     }
-    @Override
     public void sendPlayerList(String[] players) {
         JsonObject data = new JsonObject();
         JsonArray jsonArray = new Gson().toJsonTree(players).getAsJsonArray();
@@ -91,7 +89,6 @@ public class ControllerSOCKET extends ConnectionController {
 
         this.sendCommand(msg);
     }
-    @Override
     public void sendPlayersNUmber(int playersNumber) {
         JsonObject data = new JsonObject();
         data.addProperty("playersNumber", playersNumber);
@@ -102,7 +99,6 @@ public class ControllerSOCKET extends ConnectionController {
 
         this.sendCommand(msg);
     }
-    @Override
     public void sendMainBoard(Card[][] mainBoard) {
         JsonObject data = new JsonObject();
         JsonArray jsonArray = new Gson().toJsonTree(mainBoard).getAsJsonArray();
@@ -114,7 +110,6 @@ public class ControllerSOCKET extends ConnectionController {
 
         this.sendCommand(msg);
     }
-    @Override
     public void sendAllPlayerBoard(ArrayList<Card[][]> playerBoards) {
         JsonObject data = new JsonObject();
         JsonArray jsonArray = new Gson().toJsonTree(playerBoards).getAsJsonArray();
@@ -126,7 +121,6 @@ public class ControllerSOCKET extends ConnectionController {
 
         this.sendCommand(msg);
     }
-    @Override
     public void addCardToClientBoard(String playerID, int column, Card[] cards) {
         JsonObject data = new JsonObject();
         data.addProperty("playerID", playerID);
@@ -140,7 +134,6 @@ public class ControllerSOCKET extends ConnectionController {
 
         this.sendCommand(msg);
     }
-    @Override
     public void dellCardFromMainBoard(PositionWithColor[] cards) {
         JsonObject data = new JsonObject();
         JsonArray jsonArray = new Gson().toJsonTree(cards).getAsJsonArray();
@@ -152,7 +145,6 @@ public class ControllerSOCKET extends ConnectionController {
 
         this.sendCommand(msg);
     }
-    @Override
     public void sendAllCommonGoal(int[] commonGoalID) {
         JsonObject data = new JsonObject();
         JsonArray jsonArray = new Gson().toJsonTree(commonGoalID).getAsJsonArray();
@@ -164,7 +156,6 @@ public class ControllerSOCKET extends ConnectionController {
 
         this.sendCommand(msg);
     }
-    @Override
     public void sendPrivateGoal(PositionWithColor[] cards, String playerID) {
         JsonObject data = new JsonObject();
         JsonArray jsonArray = new Gson().toJsonTree(cards).getAsJsonArray();
@@ -177,7 +168,6 @@ public class ControllerSOCKET extends ConnectionController {
 
         this.sendCommand(msg);
     }
-    @Override
     public void sendEndGamePoint(JsonObject points) {
         JsonObject data = new JsonObject();
         data.add("points", points);
@@ -188,7 +178,6 @@ public class ControllerSOCKET extends ConnectionController {
 
         this.sendCommand(msg);
     }
-    @Override
     public void sendWinner(JsonObject winner) {
         JsonObject data = new JsonObject();
         data.add("winner", winner);
@@ -199,7 +188,6 @@ public class ControllerSOCKET extends ConnectionController {
 
         this.sendCommand(msg);
     }
-    @Override
     public void sendLastCommonScored(JsonObject scored) {
         JsonObject data = new JsonObject();
         data.add("scored", scored);
@@ -210,7 +198,6 @@ public class ControllerSOCKET extends ConnectionController {
 
         this.sendCommand(msg);
     }
-    @Override
     public void sendError(JsonObject error, String playerID){
         JsonObject data = new JsonObject();
         data.addProperty("playerID", playerID);
@@ -222,7 +209,6 @@ public class ControllerSOCKET extends ConnectionController {
 
         this.sendCommand(msg);
     }
-    @Override
     public void forceClientDisconnection() {
         JsonObject data = new JsonObject();
 
@@ -243,7 +229,6 @@ public class ControllerSOCKET extends ConnectionController {
      ************************************************** chat ******************
      * ************************************************************************
      */
-    @Override
     public void sendBroadcastMsg(String MSG, String sender) {
         JsonObject data = new JsonObject();
         data.addProperty("msg", MSG);
@@ -256,7 +241,6 @@ public class ControllerSOCKET extends ConnectionController {
         this.sendCommand(msg);
     }
 
-    @Override
     public void sendPrivateMSG(String userID, String MSG, String sender) {
         JsonObject data = new JsonObject();
         data.addProperty("userID", userID);
@@ -278,11 +262,11 @@ public class ControllerSOCKET extends ConnectionController {
         }
     }
     public boolean receiveBroadcastMsg(JsonObject data){
-        this.receiveBroadcastMsg(data.get("msg").getAsString(), data.get("sender").getAsString());
+        //this.receiveBroadcastMsg(data.get("msg").getAsString(), data.get("sender").getAsString()); TODO
         return true;
     }
     public boolean receivePrivateMSG(JsonObject data){
-        this.receivePrivateMSG(data.get("userID").getAsString(), data.get("msg").getAsString(), data.get("sender").getAsString());
+        //this.receivePrivateMSG(data.get("userID").getAsString(), data.get("msg").getAsString(), data.get("sender").getAsString()); TODO
         return true;
     }
     /*************************************************************************
@@ -290,13 +274,14 @@ public class ControllerSOCKET extends ConnectionController {
      * ***********************************************************************
      */
     public boolean startGame(JsonObject data){
-        boolean bool = this.startGame(data.get("playerID").getAsString());
-        return bool;
+        //boolean bool = this.startGame(data.get("playerID").getAsString()); TODO
+        //return bool;
+        return false;
     }
     public boolean takeCard(JsonObject data){
-        boolean bool = this.takeCard(data.get("column").getAsInt(),data.get("cards").toString(),data.get("playerID").getAsString());
-        return bool;
-
+        //boolean bool = this.takeCard(data.get("column").getAsInt(),data.get("cards").toString(),data.get("playerID").getAsString()); TODO
+        //return bool;
+        return false;
     }
 
     /***********************************************************************************
@@ -389,11 +374,11 @@ public class ControllerSOCKET extends ConnectionController {
         }
         public void setPlayerOffline(String playerID){
             System.out.println("\u001B[33m"+"client: " + playerID + " quit the game on port(SOCKET): " + PORT +"\u001B[0m");
-            controller.setPlayerOffline(playerID);
+            //controller.setPlayerOffline(playerID);TODO
         }
         public void setPlayerOnline(String playerID){
             System.out.println("\u001B[36m"+"client: " + playerID + " join the game on port(SOCKET): " + PORT  +"\u001B[0m");
-            controller.setPlayerOnline(playerID);
+            //controller.setPlayerOnline(playerID);TODO
         }
         private void receiveMSG()  throws IOException {
             boolean existingMethod;

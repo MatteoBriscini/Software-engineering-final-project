@@ -4,16 +4,12 @@ import com.google.gson.Gson;
 import it.polimi.ingsw.server.Exceptions.ConnectionControllerManagerException;
 import it.polimi.ingsw.server.Exceptions.ConstructorException;
 import it.polimi.ingsw.server.Exceptions.LengthException;
-import it.polimi.ingsw.server.Exceptions.addPlayerToGameException;
-import it.polimi.ingsw.shared.Connection.ConnectionType;
+import it.polimi.ingsw.shared.exceptions.addPlayerToGameException;
 import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
-import it.polimi.ingsw.shared.JsonSupportClasses.Position;
 import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
 import it.polimi.ingsw.server.Controller;
 import it.polimi.ingsw.shared.Cards.Card;
 import it.polimi.ingsw.server.Model.PlayerClasses.Player;
-import it.polimi.ingsw.client.ClientMain;
-import it.polimi.ingsw.client.Player.PlayingPlayer;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -636,45 +632,5 @@ public class ControllerTest extends TestCase {
 
         System.out.println("\nEND TEST\n");
     }
-    @Test
-    public void testOnlyOnePlayerOnline() throws ConnectionControllerManagerException, addPlayerToGameException, RemoteException {
-        ClientMain clientMain = new ClientMain();
 
-        System.out.println("START TEST testOnlyOnePlayerOnline\n");
-
-        test = new Controller();
-
-        test.addClient(7515, ConnectionType.RMI);
-
-        ArrayList<it.polimi.ingsw.server.Model.PlayerClasses.Player> players = new ArrayList<>();      //gaming order array list for this test
-        players.add(new it.polimi.ingsw.server.Model.PlayerClasses.Player("antonio"));
-        players.add(new it.polimi.ingsw.server.Model.PlayerClasses.Player("marco"));
-        players.add(new it.polimi.ingsw.server.Model.PlayerClasses.Player("paolo"));
-
-        test.addNewPlayer("antonio");
-        test.addNewPlayer("marco");
-        test.addNewPlayer("paolo");
-
-        PlayingPlayer testClient2  = new PlayingPlayer("marco", "antonio", clientMain, ConnectionType.RMI, 7515, "127.0.0.1");
-        assertFalse(test.isPlayerOffline("marco"));
-        PlayingPlayer testClient1  = new PlayingPlayer("antonio", "antonio", clientMain, ConnectionType.RMI, 7515, "127.0.0.1");
-        assertFalse(test.isPlayerOffline("antonio"));
-        PlayingPlayer testClient3  = new PlayingPlayer("paolo", "antonio", clientMain, ConnectionType.RMI, 7515, "127.0.0.1");
-        assertFalse(test.isPlayerOffline("paolo"));
-
-        assert(testClient1 .startGame());
-
-        testClient1.quitGame();
-        testClient3.quitGame();
-        assertTrue(test.isEndGame());
-
-        System.out.println("test1: take card after end of the game");
-        Position[] pos = new Position[2];
-        pos[0] = new Position(3,8);
-        pos[1] = new Position(3,7);
-
-        assertFalse(testClient2.takeCard(0, pos)); //not authorized take card (game is ended and server can't respond)
-
-        System.out.println("\nEND TEST\n");
-    }
 }

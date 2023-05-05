@@ -1,16 +1,13 @@
 package it.polimi.ingsw.client.Player;
 
 import com.google.gson.JsonObject;
-import it.polimi.ingsw.client.ClientMain;
-import it.polimi.ingsw.client.Connection.PlayingPlayerConnectionManager;
-import it.polimi.ingsw.client.Connection.PlayingPlayerRMI;
-import it.polimi.ingsw.client.Connection.PlayingPlayerSOCKET;
+import it.polimi.ingsw.client.Connection.ConnectionManager;
 import it.polimi.ingsw.client.Exceptions.InvalidPickException;
 import it.polimi.ingsw.client.Exceptions.PlayerNotFoundException;
 import it.polimi.ingsw.client.Game.MainBoard;
 import it.polimi.ingsw.client.Game.PlayerBoard;
 import it.polimi.ingsw.shared.Cards.Card;
-import it.polimi.ingsw.shared.Connection.ConnectionType;
+
 import it.polimi.ingsw.shared.JsonSupportClasses.Position;
 import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
 
@@ -20,7 +17,6 @@ import java.util.Collections;
 import java.util.Objects;
 
 public class PlayingPlayer extends Player{
-    private PlayingPlayerConnectionManager connectionManager;
     private MainBoard mainBoard;
     private PlayerBoard[] playerBoards;
     private String[] playersID;
@@ -32,17 +28,16 @@ public class PlayingPlayer extends Player{
     private PositionWithColor[] privateGoal;
     private JsonObject[] commonGoalScored;
     /**
-     * @param connectionType rmi or socket
-     * @param port for the specific game on the server
-     * @param serverIP to reach the server
+
      * @throws RemoteException if the server do not response (wrong port or ip)
      */
-    public PlayingPlayer(String playerID, String pwd, ClientMain clientMain, ConnectionType connectionType, int port, String serverIP) throws RemoteException {
-        super(playerID, pwd, clientMain);
+    public PlayingPlayer(String playerID, String pwd, ConnectionManager connection) throws RemoteException {
+        super(playerID, pwd, connection);
+        /*
         switch (connectionType){
             case RMI:
                 try {
-                    connectionManager = new PlayingPlayerRMI(port, serverIP, playerID, this);
+                    connection = new PlayingPlayerRMI(port, serverIP, playerID, this);
                 } catch (Exception e) {
                     this.disconnectError("invalid connection config received from server");
                     return;
@@ -50,7 +45,7 @@ public class PlayingPlayer extends Player{
                 break;
             case SOCKET:
                 try {
-                    connectionManager = new PlayingPlayerSOCKET(port, serverIP, playerID, this);
+                    connection = new PlayingPlayerSOCKET(port, serverIP, playerID, this);
                 } catch (Exception e) {
                     System.out.println(e.toString());
                     this.disconnectError("invalid connection config received from server");
@@ -58,13 +53,17 @@ public class PlayingPlayer extends Player{
                 }
                 break;
             case DEBUG: return;
-        }
+        }*/
     }
 
     /*************************************************************************
      ************************************************** GET ******************
      * ***********************************************************************
     */
+    public ConnectionManager getConnetcionManager(){
+        return connection;
+    }
+
     public MainBoard getMainBoard() {
         return new MainBoard(mainBoard.getBoard());
     }
@@ -149,7 +148,7 @@ public class PlayingPlayer extends Player{
     }
     public boolean startGame(){
         try {
-            return connectionManager.startGame(this.playerID);
+            return connection.startGame(this.playerID);
         } catch (Exception e) {
             this.disconnectError("server can't respond");
             return false;
@@ -158,10 +157,9 @@ public class PlayingPlayer extends Player{
 
     public boolean quitGame(){
         try {
-            return connectionManager.quitGame(this.playerID);
+            return connection.quitGame(this.playerID);
             //TODO il player deve tornare allo stato di lobby
         } catch (Exception e) {
-            System.out.println(e.toString());
             this.disconnectError("server can't respond");
             return false;
         }
@@ -197,7 +195,7 @@ public class PlayingPlayer extends Player{
         }
 
         try {
-            return connectionManager.takeCard(column, pos);
+            return connection.takeCard(column, pos);
         } catch (Exception e) {
             this.disconnectError("server can't respond");
             return false;
@@ -207,9 +205,7 @@ public class PlayingPlayer extends Player{
     public void addCardToPlayerBoard(String playerID, int column,Card[] cards){
         for(int i=0; i<playersID.length; i++){
             if(playersID[i].equals(playerID)){
-                System.out.println("test0");
                 playerBoards[i].addCard(column, cards);
-                System.out.println("test1");
             }
         }
     }
@@ -224,13 +220,6 @@ public class PlayingPlayer extends Player{
     public void receiveWinner(String winner){
         //TODO necessita metodo lato grafico
     }
-    public void disconnectError(String msg){
-        JsonObject err = new JsonObject();
-        err.addProperty("errorID", "connection error");
-        err.addProperty("errorMSG", msg);
-        //TODO il player deve tornare allo stato di lobby
-        this.errMsg(err);
-    }
     /**************************************************************************
      ************************************************** chat ******************
      * ************************************************************************
@@ -238,7 +227,7 @@ public class PlayingPlayer extends Player{
 
     public void sendBroadcastMsg(String msg){
         try{
-            connectionManager.sendBroadcastMsg(msg, this.playerID);
+            connection.sendBroadcastMsg(msg, this.playerID);
         } catch (Exception e) {
             this.disconnectError("server can't respond");
         }
@@ -255,7 +244,7 @@ public class PlayingPlayer extends Player{
         Collections.addAll(tmpPlayers, playersID);
         if (!tmpPlayers.contains(userID)) throw new PlayerNotFoundException("player not found");
         try{
-            connectionManager.sendPrivateMSG(userID, msg, this.playerID);
+            connection.sendPrivateMSG(userID, msg, this.playerID);
         } catch (Exception e) {
             this.disconnectError("server can't respond");
         }

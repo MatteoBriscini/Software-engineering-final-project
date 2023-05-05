@@ -2,19 +2,18 @@ package it.polimi.ingsw.client.Connection;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import it.polimi.ingsw.client.ClientMain;
-import it.polimi.ingsw.client.Player.LobbyPlayer;
 import it.polimi.ingsw.client.Player.PlayingPlayer;
-import it.polimi.ingsw.shared.Connection.ConnectionType;
+import it.polimi.ingsw.shared.exceptions.addPlayerToGameException;
 import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
 import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
 
+import javax.security.auth.login.LoginException;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.Socket;
 
-public class ClientSOCKET extends PlayingPlayerConnectionManager{
+public class ClientSOCKET extends ConnectionManager {
     private final String playerID;
     int PORT;
     private final String serverIP;
@@ -32,8 +31,7 @@ public class ClientSOCKET extends PlayingPlayerConnectionManager{
     Thread pingPongThread;
 
     public ClientSOCKET(int PORT, String serverIP, String playerID) throws Exception {
-        super(new LobbyPlayer("marco", "hola", new ClientMain(), ConnectionType.SOCKET, 1234, "127.0.0.1"));//TODO
-
+        super();
         this.playerID = playerID;
 
         try {
@@ -51,7 +49,7 @@ public class ClientSOCKET extends PlayingPlayerConnectionManager{
         stdIn = new BufferedReader(new InputStreamReader(System.in));
 
         this.receiveMSG();
-        this.connection(PORT, serverIP);
+        this.connection();
     }
 
     private void jsonCreate() throws FileNotFoundException {  //download json data
@@ -63,7 +61,7 @@ public class ClientSOCKET extends PlayingPlayerConnectionManager{
         this.timeout = jsonObject.get("socketTimeout").getAsInt();
     }
     @Override
-    public void connection(int PORT, String serverIP) throws IOException {
+    public void connection() throws IOException {
         JsonObject data = new JsonObject();
         data.addProperty("playerID", playerID);
         JsonObject msg = new JsonObject();
@@ -221,7 +219,7 @@ public class ClientSOCKET extends PlayingPlayerConnectionManager{
      *                          OUT lobby method
      * ***********************************************************************
      */
-    public boolean joinGame(String ID, String searchID){
+    public void joinGame(String ID, String searchID){
         JsonObject data = new JsonObject();
         data.addProperty("ID", ID);
         data.addProperty("searchID" ,searchID);
@@ -231,9 +229,19 @@ public class ClientSOCKET extends PlayingPlayerConnectionManager{
 
         out.println(msg.toString());  //send socket message TODO
         out.flush();
-        return false;
     }
-    public boolean joinGame(String ID){
+
+    @Override
+    public void createGame(String ID) throws addPlayerToGameException {
+
+    }
+
+    @Override
+    public void createGame(String ID, int maxPlayerNumber) throws addPlayerToGameException {
+
+    }
+
+    public void joinGame(String ID){
         JsonObject data = new JsonObject();
         data.addProperty("ID", ID);
         data.addProperty("searchID" , "null");
@@ -244,7 +252,7 @@ public class ClientSOCKET extends PlayingPlayerConnectionManager{
 
         out.println(msg.toString());  //send socket message TODO
         out.flush();
-        return false;
+
     }
     /*************************************************************************
      *                          OUT method
@@ -341,6 +349,16 @@ public class ClientSOCKET extends PlayingPlayerConnectionManager{
         msg.add("data", data);
 
         this.sendMSG(msg);
+    }
+
+    @Override
+    public void login(String ID, String pwd) throws LoginException {
+
+    }
+
+    @Override
+    public boolean signUp(String ID, String pwd) throws LoginException {
+        return false;
     }
 
     public void receiveBroadcastMsg(JsonObject data){
