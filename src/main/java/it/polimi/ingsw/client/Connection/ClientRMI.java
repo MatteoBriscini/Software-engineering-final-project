@@ -19,10 +19,13 @@ public class ClientRMI extends ConnectionManager implements PlayingPlayerRemoteI
     private LobbyRemoteInterface stub;
     private String remoteControllerRef;
 
+
     public ClientRMI(int PORT, String serverIP) throws Exception {
         super();
         this.PORT = PORT;
         this.serverIP = serverIP;
+
+
     }
 
 
@@ -34,6 +37,8 @@ public class ClientRMI extends ConnectionManager implements PlayingPlayerRemoteI
         }catch(Exception e){
             throw new Exception();
         }
+        Thread thread = new Thread(this::pong);       //start ping pong
+        thread.start();
         if(!inGame)stub.joinLobby(this.playerID);
     }
 
@@ -158,7 +163,30 @@ public class ClientRMI extends ConnectionManager implements PlayingPlayerRemoteI
 
     @Override
     public void ping() throws RemoteException {}
-
+    /**
+     * recursive method implements ping pong with server
+     */
+    private void pong(){
+        synchronized (this) {
+            try {
+                this.wait(pingPongTime);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        try {
+            if(inGame) {
+                stub.ping();
+            }else {//if the player does a friendly quit
+                return;
+            }
+        } catch (RemoteException e) {
+            player.disconnectError("server can't respond");
+            this.inGame = false;
+            return;
+        }
+        this.pong();
+    }
     /**
      * the server can force the disconnection to the clients
      */
