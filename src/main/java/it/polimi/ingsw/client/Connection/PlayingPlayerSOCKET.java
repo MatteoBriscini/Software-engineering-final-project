@@ -4,15 +4,17 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.client.Player.PlayingPlayer;
+import it.polimi.ingsw.shared.exceptions.addPlayerToGameException;
 import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
 import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
 
+import javax.security.auth.login.LoginException;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.Socket;
 
-public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
+public class PlayingPlayerSOCKET extends ConnectionManager {
     private final String playerID;
     int PORT;
     private final String serverIP;
@@ -31,8 +33,7 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
     Thread pingPongThread;
 
     public PlayingPlayerSOCKET(int PORT, String serverIP, String playerID, PlayingPlayer playingPlayer) throws Exception {
-        super(playingPlayer);
-
+        super();
         this.playerID = playerID;
 
         try {
@@ -50,7 +51,7 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
         stdIn = new BufferedReader(new InputStreamReader(System.in));
 
         this.receiveMSG();
-        this.connection(PORT, serverIP);
+        this.connection();
     }
 
     private void jsonCreate() throws FileNotFoundException {  //download json data
@@ -62,7 +63,7 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
         this.timeout = jsonObject.get("socketTimeout").getAsInt();
     }
     @Override
-    public void connection(int PORT, String serverIP) throws IOException {
+    public void connection() throws IOException {
         JsonObject data = new JsonObject();
         data.addProperty("playerID", playerID);
         JsonObject msg = new JsonObject();
@@ -311,6 +312,36 @@ public class PlayingPlayerSOCKET extends PlayingPlayerConnectionManager{
         msg.add("data", data);
 
         this.sendMSG(msg);
+    }
+
+    @Override
+    public void login(String ID, String pwd) throws LoginException {
+
+    }
+
+    @Override
+    public boolean signUp(String ID, String pwd) throws LoginException {
+        return false;
+    }
+
+    @Override
+    public void joinGame(String ID) throws addPlayerToGameException {
+
+    }
+
+    @Override
+    public void joinGame(String ID, String searchID) throws addPlayerToGameException {
+
+    }
+
+    @Override
+    public void createGame(String ID) throws addPlayerToGameException {
+
+    }
+
+    @Override
+    public void createGame(String ID, int maxPlayerNumber) throws addPlayerToGameException {
+
     }
 
     public void receiveBroadcastMsg(JsonObject data){

@@ -4,10 +4,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
+import it.polimi.ingsw.server.Connection.SOCKET;
 import it.polimi.ingsw.server.Controller;
-import it.polimi.ingsw.server.Connection.LobbyRMI;
-import it.polimi.ingsw.server.Exceptions.ConnectionControllerManagerException;
-import it.polimi.ingsw.server.Exceptions.addPlayerToGameException;
+import it.polimi.ingsw.server.Connection.RMI.RMI;
+import it.polimi.ingsw.shared.exceptions.addPlayerToGameException;
 import it.polimi.ingsw.shared.Connection.ConnectionType;
 import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
 
@@ -23,9 +23,10 @@ public class Lobby {
     //Attributes
 
 
-    private final LobbyRMI lobbyRMI;
-    private int standardPORT;
-
+    private final RMI rmi;
+    private final SOCKET socket;
+    private int standardPORTrmi;
+    private int getStandardPORTsocket;
     private int minPORT;
     private int maxPORT;
 
@@ -50,21 +51,39 @@ public class Lobby {
             throw new RuntimeException(e);
         }
         allocatedPORT = new ArrayList<>();
-        this.lobbyRMI = new LobbyRMI(standardPORT, this);
+        this.rmi = new RMI(standardPORTrmi, this);
+        this.socket = new SOCKET(this, getStandardPORTsocket);
     }
-    public Lobby(int PORT){
+    public Lobby(int rmiPort, int socketPort){
         try {
             jsonCreate();
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
         allocatedPORT = new ArrayList<>();
-        this.lobbyRMI = new LobbyRMI(PORT, this);
+        this.rmi = new RMI(rmiPort, this);
+        this.socket = new SOCKET(this, socketPort);
+    }
+    private void jsonCreate() throws FileNotFoundException {  //download json data
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(jsonConfigUrl.getUrl("netConfig"));
+        if(inputStream == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        JsonObject jsonObject = new Gson().fromJson(bufferedReader , JsonObject.class);
+        this.maxPORT = jsonObject.get("maxUsablePort").getAsInt();
+        int portRMI = jsonObject.get("defRmiPort").getAsInt();
+        int portSOCKET = jsonObject.get("defSocketPort").getAsInt();
+        if(portRMI > portSOCKET){
+            this.minPORT = portRMI + 1;
+        }else{
+            this.minPORT = portSOCKET + 1;
+        }
+        this.standardPORTrmi = portRMI;
+        this.getStandardPORTsocket = portSOCKET;
     }
 
     //Methods
 
-    public synchronized int login(String ID, String pwd) throws LoginException {
+    public synchronized String login(String ID, String pwd) throws LoginException {
 
         ArrayList<String[]> games;
         ArrayList<Controller> activeG;
@@ -129,7 +148,7 @@ public class Lobby {
                     }
 
                     if(activeG.get(j).isPlayerOffline(ID)){
-                        return PORT.get(j);
+                        return activeG.get(j).toString();
                     }
 
                 }
@@ -137,7 +156,7 @@ public class Lobby {
 
         }
 
-        return -1;
+        return "null";
     }
 
     public synchronized void signUp(String ID, String pwd) throws LoginException {
@@ -193,39 +212,30 @@ public class Lobby {
 
     }
 
-    public synchronized int joinGame(String ID, ConnectionType connectionType) throws addPlayerToGameException {
-
+    public synchronized String joinGame(String ID, ConnectionType connectionType) throws addPlayerToGameException {
         ArrayList<String[]> tempPlayersInGames;
         ArrayList<Controller> tempActiveGames;
         int j = 0;
 
-
         synchronized (playersInGames){
-
             tempPlayersInGames = playersInGames;
-
         }
 
         synchronized (activeGames){
-
             tempActiveGames = activeGames;
-
         }
 
         while(j < tempActiveGames.size()){
-
             if(tempActiveGames.get(j).getMaxPlayerNumber() > tempPlayersInGames.get(j).length && tempActiveGames.get(j).getCurrentPlayer() == -1){
-
-                return addPlayerToGame(ID, connectionType, j);
-
+                addPlayerToGame(ID, connectionType, j);
+                return activeGames.get(j).toString();
             }
             j++;
         }
-
-        return -1;
+        throw new addPlayerToGameException("not free game at the moment");
     }
 
-    public synchronized int joinGame(String ID, ConnectionType connectionType, String searchID) throws addPlayerToGameException {
+    public synchronized String joinGame(String ID, ConnectionType connectionType, String searchID) throws addPlayerToGameException {
 
         ArrayList<String[]> tempPlayersInGames;
         ArrayList<Controller> tempActiveGames;
@@ -233,81 +243,67 @@ public class Lobby {
         int j = 0;
 
         synchronized (playersInGames){
-
             tempPlayersInGames = playersInGames;
-
         }
 
         synchronized (activeGames){
-
             tempActiveGames = activeGames;
-
         }
 
 
         while(tempActiveGames.get(j) != null){
-
             for(String s : tempPlayersInGames.get(j)){
-
                 if(s.equals(searchID)){
-
-                    return addPlayerToGame(ID, connectionType, j);
-
+                    if(activeGames.get(j).getCurrentPlayer()==-1) {
+                        addPlayerToGame(ID, connectionType, j);
+                        return activeGames.get(j).toString();
+                    }else {
+                        throw new addPlayerToGameException("game just started");
+                    }
                 }
             }
             j++;
         }
         throw new addPlayerToGameException("ID not found");
-
     }
 
-    public synchronized int addPlayerToGame(String ID, ConnectionType connectionType, int gameNumber) throws addPlayerToGameException {
+    public synchronized void addPlayerToGame(String ID, ConnectionType connectionType, int gameNumber) throws addPlayerToGameException {
         ArrayList<String[]> tempPlayersInGames;
         ArrayList<Controller> tempActiveGames;
         ArrayList<String> temp = new ArrayList<>();
         int j = gameNumber, i = 0;
 
+
+
         synchronized (playersInGames){
-
             tempPlayersInGames = playersInGames;
-
         }
 
         synchronized (activeGames){
-
             tempActiveGames = activeGames;
-
         }
 
         tempActiveGames.get(j).addNewPlayer(ID);
-        for(i = minPORT; i < maxPORT; i++){
-            if(allocatedPORT == null || !allocatedPORT.contains(i)) break;
-        }
-        if(i == maxPORT){throw new addPlayerToGameException("All ports are full");}
 
         Collections.addAll(temp, tempPlayersInGames.get(j));
         temp.add(ID);
         playersInGames.set(j, temp.toArray(new String[0]));
 
-        try {
-            return tempActiveGames.get(j).addClient(i, connectionType);
-        } catch (ConnectionControllerManagerException e) {
-            throw new RuntimeException(e);
-        }
-
     }
 
-    public synchronized int createGame(String ID, ConnectionType connectionType) throws addPlayerToGameException {
+    public synchronized String createGame(String ID) throws addPlayerToGameException {
         Controller controller = new Controller();
-        return createGameSupport(ID, connectionType, controller);
+        createGameSupport(ID, controller);
+        return controller.toString();
     }
 
-    public synchronized int createGame(String ID, ConnectionType connectionType, int maxPlayerNumber) throws addPlayerToGameException {
+    public synchronized String createGame(String ID, int maxPlayerNumber) throws addPlayerToGameException {
         Controller controller = new Controller(maxPlayerNumber);
-        return createGameSupport(ID, connectionType, controller);
+        createGameSupport(ID, controller);
+        return controller.toString();
     }
 
-    private synchronized int createGameSupport(String ID, ConnectionType connectionType, Controller controller) throws addPlayerToGameException {
+    private synchronized void createGameSupport(String ID, Controller controller) throws addPlayerToGameException {
 
         int i = 0;
         int port = -1;
@@ -315,6 +311,7 @@ public class Lobby {
 
         temp.add(ID);
 
+        controller.turnOnCnt(socket, rmi);
 
         activeGames.add(controller);
         executor = Executors.newCachedThreadPool();
@@ -329,38 +326,15 @@ public class Lobby {
         assert allocatedPORT != null;
         allocatedPORT.add(i);
 
-        try {
-            port = controller.addClient(i, connectionType);
-        } catch (ConnectionControllerManagerException e) {
-            throw new RuntimeException(e);
-        }
-
+        playersInGames.add(temp.toArray(new String[0]));
         controller.addNewPlayer(ID);
 
-        playersInGames.add(temp.toArray(new String[0]));
-
-        return port;
 
     }
 
-    private void jsonCreate() throws FileNotFoundException {  //download json data
-        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(jsonConfigUrl.getUrl("netConfig"));
-        if(inputStream == null) throw new FileNotFoundException();
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-        JsonObject jsonObject = new Gson().fromJson(bufferedReader , JsonObject.class);
-        this.maxPORT = jsonObject.get("maxUsablePort").getAsInt();
-        int portRMI = jsonObject.get("defRmiPort").getAsInt();
-        int portSOCKET = jsonObject.get("defSocketPort").getAsInt();
-        if(portRMI > portSOCKET){
-            this.minPORT = portRMI + 1;
-        }else{
-            this.minPORT = portSOCKET + 1;
-        }
-        this.standardPORT = portRMI;
-    }
 
 
-    public ArrayList<Controller> getActiveGames() {
+    public synchronized ArrayList<Controller> getActiveGames() {
         return activeGames;
     }
 

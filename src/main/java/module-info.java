@@ -16,6 +16,7 @@ module AM19 {
     opens it.polimi.ingsw.gui to com.google.gson, java.rmi, javafx.fxml;
 
     exports it.polimi.ingsw.server.Connection.RMI;
+    exports it.polimi.ingsw.shared.exceptions;
     exports it.polimi.ingsw.server.Connection;
     exports it.polimi.ingsw.client.Connection;
     exports it.polimi.ingsw.gui;
