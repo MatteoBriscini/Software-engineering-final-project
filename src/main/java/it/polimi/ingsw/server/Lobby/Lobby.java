@@ -53,6 +53,8 @@ public class Lobby {
         allocatedPORT = new ArrayList<>();
         this.rmi = new RMI(standardPORTrmi, this);
         this.socket = new SOCKET(this, getStandardPORTsocket);
+        Thread thread = new Thread(socket::acceptConnection);
+        thread.start();
     }
     public Lobby(int rmiPort, int socketPort){
         try {
@@ -63,6 +65,8 @@ public class Lobby {
         allocatedPORT = new ArrayList<>();
         this.rmi = new RMI(rmiPort, this);
         this.socket = new SOCKET(this, socketPort);
+        Thread thread = new Thread(socket::acceptConnection);
+        thread.start();
     }
     private void jsonCreate() throws FileNotFoundException {  //download json data
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(jsonConfigUrl.getUrl("netConfig"));
