@@ -219,6 +219,33 @@ public class ClientSOCKET extends ConnectionManager {
      *                          OUT lobby method
      * ***********************************************************************
      */
+
+    public void login(String ID, String pwd) throws LoginException {
+        JsonObject data = new JsonObject();
+        data.addProperty("ID", ID);
+        data.addProperty("pwd", pwd);
+        JsonObject msg = new JsonObject();
+        msg.addProperty("service", "login");
+        msg.add("data", data);
+
+        out.println(msg.toString());  //send socket message TODO
+        out.flush();
+    }
+
+    @Override
+    public void signUp(String ID, String pwd) throws LoginException {
+        JsonObject data = new JsonObject();
+        data.addProperty("ID", ID);
+        data.addProperty("pwd", pwd);
+        JsonObject msg = new JsonObject();
+        msg.addProperty("service", "signUp");
+        msg.add("data", data);
+
+        out.println(msg.toString());  //send socket message TODO
+        out.flush();
+    }
+
+
     public void joinGame(String ID, String searchID){
         JsonObject data = new JsonObject();
         data.addProperty("ID", ID);
@@ -233,12 +260,28 @@ public class ClientSOCKET extends ConnectionManager {
 
     @Override
     public void createGame(String ID) throws addPlayerToGameException {
+        JsonObject data = new JsonObject();
+        data.addProperty("ID", ID);
+        data.addProperty("maxPlayerNumber", 0);
+        JsonObject msg = new JsonObject();
+        msg.addProperty("service", "createGame");
+        msg.add("data", data);
 
+        out.println(msg.toString());  //send socket message TODO
+        out.flush();
     }
 
     @Override
     public void createGame(String ID, int maxPlayerNumber) throws addPlayerToGameException {
+        JsonObject data = new JsonObject();
+        data.addProperty("ID", ID);
+        data.addProperty("maxPlayerNumber", maxPlayerNumber);
+        JsonObject msg = new JsonObject();
+        msg.addProperty("service", "createGame");
+        msg.add("data", data);
 
+        out.println(msg.toString());  //send socket message TODO
+        out.flush();
     }
 
     public void joinGame(String ID){
@@ -351,15 +394,7 @@ public class ClientSOCKET extends ConnectionManager {
         this.sendMSG(msg);
     }
 
-    @Override
-    public void login(String ID, String pwd) throws LoginException {
 
-    }
-
-    @Override
-    public boolean signUp(String ID, String pwd) throws LoginException {
-        return false;
-    }
 
     public void receiveBroadcastMsg(JsonObject data){
         this.receiveBroadcastMsg(data.get("msg").getAsString(), data.get("sender").getAsString());
