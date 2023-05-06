@@ -27,8 +27,6 @@ public class Lobby {
     private final SOCKET socket;
     private int standardPORTrmi;
     private int getStandardPORTsocket;
-    private int minPORT;
-    private int maxPORT;
 
 
     private ArrayList<Controller> activeGames = new ArrayList<>();
@@ -39,8 +37,6 @@ public class Lobby {
 
     private ArrayList<String[]> playersInGames = new ArrayList<>();
 
-    private ArrayList<Integer> allocatedPORT;
-
     private ExecutorService executor;
 
 
@@ -50,7 +46,6 @@ public class Lobby {
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
-        allocatedPORT = new ArrayList<>();
         this.rmi = new RMI(standardPORTrmi, this);
         this.socket = new SOCKET(this, getStandardPORTsocket);
         Thread thread = new Thread(socket::acceptConnection);
@@ -62,7 +57,6 @@ public class Lobby {
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
-        allocatedPORT = new ArrayList<>();
         this.rmi = new RMI(rmiPort, this);
         this.socket = new SOCKET(this, socketPort);
         Thread thread = new Thread(socket::acceptConnection);
@@ -73,14 +67,8 @@ public class Lobby {
         if(inputStream == null) throw new FileNotFoundException();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         JsonObject jsonObject = new Gson().fromJson(bufferedReader , JsonObject.class);
-        this.maxPORT = jsonObject.get("maxUsablePort").getAsInt();
         int portRMI = jsonObject.get("defRmiPort").getAsInt();
         int portSOCKET = jsonObject.get("defSocketPort").getAsInt();
-        if(portRMI > portSOCKET){
-            this.minPORT = portRMI + 1;
-        }else{
-            this.minPORT = portSOCKET + 1;
-        }
         this.standardPORTrmi = portRMI;
         this.getStandardPORTsocket = portSOCKET;
     }
@@ -124,7 +112,6 @@ public class Lobby {
             throw new LoginException("Wrong login credentials");
         }
 
-        // create client
 
 
         synchronized (playersInGames){
@@ -143,11 +130,6 @@ public class Lobby {
                     synchronized (activeGames){
 
                         activeG = activeGames;
-
-                    }
-                    synchronized (allocatedPORT){
-
-                        PORT = allocatedPORT;
 
                     }
 
@@ -221,12 +203,13 @@ public class Lobby {
         ArrayList<Controller> tempActiveGames;
         int j = 0;
 
-        synchronized (playersInGames){
-            tempPlayersInGames = playersInGames;
+        synchronized (activeGames){
+            if(activeGames.size()==0) throw new addPlayerToGameException("ID not found");
+            tempActiveGames = activeGames;
         }
 
-        synchronized (activeGames){
-            tempActiveGames = activeGames;
+        synchronized (playersInGames){
+            tempPlayersInGames = playersInGames;
         }
 
         while(j < tempActiveGames.size()){
@@ -246,12 +229,17 @@ public class Lobby {
 
         int j = 0;
 
-        synchronized (playersInGames){
-            tempPlayersInGames = playersInGames;
+        if(ID.equals(searchID)){
+            throw new addPlayerToGameException("ID not found");
         }
 
         synchronized (activeGames){
+            if(activeGames.size()==0) throw new addPlayerToGameException("ID not found");
             tempActiveGames = activeGames;
+        }
+
+        synchronized (playersInGames){
+            tempPlayersInGames = playersInGames;
         }
 
 
@@ -322,17 +310,8 @@ public class Lobby {
 
         executor.submit(controller);
 
-        for(i = minPORT; i < maxPORT; i++){
-            if(allocatedPORT == null || !allocatedPORT.contains(i)) break;
-        }
-        if(i == maxPORT){throw new addPlayerToGameException("All ports are full");}
-
-        assert allocatedPORT != null;
-        allocatedPORT.add(i);
-
         playersInGames.add(temp.toArray(new String[0]));
         controller.addNewPlayer(ID);
-
 
     }
 
