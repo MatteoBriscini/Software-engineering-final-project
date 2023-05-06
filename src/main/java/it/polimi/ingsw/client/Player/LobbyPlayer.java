@@ -59,11 +59,12 @@ public class LobbyPlayer extends Player{
 
     //Methods
 
-    public void login(){
+    public boolean login(){
         try {
             connection.login(playerID, pwd);
         } catch (LoginException e) {
             loginError(e.getMessage());
+            return false;
         }
         if(this.PORT != -1){
             int PORT = this.PORT;
@@ -71,50 +72,59 @@ public class LobbyPlayer extends Player{
         }else{
             addPlayerToGameError("No port received");
         }
+        return true;
     }
 
-    public void signUp(){
+    public boolean signUp(){
         try {
             connection.signUp(playerID, pwd);
         } catch (LoginException e) {
             loginError(e.getMessage());
+            return false;
         }
-
+        return true;
     }
 
-    public void joinGame(){
+    public boolean joinGame(){
         try {
             connection.joinGame(playerID);
         }
         catch (addPlayerToGameException e) {
             addPlayerToGameError(e.getMessage());
+            return false;
         }
+        return true;
 
     }
 
-    public void joinGame(String searchID){
+    public boolean joinGame(String searchID){
         try {
             connection.joinGame(playerID, searchID);
         } catch (addPlayerToGameException e) {
             addPlayerToGameError(e.getMessage());
+            return false;
         }
+        return true;
     }
 
-    public void createGame(){
+    public boolean createGame(){
         try {
             connection.createGame(playerID);
         } catch (addPlayerToGameException e) {
             addPlayerToGameError(e.getMessage());
         }
         //clientMain.setPlayerAsPlaying(this);
+        return true;
     }
 
-    public void createGame(int maxPlayerNumber){
+    public boolean createGame(int maxPlayerNumber){
         try {
             connection.createGame(playerID, maxPlayerNumber);
         } catch (addPlayerToGameException e) {
             addPlayerToGameError(e.getMessage());
+            return false;
         }
+        return true;
     }
 
 
