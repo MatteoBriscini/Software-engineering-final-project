@@ -163,7 +163,7 @@ public class ConnectionControllerManagerTest extends TestCase {
 
         testServer.forceClientDisconnection();
     }
-
+    @Test
     public void testRMIchat() throws ConnectionControllerManagerException, RemoteException, addPlayerToGameException, InterruptedException {
         System.out.println("START TEST testServerRMIOut\n");
 
@@ -211,9 +211,9 @@ public class ConnectionControllerManagerTest extends TestCase {
             System.out.println(e.toString());
             bool = true;
         }
-        assert (bool);
+        assertTrue(bool);
 
-        assert (((PlayingPlayer)testClient).startGame());       // authorized player try to start the game
+        assertTrue(((PlayingPlayer)testClient).startGame());       // authorized player try to start the game
 
         ((PlayingPlayer)testClient).sendBroadcastMsg("test broadcast message");
         try {
@@ -265,7 +265,7 @@ public class ConnectionControllerManagerTest extends TestCase {
         testClient2.setDebugMode();
 
 
-        assert(((PlayingPlayer)testClient).startGame());
+        assertTrue(((PlayingPlayer)testClient).startGame());
 
         ((PlayingPlayer)testClient).quitGame();
         ((PlayingPlayer)testClient2).quitGame();
