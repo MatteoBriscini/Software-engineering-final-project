@@ -63,9 +63,9 @@ public class ClientRMI extends ConnectionManager implements PlayingPlayerRemoteI
         }
     }
 
-    public boolean signUp(String ID, String pwd) throws LoginException{
+    public void signUp(String ID, String pwd) throws LoginException{
         try {
-            return stub.signUp(ID, pwd);
+            stub.signUp(ID, pwd);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }

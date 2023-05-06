@@ -80,7 +80,7 @@ public abstract class ConnectionManager extends UnicastRemoteObject {
     public abstract void sendBroadcastMsg(String msg, String sender) throws Exception;
     public abstract void sendPrivateMSG(String userID, String msg, String sender) throws Exception;
     public abstract void login(String ID, String pwd) throws LoginException;
-    public abstract boolean signUp(String ID, String pwd) throws LoginException;
+    public abstract void signUp(String ID, String pwd) throws LoginException;
     public abstract void joinGame(String ID) throws addPlayerToGameException;
     public abstract void joinGame(String ID, String searchID) throws addPlayerToGameException;
     public abstract void createGame(String ID) throws addPlayerToGameException;

@@ -320,8 +320,8 @@ public class PlayingPlayerSOCKET extends ConnectionManager {
     }
 
     @Override
-    public boolean signUp(String ID, String pwd) throws LoginException {
-        return false;
+    public void signUp(String ID, String pwd) throws LoginException {
+
     }
 
     @Override
