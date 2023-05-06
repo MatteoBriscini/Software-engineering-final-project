@@ -4,6 +4,7 @@ package it.polimi.ingsw.server.Connection;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import it.polimi.ingsw.server.Controller;
 import it.polimi.ingsw.shared.exceptions.addPlayerToGameException;
 import it.polimi.ingsw.server.Lobby.Lobby;
 import it.polimi.ingsw.shared.Cards.Card;
@@ -55,9 +56,9 @@ public class SOCKET extends ConnectionController{
         }
         executor.shutdown();
     }
-    /*************************************************************************
+    /**********************************************************************************
      ************************************************** OUT playing methods ***********
-     * ***********************************************************************
+     * ********************************************************************************
      */
 
     private void sendCommand(JsonObject msg, ArrayList<MultiClientSocketGame> tmpClients){
@@ -261,11 +262,11 @@ public class SOCKET extends ConnectionController{
             }
         }
     }
-    public boolean receiveBroadcastMsg(JsonObject data){
+    public boolean receiveBroadcastMsg(JsonObject data, MultiClientSocketGame ref){
         //TODO this.receiveBroadcastMsg(data.get("msg").getAsString(), data.get("sender").getAsString());
         return true;
     }
-    public boolean receivePrivateMSG(JsonObject data){
+    public boolean receivePrivateMSG(JsonObject data, MultiClientSocketGame ref){
         //TODO this.receivePrivateMSG(data.get("userID").getAsString(), data.get("msg").getAsString(), data.get("sender").getAsString());
         return true;
     }
@@ -273,12 +274,12 @@ public class SOCKET extends ConnectionController{
      ************************************************** IN playing methods ************
      * ***********************************************************************
      */
-    public boolean startGame(JsonObject data){
+    public boolean startGame(JsonObject data, MultiClientSocketGame ref){
         //TODO boolean bool = this.startGame(data.get("playerID").getAsString());
         //return bool;
         return false;
     }
-    public boolean takeCard(JsonObject data){
+    public boolean takeCard(JsonObject data, MultiClientSocketGame ref){
         //TODO boolean bool = this.takeCard(data.get("column").getAsInt(),data.get("cards").toString(),data.get("playerID").getAsString());
         //return bool;
         return false;
@@ -289,9 +290,9 @@ public class SOCKET extends ConnectionController{
      * ***********************************************************************
      * */
 
-    public boolean login(JsonObject data){
+    public boolean login(JsonObject data, MultiClientSocketGame ref){
         try {
-            this.login(data.get("ID").getAsString(), data.get("pwd").getAsString());
+            String controllerRef = this.login(data.get("ID").getAsString(), data.get("pwd").getAsString());
         } catch (LoginException e) {
             return false;
         }
@@ -299,8 +300,7 @@ public class SOCKET extends ConnectionController{
     }
 
 
-    public boolean signUp(JsonObject data){
-
+    public boolean signUp(JsonObject data, MultiClientSocketGame ref){
         try {
             this.signUp(data.get("ID").getAsString(), data.get("pwd").getAsString());
         } catch (LoginException e) {
@@ -310,16 +310,16 @@ public class SOCKET extends ConnectionController{
 
     }
 
-    public boolean joinGame(JsonObject data){
+    public boolean joinGame(JsonObject data, MultiClientSocketGame ref){
         if(!data.get("searchID").getAsString().equals("null")){
             try {
-                this.joinGame(data.get("ID").getAsString(), data.get("searchID").getAsString());
+                String controllerRef = this.joinGame(data.get("ID").getAsString(), data.get("searchID").getAsString());
             } catch (addPlayerToGameException e) {
                 return false;
             }
         }else{
             try {
-                this.joinGame(data.get("ID").getAsString());
+                String controllerRef = this.joinGame(data.get("ID").getAsString());
             } catch (addPlayerToGameException e) {
                 return false;
             }
@@ -328,17 +328,17 @@ public class SOCKET extends ConnectionController{
         return true;
     }
 
-    public boolean createGame(JsonObject data){
+    public boolean createGame(JsonObject data, MultiClientSocketGame ref){
 
         if(data.get("maxPlayerNumber").getAsInt() != 0){
             try {
-                this.createGame(data.get("ID").getAsString(), data.get("maxPlayerNumber").getAsInt());
+                String controllerRef = this.createGame(data.get("ID").getAsString(), data.get("maxPlayerNumber").getAsInt());
             } catch (addPlayerToGameException e) {
                 return false;
             }
         }else{
             try {
-                this.createGame(data.get("ID").getAsString());
+                String controllerRef = this.createGame(data.get("ID").getAsString());
             } catch (addPlayerToGameException e) {
                 return false;
             }
@@ -354,6 +354,7 @@ public class SOCKET extends ConnectionController{
 
     public class MultiClientSocketGame implements Runnable{
         private final Socket socket;
+        private String controllerRef;
         private boolean cntOn = true;
         private String clientID;
         private Scanner in;
@@ -362,6 +363,12 @@ public class SOCKET extends ConnectionController{
         private int pingPongTime;
         private Boolean pingPongResponse = false;
         Thread pingPongThread;
+        public void setController (String controllerRef){
+            this.controllerRef=controllerRef;
+        }
+        public String getController(){
+            return controllerRef;
+        }
         public MultiClientSocketGame(Socket socket){
             this.socket = socket;
 
@@ -412,7 +419,6 @@ public class SOCKET extends ConnectionController{
             }
             if(!cntOn) return;
             if(!pingPongResponse){
-
                 setPlayerOffline(clientID);
                 return;
             }
@@ -421,7 +427,6 @@ public class SOCKET extends ConnectionController{
         }
         public void forceClientDisconnection() throws IOException {
             if(cntOn)this.setPlayerOffline(this.clientID);
-
             cntOn = false;
             in.close();
             out.close();
@@ -484,14 +489,14 @@ public class SOCKET extends ConnectionController{
                     Method getNameMethod = null;
 
                     try {
-                        getNameMethod = SOCKET.this.getClass().getMethod(methodName, JsonObject.class);
+                        getNameMethod = SOCKET.this.getClass().getMethod(methodName, JsonObject.class, MultiClientSocketGame.class);
                     } catch (NoSuchMethodException e) {
                         existingMethod = false;
                     }
                     System.out.println(existingMethod);
                     if(getNameMethod != null) {
                         try {
-                            Boolean booleanResponse = (boolean) getNameMethod.invoke(SOCKET.this, data);
+                            Boolean booleanResponse = (boolean) getNameMethod.invoke(SOCKET.this, data, this);
                             sendData.addProperty("response", booleanResponse);
                         } catch (IllegalAccessException | InvocationTargetException e) {
                             existingMethod = false;
