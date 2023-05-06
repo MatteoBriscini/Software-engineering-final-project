@@ -37,6 +37,14 @@ public class MainBoard {
         return board[x][y].getSketch();
     }
 
+    public int getRows(){
+        return board[0].length;
+    }
+
+    public int getColumns(){
+        return board.length;
+    }
+
 
     /**
      * @param positions contains all the usable positions on the board
