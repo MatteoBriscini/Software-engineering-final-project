@@ -72,7 +72,6 @@ public class ClientSOCKET extends ConnectionManager {
         }
     }
     private void pingPong(){
-
         try {
             Thread.sleep(pingPongTime);
         } catch (InterruptedException e) {
@@ -127,10 +126,13 @@ public class ClientSOCKET extends ConnectionManager {
                             throw new RuntimeException("server try to call not existing client's method");
                         }
                         JsonObject data = jsonObject.get("data").getAsJsonObject();
+
                         if(getNameMethod != null) {
                             try {
                                 getNameMethod.invoke(this, data);
                             } catch (IllegalAccessException | InvocationTargetException e) {
+                                System.out.println(methodName);
+                                System.out.println(e);
                                 throw new RuntimeException("can't find method on server");
                             }
                         }
@@ -352,14 +354,12 @@ public class ClientSOCKET extends ConnectionManager {
         JsonObject data = new JsonObject();
         data.addProperty("playerID", playerID);
         JsonObject msg = new JsonObject();
-        msg.addProperty("service", "quit");
+        msg.addProperty("service", "quitGame");
         msg.add("data", data);
 
-        this.setPlayerAsLobby();
-
         boolean bool = this.sendMSG(msg);
-        in.close();
-        out.close();
+
+        this.setPlayerAsLobby();
 
         return bool;
     }

@@ -156,7 +156,7 @@ public class PlayingPlayer extends Player{
         } catch (InvalidPickException e) {
             JsonObject err = new JsonObject();
             err.addProperty("errorID", "invalid move");
-            err.addProperty("errorMSG", e.toString());
+            err.addProperty("errorMSG", e.getMessage());
             this.errMsg(err);
             return false;
         }

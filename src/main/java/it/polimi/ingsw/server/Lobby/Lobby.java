@@ -14,6 +14,7 @@ import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
 import javax.security.auth.login.LoginException;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -76,7 +77,6 @@ public class Lobby {
     //Methods
 
     public synchronized String login(String ID, String pwd) throws LoginException {
-
         ArrayList<String[]> games;
         ArrayList<Controller> activeG;
         ArrayList<Integer> PORT;
@@ -120,6 +120,7 @@ public class Lobby {
 
         }
 
+
         for(int j = 0; j < games.size(); j++){
 
             String[] players = games.get(j);
@@ -132,7 +133,6 @@ public class Lobby {
                         activeG = activeGames;
 
                     }
-
                     if(activeG.get(j).isPlayerOffline(ID)){
                         return activeG.get(j).toString();
                     }
@@ -199,6 +199,7 @@ public class Lobby {
     }
 
     public synchronized String joinGame(String ID, ConnectionType connectionType) throws addPlayerToGameException {
+
         ArrayList<String[]> tempPlayersInGames;
         ArrayList<Controller> tempActiveGames;
         int j = 0;

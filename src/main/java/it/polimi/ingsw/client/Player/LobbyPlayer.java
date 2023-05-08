@@ -7,16 +7,14 @@ import it.polimi.ingsw.shared.exceptions.addPlayerToGameException;
 import javax.security.auth.login.LoginException;
 
 public class LobbyPlayer extends Player{
-
-
-    private int PORT;
-
-
     public LobbyPlayer(String playerID, String pwd, ConnectionManager connection){
         super(playerID, pwd, connection);
         this.connection.setInGame(false);
         try {
-            connection.connection();
+            if(!connection.getConnected()){
+                connection.connection();
+                connection.setConnected(true);
+            }
         } catch (Exception e) {
             this.disconnectError("invalid connection config");
         }
@@ -70,12 +68,6 @@ public class LobbyPlayer extends Player{
         } catch (LoginException e) {
             loginError(e.getMessage());
             return false;
-        }
-        if(this.PORT != -1){
-            int PORT = this.PORT;
-            //clientMain.setPlayerAsPlaying(this);
-        }else{
-            addPlayerToGameError("No port received");
         }
         return true;
     }

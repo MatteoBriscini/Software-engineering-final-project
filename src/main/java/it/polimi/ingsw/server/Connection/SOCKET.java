@@ -65,6 +65,7 @@ public class SOCKET extends ConnectionController{
     private void sendCommand(JsonObject msg, ArrayList<MultiClientSocketGame> tmpClients){
         for(MultiClientSocketGame client: tmpClients){
             try {
+
                 client.sendMSG(msg);
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -124,7 +125,7 @@ public class SOCKET extends ConnectionController{
 
         this.sendCommand(msg, clients);
     }
-    public void addCardToClientBoard(String playerID, int column, Card[] cards) {
+    public void addCardToClientBoard(String playerID, int column, Card[] cards, ArrayList<MultiClientSocketGame> clients) {
         JsonObject data = new JsonObject();
         data.addProperty("playerID", playerID);
         data.addProperty("column", column);
@@ -196,7 +197,7 @@ public class SOCKET extends ConnectionController{
         data.add("scored", scored);
 
         JsonObject msg = new JsonObject();
-        msg.addProperty("service", "receiveWinner");
+        msg.addProperty("service", "receiveLastCommonScored");
         msg.add("data", data);
 
         this.sendCommand(msg, clients);
@@ -293,8 +294,8 @@ public class SOCKET extends ConnectionController{
         try {
             String controllerRef = this.login(data.get("ID").getAsString(), data.get("pwd").getAsString());
             if(!controllerRef.equals("null")){
+
                 ref.setController(controllerRef);
-                ref.setPlayerOnline();
                 JsonObject data1 = new JsonObject();
 
                 JsonObject msg = new JsonObject();
@@ -304,7 +305,9 @@ public class SOCKET extends ConnectionController{
                 ArrayList<MultiClientSocketGame> tmp = new ArrayList<>();
                 tmp.add(ref);
 
-                this.sendCommand(msg, tmp);}
+                this.sendCommand(msg, tmp);
+                ref.setPlayerOnline();
+            }
         } catch (LoginException e) {
             return false;
         }
@@ -372,7 +375,7 @@ public class SOCKET extends ConnectionController{
     public class MultiClientSocketGame implements Runnable{
         private final Socket socket;
         private String controllerRef;
-        private boolean cntOn = true;
+        private boolean cntOn = true, quit;
         private String clientID;
         private Scanner in;
         private PrintWriter out;
@@ -430,7 +433,7 @@ public class SOCKET extends ConnectionController{
                     throw new RuntimeException(e);
                 }
             }
-            if(!cntOn) return;
+            if(!cntOn || quit) return;
             if(!pingPongResponse){
                 setPlayerOffline(clientID);
                 return;
@@ -469,25 +472,26 @@ public class SOCKET extends ConnectionController{
             controller.setPlayerOnline(playerID);
             controller.addClientSOCKET(this);
         }
-        private void receiveMSG()  throws IOException {
+        private void receiveMSG()  throws IOException {  //TODO quit cnt sia qui che in rmi
             boolean existingMethod;
             JsonObject response = new JsonObject();
             response.addProperty("service", "receiveResponse");
             JsonObject sendData = new JsonObject();
             while (cntOn){   //LOOP receive message
                 String line = in.nextLine();
+                //System.out.println(line + clientID);
                 JsonObject jsonObject = new Gson().fromJson(line, JsonObject.class);
                 String methodName = jsonObject.get("service").getAsString();
                 JsonObject data = jsonObject.get("data").getAsJsonObject();
-                if (methodName.equals("quit")) {
-                    cntOn = false;
+                if (methodName.equals("quitGame")) {
+                    quit = true;
                     sendData.addProperty("existingMethod", true);
                     sendData.addProperty("response",true);
                     this.setPlayerOffline(data.get("playerID").getAsString());
                     response.add("data", sendData);
                     this.sendMSG(response);
-                    break;
                 } else if(methodName.equals("joinLobby")){
+                    quit = false;
                     cntOn = true;
                     sendData.addProperty("existingMethod", true);
                     sendData.addProperty("response",true);
@@ -496,7 +500,6 @@ public class SOCKET extends ConnectionController{
                     response.add("data", sendData);
                     this.sendMSG(response);
                 } else if(methodName.equals("pingPong")){
-
                     data = new JsonObject();
                     JsonObject msg = new JsonObject();
                     msg.addProperty("service", "pingResponse");
