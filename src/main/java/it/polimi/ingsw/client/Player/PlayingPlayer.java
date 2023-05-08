@@ -29,31 +29,10 @@ public class PlayingPlayer extends Player{
     private JsonObject[] commonGoalScored;
     /**
 
-     * @throws RemoteException if the server do not response (wrong port or ip)
+     * @throws RemoteException if the server does not response (wrong port or ip)
      */
     public PlayingPlayer(String playerID, String pwd, ConnectionManager connection) throws RemoteException {
         super(playerID, pwd, connection);
-        /*
-        switch (connectionType){
-            case RMI:
-                try {
-                    connection = new PlayingPlayerRMI(port, serverIP, playerID, this);
-                } catch (Exception e) {
-                    this.disconnectError("invalid connection config received from server");
-                    return;
-                }
-                break;
-            case SOCKET:
-                try {
-                    connection = new PlayingPlayerSOCKET(port, serverIP, playerID, this);
-                } catch (Exception e) {
-                    System.out.println(e.toString());
-                    this.disconnectError("invalid connection config received from server");
-                    return;
-                }
-                break;
-            case DEBUG: return;
-        }*/
     }
 
     /*************************************************************************
@@ -157,8 +136,9 @@ public class PlayingPlayer extends Player{
 
     public boolean quitGame(){
         try {
-            return connection.quitGame(this.playerID);
-            //TODO il player deve tornare allo stato di lobby
+            boolean bool = connection.quitGame(this.playerID);
+            if(bool)connection.setPlayerAsLobby();
+            return bool;
         } catch (Exception e) {
             this.disconnectError("server can't respond");
             return false;

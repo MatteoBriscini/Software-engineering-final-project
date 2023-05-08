@@ -168,6 +168,7 @@ public class Controller implements Runnable {
         return controllerManager.removeClientRMI(client, playerID);
     }
     public void addClientSOCKET(SOCKET.MultiClientSocketGame client){
+
         controllerManager.addClientSOCKET(client);
     }
 

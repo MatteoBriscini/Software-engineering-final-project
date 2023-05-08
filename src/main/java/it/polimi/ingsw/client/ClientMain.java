@@ -21,7 +21,7 @@ public class ClientMain {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        Player player = null;
+        Player player;
         player = new LobbyPlayer("paolo", "antonio", connection);
         ((LobbyPlayer)player).login();
         ((LobbyPlayer)player).createGame();

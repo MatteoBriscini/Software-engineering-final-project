@@ -39,7 +39,7 @@ public abstract class ConnectionController {
      * ***********************************************************************
      * method to start game, only the creator of the game can start the game in every moment
      * @param playerID ID of the player call the method
-     * @return true if player can start the game false in all other cases
+     * @return true if a player can start the game false in all other cases
      * @throws RemoteException if server is offline
      */
     public boolean startGame(String playerID, String connectionInterface){
@@ -90,30 +90,23 @@ public abstract class ConnectionController {
         System.out.println("\u001B[36m"+"client: " + playerID + " join the lobby on port(RMI): " + PORT +"\u001B[0m");
     }
     public String login(String ID, String pwd) throws LoginException {
-        System.out.println(ID + " on port: "+ PORT + ", logging in");
         return lobby.login(ID, pwd);
     }
 
 
     public boolean signUp(String ID, String pwd) throws LoginException {
-
-        System.out.println(ID + " on port: "+ PORT + ", trying to sign up");
         lobby.signUp(ID, pwd);
         return false;
     }
 
     public String joinGame(String ID) throws addPlayerToGameException {
-        System.out.println(ID + " on port: "+ PORT + ", trying to join a random game");
         return lobby.joinGame(ID, this.connectionType);
     }
     public String joinGame(String ID, String searchID) throws addPlayerToGameException {
-        System.out.println(ID + " on port: "+ PORT + ", trying to join a game with player " + searchID);
         return lobby.joinGame(ID, this.connectionType, searchID);
     }
 
     public String createGame(String ID) throws addPlayerToGameException {
-
-        System.out.println(ID + " on port: "+ PORT + ", trying to create a game");
         return lobby.createGame(ID);
     }
 

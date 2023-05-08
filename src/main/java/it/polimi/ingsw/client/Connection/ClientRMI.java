@@ -24,8 +24,6 @@ public class ClientRMI extends ConnectionManager implements PlayingPlayerRemoteI
         super();
         this.PORT = PORT;
         this.serverIP = serverIP;
-
-
     }
 
 

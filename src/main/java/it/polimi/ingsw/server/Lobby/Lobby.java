@@ -229,10 +229,6 @@ public class Lobby {
 
         int j = 0;
 
-        if(ID.equals(searchID)){
-            throw new addPlayerToGameException("ID not found");
-        }
-
         synchronized (activeGames){
             if(activeGames.size()==0) throw new addPlayerToGameException("ID not found");
             tempActiveGames = activeGames;
