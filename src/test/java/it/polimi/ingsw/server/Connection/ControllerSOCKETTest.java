@@ -37,7 +37,6 @@ public class ControllerSOCKETTest extends TestCase {
         ((LobbyPlayer)testClient).login();
         ((LobbyPlayer)testClient).createGame();
         testClient = connection.getPlayer();
-        System.out.println(testClient);
 
         controller = lobby.getActiveGames().get(0);
         testServer = controller.getControllerManager();

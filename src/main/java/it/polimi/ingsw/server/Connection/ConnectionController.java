@@ -87,7 +87,7 @@ public abstract class ConnectionController {
  * */
 
     public void joinLobby(String playerID){
-        System.out.println("\u001B[36m"+"client: " + playerID + " join the lobby on port(RMI): " + PORT +"\u001B[0m");
+        System.out.println("\u001B[36m"+"client: " + playerID + " join the lobby (RMI)" +"\u001B[0m");
     }
     public String login(String ID, String pwd) throws LoginException {
         return lobby.login(ID, pwd);

@@ -64,9 +64,6 @@ public class ClientSOCKET extends ConnectionManager {
         JsonObject msg = new JsonObject();
         msg.addProperty("service", "joinLobby");
         msg.add("data", data);this.sendMSG(msg);
-
-        //pingPongThread = new Thread(this::pingPong);       //start ping pong
-        //pingPongThread.start();
     }
     public void pingResponse(JsonObject data){
         synchronized (pingPongThread) {
@@ -75,6 +72,7 @@ public class ClientSOCKET extends ConnectionManager {
         }
     }
     private void pingPong(){
+
         try {
             Thread.sleep(pingPongTime);
         } catch (InterruptedException e) {
@@ -209,6 +207,8 @@ public class ClientSOCKET extends ConnectionManager {
         ((PlayingPlayer)player).disconnectError("disconnection forced by the server");
     }
     public void setPlayerAsPlaying(JsonObject data){
+        pingPongThread = new Thread(this::pingPong);       //start ping pong
+        pingPongThread.start();
         this.setPlayerAsPlaying();
     }
     /*************************************************************************
@@ -250,8 +250,9 @@ public class ClientSOCKET extends ConnectionManager {
         msg.addProperty("service", "joinGame");
         msg.add("data" ,data);
 
+
         boolean bool = this.sendMSG(msg);
-        if(bool) this.setPlayerAsPlaying();
+        if(bool) this.setPlayerAsPlaying(data);
         else throw new addPlayerToGameException("fail to joint the game");
     }
 
@@ -265,7 +266,7 @@ public class ClientSOCKET extends ConnectionManager {
         msg.add("data", data);
 
         boolean bool = this.sendMSG(msg);
-        if(bool) this.setPlayerAsPlaying();
+        if(bool) this.setPlayerAsPlaying(data);
         else throw new addPlayerToGameException("fail to create the game");
     }
 
@@ -279,7 +280,7 @@ public class ClientSOCKET extends ConnectionManager {
         msg.add("data", data);
 
         boolean bool = this.sendMSG(msg);
-        if(bool) this.setPlayerAsPlaying();
+        if(bool) this.setPlayerAsPlaying(data);
         else throw new addPlayerToGameException("fail to create the game");
     }
 
@@ -292,7 +293,7 @@ public class ClientSOCKET extends ConnectionManager {
         msg.add("data" ,data);
 
         boolean bool = this.sendMSG(msg);
-        if(bool) this.setPlayerAsPlaying();
+        if(bool) this.setPlayerAsPlaying(data);
         else throw new addPlayerToGameException("fail to joint the game");
     }
     /*************************************************************************
