@@ -15,11 +15,7 @@ public abstract class Player {
         this.pwd = pwd;
         this.connection = connection;
         this.connection.setPlayer(this, this.playerID);
-        try {
-            connection.connection();
-        } catch (Exception e) {
-            this.disconnectError("invalid connection config");
-        }
+
     }
 
     /**

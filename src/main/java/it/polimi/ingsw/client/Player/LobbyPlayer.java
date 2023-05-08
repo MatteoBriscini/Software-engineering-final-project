@@ -15,6 +15,11 @@ public class LobbyPlayer extends Player{
     public LobbyPlayer(String playerID, String pwd, ConnectionManager connection){
         super(playerID, pwd, connection);
         this.connection.setInGame(false);
+        try {
+            connection.connection();
+        } catch (Exception e) {
+            this.disconnectError("invalid connection config");
+        }
     }
 
     //Set and get methods
@@ -126,6 +131,4 @@ public class LobbyPlayer extends Player{
         }
         return true;
     }
-
-
 }

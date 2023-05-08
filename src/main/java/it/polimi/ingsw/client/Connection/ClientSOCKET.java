@@ -14,7 +14,6 @@ import java.lang.reflect.Method;
 import java.net.Socket;
 
 public class ClientSOCKET extends ConnectionManager {
-    private final String playerID;
     int PORT;
     private final String serverIP;
     private final Socket echoSocket;
@@ -30,9 +29,8 @@ public class ClientSOCKET extends ConnectionManager {
     private boolean quit = false;
     Thread pingPongThread;
 
-    public ClientSOCKET(int PORT, String serverIP, String playerID) throws Exception {
+    public ClientSOCKET(int PORT, String serverIP) throws Exception {
         super();
-        this.playerID = playerID;
 
         try {
             jsonCreate();
@@ -49,7 +47,6 @@ public class ClientSOCKET extends ConnectionManager {
         stdIn = new BufferedReader(new InputStreamReader(System.in));
 
         this.receiveMSG();
-        this.connection();
     }
 
     private void jsonCreate() throws FileNotFoundException {  //download json data
@@ -65,9 +62,8 @@ public class ClientSOCKET extends ConnectionManager {
         JsonObject data = new JsonObject();
         data.addProperty("playerID", playerID);
         JsonObject msg = new JsonObject();
-        msg.addProperty("service", "join");
-        msg.add("data", data);
-        this.sendMSG(msg);
+        msg.addProperty("service", "joinLobby");
+        msg.add("data", data);this.sendMSG(msg);
 
         //pingPongThread = new Thread(this::pingPong);       //start ping pong
         //pingPongThread.start();
@@ -93,7 +89,6 @@ public class ClientSOCKET extends ConnectionManager {
         msg.add("data", data);
         out.println(msg.toString());
         out.flush();
-        //System.out.println(this.playerID + ":  "+ msg);
         synchronized (pingPongThread) {
             try {
                 pingPongThread.wait(timeout);
@@ -117,12 +112,10 @@ public class ClientSOCKET extends ConnectionManager {
             String serverMsg;
             try {
                 while ((serverMsg = in.readLine()) != null ){//receive socket message
-                    //System.out.println("\u001B[32m"+ this.playerID + ":  "+ serverMsg + "\u001B[0m");
                     JsonObject jsonObject = new Gson().fromJson(serverMsg, JsonObject.class);
                     String methodName = jsonObject.get("service").getAsString();
                     if(methodName.equals("pingPong")){
                         JsonObject data = new JsonObject();
-
                         JsonObject msg = new JsonObject();
                         msg.addProperty("service", "pingResponse");
                         msg.add("data", data);
@@ -146,7 +139,7 @@ public class ClientSOCKET extends ConnectionManager {
                     }
                 }
             } catch (IOException e) {
-                if(!quit) throw new RuntimeException(e); //TODO
+                if(!quit) throw new RuntimeException(e); //TODO disconnection error
             }
         });
         receiveMsgThread.start();
@@ -215,6 +208,9 @@ public class ClientSOCKET extends ConnectionManager {
         out.close();
         ((PlayingPlayer)player).disconnectError("disconnection forced by the server");
     }
+    public void setPlayerAsPlaying(JsonObject data){
+        this.setPlayerAsPlaying();
+    }
     /*************************************************************************
      *                          OUT lobby method
      * ***********************************************************************
@@ -228,8 +224,8 @@ public class ClientSOCKET extends ConnectionManager {
         msg.addProperty("service", "login");
         msg.add("data", data);
 
-        out.println(msg.toString());  //send socket message TODO
-        out.flush();
+        boolean bool = this.sendMSG(msg);
+        if(!bool)throw new LoginException("fail to login");
     }
 
     @Override
@@ -241,12 +237,12 @@ public class ClientSOCKET extends ConnectionManager {
         msg.addProperty("service", "signUp");
         msg.add("data", data);
 
-        out.println(msg.toString());  //send socket message TODO
-        out.flush();
+        boolean bool = this.sendMSG(msg);
+        if(!bool)throw new LoginException("fail to sing up");
     }
 
 
-    public void joinGame(String ID, String searchID){
+    public void joinGame(String ID, String searchID)throws addPlayerToGameException{
         JsonObject data = new JsonObject();
         data.addProperty("ID", ID);
         data.addProperty("searchID" ,searchID);
@@ -254,8 +250,9 @@ public class ClientSOCKET extends ConnectionManager {
         msg.addProperty("service", "joinGame");
         msg.add("data" ,data);
 
-        out.println(msg.toString());  //send socket message TODO
-        out.flush();
+        boolean bool = this.sendMSG(msg);
+        if(bool) this.setPlayerAsPlaying();
+        else throw new addPlayerToGameException("fail to joint the game");
     }
 
     @Override
@@ -267,8 +264,9 @@ public class ClientSOCKET extends ConnectionManager {
         msg.addProperty("service", "createGame");
         msg.add("data", data);
 
-        out.println(msg.toString());  //send socket message TODO
-        out.flush();
+        boolean bool = this.sendMSG(msg);
+        if(bool) this.setPlayerAsPlaying();
+        else throw new addPlayerToGameException("fail to create the game");
     }
 
     @Override
@@ -280,22 +278,22 @@ public class ClientSOCKET extends ConnectionManager {
         msg.addProperty("service", "createGame");
         msg.add("data", data);
 
-        out.println(msg.toString());  //send socket message TODO
-        out.flush();
+        boolean bool = this.sendMSG(msg);
+        if(bool) this.setPlayerAsPlaying();
+        else throw new addPlayerToGameException("fail to create the game");
     }
 
-    public void joinGame(String ID){
+    public void joinGame(String ID)throws addPlayerToGameException{
         JsonObject data = new JsonObject();
         data.addProperty("ID", ID);
         data.addProperty("searchID" , "null");
         JsonObject msg = new JsonObject();
         msg.addProperty("service", "joinGame");
-
         msg.add("data" ,data);
 
-        out.println(msg.toString());  //send socket message TODO
-        out.flush();
-
+        boolean bool = this.sendMSG(msg);
+        if(bool) this.setPlayerAsPlaying();
+        else throw new addPlayerToGameException("fail to joint the game");
     }
     /*************************************************************************
      *                          OUT method
@@ -304,7 +302,6 @@ public class ClientSOCKET extends ConnectionManager {
 
 
     private boolean sendMSG (JsonObject msg) {
-        //System.out.println(this.playerID + ":  "+ msg);
         synchronized (this){
             this.validResponse=false;
         }
@@ -318,8 +315,7 @@ public class ClientSOCKET extends ConnectionManager {
                 throw new RuntimeException(e);
             }
             if(!validResponse){
-                //System.out.println("errore"); TODO
-                //((PlayingPlayer)player).disconnectError("server can't respond");
+                ((PlayingPlayer)player).disconnectError("server can't respond");
             }
         }
         return response;
@@ -358,7 +354,7 @@ public class ClientSOCKET extends ConnectionManager {
         msg.addProperty("service", "quit");
         msg.add("data", data);
 
-        //TODO make player to lobby player
+        this.setPlayerAsLobby();
 
         boolean bool = this.sendMSG(msg);
         in.close();

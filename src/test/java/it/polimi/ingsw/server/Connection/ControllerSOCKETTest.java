@@ -1,8 +1,14 @@
 package it.polimi.ingsw.server.Connection;
 
 import it.polimi.ingsw.client.ClientMain;
+import it.polimi.ingsw.client.Connection.ClientSOCKET;
+import it.polimi.ingsw.client.Connection.ConnectionManager;
+import it.polimi.ingsw.client.Player.LobbyPlayer;
+import it.polimi.ingsw.client.Player.Player;
+import it.polimi.ingsw.client.Player.PlayingPlayer;
 import it.polimi.ingsw.server.Controller;
 import it.polimi.ingsw.server.Exceptions.ConnectionControllerManagerException;
+import it.polimi.ingsw.server.Lobby.Lobby;
 import it.polimi.ingsw.shared.exceptions.addPlayerToGameException;
 import junit.framework.TestCase;
 
@@ -10,8 +16,36 @@ import java.rmi.RemoteException;
 
 public class ControllerSOCKETTest extends TestCase {
     Controller controller = new Controller();
+    ConnectionControllerManager testServer;
+    Lobby lobby;
     private ClientMain clientMain = new ClientMain();
     public void testServerSOCKETIn() throws RemoteException, InterruptedException, ConnectionControllerManagerException, addPlayerToGameException {
+        lobby = new Lobby(8001, 8000);
+        ConnectionManager connection;
+        Player testClient;
+        ConnectionManager connection1;
+        Player testClient1;
+        try {
+            connection = new ClientSOCKET(8000, "127.0.0.1");
+            testClient  = new LobbyPlayer("antonio", "antonio", connection);
+            connection1 = new ClientSOCKET(8000, "127.0.0.1");
+            testClient1  = new LobbyPlayer("mauro", "antonio", connection1);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        ((LobbyPlayer)testClient).login();
+        ((LobbyPlayer)testClient).createGame();
+        testClient = connection.getPlayer();
+        System.out.println(testClient);
+
+        controller = lobby.getActiveGames().get(0);
+        testServer = controller.getControllerManager();
+
+        assertFalse(testServer.isRmiActive());
+        assertTrue(testServer.isSocketActive());
+
+        Thread.sleep(2000);
        /* System.out.println("START TEST testServerSOCKETIn\n");
 
         //controller.addClient(8000, ConnectionType.SOCKET);

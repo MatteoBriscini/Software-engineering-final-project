@@ -52,8 +52,7 @@ public abstract class ConnectionManager extends UnicastRemoteObject {
     }
     public void setPlayerAsPlaying(){
         String playerID = player.getPlayerID();
-        ConnectionManager connectionManager = player.getConnection();
-        connectionManager.setInGame(true);
+        this.setInGame(true);
         String pwd = player.getPwd();
         try {
             this.player = new PlayingPlayer(playerID, pwd, this);
@@ -63,8 +62,7 @@ public abstract class ConnectionManager extends UnicastRemoteObject {
     }
     public void setPlayerAsLobby(){
         String playerID = player.getPlayerID();
-        ConnectionManager connectionManager = player.getConnection();
-        connectionManager.setInGame(false);
+        this.setInGame(false);
         String pwd = player.getPwd();
         this.player = new LobbyPlayer(playerID, pwd, this);
         System.out.println("test");
