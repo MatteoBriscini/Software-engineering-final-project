@@ -395,10 +395,6 @@ public class SOCKET extends ConnectionController{
                 System.out.println("MultiClientSocketGame: JSON FILE NOT FOUND");
                 throw new RuntimeException(e);
             }
-
-
-            //pingPongThread = new Thread(this::pingPong);       //start ping pong
-            //pingPongThread.start();
         }
 
         private void jsonCreate() throws FileNotFoundException {  //download json data
@@ -462,6 +458,9 @@ public class SOCKET extends ConnectionController{
             controller.setPlayerOffline(playerID);
         }
         public void setPlayerOnline(){
+            pingPongThread = new Thread(this::pingPong);       //start ping pong
+            pingPongThread.start();
+
             this.setPlayerOnline(this.clientID);
         }
         public void setPlayerOnline(String playerID){
@@ -493,7 +492,7 @@ public class SOCKET extends ConnectionController{
                     sendData.addProperty("existingMethod", true);
                     sendData.addProperty("response",true);
                     this.clientID = data.get("playerID").getAsString();
-                    System.out.println("\u001B[36m"+"client: " + this.clientID + " join the lobby" +"\u001B[0m");
+                    System.out.println("\u001B[36m"+"client: " + this.clientID + " join the lobby (SOCKET)" +"\u001B[0m");
                     response.add("data", sendData);
                     this.sendMSG(response);
                 } else if(methodName.equals("pingPong")){
