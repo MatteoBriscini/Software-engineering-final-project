@@ -23,8 +23,11 @@ import java.util.ArrayList;
 public abstract class ConnectionManager extends UnicastRemoteObject {
     protected Player player;
     protected String playerID;
+    private boolean connected = false;
+
     protected boolean inGame = false;
     protected int pingPongTime;
+
     protected ConnectionManager() throws RemoteException {
         try {
             jsonCreate();
@@ -39,6 +42,12 @@ public abstract class ConnectionManager extends UnicastRemoteObject {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         JsonObject jsonObject = new Gson().fromJson(bufferedReader , JsonObject.class);
         this.pingPongTime = jsonObject.get("pingPongTime").getAsInt();
+    }
+    public boolean getConnected(){
+        return connected;
+    }
+    public void setConnected(boolean connected){
+        this.connected = connected;
     }
     public void setPlayer(Player player, String playerID){
         this.playerID = playerID;
@@ -65,7 +74,6 @@ public abstract class ConnectionManager extends UnicastRemoteObject {
         this.setInGame(false);
         String pwd = player.getPwd();
         this.player = new LobbyPlayer(playerID, pwd, this);
-        System.out.println("test");
     }
     /*************************************************************************
      ************************************************** OUT method ***********
@@ -117,6 +125,7 @@ public abstract class ConnectionManager extends UnicastRemoteObject {
      */
     public void receiveAllPlayerBoard(String playerBoards){//Card[][]
         JsonArray jsonArray = new Gson().fromJson(playerBoards, JsonArray.class);
+
         ArrayList<Card[][]> boards = new ArrayList<>();
         for (int i = 0; i<jsonArray.size();i++){
             boards.add(new Gson().fromJson(jsonArray.get(0), Card[][].class));
