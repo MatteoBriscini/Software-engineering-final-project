@@ -11,8 +11,6 @@ public class HelloApplication extends Application  {
     @Override
     public void start(Stage stage) throws IOException {
 
-            System.out.println(this.getClass().getResource("hello-view.fxml"));
-
             FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("hello-view.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 320, 240);
             stage.setTitle("Hello!");
@@ -21,11 +19,7 @@ public class HelloApplication extends Application  {
     }
 
     public static void main(String[] args) {
-        /*
-        for (String arg: args) {
-            System.out.println(arg);
-        }
-        */
+
         if (args.length > 0) {
             String param0 = args[0];
             if (param0.equals( "--server") )
