@@ -76,6 +76,22 @@
             <resource>
                 <directory>src/main/resources</directory>
             </resource>
+
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>it.polimi.ingsw.gui.fxml</include>
+                </includes>
+            </resource>
+
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>it.polimi.ingsw.gui.css</include>
+                </includes>
+            </resource>
+
+
         </resources>
 
         <plugins>
