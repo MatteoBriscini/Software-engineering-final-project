@@ -264,7 +264,6 @@ public class ConnectionControllerManagerTest extends TestCase {
         testClient2 = connection2.getPlayer();
         testClient2.setDebugMode();
 
-
         assertTrue(((PlayingPlayer)testClient).startGame());
 
         ((PlayingPlayer)testClient).quitGame();

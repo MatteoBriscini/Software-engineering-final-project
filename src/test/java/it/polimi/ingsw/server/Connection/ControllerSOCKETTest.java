@@ -6,6 +6,7 @@ import it.polimi.ingsw.client.ClientMain;
 import it.polimi.ingsw.client.Connection.ClientRMI;
 import it.polimi.ingsw.client.Connection.ClientSOCKET;
 import it.polimi.ingsw.client.Connection.ConnectionManager;
+import it.polimi.ingsw.client.Exceptions.PlayerNotFoundException;
 import it.polimi.ingsw.client.Player.LobbyPlayer;
 import it.polimi.ingsw.client.Player.Player;
 import it.polimi.ingsw.client.Player.PlayingPlayer;
@@ -152,49 +153,67 @@ public class ControllerSOCKETTest extends TestCase {
         System.out.println("\nEND TEST\n");
 
         testServer.forceClientDisconnection();
-       /*
+
     }
     public void testSOCKETchat() throws ConnectionControllerManagerException, RemoteException, addPlayerToGameException, InterruptedException {
-        controller = new Controller();
+        System.out.println("START TEST testServerRMIOut\n");
 
-        System.out.println("START TEST testServerRMIIn\n");
+        lobby = new Lobby(8002, 8003);
+        clientMain = new ClientMain();
 
-        //controller.addClient(8003, ConnectionType.SOCKET);
+        ArrayList<it.polimi.ingsw.server.Model.PlayerClasses.Player> players = new ArrayList<>();      //gaming order array list for this test
+        players.add(new it.polimi.ingsw.server.Model.PlayerClasses.Player("antonio"));
+        players.add(new it.polimi.ingsw.server.Model.PlayerClasses.Player("marco"));
+        players.add(new it.polimi.ingsw.server.Model.PlayerClasses.Player("paolo"));
 
-        controller.addNewPlayer("antonio");
-        controller.addNewPlayer("marco");
-        controller.addNewPlayer("paolo");
+        ConnectionManager connection;
+        ConnectionManager connection1;
+        ConnectionManager connection2;
 
-        PlayingPlayer testClient1  = new PlayingPlayer("antonio", "antonio", clientMain, ConnectionType.SOCKET, 8003, "127.0.0.1");
-        assert (!controller.isPlayerOffline("antonio"));
-        PlayingPlayer testClient2  = new PlayingPlayer("marco", "antonio", clientMain, ConnectionType.SOCKET, 8003, "127.0.0.1");
-        assert (!controller.isPlayerOffline("marco"));
-        PlayingPlayer testClient3  = new PlayingPlayer("paolo", "antonio", clientMain, ConnectionType.SOCKET, 8003, "127.0.0.1");
-        assert (!controller.isPlayerOffline("paolo"));
+        try {
+            connection = new ClientSOCKET(8003, "127.0.0.1");
+            connection1 = new ClientSOCKET(8003, "127.0.0.1");
+            connection2 = new ClientSOCKET(8003, "127.0.0.1");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
-        testClient3.sendBroadcastMsg("test broadcast message");
+
+        Player testClient  = new LobbyPlayer("antonio", "antonio", connection);
+        ((LobbyPlayer)testClient).createGame();
+        testClient = connection.getPlayer();
+        testClient.setDebugMode();
+        Player testClient1  = new LobbyPlayer("marco", "antonio", connection1);
+        ((LobbyPlayer)testClient1).joinGame("antonio");
+        testClient1 = connection1.getPlayer();
+        testClient1.setDebugMode();
+        Player testClient2 = new LobbyPlayer("paolo", "antonio", connection2);
+        ((LobbyPlayer)testClient2).joinGame("antonio");
+        testClient2 = connection2.getPlayer();
+        testClient2.setDebugMode();
+
+
+        ((PlayingPlayer)testClient2).sendBroadcastMsg("test broadcast message");
 
         boolean bool = false;
         try {
-            testClient2.sendPrivateMSG("paolo", "test private message");
+            ((PlayingPlayer)testClient1).sendPrivateMSG("paolo", "test private message");
         } catch (PlayerNotFoundException e) {
             System.out.println(e.toString());
             bool = true;
         }
-        assert (bool);
+        assertTrue(bool);
 
+        assertTrue(((PlayingPlayer)testClient).startGame());       // authorized player try to start the game
 
-        assert (testClient1.startGame());       // authorized player try to start the game
-        Thread.sleep(1000);
-
-        testClient1.sendBroadcastMsg("test broadcast message");
+        ((PlayingPlayer)testClient).sendBroadcastMsg("test broadcast message");
         try {
-            testClient2.sendPrivateMSG("paolo", "test private message");
+            ((PlayingPlayer)testClient1).sendPrivateMSG("paolo", "test private message");
         } catch (PlayerNotFoundException e) {
             throw new RuntimeException(e);
         }
 
         Thread.sleep(2000);
-        System.out.println("\nEND TEST\n");*/
+        System.out.println("\nEND TEST\n");
     }
 }

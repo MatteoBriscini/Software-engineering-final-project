@@ -54,6 +54,9 @@ public class ConnectionControllerManager {
         socketActive = true;
         clientsSOCKET.add(client);
     }
+    public void removeClientSOCKET(SOCKET.MultiClientSocketGame client){
+        clientsSOCKET.remove(client);
+    }
 
     /*************************************************************************
      ************************************************** OUT method ***********

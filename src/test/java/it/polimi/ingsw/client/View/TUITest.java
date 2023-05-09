@@ -1,6 +1,8 @@
 package it.polimi.ingsw.client.View;
 
 import it.polimi.ingsw.client.ClientMain;
+import it.polimi.ingsw.client.Connection.ClientRMI;
+import it.polimi.ingsw.client.Connection.ConnectionManager;
 import it.polimi.ingsw.client.Player.PlayingPlayer;
 import it.polimi.ingsw.shared.Cards.Card;
 import it.polimi.ingsw.shared.Cards.CardColor;
@@ -25,7 +27,13 @@ public class TUITest extends TestCase {
 
     {
         try {
-            player = new PlayingPlayer("name","pwd",cm, ConnectionType.DEBUG,0,"Server");
+            ConnectionManager connection = null;
+            try {
+                connection = new ClientRMI(9090, "127.0.0.1");
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            player = new PlayingPlayer("name","pwd",connection);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }

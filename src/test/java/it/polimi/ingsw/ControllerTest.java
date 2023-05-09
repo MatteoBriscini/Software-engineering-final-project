@@ -395,9 +395,7 @@ public class ControllerTest extends TestCase {
         PositionWithColor[] cards = new PositionWithColor[2];
         cards[0] =new PositionWithColor(4,4,0,  BLUE);
         cards[1] =new PositionWithColor(4,3,0, LIGHTBLUE);
-        //System.out.println(test.isPlayerOffline(test.getCurrentPlayerID()));
         assert(test.takeCard(0, cards, test.getCurrentPlayerID()));
-
 
         assertEquals(1, test.getCurrentPlayer());
         board = test.getMainBoard();
