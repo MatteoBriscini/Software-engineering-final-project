@@ -204,6 +204,17 @@ public class PlayingPlayer extends Player{
      ************************************************** chat ******************
      * ************************************************************************
      */
+    public void sendMessage(String msg)throws PlayerNotFoundException{
+        int index = msg.indexOf(':');
+        if(index == -1){
+            sendBroadcastMsg(msg);
+            return;
+        }
+        String sender = msg.substring(0, index).replaceAll("\\s+","");
+        msg = msg.substring(index+1, msg.length());
+        if(msg.charAt(0) == ' ')msg = msg.substring(1);
+        sendPrivateMSG(sender, msg);
+    }
 
     public void sendBroadcastMsg(String msg){
         try{

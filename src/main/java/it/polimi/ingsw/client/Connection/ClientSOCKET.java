@@ -100,6 +100,12 @@ public class ClientSOCKET extends ConnectionManager {
         pingPongResponse = false;
         this.pingPong();
     }
+    private JsonObject prepareMSG(JsonObject data, String methodName){
+        JsonObject msg = new JsonObject();
+        msg.addProperty("service", methodName);
+        msg.add("data", data);
+        return msg;
+    }
     /*************************************************************************
      *                           IN method
      * ***********************************************************************
@@ -113,10 +119,7 @@ public class ClientSOCKET extends ConnectionManager {
                     String methodName = jsonObject.get("service").getAsString();
                     if(methodName.equals("pingPong")){
                         JsonObject data = new JsonObject();
-                        JsonObject msg = new JsonObject();
-                        msg.addProperty("service", "pingResponse");
-                        msg.add("data", data);
-                        out.println(msg.toString());
+                        out.println(prepareMSG(data, "pingResponse"));
                         out.flush();
                     }else {
                         Method getNameMethod = null;
@@ -137,7 +140,7 @@ public class ClientSOCKET extends ConnectionManager {
                     }
                 }
             } catch (IOException e) {
-                if(!quit) throw new RuntimeException(e); //TODO disconnection error
+                if(!quit) player.disconnectError("can't find server");
             }
         });
         receiveMsgThread.start();
@@ -218,11 +221,7 @@ public class ClientSOCKET extends ConnectionManager {
         JsonObject data = new JsonObject();
         data.addProperty("ID", ID);
         data.addProperty("pwd", pwd);
-        JsonObject msg = new JsonObject();
-        msg.addProperty("service", "login");
-        msg.add("data", data);
-
-        boolean bool = this.sendMSG(msg);
+        boolean bool = this.sendMSG(prepareMSG(data, "login"));
         if(!bool)throw new LoginException("fail to login");
     }
 
@@ -231,11 +230,7 @@ public class ClientSOCKET extends ConnectionManager {
         JsonObject data = new JsonObject();
         data.addProperty("ID", ID);
         data.addProperty("pwd", pwd);
-        JsonObject msg = new JsonObject();
-        msg.addProperty("service", "signUp");
-        msg.add("data", data);
-
-        boolean bool = this.sendMSG(msg);
+        boolean bool = this.sendMSG(prepareMSG(data, "signUp"));
         if(!bool)throw new LoginException("fail to sing up");
     }
 
@@ -244,12 +239,7 @@ public class ClientSOCKET extends ConnectionManager {
         JsonObject data = new JsonObject();
         data.addProperty("ID", ID);
         data.addProperty("searchID" ,searchID);
-        JsonObject msg = new JsonObject();
-        msg.addProperty("service", "joinGame");
-        msg.add("data" ,data);
-
-
-        boolean bool = this.sendMSG(msg);
+        boolean bool = this.sendMSG(prepareMSG(data, "joinGame"));
         if(bool) this.setPlayerAsPlaying(data);
         else throw new addPlayerToGameException("fail to joint the game");
     }
@@ -259,11 +249,7 @@ public class ClientSOCKET extends ConnectionManager {
         JsonObject data = new JsonObject();
         data.addProperty("ID", ID);
         data.addProperty("maxPlayerNumber", 0);
-        JsonObject msg = new JsonObject();
-        msg.addProperty("service", "createGame");
-        msg.add("data", data);
-
-        boolean bool = this.sendMSG(msg);
+        boolean bool = this.sendMSG(prepareMSG(data, "createGame"));
         if(bool) this.setPlayerAsPlaying(data);
         else throw new addPlayerToGameException("fail to create the game");
     }
@@ -273,11 +259,7 @@ public class ClientSOCKET extends ConnectionManager {
         JsonObject data = new JsonObject();
         data.addProperty("ID", ID);
         data.addProperty("maxPlayerNumber", maxPlayerNumber);
-        JsonObject msg = new JsonObject();
-        msg.addProperty("service", "createGame");
-        msg.add("data", data);
-
-        boolean bool = this.sendMSG(msg);
+        boolean bool = this.sendMSG(prepareMSG(data, "createGame"));
         if(bool) this.setPlayerAsPlaying(data);
         else throw new addPlayerToGameException("fail to create the game");
     }
@@ -286,11 +268,7 @@ public class ClientSOCKET extends ConnectionManager {
         JsonObject data = new JsonObject();
         data.addProperty("ID", ID);
         data.addProperty("searchID" , "null");
-        JsonObject msg = new JsonObject();
-        msg.addProperty("service", "joinGame");
-        msg.add("data" ,data);
-
-        boolean bool = this.sendMSG(msg);
+        boolean bool = this.sendMSG(prepareMSG(data, "joinGame"));
         if(bool) this.setPlayerAsPlaying(data);
         else throw new addPlayerToGameException("fail to joint the game");
     }
@@ -306,7 +284,6 @@ public class ClientSOCKET extends ConnectionManager {
         }
         out.println(msg.toString());  //send socket message
         out.flush();
-        //if(msg.get("service").getAsString().equals("pingPong") || msg.get("service").getAsString().equals("pingResponse")) return true;
         synchronized (echoSocket) {
             try {
                 echoSocket.wait(timeout);
@@ -326,22 +303,14 @@ public class ClientSOCKET extends ConnectionManager {
         data.addProperty("column", column);
         data.add("cards", cardsArray);
         data.addProperty("playerID", playerID);
-
-        JsonObject msg = new JsonObject();
-        msg.addProperty("service", "takeCard");
-        msg.add("data", data);
-
-        boolean bool = this.sendMSG(msg);
+        boolean bool = this.sendMSG(prepareMSG(data, "takeCard"));
         return bool;
     }
     @Override
     public boolean startGame(String playerID) throws IOException {
         JsonObject data = new JsonObject();
         data.addProperty("playerID", playerID);
-        JsonObject msg = new JsonObject();
-        msg.addProperty("service", "startGame");
-        msg.add("data", data);
-        boolean bool = this.sendMSG(msg);
+        boolean bool = this.sendMSG(prepareMSG(data, "startGame"));
         return bool;
     }
     @Override
@@ -349,14 +318,8 @@ public class ClientSOCKET extends ConnectionManager {
         quit = true;
         JsonObject data = new JsonObject();
         data.addProperty("playerID", playerID);
-        JsonObject msg = new JsonObject();
-        msg.addProperty("service", "quitGame");
-        msg.add("data", data);
-
-        boolean bool = this.sendMSG(msg);
-
+        boolean bool = this.sendMSG(prepareMSG(data, "quitGame"));
         this.setPlayerAsLobby();
-
         return bool;
     }
     /**************************************************************************
@@ -367,24 +330,14 @@ public class ClientSOCKET extends ConnectionManager {
         JsonObject data = new JsonObject();
         data.addProperty("msg", MSG);
         data.addProperty("sender", sender);
-
-        JsonObject msg = new JsonObject();
-        msg.addProperty("service", "receiveBroadcastMsg");
-        msg.add("data", data);
-
-        this.sendMSG(msg);
+        this.sendMSG(prepareMSG(data, "receiveBroadcastMsg"));
     }
     public void sendPrivateMSG(String userID, String MSG, String sender){
         JsonObject data = new JsonObject();
         data.addProperty("userID", userID);
         data.addProperty("msg", MSG);
         data.addProperty("sender", sender);
-
-        JsonObject msg = new JsonObject();
-        msg.addProperty("service", "receivePrivateMSG");
-        msg.add("data", data);
-
-        this.sendMSG(msg);
+        this.sendMSG(prepareMSG(data, "receivePrivateMSG"));
     }
 
 

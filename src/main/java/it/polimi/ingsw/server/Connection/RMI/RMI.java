@@ -11,6 +11,7 @@ import it.polimi.ingsw.shared.Cards.Card;
 import it.polimi.ingsw.shared.Connection.ConnectionType;
 import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
 import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
+import it.polimi.ingsw.shared.TextColor;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -71,7 +72,7 @@ public class RMI extends ConnectionController implements LobbyRemoteInterface {
             throw new RuntimeException(e);
         }
 
-        System.out.println("\u001B[32m" + "Server (rmi) ready on port: " + PORT + "\u001B[0m");
+        System.out.println("\u001B[32m" + "Server (rmi) ready on port: " + PORT + TextColor.DEFAULT.get());
     }
     /**
      * method called from a client in ping pong
@@ -109,7 +110,7 @@ public class RMI extends ConnectionController implements LobbyRemoteInterface {
     public synchronized boolean joinGameConnection(PlayingPlayerRemoteInterface client_ref,String playerID, String connectionInterface){
         Controller controller = this.getActualController(connectionInterface);
         if(!controller.getClientsRMImap().containsValue(client_ref)&&!controller.getClientsRMImap().containsKey(playerID) && (controller.getCurrentPlayer()==-1||controller.isPlayerOffline(playerID))&&!controller.isEndGame()) {
-            System.out.println("\u001B[36m" + "client: " + playerID + " join the game (RMI) " + "\u001B[0m");
+            System.out.println(TextColor.LIGHT_BLUE.get() + "client: " + playerID + " join the game (RMI) " + TextColor.DEFAULT.get());
 
             controller.addClientRMI(client_ref, playerID);
             controller.setPlayerOnline(playerID);
@@ -137,7 +138,7 @@ public class RMI extends ConnectionController implements LobbyRemoteInterface {
     public synchronized boolean quitGameConnection(PlayingPlayerRemoteInterface client_ref,String playerID, Controller controller){
         if(controller.getClientsRMImap().containsValue(client_ref)){
             if(controller.removeClientRMI(client_ref, playerID)) {
-                System.out.println("\u001B[33m"+"client: " + playerID + " quit the game (RMI) "+"\u001B[0m");
+                System.out.println(TextColor.YELLOW.get()+"client: " + playerID + " quit the game (RMI) "+TextColor.DEFAULT.get());
                 controller.setPlayerOffline(playerID);
                 return true;
             }

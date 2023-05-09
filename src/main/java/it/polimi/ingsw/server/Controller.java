@@ -14,6 +14,7 @@ import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
 import it.polimi.ingsw.shared.JsonSupportClasses.Position;
 import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
 import it.polimi.ingsw.server.Model.PlayerClasses.Player;
+import it.polimi.ingsw.shared.TextColor;
 import it.polimi.ingsw.shared.exceptions.addPlayerToGameException;
 
 import java.io.*;
@@ -229,7 +230,7 @@ public class Controller implements Runnable {
         for (int i = 0; i<players.size(); i++){
             if(players.get(i).getPlayerID().equals(playerID)){
                 if(!activePlayers.get(i)) {
-                    System.out.println("\u001B[33m" + players.get(i).getPlayerID() + " reconnected the game" + "\u001B[0m");
+                    System.out.println(TextColor.YELLOW.get() + players.get(i).getPlayerID() + " reconnected to the game" + TextColor.DEFAULT.get());
                     activePlayers.set(i, true);
 
                     //update all playerBoards in all clients
@@ -242,7 +243,7 @@ public class Controller implements Runnable {
                     //update the main board to all clients
                     controllerManager.sendMainBoard(game.getMainBoard());
 
-                    System.out.println("\u001B[36m" + "recreate client data after "+ playerID+ " reconnection after a crash" + "\u001B[0m");
+                    System.out.println(TextColor.LIGHT_BLUE.get() + "recreate client data after "+ playerID+ " reconnection after a crash" + TextColor.DEFAULT.get());
                     return;
                 }
             }
@@ -412,7 +413,7 @@ public class Controller implements Runnable {
      * @param commonGoalIDArray ids for common goal
      */
     synchronized private void createClientData(int[] commonGoalIDArray){
-        System.out.println("\u001B[36m" + "create client data" + "\u001B[0m");
+        System.out.println(TextColor.LIGHT_BLUE.get() + "create client data" + TextColor.DEFAULT.get());
 
         //send players id list, and game order (broadcast to each client)
         ArrayList<String> playersID = new ArrayList<>();
@@ -480,7 +481,7 @@ public class Controller implements Runnable {
      */
     synchronized public void endGame(){
         endGame = true;
-        System.out.println("\u001B[36m" + "the game is ended" + "\u001B[0m");
+        System.out.println(TextColor.LIGHT_BLUE.get() + "the game is ended" + TextColor.DEFAULT.get());
 
         synchronized (waitForPlayerResponse) {
             waitForPlayerResponse.notify();
@@ -622,7 +623,7 @@ public class Controller implements Runnable {
                 scored.addProperty("playerID", game.getPlayerArray().get(currentPlayer).getPlayerID());
                 scored.addProperty("value", point);
                 controllerManager.sendLastCommonScored(scored);
-                System.out.println("\u001B[36m" + "send new CommonGoal scorer" + "\u001B[0m");
+                System.out.println(TextColor.LIGHT_BLUE.get() + "send new CommonGoal scorer" + TextColor.DEFAULT.get());
             }
 
         }
@@ -680,7 +681,7 @@ public class Controller implements Runnable {
      * @param column card on player boards needs to insert in a specific column
      */
     synchronized private void updateClientData(PositionWithColor[] positions, Card[] cards, int column){
-        System.out.println("\u001B[36m" + "update client data" + "\u001B[0m");
+        System.out.println(TextColor.LIGHT_BLUE.get() + "update client data" + TextColor.DEFAULT.get());
 
         //update main board (broadcast to each client)
         controllerManager.dellCardFromMainBoard(positions);

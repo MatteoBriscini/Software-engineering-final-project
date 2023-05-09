@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.server.Controller;
+import it.polimi.ingsw.shared.TextColor;
 import it.polimi.ingsw.shared.exceptions.addPlayerToGameException;
 import it.polimi.ingsw.server.Lobby.Lobby;
 import it.polimi.ingsw.shared.Cards.Card;
@@ -38,7 +39,7 @@ public class SOCKET extends ConnectionController{
             System.out.println(e.toString());
             return;
         }
-        System.err.println("\u001B[32m" + "Server (socket) ready on port: " + PORT + "\u001B[0m");
+        System.err.println("\u001B[32m" + "Server (socket) ready on port: " + PORT + TextColor.DEFAULT.get());
     }
     public void acceptConnection(){
         ExecutorService executor = Executors.newCachedThreadPool();
@@ -392,7 +393,7 @@ public class SOCKET extends ConnectionController{
             out.flush();
         }
         public void setPlayerOffline(String playerID){
-            System.out.println("\u001B[33m"+"client: " + playerID + " quit the game(SOCKET)" +"\u001B[0m");
+            System.out.println(TextColor.YELLOW.get()+"client: " + playerID + " quit the game(SOCKET)" +TextColor.DEFAULT.get());
             Controller controller = SOCKET.this.getActualController(controllerRef);
             controller.setPlayerOffline(playerID);
             controller.removeClientSOCKET(this);
@@ -404,7 +405,7 @@ public class SOCKET extends ConnectionController{
             this.setPlayerOnline(this.clientID);
         }
         public void setPlayerOnline(String playerID){
-            System.out.println("\u001B[36m"+"client: " + playerID + " join the game (SOCKET)" +"\u001B[0m");
+            System.out.println(TextColor.LIGHT_BLUE.get()+"client: " + playerID + " join the game (SOCKET)" +TextColor.DEFAULT.get());
             Controller controller = SOCKET.this.getActualController(controllerRef);
             controller.setPlayerOnline(playerID);
             controller.addClientSOCKET(this);
@@ -430,7 +431,7 @@ public class SOCKET extends ConnectionController{
                         quit = false;
                         cntOn = true;
                         sendResponse(true,true);
-                        System.out.println("\u001B[36m" + "client: " + this.clientID + " join the lobby (SOCKET)" + "\u001B[0m");
+                        System.out.println(TextColor.LIGHT_BLUE.get() + "client: " + this.clientID + " join the lobby (SOCKET)" + TextColor.DEFAULT.get());
                         break;
                     case ("pingPong"):
                         sendMSG(prepareMSG(new JsonObject(), "pingResponse"));
