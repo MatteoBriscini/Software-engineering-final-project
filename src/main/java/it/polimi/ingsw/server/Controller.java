@@ -168,8 +168,10 @@ public class Controller implements Runnable {
         return controllerManager.removeClientRMI(client, playerID);
     }
     public void addClientSOCKET(SOCKET.MultiClientSocketGame client){
-
         controllerManager.addClientSOCKET(client);
+    }
+    public void removeClientSOCKET(SOCKET.MultiClientSocketGame client){
+        controllerManager.removeClientSOCKET(client);
     }
 
     /**
@@ -209,12 +211,12 @@ public class Controller implements Runnable {
         for (boolean b: activePlayers){
             if (b)i++;
         }
-        if(i<=1){
+        if(i==1 && currentPlayer!=-1){
+            controllerManager.forceClientDisconnection();
+        }
+        if(i<=1&& currentPlayer!=-1){
             this.currentPlayer = -1;
             this.endGame = true;
-        }
-        if(i==1){
-            controllerManager.forceClientDisconnection();
         }
     }
 

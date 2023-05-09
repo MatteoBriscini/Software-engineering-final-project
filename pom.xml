@@ -73,11 +73,9 @@
             <resource>
                 <directory>src/main/resources/json/goal</directory>
             </resource>
-
             <resource>
                 <directory>src/main/resources</directory>
             </resource>
-
         </resources>
 
         <plugins>

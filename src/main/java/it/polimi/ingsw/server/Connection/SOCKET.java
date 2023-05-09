@@ -215,7 +215,6 @@ public class SOCKET extends ConnectionController{
     }
     public void forceClientDisconnection(ArrayList<MultiClientSocketGame> clients) {
         JsonObject data = new JsonObject();
-
         JsonObject msg = new JsonObject();
         msg.addProperty("service", "forceDisconnection");
         msg.add("data", data);
@@ -416,6 +415,7 @@ public class SOCKET extends ConnectionController{
             }
         }
         private void pingPong(){
+
             try {
                 Thread.sleep(pingPongTime);
             } catch (InterruptedException e) {
@@ -442,11 +442,7 @@ public class SOCKET extends ConnectionController{
             this.pingPong();
         }
         public void forceClientDisconnection() throws IOException {
-            if(cntOn)this.setPlayerOffline(this.clientID);
-            cntOn = false;
-            in.close();
-            out.close();
-            socket.close();
+            quit = true;
         }
         public void privateChat(JsonObject msg, String playerID, String sender, ArrayList<MultiClientSocketGame> clients) throws IOException {
             if (!sender.equals(this.clientID) && playerID.equals(this.clientID) && clients.contains(this))this.sendMSG(msg);
@@ -456,9 +452,10 @@ public class SOCKET extends ConnectionController{
             out.flush();
         }
         public void setPlayerOffline(String playerID){
-            System.out.println("\u001B[33m"+"client: " + playerID + " quit the game on port(SOCKET): " + PORT +"\u001B[0m");
+            System.out.println("\u001B[33m"+"client: " + playerID + " quit the game(SOCKET)" +"\u001B[0m");
             Controller controller = SOCKET.this.getActualController(controllerRef);
             controller.setPlayerOffline(playerID);
+            controller.removeClientSOCKET(this);
         }
         public void setPlayerOnline(){
             pingPongThread = new Thread(this::pingPong);       //start ping pong
