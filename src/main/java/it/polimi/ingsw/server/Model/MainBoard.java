@@ -15,7 +15,7 @@ import java.util.*;
 import static it.polimi.ingsw.shared.Cards.CardColor.*;
 
 /**
- * This class is used to make all the checks on the MainBoard and remove or insert the cards
+ * This class is used to make all the controls on the MainBoard and remove or insert the cards
  */
 public class MainBoard {
     private final List<Card> colorsList;
