@@ -111,8 +111,6 @@ public abstract class ConnectionController {
     }
 
     public String createGame(String ID, int maxPlayerNumber) throws addPlayerToGameException {
-
-        System.out.println(ID + " on port: "+ PORT + ", trying to create a game with " + maxPlayerNumber + " players");
         return lobby.createGame(ID);
     }
 }

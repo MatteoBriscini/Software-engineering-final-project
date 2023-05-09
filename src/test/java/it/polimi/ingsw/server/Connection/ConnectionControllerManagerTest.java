@@ -89,15 +89,12 @@ public class ConnectionControllerManagerTest extends TestCase {
         Player testClient  = new LobbyPlayer("antonio", "antonio", connection);
         ((LobbyPlayer)testClient).createGame();
         testClient = connection.getPlayer();
-        testClient.setDebugMode();
         Player testClient1  = new LobbyPlayer("marco", "antonio", connection1);
         ((LobbyPlayer)testClient1).joinGame("antonio");
         testClient1 = connection1.getPlayer();
-        testClient1.setDebugMode();
         Player testClient2 = new LobbyPlayer("paolo", "antonio", connection2);
         ((LobbyPlayer)testClient2).joinGame("antonio");
         testClient2 = connection2.getPlayer();
-        testClient2.setDebugMode();
 
 
         controller = lobby.getActiveGames().get(0);
@@ -155,7 +152,6 @@ public class ConnectionControllerManagerTest extends TestCase {
         testClient2 = new LobbyPlayer("paolo", "antonio", connection2);  //paolo rejoins a game after the crash
         ((LobbyPlayer)testClient2).login();
         testClient2 = connection2.getPlayer();
-        testClient2.setDebugMode();
         //testClient2 = connection2.getPlayer();
         assertFalse(controller.isPlayerOffline("paolo"));
 
@@ -191,15 +187,12 @@ public class ConnectionControllerManagerTest extends TestCase {
         Player testClient  = new LobbyPlayer("antonio", "antonio", connection);
         ((LobbyPlayer)testClient).createGame();
         testClient = connection.getPlayer();
-        testClient.setDebugMode();
         Player testClient1  = new LobbyPlayer("marco", "antonio", connection1);
         ((LobbyPlayer)testClient1).joinGame("antonio");
         testClient1 = connection1.getPlayer();
-        testClient1.setDebugMode();
         Player testClient2 = new LobbyPlayer("paolo", "antonio", connection2);
         ((LobbyPlayer)testClient2).joinGame("antonio");
         testClient2 = connection2.getPlayer();
-        testClient2.setDebugMode();
 
 
         ((PlayingPlayer)testClient2).sendBroadcastMsg("test broadcast message");
@@ -254,15 +247,12 @@ public class ConnectionControllerManagerTest extends TestCase {
         Player testClient  = new LobbyPlayer("antonio", "antonio", connection);
         ((LobbyPlayer)testClient).createGame();
         testClient = connection.getPlayer();
-        testClient.setDebugMode();
         Player testClient1  = new LobbyPlayer("marco", "antonio", connection1);
         ((LobbyPlayer)testClient1).joinGame("antonio");
         testClient1 = connection1.getPlayer();
-        testClient1.setDebugMode();
         Player testClient2 = new LobbyPlayer("paolo", "antonio", connection2);
         ((LobbyPlayer)testClient2).joinGame("antonio");
         testClient2 = connection2.getPlayer();
-        testClient2.setDebugMode();
 
         assertTrue(((PlayingPlayer)testClient).startGame());
 

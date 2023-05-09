@@ -48,7 +48,6 @@ public class ClientRMI extends ConnectionManager implements PlayingPlayerRemoteI
             throw new RuntimeException(e);
         }
         if(!tmp.equals("null")){
-            System.out.println(tmp);
             this.remoteControllerRef = tmp;
             try {
                 this.setPlayerAsPlaying();
@@ -84,7 +83,6 @@ public class ClientRMI extends ConnectionManager implements PlayingPlayerRemoteI
             this.remoteControllerRef = stub.joinGame(ID, searchID);
             stub.joinGameConnection(this, this.playerID, remoteControllerRef);
         } catch (RemoteException e) {
-            System.out.println(e);
             player.disconnectError("server can't respond");
             return;
         }

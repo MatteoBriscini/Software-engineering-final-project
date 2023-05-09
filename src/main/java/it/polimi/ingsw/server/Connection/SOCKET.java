@@ -19,9 +19,7 @@ import java.lang.reflect.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -76,54 +74,34 @@ public class SOCKET extends ConnectionController{
         JsonObject data = new JsonObject();
         data.addProperty("playerID", activePlayerID);
 
-        JsonObject msg = new JsonObject();
-        msg.addProperty("service", "notifyActivePlayer");
-        msg.add("data", data);
-
-        this.sendCommand(msg, clients);
+        this.sendCommand(clients.get(clients.size()-1).prepareMSG(data, "notifyActivePlayer"), clients);
     }
     public void sendPlayerList(String[] players, ArrayList<MultiClientSocketGame> clients) {
         JsonObject data = new JsonObject();
         JsonArray jsonArray = new Gson().toJsonTree(players).getAsJsonArray();
         data.add("players", jsonArray);
 
-        JsonObject msg = new JsonObject();
-        msg.addProperty("service", "receivePlayerList");
-        msg.add("data", data);
-
-        this.sendCommand(msg, clients);
+        this.sendCommand(clients.get(clients.size()-1).prepareMSG(data, "receivePlayerList"), clients);
     }
     public void sendPlayersNUmber(int playersNumber, ArrayList<MultiClientSocketGame> clients) {
         JsonObject data = new JsonObject();
         data.addProperty("playersNumber", playersNumber);
 
-        JsonObject msg = new JsonObject();
-        msg.addProperty("service", "receivePlayersNumber");
-        msg.add("data", data);
-
-        this.sendCommand(msg,clients);
+        this.sendCommand(clients.get(clients.size()-1).prepareMSG(data, "receivePlayersNumber"),clients);
     }
     public void sendMainBoard(Card[][] mainBoard, ArrayList<MultiClientSocketGame> clients) {
         JsonObject data = new JsonObject();
         JsonArray jsonArray = new Gson().toJsonTree(mainBoard).getAsJsonArray();
         data.add("mainBoard", jsonArray);
 
-        JsonObject msg = new JsonObject();
-        msg.addProperty("service", "receiveMainBoard");
-        msg.add("data", data);
-
-        this.sendCommand(msg, clients);
+        this.sendCommand(clients.get(clients.size()-1).prepareMSG(data, "receiveMainBoard"), clients);
     }
     public void sendAllPlayerBoard(ArrayList<Card[][]> playerBoards, ArrayList<MultiClientSocketGame> clients) {
         JsonObject data = new JsonObject();
         JsonArray jsonArray = new Gson().toJsonTree(playerBoards).getAsJsonArray();
         data.add("playerBoards", jsonArray);
 
-        JsonObject msg = new JsonObject();
-        msg.addProperty("service", "receiveAllPlayerBoard");
-        msg.add("data", data);
-
-        this.sendCommand(msg, clients);
+        this.sendCommand(clients.get(clients.size()-1).prepareMSG(data, "receiveAllPlayerBoard"), clients);
     }
     public void addCardToClientBoard(String playerID, int column, Card[] cards, ArrayList<MultiClientSocketGame> clients) {
         JsonObject data = new JsonObject();
@@ -132,33 +110,21 @@ public class SOCKET extends ConnectionController{
         JsonArray jsonArray = new Gson().toJsonTree(cards).getAsJsonArray();
         data.add("cards", jsonArray);
 
-        JsonObject msg = new JsonObject();
-        msg.addProperty("service", "addCardToPlayerBoard");
-        msg.add("data", data);
-
-        this.sendCommand(msg, clients);
+        this.sendCommand(clients.get(clients.size()-1).prepareMSG(data, "addCardToPlayerBoard"), clients);
     }
     public void dellCardFromMainBoard(PositionWithColor[] cards, ArrayList<MultiClientSocketGame> clients) {
         JsonObject data = new JsonObject();
         JsonArray jsonArray = new Gson().toJsonTree(cards).getAsJsonArray();
         data.add("cards", jsonArray);
 
-        JsonObject msg = new JsonObject();
-        msg.addProperty("service", "removeCardFromMainBoard");
-        msg.add("data", data);
-
-        this.sendCommand(msg, clients);
+        this.sendCommand(clients.get(clients.size()-1).prepareMSG(data, "removeCardFromMainBoard"), clients);
     }
     public void sendAllCommonGoal(int[] commonGoalID, ArrayList<MultiClientSocketGame> clients) {
         JsonObject data = new JsonObject();
         JsonArray jsonArray = new Gson().toJsonTree(commonGoalID).getAsJsonArray();
         data.add("commonGoalID", jsonArray);
 
-        JsonObject msg = new JsonObject();
-        msg.addProperty("service", "receiveAllCommonGoal");
-        msg.add("data", data);
-
-        this.sendCommand(msg, clients);
+        this.sendCommand(clients.get(clients.size()-1).prepareMSG(data, "receiveAllCommonGoal"), clients);
     }
     public void sendPrivateGoal(PositionWithColor[] cards, String playerID, ArrayList<MultiClientSocketGame> clients) {
         JsonObject data = new JsonObject();
@@ -166,59 +132,36 @@ public class SOCKET extends ConnectionController{
         data.addProperty("playerID", playerID);
         data.add("cards", jsonArray);
 
-        JsonObject msg = new JsonObject();
-        msg.addProperty("service", "receivePrivateGoal");
-        msg.add("data", data);
-
-        this.sendCommand(msg, clients);
+        this.sendCommand(clients.get(clients.size()-1).prepareMSG(data, "receivePrivateGoal"), clients);
     }
     public void sendEndGamePoint(JsonObject points, ArrayList<MultiClientSocketGame> clients) {
         JsonObject data = new JsonObject();
         data.add("points", points);
 
-        JsonObject msg = new JsonObject();
-        msg.addProperty("service", "endGameValue");
-        msg.add("data", data);
-
-        this.sendCommand(msg, clients);
+        this.sendCommand(clients.get(clients.size()-1).prepareMSG(data, "endGameValue"), clients);
     }
     public void sendWinner(JsonObject winner, ArrayList<MultiClientSocketGame> clients) {
         JsonObject data = new JsonObject();
         data.add("winner", winner);
 
-        JsonObject msg = new JsonObject();
-        msg.addProperty("service", "receiveWinner");
-        msg.add("data", data);
-
-        this.sendCommand(msg, clients);
+        this.sendCommand(clients.get(clients.size()-1).prepareMSG(data,"receiveWinner"), clients);
     }
     public void sendLastCommonScored(JsonObject scored, ArrayList<MultiClientSocketGame> clients) {
         JsonObject data = new JsonObject();
         data.add("scored", scored);
 
-        JsonObject msg = new JsonObject();
-        msg.addProperty("service", "receiveLastCommonScored");
-        msg.add("data", data);
-
-        this.sendCommand(msg, clients);
+        this.sendCommand(clients.get(clients.size()-1).prepareMSG(data, "receiveLastCommonScored"), clients);
     }
     public void sendError(JsonObject error, String playerID, ArrayList<MultiClientSocketGame> clients){
         JsonObject data = new JsonObject();
         data.addProperty("playerID", playerID);
         data.add("error", error);
 
-        JsonObject msg = new JsonObject();
-        msg.addProperty("service", "errorMSG");
-        msg.add("data", data);
-
-        this.sendCommand(msg, clients);
+        this.sendCommand(clients.get(clients.size()-1).prepareMSG(data, "errorMSG"), clients);
     }
     public void forceClientDisconnection(ArrayList<MultiClientSocketGame> clients) {
         JsonObject data = new JsonObject();
-        JsonObject msg = new JsonObject();
-        msg.addProperty("service", "forceDisconnection");
-        msg.add("data", data);
-        this.sendCommand(msg, clients);
+        this.sendCommand(clients.get(clients.size()-1).prepareMSG(data,"forceDisconnection"), clients);
 
         for(MultiClientSocketGame client: clients){
             try {
@@ -237,11 +180,7 @@ public class SOCKET extends ConnectionController{
         data.addProperty("msg", MSG);
         data.addProperty("sender", sender);
 
-        JsonObject msg = new JsonObject();
-        msg.addProperty("service", "receiveBroadcastMsg");
-        msg.add("data", data);
-
-        this.sendCommand(msg, clients);
+        this.sendCommand(clients.get(clients.size()-1).prepareMSG(data,"receiveBroadcastMsg"), clients);
     }
     public void sendPrivateMSG(String userID, String MSG, String sender, ArrayList<MultiClientSocketGame> clients) {
         JsonObject data = new JsonObject();
@@ -293,18 +232,13 @@ public class SOCKET extends ConnectionController{
         try {
             String controllerRef = this.login(data.get("ID").getAsString(), data.get("pwd").getAsString());
             if(!controllerRef.equals("null")){
-
                 ref.setController(controllerRef);
                 JsonObject data1 = new JsonObject();
-
-                JsonObject msg = new JsonObject();
-                msg.addProperty("service", "setPlayerAsPlaying");
-                msg.add("data", data1);
 
                 ArrayList<MultiClientSocketGame> tmp = new ArrayList<>();
                 tmp.add(ref);
 
-                this.sendCommand(msg, tmp);
+                this.sendCommand(ref.prepareMSG(data1, "setPlayerAsPlaying"), tmp);
                 ref.setPlayerOnline();
             }
         } catch (LoginException e) {
@@ -390,7 +324,6 @@ public class SOCKET extends ConnectionController{
         }
         public MultiClientSocketGame(Socket socket){
             this.socket = socket;
-
             try {
                 jsonCreate();
             } catch (FileNotFoundException e) {
@@ -411,31 +344,26 @@ public class SOCKET extends ConnectionController{
         public void pingResponse(){
             synchronized (pingPongThread) {
                 pingPongResponse = true;
-                pingPongThread.notifyAll();
+                pingPongThread.notify();
             }
         }
         private void pingPong(){
-
             try {
                 Thread.sleep(pingPongTime);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
             JsonObject data = new JsonObject();
-            JsonObject msg = new JsonObject();
-            msg.addProperty("service", "pingPong");
-            msg.add("data", data);
             synchronized (pingPongThread) {
                 try {
-                    this.sendMSG(msg);  //send socket message
+                    this.sendMSG(prepareMSG(data,"pingPong"));  //send a socket message
                     pingPongThread.wait(timeout);
                 } catch (IOException | InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             }
-            if(!cntOn || quit) return;
             if(!pingPongResponse){
-                setPlayerOffline(clientID);
+                if(cntOn || !quit)setPlayerOffline(clientID);
                 return;
             }
             pingPongResponse = false;
@@ -446,6 +374,18 @@ public class SOCKET extends ConnectionController{
         }
         public void privateChat(JsonObject msg, String playerID, String sender, ArrayList<MultiClientSocketGame> clients) throws IOException {
             if (!sender.equals(this.clientID) && playerID.equals(this.clientID) && clients.contains(this))this.sendMSG(msg);
+        }
+        private void sendResponse(boolean existigMethod, boolean methodResult) throws IOException {
+            JsonObject sendData = new JsonObject();
+            sendData.addProperty("existingMethod", existigMethod);
+            sendData.addProperty("response", methodResult);
+            sendMSG(prepareMSG(sendData,"receiveResponse"));
+        }
+        private JsonObject prepareMSG(JsonObject data, String methodName){
+            JsonObject msg = new JsonObject();
+            msg.addProperty("service", methodName);
+            msg.add("data", data);
+            return msg;
         }
         public void sendMSG (JsonObject msg) throws IOException {
             out.println(msg);
@@ -476,60 +416,72 @@ public class SOCKET extends ConnectionController{
             JsonObject sendData = new JsonObject();
             while (cntOn){   //LOOP receive message
                 String line = in.nextLine();
-                //System.out.println(line + clientID);
                 JsonObject jsonObject = new Gson().fromJson(line, JsonObject.class);
                 String methodName = jsonObject.get("service").getAsString();
                 JsonObject data = jsonObject.get("data").getAsJsonObject();
-                if (methodName.equals("quitGame")) {
-                    quit = true;
-                    sendData.addProperty("existingMethod", true);
-                    sendData.addProperty("response",true);
-                    this.setPlayerOffline(data.get("playerID").getAsString());
-                    response.add("data", sendData);
-                    this.sendMSG(response);
-                } else if(methodName.equals("joinLobby")){
-                    quit = false;
-                    cntOn = true;
-                    sendData.addProperty("existingMethod", true);
-                    sendData.addProperty("response",true);
-                    this.clientID = data.get("playerID").getAsString();
-                    System.out.println("\u001B[36m"+"client: " + this.clientID + " join the lobby (SOCKET)" +"\u001B[0m");
-                    response.add("data", sendData);
-                    this.sendMSG(response);
-                } else if(methodName.equals("pingPong")){
-                    data = new JsonObject();
-                    JsonObject msg = new JsonObject();
-                    msg.addProperty("service", "pingResponse");
-                    msg.add("data", data);
-                    this.sendMSG(msg);
-                } else if(methodName.equals("pingResponse")){
-                    this.pingResponse();
-                } else {
-                    existingMethod = true;
-                    Method getNameMethod = null;
-
-                    try {
-                        getNameMethod = SOCKET.this.getClass().getMethod(methodName, JsonObject.class, MultiClientSocketGame.class);
-                    } catch (NoSuchMethodException e) {
-                        existingMethod = false;
-                    }
-                    if(getNameMethod != null) {
-                        try {
-                            Boolean booleanResponse = (boolean) getNameMethod.invoke(SOCKET.this, data, this);
-                            sendData.addProperty("response", booleanResponse);
-                        } catch (IllegalAccessException | InvocationTargetException e) {
-                            existingMethod = false;
+                switch (methodName) {
+                    case ("quitGame"):
+                        this.setPlayerOffline(data.get("playerID").getAsString());
+                        quit = true;
+                        sendResponse(true,true);
+                        break;
+                    case ("joinLobby"):
+                        this.clientID = data.get("playerID").getAsString();
+                        quit = false;
+                        cntOn = true;
+                        sendResponse(true,true);
+                        System.out.println("\u001B[36m" + "client: " + this.clientID + " join the lobby (SOCKET)" + "\u001B[0m");
+                        break;
+                    case ("pingPong"):
+                        sendMSG(prepareMSG(new JsonObject(), "pingResponse"));
+                        break;
+                    case ("pingResponse"):
+                        this.pingResponse();
+                        break;
+                    default:
+                        Map<Boolean, Method> mapG = this.getMethod(methodName);
+                        if (mapG.containsKey(false)){
+                            sendResponse(false,false);
+                            return;
                         }
-                    }
-
-                    sendData.addProperty("existingMethod", existingMethod);
-                    response.add("data", sendData);
-                    this.sendMSG(response);
+                        Map<Boolean, Boolean> mapC = callMethod(mapG.get(true), data);
+                        if (mapC.containsKey(false)) {
+                            sendResponse(false, false);
+                        }
+                        else {
+                            sendResponse(true, mapC.get(true));
+                        }
+                        break;
                 }
             }
             in.close();
             out.close();
             socket.close();
+        }
+
+        private Map<Boolean, Method> getMethod(String methodName){
+            Map<Boolean, Method> map = new HashMap<>();
+            Method getNameMethod = null;
+            try {
+                getNameMethod = SOCKET.this.getClass().getMethod(methodName, JsonObject.class, MultiClientSocketGame.class);
+            } catch (NoSuchMethodException e){
+                map.put(false, getNameMethod);
+            }
+            map.put(true, getNameMethod);
+            return map;
+        }
+        private Map<Boolean, Boolean>  callMethod(Method getNameMethod, JsonObject data){
+            Map<Boolean, Boolean> map = new HashMap<>();
+            Boolean booleanResponse = false;
+            if(getNameMethod != null) {
+                try {
+                    booleanResponse = (boolean) getNameMethod.invoke(SOCKET.this, data, this);
+                    map.put(true, booleanResponse);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    map.put(false, booleanResponse);
+                }
+            }
+            return map;
         }
         public void run(){
             //go here when players connect to the server

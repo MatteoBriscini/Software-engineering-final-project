@@ -68,7 +68,7 @@ public class ClientSOCKET extends ConnectionManager {
     public void pingResponse(JsonObject data){
         synchronized (pingPongThread) {
             pingPongResponse = true;
-            pingPongThread.notifyAll();
+            pingPongThread.notify();
         }
     }
     private void pingPong(){
@@ -131,8 +131,6 @@ public class ClientSOCKET extends ConnectionManager {
                             try {
                                 getNameMethod.invoke(this, data);
                             } catch (IllegalAccessException | InvocationTargetException e) {
-                                System.out.println(methodName);
-                                System.out.println(e);
                                 throw new RuntimeException("can't find method on server");
                             }
                         }
@@ -149,7 +147,7 @@ public class ClientSOCKET extends ConnectionManager {
         synchronized (echoSocket){
             this.validResponse= true;
             this.response = data.get("response").getAsBoolean();
-            echoSocket.notifyAll();
+            echoSocket.notify();
         }
     }
 
@@ -308,7 +306,7 @@ public class ClientSOCKET extends ConnectionManager {
         }
         out.println(msg.toString());  //send socket message
         out.flush();
-        if(msg.get("service").getAsString().equals("pingPong") || msg.get("service").getAsString().equals("pingResponse")) return true;
+        //if(msg.get("service").getAsString().equals("pingPong") || msg.get("service").getAsString().equals("pingResponse")) return true;
         synchronized (echoSocket) {
             try {
                 echoSocket.wait(timeout);

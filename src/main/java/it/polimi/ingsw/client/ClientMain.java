@@ -33,8 +33,6 @@ public class ClientMain {
         ((LobbyPlayer)player1).joinGame();
         player1 = connection1.getPlayer();
         player = connection.getPlayer();
-        player.setDebugMode();
-        player1.setDebugMode();
     }
 
 }

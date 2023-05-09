@@ -7,7 +7,6 @@ import it.polimi.ingsw.client.Connection.ConnectionManager;
 public abstract class Player {
     protected String playerID;
     protected String pwd;
-    private boolean debug = false;
     ConnectionManager connection;
 
     public Player(String playerID, String pwd, ConnectionManager connection){
@@ -21,13 +20,9 @@ public abstract class Player {
     /**
      * in test connection error don't have to kill process
      */
-    public void setDebugMode(){
-        debug = true;
-    }
     public String getPlayerID() {
         return playerID;
     }
-
     public String getPwd(){
         return pwd;
     }
@@ -40,7 +35,6 @@ public abstract class Player {
         err.addProperty("errorID", "connection error");
         err.addProperty("errorMSG", msg);
         this.errMsg(err);
-        if(!debug)System.exit(1);
     }
     public void errMsg(JsonObject err){
         System.err.println(err.get("errorID").toString().toUpperCase() + ": " + err.get("errorMSG")); //TODO necessita metodo lato grafico

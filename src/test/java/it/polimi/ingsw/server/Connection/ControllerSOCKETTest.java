@@ -87,9 +87,7 @@ public class ControllerSOCKETTest extends TestCase {
         testClient = connection.getPlayer();
         testClient1 = connection1.getPlayer();
         testClient2 = connection2.getPlayer();
-        testClient.setDebugMode();
-        testClient1.setDebugMode();
-        testClient2.setDebugMode();
+
 
 
         controller = lobby.getActiveGames().get(0);
@@ -120,6 +118,7 @@ public class ControllerSOCKETTest extends TestCase {
         assertEquals(-1, controller.getCurrentPlayer());
         assertTrue(((PlayingPlayer)testClient).startGame());       // authorized player try to start the game
         assertEquals(0, controller.getCurrentPlayer());
+        Thread.sleep(500);
         assertEquals(((PlayingPlayer) testClient).getActivePlayer(), ((PlayingPlayer) testClient1).getActivePlayer());
         assertEquals(((PlayingPlayer) testClient2).getActivePlayer(), ((PlayingPlayer) testClient1).getActivePlayer());
         assertEquals(((PlayingPlayer) testClient2).getActivePlayer(), controller.getCurrentPlayerID());
@@ -131,6 +130,7 @@ public class ControllerSOCKETTest extends TestCase {
         pos[0] = new Position(3,8);
         pos[1] = new Position(3,7);
 
+        System.out.println(controller.getCurrentPlayer());
         assertTrue(((PlayingPlayer)testClient).takeCard(0,pos)); // authorized player try to take card
         assertFalse(((PlayingPlayer) testClient2).takeCard(0, pos));//not authorized player try to take card
         assertEquals(1, controller.getCurrentPlayer());
@@ -144,11 +144,10 @@ public class ControllerSOCKETTest extends TestCase {
         testClient2 = new LobbyPlayer("paolo", "antonio", connection2);  //paolo rejoins a game after the crash
         ((LobbyPlayer)testClient2).login();
         testClient2 = connection2.getPlayer();
-        testClient2.setDebugMode();
         assertFalse(controller.isPlayerOffline("paolo"));
 
 
-        Thread.sleep(2000);
+        Thread.sleep(1000);
 
         System.out.println("\nEND TEST\n");
 
@@ -182,16 +181,12 @@ public class ControllerSOCKETTest extends TestCase {
         Player testClient  = new LobbyPlayer("antonio", "antonio", connection);
         ((LobbyPlayer)testClient).createGame();
         testClient = connection.getPlayer();
-        testClient.setDebugMode();
         Player testClient1  = new LobbyPlayer("marco", "antonio", connection1);
         ((LobbyPlayer)testClient1).joinGame("antonio");
         testClient1 = connection1.getPlayer();
-        testClient1.setDebugMode();
         Player testClient2 = new LobbyPlayer("paolo", "antonio", connection2);
         ((LobbyPlayer)testClient2).joinGame("antonio");
         testClient2 = connection2.getPlayer();
-        testClient2.setDebugMode();
-
 
         ((PlayingPlayer)testClient2).sendBroadcastMsg("test broadcast message");
 
