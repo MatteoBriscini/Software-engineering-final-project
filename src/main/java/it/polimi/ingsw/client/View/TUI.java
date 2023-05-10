@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.View;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.client.Connection.ClientRMI;
 import it.polimi.ingsw.client.Connection.ClientSOCKET;
@@ -11,8 +12,13 @@ import it.polimi.ingsw.client.Player.LobbyPlayer;
 import it.polimi.ingsw.client.Player.Player;
 import it.polimi.ingsw.client.Player.PlayingPlayer;
 import it.polimi.ingsw.shared.Cards.CardColor;
+import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
 import it.polimi.ingsw.shared.JsonSupportClasses.Position;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.*;
 
 import static it.polimi.ingsw.client.View.ColorCodes.*;
@@ -20,20 +26,61 @@ import static it.polimi.ingsw.client.View.ColorCodes.*;
 
 public class TUI {
 
+    MainBoard mainBoard;
+    PlayerBoard playerBoard;
     private Player player;
 
     private String printLine;
 
+    private JsonUrl jsonUrl;
+
+    private int minPlayers,maxPlayers,minPickable,maxPickable;
+
+    private int socketPort,RMIPort;
+    private String serverIP;
+
     private ConnectionManager connection;
 
     public TUI(Player player){
+
         this.player=player;
+
+        try {
+            jsonCreate();
+        } catch (FileNotFoundException e) {
+            System.out.println("TUI: JSON FILE NOT FOUND");
+            throw new RuntimeException(e);
+        }
+
+    }
+
+
+    public void jsonCreate() throws FileNotFoundException{
+
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("controllerConfig"));
+        if(inputStream == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+        InputStream inputStream1 = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("netConfig"));
+        if(inputStream1 == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader1 = new BufferedReader(new InputStreamReader(inputStream1));
+
+        JsonObject jsonObject = new Gson().fromJson(bufferedReader, JsonObject.class);
+        this.minPlayers = jsonObject.get("minPlayerNumber").getAsInt();
+        this.maxPlayers = jsonObject.get("maxPlayerNumber").getAsInt();
+        this.minPickable = jsonObject.get("minTakeCard").getAsInt();
+        this.maxPickable = jsonObject.get("maxTakeCard").getAsInt();
+
+        jsonObject = new Gson().fromJson(bufferedReader1, JsonObject.class);
+        this.serverIP = jsonObject.get("serverIP").getAsString();
+        this.socketPort = jsonObject.get("defSocketPort").getAsInt();
+        this.RMIPort = jsonObject.get("defRMIPort").getAsInt();
     }
 
 
 
     public void toRun(){
-        System.out.println("WELCOME TO MYSHELFIE");
+        System.out.println("WELCOME TO My Shelfie");
         connectionSelection();
         userIdentification();
     }
@@ -54,14 +101,14 @@ public class TUI {
 
         if(c=='S'){
             try {
-                connection = new ClientSOCKET(1234,"127.0.0.1");
+                connection = new ClientSOCKET(socketPort,serverIP);
             } catch (Exception e) {
                 player.disconnectError("Server is offline");
             }
         }
         else{
             try {
-                connection = new ClientRMI(1234,"127.0.0.1");
+                connection = new ClientRMI(RMIPort,serverIP);
             } catch (Exception e) {
                 player.disconnectError("Server is offline");
             }
@@ -111,8 +158,9 @@ public class TUI {
 
     public void printBoard() {
 
-        MainBoard mainBoard;
-        PlayerBoard playerBoard;
+
+        /** stampare obiettivi*/
+
 
         for(String id : ((PlayingPlayer) player).getPlayersID()){
             playerBoard = ((PlayingPlayer)player).getPlayerBoard(id);
@@ -159,17 +207,16 @@ public class TUI {
      * this method allows the player to join create a new game
      */
     public void createGame(){
-        Scanner sc = new Scanner(System.in);
         String selection;
         boolean success;
 
         success=false;
         do {
-            System.out.println("Insert the number of players for this game (min 2, max 4)\nInsert /def to use default settings");
+            System.out.println("Insert the number of players for this game (min " +minPlayers+ ", max" +maxPlayers+ "\nInsert /def to use default settings");
             selection = stringCommand();
             if (selection.equals("/def")) {
                 success=((LobbyPlayer)player).createGame();
-            } else if (Integer.parseInt(selection)>=2 && Integer.parseInt(selection)<=4) {
+            } else if (Integer.parseInt(selection)>=minPlayers && Integer.parseInt(selection)<=maxPlayers) {
                 success=((LobbyPlayer)player).createGame(Integer.parseInt(selection));
             }
         }while(!success);
@@ -179,11 +226,9 @@ public class TUI {
      * this method allows the player to join an existent game
      */
     public void joinGame(){
-        Scanner sc = new Scanner(System.in);
         String selection;
         boolean success;
 
-        success=false;
         do{
             System.out.println("Insert the name of a player to play with a friend, or /rand to join a random game");
             selection = stringCommand();
@@ -237,7 +282,6 @@ public class TUI {
      *                               4)calling the method to insert the cards on the player's board
      */
     public void takeCard(){
-        char sel;
         String[] picks;
         Position[] positions;
         int column;
@@ -269,7 +313,7 @@ public class TUI {
             System.out.println("Select the positions of the cards you want to take: x1,y1; [...]; xn,yn\n");
             selection = sc.nextLine();
             picks = selection.split(";");
-        } while (picks.length<1 || picks.length>3);
+        } while (picks.length<minPickable || picks.length>maxPickable);
 
         return picks;
     }
@@ -324,9 +368,9 @@ public class TUI {
         do {
             System.out.println("select the column on your board:\n");
             column = Integer.parseInt(sc.nextLine());
-            if(column<0 || column>5)
+            if(column<0 || column>= ((PlayingPlayer)player).getPlayerBoard(((PlayingPlayer)player).getPlayerID()).getColumns())
                 printError("Invalid column, please try again");
-        }while (column<0 || column>5);
+        }while (column<0 || column>= ((PlayingPlayer)player).getPlayerBoard(((PlayingPlayer)player).getPlayerID()).getColumns());
         return column;
     }
 
@@ -348,8 +392,34 @@ public class TUI {
 
     }
 
-    public void finalResults(JsonObject table){
+    /**
+     * this method sorts the final table of the game and displays it
+     * @param tableJ is a JsonObject formatted this way: { "[name1]": points1, [...] , "[nameN]": pointsN}
+     */
+    public void finalResults(JsonObject tableJ){
+        int n=((PlayingPlayer)player).getPlayersNumber();
+        String[][] table = new String[n][n];
 
+        for(int i=0;i<n; i++){
+            table[i][0]= ((PlayingPlayer)player).getPlayersID()[i];
+            table[i][1]= tableJ.get(((PlayingPlayer)player).getPlayersID()[i]).getAsString();
+        }
+
+        Arrays.sort(table, Comparator.comparingInt(row->Integer.parseInt(row[1])));
+
+        System.out.println("FINAL RESULTS:");
+        for(int i=0;i<n;i++){
+            System.out.println("#"+(i+1)+": "+table[i][0]+"\tpoints: "+table[i][1]);
+        }
+
+    }
+
+
+    /**
+     * @param n is the number of players connected to the game
+     */
+    public void receiveNumPlayers(int n){
+        System.out.println("Players connected: "+n);
     }
 
 
@@ -362,7 +432,7 @@ public class TUI {
      * this method calls the quitGame method on the server and prints an error message if this procedure fails
      */
     public void quitGame(){
-        if(!((PlayingPlayer)player).quitGame());
+        if(!((PlayingPlayer)player).quitGame())
             printError("Failed to quit the game");
     }
 
