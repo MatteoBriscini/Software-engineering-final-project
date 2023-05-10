@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.Game;
 
 import it.polimi.ingsw.shared.Cards.Card;
+import it.polimi.ingsw.shared.Cards.CardColor;
 
 import static it.polimi.ingsw.shared.Cards.CardColor.*;
 
@@ -33,6 +34,18 @@ public class PlayerBoard {
         if(board[column][y-cards].getColor() == EMPTY){return true;}
         return false;
 
+    }
+
+    public int getColumns(){
+        return x;
+    }
+
+    public int getRows(){
+        return y;
+    }
+
+    public CardColor getColor(int x, int y){
+        return board[x][y].getColor();
     }
 
     public void addCard(int column,Card[] cards){

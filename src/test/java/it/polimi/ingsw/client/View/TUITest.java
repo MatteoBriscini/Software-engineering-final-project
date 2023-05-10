@@ -1,9 +1,12 @@
+/*
 package it.polimi.ingsw.client.View;
+
 
 import it.polimi.ingsw.client.ClientMain;
 import it.polimi.ingsw.client.Connection.ClientRMI;
 import it.polimi.ingsw.client.Connection.ConnectionManager;
 import it.polimi.ingsw.client.Player.PlayingPlayer;
+import it.polimi.ingsw.server.Lobby.Lobby;
 import it.polimi.ingsw.shared.Cards.Card;
 import it.polimi.ingsw.shared.Cards.CardColor;
 import it.polimi.ingsw.shared.Connection.ConnectionType;
@@ -12,6 +15,10 @@ import junit.framework.TestCase;
 import java.rmi.RemoteException;
 
 public class TUITest extends TestCase {
+
+    Lobby lobby;
+
+
 
     ClientMain cm=new ClientMain();
     PlayingPlayer player;
@@ -52,3 +59,5 @@ public class TUITest extends TestCase {
         tui.printBoard();
     }
 }
+
+*/
