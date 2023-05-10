@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.View;
 
+import com.google.gson.JsonObject;
 import it.polimi.ingsw.client.Connection.ClientRMI;
 import it.polimi.ingsw.client.Connection.ClientSOCKET;
 import it.polimi.ingsw.client.Connection.ConnectionManager;
@@ -9,16 +10,12 @@ import it.polimi.ingsw.client.Game.PlayerBoard;
 import it.polimi.ingsw.client.Player.LobbyPlayer;
 import it.polimi.ingsw.client.Player.Player;
 import it.polimi.ingsw.client.Player.PlayingPlayer;
-import it.polimi.ingsw.shared.Cards.Card;
 import it.polimi.ingsw.shared.Cards.CardColor;
-import it.polimi.ingsw.shared.Connection.ConnectionType;
 import it.polimi.ingsw.shared.JsonSupportClasses.Position;
 
-import java.net.Socket;
 import java.util.*;
 
 import static it.polimi.ingsw.client.View.ColorCodes.*;
-import static it.polimi.ingsw.shared.Connection.ConnectionType.*;
 
 
 public class TUI {
@@ -96,7 +93,7 @@ public class TUI {
 
             logged=false;
             System.out.println("Enter your username (or /back to return to the previous selection):");
-            user=sc.nextLine();
+            user=stringCommand();
             if(!(user.equals("/back"))) {
                 System.out.println("Enter your password:");
                 pwd = sc.nextLine();
@@ -169,8 +166,7 @@ public class TUI {
         success=false;
         do {
             System.out.println("Insert the number of players for this game (min 2, max 4)\nInsert /def to use default settings");
-            selection = sc.nextLine();
-            selection.toLowerCase();
+            selection = stringCommand();
             if (selection.equals("/def")) {
                 success=((LobbyPlayer)player).createGame();
             } else if (Integer.parseInt(selection)>=2 && Integer.parseInt(selection)<=4) {
@@ -190,7 +186,7 @@ public class TUI {
         success=false;
         do{
             System.out.println("Insert the name of a player to play with a friend, or /rand to join a random game");
-            selection = sc.nextLine();
+            selection = stringCommand();
             if(selection.equals("/rand")){
                 success=((LobbyPlayer)player).joinGame();
             } else {
@@ -232,15 +228,42 @@ public class TUI {
         ((PlayingPlayer)player).startGame();
     }
 
+
+    /**
+     * this method manage the entire process of taking one or more cards from the main board and inserting them into the player's board
+     * the steps of the process are: 1)taking the cards from the main board (with a check on the validity of the move)
+     *                               2)reordering the cards
+     *                               3)selecting the column of the player's board in which the cards need to be inserted
+     *                               4)calling the method to insert the cards on the player's board
+     */
     public void takeCard(){
-        Scanner sc = new Scanner(System.in);
-        String selection;
         char sel;
         String[] picks;
-        String[] tmpSel;
-        String[] singlePick;
         Position[] positions;
-        String tmpPos;
+        int column;
+
+
+        picks= selectCardsFromBoard();
+
+        reorderCards(picks);
+
+        column=selectColumn();
+
+        positions = new Position[picks.length];
+        intCoordinates(picks,positions);
+
+        ((PlayingPlayer)player).takeCard(column,positions);
+
+    }
+
+    /**
+     * @return an array of Strings that contains the coordinates of the to be picked from the main board
+     *          format: {[x1,y1],[...],[xn,yn]}
+     */
+    public String[] selectCardsFromBoard(){
+        Scanner sc = new Scanner(System.in);
+        String selection;
+        String[] picks;
 
         do {
             System.out.println("Select the positions of the cards you want to take: x1,y1; [...]; xn,yn\n");
@@ -248,38 +271,100 @@ public class TUI {
             picks = selection.split(";");
         } while (picks.length<1 || picks.length>3);
 
-        positions = new Position[picks.length];
-        for(int i=0; i< picks.length;i++){
-            singlePick=picks[i].split(",");
-            positions[i]= new Position(Integer.parseInt(singlePick[0]),Integer.parseInt(singlePick[1]));
-        }
+        return picks;
+    }
 
-        /** stampare carte selezionate */
+    /**
+     * @param picks is an array that contains coordinates formatted as Strings [x,y]
+     *              This array will be reordered, based on player's choices
+     */
+    public void reorderCards(String[] picks){
+        Scanner sc = new Scanner(System.in);
+        String selection;
+        String[] tmpPick;
+        String tmpPos;
+        char sel;
 
-        do {
-            System.out.println("Do you want to change the order of the cards? Y/N");
-            sel =charCommand();
-        }while (sel!='Y' && sel!='N');
+        do{
 
-        if(sel=='Y'){
+            /** stampare carte selezionate */
+
+            do {
+                System.out.println("Do you want to change the order of the cards? Y/N");
+                sel = charCommand();
+            }while (sel!='Y' && sel!='N');
+
+
             do{
                 System.out.println("Insert the new order, from the bottom to the top: bottom card, [...], top card\n");
                 selection = sc.nextLine();
-                tmpSel=selection.split(",");
+                tmpPick=selection.split(",");
 
-                if(tmpSel.length==picks.length){
+                if(tmpPick.length==picks.length){
                     for(int i=0;i<picks.length;i++) {
                         tmpPos = picks[i];
-                        picks[i]=picks[Integer.parseInt(tmpSel[i])];
-                        picks[Integer.parseInt(tmpSel[i])]=tmpPos;
+                        picks[i]=picks[Integer.parseInt(tmpPick[i])];
+                        picks[Integer.parseInt(tmpPick[i])]=tmpPos;
                     }
                 }
-                else printError("The number of tiles you want to reorder is different from the number of tiles you picked");
+                else printError("The number of tiles you want to reorder is different from the number of tiles you picked, please try again\n");
+            }while(tmpPick.length!=picks.length);
 
-            }while(tmpSel.length!=picks.length);
+        }while (sel=='Y');
+
+    }
+
+    /**
+     * @return the index of the columns in which the cards have to be placed
+     */
+    public int selectColumn(){
+        Scanner sc = new Scanner(System.in);
+        int column;
+
+        do {
+            System.out.println("select the column on your board:\n");
+            column = Integer.parseInt(sc.nextLine());
+            if(column<0 || column>5)
+                printError("Invalid column, please try again");
+        }while (column<0 || column>5);
+        return column;
+    }
+
+    /**
+     * @param picks is the array that contains the coordinates as Strings
+     * @param positions is the array that will contain the coordinates as ints
+     */
+    private void intCoordinates(String[] picks,Position[] positions){
+        String[] tmpPick;
+
+        for(int i=0; i< picks.length;i++){
+            tmpPick=picks[i].split(",");
+            positions[i]= new Position(Integer.parseInt(tmpPick[0]),Integer.parseInt(tmpPick[1]));
         }
     }
 
+
+    public void Update(){
+
+    }
+
+    public void finalResults(JsonObject table){
+
+    }
+
+
+
+    public void setMode(){
+
+    }
+
+    /**
+     * this method calls the quitGame method on the server and prints an error message if this procedure fails
+     */
+    public void quitGame(){
+        if(!((PlayingPlayer)player).quitGame());
+            printError("Failed to quit the game");
+    }
 
     /**
      * @param err is the string to print on the standard error stream
@@ -289,8 +374,20 @@ public class TUI {
     }
 
 
+    /**
+     * @return an upper case char
+     */
     public char charCommand(){
         Scanner sc = new Scanner(System.in);
         return(Character.toUpperCase(sc.next().charAt(0)));
+    }
+
+
+    /**
+     * @return a lower case String
+     */
+    public String stringCommand() {
+        Scanner sc = new Scanner(System.in);
+        return (sc.nextLine().toLowerCase());
     }
 }
