@@ -422,6 +422,20 @@ public class Controller implements Runnable {
         }
         controllerManager.sendPlayerList(playersID.toArray(new String[0]));
 
+        //send all commonGoalID (broadcast to each client)
+        controllerManager.sendAllCommonGoal(commonGoalIDArray);
+
+        //send all private goal (broadcast to each client)
+        ArrayList<Player> players = game.getPlayerArray();
+        for (Player p: players) {
+            ArrayList<PositionWithColor> privateGoal = new ArrayList<>();
+            for(int j=0; j<p.getPersonalTarget().getColor().length; j++){
+                privateGoal.add(new PositionWithColor(p.getPersonalTarget().getX()[j],
+                        p.getPersonalTarget().getY()[j],0,Enum.valueOf(CardColor.class, p.getPersonalTarget().getColor()[j])));
+            }
+            controllerManager.sendPrivateGoal(privateGoal.toArray(new PositionWithColor[0]), p.getPlayerID());
+        }
+
         //get main board
         Card[][] mainBoard = game.getMainBoard();
 
@@ -437,19 +451,7 @@ public class Controller implements Runnable {
         //send all player board (broadcast to each client)
         controllerManager.sendAllPlayerBoard(playersBoard);
 
-        //send all commonGoalID (broadcast to each client)
-        controllerManager.sendAllCommonGoal(commonGoalIDArray);
 
-        //send all private goal (broadcast to each client)
-        ArrayList<Player> players = game.getPlayerArray();
-        for (Player p: players) {
-            ArrayList<PositionWithColor> privateGoal = new ArrayList<>();
-            for(int j=0; j<p.getPersonalTarget().getColor().length; j++){
-                privateGoal.add(new PositionWithColor(p.getPersonalTarget().getX()[j],
-                        p.getPersonalTarget().getY()[j],0,Enum.valueOf(CardColor.class, p.getPersonalTarget().getColor()[j])));
-            }
-            controllerManager.sendPrivateGoal(privateGoal.toArray(new PositionWithColor[0]), p.getPlayerID());
-        }
     }
 
     /*************************************************************************

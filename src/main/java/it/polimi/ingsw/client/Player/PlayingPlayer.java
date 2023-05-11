@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.Player;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.client.Connection.ConnectionManager;
 import it.polimi.ingsw.client.Exceptions.InvalidPickException;
@@ -107,21 +108,24 @@ public class PlayingPlayer extends Player{
     }
     public void setPlayersNumber(int playersNumber) {
         this.playersNumber = playersNumber;
-    }//TODO players numbers on view
+        if(ui!=null)ui.receiveNumPlayers(playersNumber);
+    }
     public void createMainBoard(Card[][] board){
         this.mainBoard = new MainBoard(board);
-    }//TODO update all data on view
-    public void createAllClientBoard(ArrayList<Card[][]> boards){//TODO update all data on view
+
+    }
+    public void createAllClientBoard(ArrayList<Card[][]> boards){
         ArrayList<PlayerBoard> tmpBoards = new ArrayList<>();
         for(Card[][] c : boards){
             tmpBoards.add(new PlayerBoard(c));
         }
         playerBoards = tmpBoards.toArray(new PlayerBoard[0]);
+        if(ui!=null) ui.updateAll();
     }
 
     public void setPrivateGoal(PositionWithColor[] privateGoal) {
         this.privateGoal = privateGoal;
-    }//TODO update all data on view
+    }
 
     /*************************************************************************
      ************************************************** others ******************
@@ -235,7 +239,7 @@ public class PlayingPlayer extends Player{
             if(playersID[i].equals(playerID)){
                 playerBoards[i].addCard(column, cards);
             }
-        }//TODO send to grafic
+        }if(ui!=null)ui.updatePlayerBoard(playerID, column, cards);
     }
 
     /**
@@ -244,14 +248,16 @@ public class PlayingPlayer extends Player{
      */
     public void removeCardFromMainBoard(PositionWithColor[] position){
         mainBoard.removeCard(position);
-    }//TODO send to grafic
+        if(ui!=null)ui.updateMainBoard(position);
+    }
 
     /**
      * called from server
      * @param points JsonObject {"playerID": pointsValue} for each player in the game
      */
     public void endGameValue(String points){
-        //TODO necessita metodo lato grafico
+        JsonObject jsonObject = new Gson().fromJson(points, JsonObject.class);
+        if(ui!=null)ui.finalResults(jsonObject);
     }
 
     /**
@@ -302,7 +308,8 @@ public class PlayingPlayer extends Player{
     public void receiveBroadcastMsg(String msg, String sender){
         if(!sender.equals(this.playerID)) {
             String sout = sender + ": " + msg;
-            System.out.println(sout);              //TODO necessita metodo lato grafico
+            if(ui!=null) ui.receiveMsg(sout);
+            else System.out.println(sout);
         }
     }
 
@@ -331,7 +338,8 @@ public class PlayingPlayer extends Player{
     public void receivePrivateMSG(String userID, String msg, String sender){
         if(!sender.equals(this.playerID) && Objects.equals(userID, this.playerID)){
             String sout = sender + ": [PRIVATE] " + msg;
-            System.out.println(sout);              //TODO necessita metodo lato grafico
+            if(ui!=null) ui.receiveMsg(sout);
+            else System.out.println(sout);
         }
     }
 }
