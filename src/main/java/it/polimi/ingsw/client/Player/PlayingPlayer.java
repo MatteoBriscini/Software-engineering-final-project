@@ -27,8 +27,11 @@ public class PlayingPlayer extends Player{
     private int[]CommonGoalID;
     private PositionWithColor[] privateGoal;
     private JsonObject[] commonGoalScored;
-    /**
 
+    /**
+     * @param playerID id of the client will be unique
+     * @param pwd access password
+     * @param connection class who will manage connection to the server
      * @throws RemoteException if the server does not response (wrong port or ip)
      */
     public PlayingPlayer(String playerID, String pwd, ConnectionManager connection) throws RemoteException {
@@ -49,6 +52,11 @@ public class PlayingPlayer extends Player{
     public int getPlayersNumber() {
         return playersNumber;
     }
+
+    /**
+     * @param playerID need to know witch playerBoard want to get
+     * @return player board
+     */
     public PlayerBoard getPlayerBoard(String playerID) {
         int i;
         for (i= 0; i<playersID.length; i++){
@@ -99,11 +107,11 @@ public class PlayingPlayer extends Player{
     }
     public void setPlayersNumber(int playersNumber) {
         this.playersNumber = playersNumber;
-    }
+    }//TODO players numbers on view
     public void createMainBoard(Card[][] board){
         this.mainBoard = new MainBoard(board);
-    }
-    public void createAllClientBoard(ArrayList<Card[][]> boards){
+    }//TODO update all data on view
+    public void createAllClientBoard(ArrayList<Card[][]> boards){//TODO update all data on view
         ArrayList<PlayerBoard> tmpBoards = new ArrayList<>();
         for(Card[][] c : boards){
             tmpBoards.add(new PlayerBoard(c));
@@ -113,11 +121,14 @@ public class PlayingPlayer extends Player{
 
     public void setPrivateGoal(PositionWithColor[] privateGoal) {
         this.privateGoal = privateGoal;
-    }
+    }//TODO update all data on view
 
     /*************************************************************************
      ************************************************** others ******************
      * ***********************************************************************
+     * *
+     * called from the server when a player scored a common goal
+     * @param scored
      */
     public void addCommonGoalScored(JsonObject scored){
         ArrayList<JsonObject> tmpScored = new ArrayList<>();
@@ -125,6 +136,10 @@ public class PlayingPlayer extends Player{
         tmpScored.add(scored);
         commonGoalScored = tmpScored.toArray(new JsonObject[0]);
     }
+    /**
+     * try to start the game
+     * @return false if there is a connection problem (it will print spontaneous an error message), or the player cant start the game
+     */
     public boolean startGame(){
         try {
             return connection.startGame(this.playerID);
@@ -134,6 +149,10 @@ public class PlayingPlayer extends Player{
         }
     }
 
+    /**
+     * try to quit the game
+     * @return false if there is a connection problem (it will print spontaneous an error message), or the player cant start the game
+     */
     public boolean quitGame(){
         try {
             boolean bool = connection.quitGame(this.playerID);
@@ -145,29 +164,20 @@ public class PlayingPlayer extends Player{
         }
     }
 
+    /**
+     * @param column on the player board where
+     * @param cards sorted array of cards the player want to take
+     * @return false if the move is not valid (it will print a spontaneous error message)
+     */
     public boolean takeCard(int column, Position[] cards){
-
         Position[] tmpCards = new Position[cards.length];
         for (int i = 0; i<cards.length;i++){
             tmpCards[i] = new Position(cards[i].getX(), cards[i].getY());
         }
-        try {
-            mainBoard.validPick(tmpCards);
-        } catch (InvalidPickException e) {
-            JsonObject err = new JsonObject();
-            err.addProperty("errorID", "invalid move");
-            err.addProperty("errorMSG", e.getMessage());
-            this.errMsg(err);
-            return false;
-        }
 
-        if(!playerBoards[myTurnNumber].checkSpace(column, cards.length)){
-            JsonObject err = new JsonObject();
-            err.addProperty("errorID", "invalid move");
-            err.addProperty("errorMSG", "not enough space on your shelf");
-            this.errMsg(err);
-            return false;
-        }
+        if(!checkMainBoardMove(tmpCards)) return false;
+
+        if(!checkPlayerBoardMove(column, cards.length)) return false;
 
         PositionWithColor[] pos = new  PositionWithColor[cards.length];
         for(int i = 0; i<cards.length; i++){
@@ -182,40 +192,100 @@ public class PlayingPlayer extends Player{
         }
     }
 
+    /**
+     * @param pos where want to take the card
+     * @return false if the move is not valid (it will print a spontaneous error message)
+     */
+    public boolean checkMainBoardMove(Position[] pos){
+        try {
+            mainBoard.validPick(pos);
+        } catch (InvalidPickException e) {
+            JsonObject err = new JsonObject();
+            err.addProperty("errorID", "invalid move");
+            err.addProperty("errorMSG", e.getMessage());
+            this.errMsg(err);
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @param column where put the card
+     * @param nCards how many cards have to insert in the column
+     * @return false if the move is not valid (it will print a spontaneous error message)
+     */
+    private boolean checkPlayerBoardMove(int column,int nCards){
+        if(!playerBoards[myTurnNumber].checkSpace(column, nCards)){
+            JsonObject err = new JsonObject();
+            err.addProperty("errorID", "invalid move");
+            err.addProperty("errorMSG", "not enough space on your shelf in that column");
+            this.errMsg(err);
+            return false;
+        }
+        return true;
+    }
+    /**
+     * called from server
+     * @param playerID on which playerBoard method has to add the cards
+     * @param column where have to add cards
+     * @param cards element added to the player board
+     */
     public void addCardToPlayerBoard(String playerID, int column,Card[] cards){
         for(int i=0; i<playersID.length; i++){
             if(playersID[i].equals(playerID)){
                 playerBoards[i].addCard(column, cards);
             }
-        }
+        }//TODO send to grafic
     }
 
+    /**
+     * called from server
+     * @param position where have to remove cards
+     */
     public void removeCardFromMainBoard(PositionWithColor[] position){
         mainBoard.removeCard(position);
-    }
+    }//TODO send to grafic
 
+    /**
+     * called from server
+     * @param points JsonObject {"playerID": pointsValue} for each player in the game
+     */
     public void endGameValue(String points){
         //TODO necessita metodo lato grafico
     }
+
+    /**
+     * called from server
+     * @param winner  JsonObject {"winnerName": playerID, "points": pointsValue}
+     */
     public void receiveWinner(String winner){
         //TODO necessita metodo lato grafico
     }
+
     /**************************************************************************
      ************************************************** chat ******************
      * ************************************************************************
+     * *
+     * called from tui, it wil be sending msg as private or as broadcast (if contains --playerID : it will be private)
+     * @param msg the String of message
+     * @throws PlayerNotFoundException if can't find the playerID or the game is not started yet (only in vase of private msg)
      */
     public void sendMessage(String msg)throws PlayerNotFoundException{
         int index = msg.indexOf(':');
-        if(index == -1){
+        String marker = msg.substring(0,2);
+        if(index == -1 || !marker.equals("--")){
             sendBroadcastMsg(msg);
             return;
         }
-        String sender = msg.substring(0, index).replaceAll("\\s+","");
+        String sender = msg.substring(2, index).replaceAll("\\s+","");
         msg = msg.substring(index+1, msg.length());
         if(msg.charAt(0) == ' ')msg = msg.substring(1);
         sendPrivateMSG(sender, msg);
     }
 
+    /**
+     * @param msg String with the message
+     */
     public void sendBroadcastMsg(String msg){
         try{
             connection.sendBroadcastMsg(msg, this.playerID);
@@ -223,12 +293,24 @@ public class PlayingPlayer extends Player{
             this.disconnectError("server can't respond");
         }
     }
+
+    /**
+     * called from server where there is a new broadcast message
+     * @param msg the message
+     * @param sender the player who wrote the message
+     */
     public void receiveBroadcastMsg(String msg, String sender){
         if(!sender.equals(this.playerID)) {
             String sout = sender + ": " + msg;
             System.out.println(sout);              //TODO necessita metodo lato grafico
         }
     }
+
+    /**
+     * @param userID at which player have to send the message
+     * @param msg the message
+     * @throws PlayerNotFoundException if can't find the playerID or the game is not started yet
+     */
     public void sendPrivateMSG(String userID, String msg) throws PlayerNotFoundException {
         ArrayList<String> tmpPlayers = new ArrayList<>();
         if (playersID == null) throw new PlayerNotFoundException("game not started yet");
@@ -240,6 +322,12 @@ public class PlayingPlayer extends Player{
             this.disconnectError("server can't respond");
         }
     }
+
+    /**
+     * @param userID at which player have to send the message
+     * @param msg the message
+     * @param sender the player who wrote the message
+     */
     public void receivePrivateMSG(String userID, String msg, String sender){
         if(!sender.equals(this.playerID) && Objects.equals(userID, this.playerID)){
             String sout = sender + ": [PRIVATE] " + msg;

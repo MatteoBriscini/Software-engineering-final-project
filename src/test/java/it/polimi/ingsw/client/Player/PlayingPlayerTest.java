@@ -48,6 +48,6 @@ public class PlayingPlayerTest extends TestCase {
         testClient2 = connection2.getPlayer();
         ((PlayingPlayer)testClient).startGame();
         ((PlayingPlayer)testClient).sendMessage("ciao a tutti");
-        ((PlayingPlayer)testClient).sendMessage(" ma rco : ciao a marco");
+        ((PlayingPlayer)testClient).sendMessage("--ma rco : ciao a marco");
     }
 }
