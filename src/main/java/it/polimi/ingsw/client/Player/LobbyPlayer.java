@@ -50,6 +50,8 @@ public class LobbyPlayer extends Player{
         JsonObject err = new JsonObject();
         err.addProperty("errorID", "login error");
         err.addProperty("errorMSG", msg);
+        this.errMsg(err);
+
     }
 
     public void addPlayerToGameError(String msg){

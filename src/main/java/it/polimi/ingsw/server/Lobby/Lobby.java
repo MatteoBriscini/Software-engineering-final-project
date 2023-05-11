@@ -32,7 +32,7 @@ public class Lobby {
 
     private ArrayList<Controller> activeGames = new ArrayList<>();
 
-    private static String loginJSONURL = "src/main/json/config/registeredPlayers.json";
+    private static String loginJSONURL = "/home/matteo/Desktop/IDS/AM19/src/main/json/config/registeredPlayers.json";
 
     private JsonUrl jsonConfigUrl;
 
@@ -41,24 +41,25 @@ public class Lobby {
     private ExecutorService executor;
 
 
-    public Lobby(){
+    public Lobby(String ID){
         try {
             jsonCreate();
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
-        this.rmi = new RMI(standardPORTrmi, this);
+        this.rmi = new RMI(standardPORTrmi, this, ID);
         this.socket = new SOCKET(this, getStandardPORTsocket);
         Thread thread = new Thread(socket::acceptConnection);
         thread.start();
     }
+
     public Lobby(int rmiPort, int socketPort){
         try {
             jsonCreate();
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
-        this.rmi = new RMI(rmiPort, this);
+        this.rmi = new RMI(rmiPort, this, "127.0.0.1");
         this.socket = new SOCKET(this, socketPort);
         Thread thread = new Thread(socket::acceptConnection);
         thread.start();
@@ -87,6 +88,7 @@ public class Lobby {
         try {
             fileJson = new FileReader(path);
         } catch (FileNotFoundException e) {
+            System.err.println(4);
             throw new RuntimeException(e);
         }
 

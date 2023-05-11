@@ -31,8 +31,11 @@ public class RMI extends ConnectionController implements LobbyRemoteInterface {
     private boolean inGame = false;
     protected final String cntType;
     private int pingPongTime;
-    public RMI(int port, Lobby lobby) {
+    public RMI(int port, Lobby lobby , String IP) {
         super(lobby, port, ConnectionType.RMI);
+
+        System.setProperty("java.rmi.server.hostname", "192.168.178.21");
+
         this.cntType = "RMI";
         this.connection();
 
