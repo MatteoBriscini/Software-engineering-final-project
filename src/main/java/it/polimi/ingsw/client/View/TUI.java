@@ -57,6 +57,8 @@ public class TUI implements UserInterface{
         connectionSelection();
         userIdentification();
 
+        Thread thread = new Thread(()->{this.toRun();});
+        thread.start();
     }
 
 
@@ -85,9 +87,31 @@ public class TUI implements UserInterface{
 
 
     public void toRun(){
+        Scanner sc = new Scanner(System.in);
+        char c;
+
         System.out.println("WELCOME TO My Shelfie");
-        connectionSelection();
-        userIdentification();
+
+        do {
+            System.out.println("Hi " + player.getPlayerID() + ", do you want to create a new game or join an existing one?\n[C] Create\n[J] Join");
+            c=charCommand();
+            if (c!='C' && c!='J')
+                printError("Invalid selection, please try again");
+        }while (c!='C' && c!='J');
+
+        if(c=='C'){
+            createGame();
+        }
+        else{
+            joinGame();
+        }
+
+        System.out.println("THIS IS THE WAITING ROOM...");
+
+
+
+
+
     }
 
 
@@ -96,12 +120,18 @@ public class TUI implements UserInterface{
         char c;
         String ip;
 
-        //System.out.println("Do you want to use de default server?");
-        //c=sc.next().charAt(0);
+        do {
+            System.out.println("Do you want to use de default server? Y/N");
+            c = charCommand();
+            if (c!='Y' && c!='N')
+                printError("Invalid selection, please try again");
+        }while (c!='Y' && c!='N');
 
+        if(c=='N') {
             System.out.println("insert server IP:");
-            ip=sc.nextLine();
-            this.serverIP=ip;
+            ip = sc.nextLine();
+            this.serverIP = ip;
+        }
 
     }
 
@@ -172,13 +202,16 @@ public class TUI implements UserInterface{
                     logged = ((LobbyPlayer) player).login();
                 }
             }
+
+            if(!logged)
+                printError("Invalid selection, please try again\n");
         }while (!logged || user.equals("/back"));
 
     }
 
 
     /**
-     * this method allows the player to join create a new game
+     * this method allows the player to create a new game
      */
     private void createGame(){
         String selection;
@@ -186,13 +219,15 @@ public class TUI implements UserInterface{
 
         success=false;
         do {
-            System.out.println("Insert the number of players for this game (min " +minPlayers+ ", max" +maxPlayers+ "\nInsert /def to use default settings");
+            System.out.println("Insert the number of players for this game (min " +minPlayers+ ", max" +maxPlayers+ ")\nInsert /def to use default settings");
             selection = stringCommand();
             if (selection.equals("/def")) {
                 success=((LobbyPlayer)player).createGame();
             } else if (Integer.parseInt(selection)>=minPlayers && Integer.parseInt(selection)<=maxPlayers) {
                 success=((LobbyPlayer)player).createGame(Integer.parseInt(selection));
             }
+            if(!success)
+                System.out.println("Game creation failed, please try again");
         }while(!success);
     }
 
