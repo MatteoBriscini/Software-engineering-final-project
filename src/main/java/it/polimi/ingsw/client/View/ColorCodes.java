@@ -8,8 +8,8 @@ public enum ColorCodes {
     PURPLE("\033[45m"), // PURPLE
     WHITE("\033[47m"),  // WHITE
     YELLOW("\033[43m"), // YELLOW
-    EMPTY("\033[40m"),  // BLACK
-    RED_BACKGROUND("\033[41m");    // RED
+    EMPTY("\033[40m");  // BLACK
+
 
 
 
