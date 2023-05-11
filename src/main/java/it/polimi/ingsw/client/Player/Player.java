@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import it.polimi.ingsw.client.ClientMain;
 import it.polimi.ingsw.client.Connection.ConnectionManager;
 import it.polimi.ingsw.client.View.UserInterface;
+import it.polimi.ingsw.shared.PlayerMode;
 
 public abstract class Player {
     protected String playerID;
@@ -19,6 +20,9 @@ public abstract class Player {
 
     }
 
+    public UserInterface getUI(){
+        return ui;
+    }
     public void setUi(UserInterface ui) {
         this.ui = ui;
     }
@@ -31,6 +35,10 @@ public abstract class Player {
     }
     public String getPwd(){
         return pwd;
+    }
+
+    public void setMode(PlayerMode m){
+        ui.setMode(m);
     }
 
     public ConnectionManager getConnection() {

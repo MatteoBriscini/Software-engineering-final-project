@@ -6,7 +6,9 @@ import com.google.gson.JsonObject;
 import it.polimi.ingsw.client.Player.LobbyPlayer;
 import it.polimi.ingsw.client.Player.Player;
 import it.polimi.ingsw.client.Player.PlayingPlayer;
+import it.polimi.ingsw.client.View.UserInterface;
 import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
+import it.polimi.ingsw.shared.PlayerMode;
 import it.polimi.ingsw.shared.exceptions.addPlayerToGameException;
 import it.polimi.ingsw.shared.Cards.Card;
 import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
@@ -61,6 +63,7 @@ public abstract class ConnectionManager extends UnicastRemoteObject {
     }
     public void setPlayerAsPlaying(){
         String playerID = player.getPlayerID();
+        UserInterface ui = player.getUI();
         this.setInGame(true);
         String pwd = player.getPwd();
         try {
@@ -68,12 +71,21 @@ public abstract class ConnectionManager extends UnicastRemoteObject {
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
+        if(ui!=null){
+            player.setUi(ui);
+            player.setMode(PlayerMode.PLAYING);
+        }
     }
     public void setPlayerAsLobby(){
         String playerID = player.getPlayerID();
+        UserInterface ui = player.getUI();
         this.setInGame(false);
         String pwd = player.getPwd();
         this.player = new LobbyPlayer(playerID, pwd, this);
+        if(ui!=null){
+            player.setUi(ui);
+            player.setMode(PlayerMode.LOBBY);
+        }
     }
     /*************************************************************************
      ************************************************** OUT method ***********
