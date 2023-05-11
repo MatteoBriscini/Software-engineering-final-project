@@ -44,9 +44,7 @@ public class TUI implements UserInterface{
 
     private ConnectionManager connection;
 
-    public TUI(Player player){
-
-        this.player=player;
+    public TUI(){
 
         try {
             jsonCreate();
@@ -54,6 +52,10 @@ public class TUI implements UserInterface{
             System.out.println("TUI: JSON FILE NOT FOUND");
             throw new RuntimeException(e);
         }
+
+        serverSelection();
+        connectionSelection();
+        userIdentification();
 
     }
 
@@ -77,7 +79,7 @@ public class TUI implements UserInterface{
         jsonObject = new Gson().fromJson(bufferedReader1, JsonObject.class);
         this.serverIP = jsonObject.get("serverIP").getAsString();
         this.socketPort = jsonObject.get("defSocketPort").getAsInt();
-        this.RMIPort = jsonObject.get("defRMIPort").getAsInt();
+        this.RMIPort = jsonObject.get("defRmiPort").getAsInt();
     }
 
 
@@ -86,6 +88,21 @@ public class TUI implements UserInterface{
         System.out.println("WELCOME TO My Shelfie");
         connectionSelection();
         userIdentification();
+    }
+
+
+    private void serverSelection(){
+        Scanner sc = new Scanner(System.in);
+        char c;
+        String ip;
+
+        //System.out.println("Do you want to use de default server?");
+        //c=sc.next().charAt(0);
+
+            System.out.println("insert server IP:");
+            ip=sc.nextLine();
+            this.serverIP=ip;
+
     }
 
     /**
