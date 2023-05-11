@@ -133,7 +133,6 @@ public abstract class ConnectionManager extends UnicastRemoteObject {
         ((PlayingPlayer)player).createAllClientBoard(boards);
     }
     /**
-    /**
      * @param playerID name of the owner of the board we have to add cards
      * @param column on the board where we have to add cards
      * @param cards card array to add at the board

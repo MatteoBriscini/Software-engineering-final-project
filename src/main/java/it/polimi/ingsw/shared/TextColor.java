@@ -12,5 +12,4 @@ public enum TextColor {
     public String get() {
         return code;
     }
-
 }

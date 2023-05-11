@@ -17,7 +17,7 @@ public class CouplesAndPokersGoals extends CommonGoal{
     /**
      * parameters
      */
-    private boolean[][] alreadyUsed = new boolean[5][6];
+    private boolean[][] alreadyUsed;
     private int validCombo = 0;  //amount of valid row
     private int elementCombo = 0;  //amount of element in a single combo
     private final NColorsGroup equal = new NColorsGroup();
@@ -43,7 +43,7 @@ public class CouplesAndPokersGoals extends CommonGoal{
             System.out.println("CouplesAndPokers: JSON FILE NOT FOUND");
             throw new RuntimeException(e);
         }
-
+        alreadyUsed = new boolean[rowSize][columnSize];
         for(int i = 0; i<mGroupsArray.size(); i++){
             if(nCardsArray.get(i).getAsInt() == n && mGroupsArray.get(i).getAsInt()==mGroups) {
                 this.n = n;
@@ -81,7 +81,7 @@ public class CouplesAndPokersGoals extends CommonGoal{
     @Override
     public boolean check(Card[][] board){
         int i,j;
-        alreadyUsed = new boolean[5][6];
+        alreadyUsed = new boolean[rowSize][columnSize];
         for (i=0; i<rowSize ; i++){
             for (j=0; j<columnSize; j++){
                 if (!alreadyUsed[i][j] &&( i+1<rowSize && (equal.nColorsCheck(new Card[]{board[i][j], board[i+1][j]}, 1, 1)) || j+1<columnSize && (equal.nColorsCheck(new Card[]{board[i][j], board[i][j+1]},1, 1)))) { //search for first pair
