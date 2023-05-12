@@ -4,6 +4,7 @@ import it.polimi.ingsw.shared.Cards.Card;
 import it.polimi.ingsw.shared.Cards.CardColor;
 
 import static it.polimi.ingsw.shared.Cards.CardColor.*;
+import static java.util.Arrays.deepToString;
 
 public class PlayerBoard {
 
@@ -22,7 +23,7 @@ public class PlayerBoard {
         Card[][] tmpBoard=new Card[x][y];
 
         for(int x=0;x<this.x;x++) {
-            for (int y = 0; y < this.x; y++) {
+            for (int y = 0; y < this.y; y++) {
                 tmpBoard[x][y] = new Card(board[x][y].getColor());
             }
         }

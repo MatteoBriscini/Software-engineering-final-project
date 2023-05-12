@@ -25,6 +25,7 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 import static it.polimi.ingsw.client.View.ColorCodes.*;
+import static java.util.Arrays.deepToString;
 
 
 public class TUI implements UserInterface{
@@ -441,18 +442,25 @@ public class TUI implements UserInterface{
 
 
     public void updateAll(){
-        String[][] toPrint = new String[playerBoard.getColumns()][playerBoard.getRows()];
+        String[][] toPrint = new String[((PlayingPlayer)player).getPlayerBoard(player.getPlayerID()).getColumns()][((PlayingPlayer)player).getPlayerBoard(player.getPlayerID()).getRows()];
 
         for(String id : ((PlayingPlayer)player).getPlayersID()) {
-            if(id!=(player).getPlayerID())
+            System.out.println(id);
+            if(id!=(player).getPlayerID()){
                 playerBoardToString(((PlayingPlayer) player).getPlayerBoard(id), toPrint);
-            else playerBoardToString(((PlayingPlayer) player).getPlayerBoard(id),((PlayingPlayer) player).getPrivateGoal() , toPrint);
+                System.out.println("help1");
+            }
+            else {
+                playerBoardToString(((PlayingPlayer) player).getPlayerBoard(id),((PlayingPlayer) player).getPrivateGoal() , toPrint);
+                System.out.println("help2");
+            }
             System.out.println(toPrint);
         }
+        System.out.println(2);
 
         mainBoardToString(((PlayingPlayer) player).getMainBoard(),toPrint);
         System.out.println(toPrint);
-
+        System.out.println("end");
         //playerBoardToString(); fare json con board da stampare
     }
 
@@ -549,12 +557,14 @@ public class TUI implements UserInterface{
 
     private void playerBoardToString(PlayerBoard board, String[][] s){
         for(int x=0;x<board.getColumns();x++)
-            for (int y=0;y<board.getRows();y++)
+            for (int y=0;y<board.getRows();y++){
                 s[x][y]=board.getBoard()[x][y].getColor().toString();
+                //System.out.println(s[x][y]);
+            }
     }
 
     private void playerBoardToString(PlayerBoard board,PositionWithColor[] goal, String[][] s) {
-
+        System.out.println(board);
         for (int column = 0; column < board.getColumns(); column++) {
             for (int row = 0; row < board.getRows(); row++) {
 
@@ -578,6 +588,7 @@ public class TUI implements UserInterface{
                 else s[column][row] = s[column][row] + "   ";
             }
         }
+        System.out.println("end");
 
     }
 
