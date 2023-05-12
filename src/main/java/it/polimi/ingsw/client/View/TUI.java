@@ -101,17 +101,55 @@ public class TUI implements UserInterface{
 
         if(c=='C'){
             createGame();
+            System.out.println("THIS IS THE WAITING ROOM...");
         }
         else{
             joinGame();
+            System.out.println("THIS IS THE WAITING ROOM...");
         }
 
-        System.out.println("THIS IS THE WAITING ROOM...");
+    }
 
 
+    private void userInput(){
+        Scanner sc = new Scanner(System.in);
+        String s;
+        char c;
+        String msg;
 
+        while (sc!=null){
+            s=sc.nextLine().toLowerCase();
 
+            if(s.equals("/start")){
+                ((PlayingPlayer)player).startGame();
 
+            } else if (s.startsWith("/chat")) {
+                System.out.println("ffffffffffffffffffffffffffffffffffffffffffffff");
+                msg = s.substring(7,s.length());
+
+            } else if (s.equals("/help")) {
+                System.out.println("fra ti capisco");
+
+            } else if (s.startsWith("/pick")) {
+                System.out.println("pick me up");
+
+            } else if (s.equals("/quit")) {
+                do {
+                    System.out.println("Are you sure? Y/N");
+                    c=charCommand();
+
+                    if(c=='Y')
+                        ((PlayingPlayer) player).quitGame();
+                    if(c!='Y' && c!='N')
+                        System.out.println("Invalid selection,please try again");
+                }while (c!='Y' && c!='N');
+                if(c=='Y'){
+                    break;
+                }
+
+            }   else System.out.println("Invalid command, please try again (/help to see the allowed commands)");
+
+        }
     }
 
 
@@ -206,6 +244,8 @@ public class TUI implements UserInterface{
             if(!logged)
                 printError("Invalid selection, please try again\n");
         }while (!logged || user.equals("/back"));
+
+        player.setUi(this);
 
     }
 
@@ -398,7 +438,19 @@ public class TUI implements UserInterface{
 
 
     public void updateAll(){
+        String[][] toPrint = new String[playerBoard.getColumns()][playerBoard.getRows()];
 
+        for(String id : ((PlayingPlayer)player).getPlayersID()) {
+            if(id!=(player).getPlayerID())
+                playerBoardToString(((PlayingPlayer) player).getPlayerBoard(id), toPrint);
+            else playerBoardToString(((PlayingPlayer) player).getPlayerBoard(id),((PlayingPlayer) player).getPrivateGoal() , toPrint);
+            System.out.println(toPrint);
+        }
+
+        mainBoardToString(((PlayingPlayer) player).getMainBoard(),toPrint);
+        System.out.println(toPrint);
+
+        //playerBoardToString(); fare json con board da stampare
     }
 
     public void updateMainBoard(PositionWithColor[] p){
@@ -445,12 +497,11 @@ public class TUI implements UserInterface{
 
     public void setMode(PlayerMode m){
         player = connection.getPlayer();
-
-         //se current player = NULL allora partita non iniziata
+        Thread thread = new Thread(()->{this.userInput();});
 
         switch (m){
-            case LOBBY -> userIdentification();
-            //case PLAYING ->
+            case LOBBY -> toRun();
+            case PLAYING -> thread.start();
         }
 
     }
