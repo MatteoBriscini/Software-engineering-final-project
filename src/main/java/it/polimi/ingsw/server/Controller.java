@@ -337,7 +337,7 @@ public class Controller implements Runnable {
         } else {
             error.addProperty("errorID", "can't start the game");
             if(alreadyStarted) error.addProperty("errorMSG", "the game is already started");
-            if(playerNum < minPlayerNumber ) error.addProperty("errorMSG", "there isn't enough player in the game");
+            if(playerNum < minPlayerNumber ) error.addProperty("errorMSG", "there aren't enough player in the game");
             controllerManager.sendError(error, playerID);
 
             return false;
@@ -435,13 +435,11 @@ public class Controller implements Runnable {
             }
             controllerManager.sendPrivateGoal(privateGoal.toArray(new PositionWithColor[0]), p.getPlayerID());
         }
-
         //get main board
         Card[][] mainBoard = game.getMainBoard();
 
         //send all main board (broadcast to each client)
         controllerManager.sendMainBoard(mainBoard);
-
         //get all player board
         ArrayList<Card[][]> playersBoard = new ArrayList<>();
         for(int i = 0; i< game.getPlayerArray().size(); i++){
@@ -450,7 +448,6 @@ public class Controller implements Runnable {
 
         //send all player board (broadcast to each client)
         controllerManager.sendAllPlayerBoard(playersBoard);
-
 
     }
 
