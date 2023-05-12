@@ -452,10 +452,12 @@ public class TUI implements UserInterface{
             else {
                 playerBoardToString(((PlayingPlayer) player).getPlayerBoard(id),((PlayingPlayer) player).getPrivateGoal() , toPrint);
             }
-            System.out.println(toPrint);
+            this.printBoard(toPrint, ((PlayingPlayer)player).getPlayerBoard(player.getPlayerID()).getColumns(), ((PlayingPlayer)player).getPlayerBoard(player.getPlayerID()).getRows(), id);
         }
 
         mainBoardToString(((PlayingPlayer) player).getMainBoard(),mainBoardToPrint);
+        this.printBoard(mainBoardToPrint,((PlayingPlayer) player).getMainBoard().getColumns(),((PlayingPlayer) player).getMainBoard().getRows() , "main");
+
         //playerBoardToString(); fare json con board da stampare
     }
 
@@ -547,29 +549,23 @@ public class TUI implements UserInterface{
     private void mainBoardToString(MainBoard board, String[][] s){
         for(int x=0;x<board.getColumns();x++)
             for (int y=0;y<board.getRows();y++) {
-                s[x][y] = board.getBoard()[x][y].getColor().toString();
+                s[x][y] = ColorCodes.valueOf(board.getBoard()[x][y].getColor().toString()).get() + "  ";
             }
     }
 
     private void playerBoardToString(PlayerBoard board, String[][] s){
         for(int x=0;x<board.getColumns();x++)
             for (int y=0;y<board.getRows();y++){
-                s[x][y]=board.getBoard()[x][y].getColor().toString();
+                s[x][y]= ColorCodes.valueOf(board.getBoard()[x][y].getColor().toString()).get() + "  ";
             }
     }
 
     private void playerBoardToString(PlayerBoard board,PositionWithColor[] goal, String[][] s) {
         for (int column = 0; column < board.getColumns(); column++) {
             for (int row = 0; row < board.getRows(); row++) {
+                s[column][row]= ColorCodes.valueOf(board.getBoard()[column][row].getColor().toString()).get();
 
-                for (int i = 0; i < CardColor.values().length; i++) {
-                    if (board.getColor(column, row).toString().equals(CardColor.values()[i].toString())) {
-                        s[column][row] = ColorCodes.values()[i].get();
-                    }
-                }
-
-
-                if (s[column][row].equals("EMPTY")) {
+                if (s[column][row].equals(EMPTY.get())) {
                     for (PositionWithColor p : goal) {
                         for (int i = 0; i < CardColor.values().length; i++) {
                             if (p.getColor().toString().equals(CardColor.values()[i].toString())) {
@@ -593,7 +589,7 @@ public class TUI implements UserInterface{
             for(int x=0;x<columns;x++){
                 printLine = printLine + board[x][y];
             }
-            System.out.println(printLine + EMPTY.get());
+            System.out.println(printLine + EMPTY.get() + "\033[0m");
         }
         if(whosBoard.equals("main")){
             System.out.println("Main board");

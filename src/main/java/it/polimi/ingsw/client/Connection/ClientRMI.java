@@ -37,15 +37,15 @@ public class ClientRMI extends ConnectionManager implements PlayingPlayerRemoteI
         }
         Thread thread = new Thread(this::pong);       //start ping pong
         thread.start();
-        if(!inGame)stub.joinLobby(this.playerID);
+
     }
 
     public void login(String ID, String pwd) throws LoginException{
-        String tmp;
+        String tmp = "null";
         try {
            tmp = stub.login(ID, pwd);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            player.disconnectError("server can't respond");
         }
         if(!tmp.equals("null")){
             this.remoteControllerRef = tmp;
@@ -56,7 +56,13 @@ public class ClientRMI extends ConnectionManager implements PlayingPlayerRemoteI
                 this.setPlayerAsLobby();
                 player.disconnectError("server can't respond");
             }
-
+        }
+        if(!inGame) {
+            try {
+                stub.joinLobby(this.playerID);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -64,10 +70,16 @@ public class ClientRMI extends ConnectionManager implements PlayingPlayerRemoteI
         try {
             stub.signUp(ID, pwd);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            player.disconnectError("server can't respond");
+        }
+        if(!inGame) {
+            try {
+                stub.joinLobby(this.playerID);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
-
     public void joinGame(String ID) throws addPlayerToGameException{
         try {
             this.remoteControllerRef = stub.joinGame(ID);

@@ -5,7 +5,7 @@ public enum ColorCodes {
     BLUE("\033[44m"),   // BLUE
     GREEN("\033[42m"),  // GREEN
     LIGHTBLUE("\033[46m"),   // CYAN
-    PURPLE("\033[45m"), // PURPLE
+    PINK("\033[45m"), // PURPLE
     WHITE("\033[47m"),  // WHITE
     YELLOW("\033[43m"), // YELLOW
     EMPTY("\033[40m");  // BLACK

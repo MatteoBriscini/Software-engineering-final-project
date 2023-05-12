@@ -36,7 +36,6 @@ public class ClientSOCKET extends ConnectionManager {
             jsonCreate();
         } catch (FileNotFoundException e) {
             System.out.println("PlayingPlayerSOCKET: JSON FILE NOT FOUND");
-            throw new RuntimeException(e);
         }
 
         this.PORT = PORT;
@@ -63,7 +62,8 @@ public class ClientSOCKET extends ConnectionManager {
         data.addProperty("playerID", playerID);
         JsonObject msg = new JsonObject();
         msg.addProperty("service", "joinLobby");
-        msg.add("data", data);this.sendMSG(msg);
+        msg.add("data", data);
+        this.sendMSG(msg);
     }
     public void pingResponse(JsonObject data){
         synchronized (pingPongThread) {
