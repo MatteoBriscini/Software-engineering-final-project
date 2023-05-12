@@ -549,33 +549,30 @@ public class TUI implements UserInterface{
     private void mainBoardToString(MainBoard board, String[][] s){
         for(int x=0;x<board.getColumns();x++)
             for (int y=0;y<board.getRows();y++) {
-                s[x][y] = ColorCodes.valueOf(board.getBoard()[x][y].getColor().toString()).get() + "  ";
+                s[x][y] = ColorCodes.valueOf(board.getBoard()[x][y].getColor().toString()).get() + "   ";
             }
     }
 
     private void playerBoardToString(PlayerBoard board, String[][] s){
         for(int x=0;x<board.getColumns();x++)
             for (int y=0;y<board.getRows();y++){
-                s[x][y]= ColorCodes.valueOf(board.getBoard()[x][y].getColor().toString()).get() + "  ";
+                s[x][y]= ColorCodes.valueOf(board.getBoard()[x][y].getColor().toString()).get() + "   ";
             }
     }
 
     private void playerBoardToString(PlayerBoard board,PositionWithColor[] goal, String[][] s) {
+        String color;
         for (int column = 0; column < board.getColumns(); column++) {
             for (int row = 0; row < board.getRows(); row++) {
-                s[column][row]= ColorCodes.valueOf(board.getBoard()[column][row].getColor().toString()).get();
-
-                if (s[column][row].equals(EMPTY.get())) {
+                color = ColorCodes.valueOf(board.getBoard()[column][row].getColor().toString()).get() ;
+                s[column][row] = color + "   ";
+                if (color.equals(EMPTY.get())) {
                     for (PositionWithColor p : goal) {
-                        for (int i = 0; i < CardColor.values().length; i++) {
-                            if (p.getColor().toString().equals(CardColor.values()[i].toString())) {
-                                s[column][row] = s[column][row] + TextColorCodes.values()[i].get() + " X ";
-                            }
-                            else s[column][row] = s[column][row] + "   ";
+                        if(p.getX()==row && p.getY() == column){
+                            s[column][row] = TextColorCodes.valueOf(p.getColor().toString()).get()+ color + " * ";
                         }
                     }
                 }
-                else s[column][row] = s[column][row] + "   ";
             }
         }
 
@@ -584,7 +581,7 @@ public class TUI implements UserInterface{
     private void printBoard(String[][] board, int columns,int rows, String whosBoard){
         String printLine;
 
-        for(int y=rows-1;y>0;y--){
+        for(int y=rows-1;y>=0;y--){
             printLine = EMPTY.get();
             for(int x=0;x<columns;x++){
                 printLine = printLine + board[x][y];
