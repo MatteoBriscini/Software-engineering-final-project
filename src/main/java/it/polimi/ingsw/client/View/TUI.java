@@ -443,24 +443,19 @@ public class TUI implements UserInterface{
 
     public void updateAll(){
         String[][] toPrint = new String[((PlayingPlayer)player).getPlayerBoard(player.getPlayerID()).getColumns()][((PlayingPlayer)player).getPlayerBoard(player.getPlayerID()).getRows()];
+        String[][] mainBoardToPrint = new String[((PlayingPlayer) player).getMainBoard().getColumns()][((PlayingPlayer) player).getMainBoard().getRows()];
 
         for(String id : ((PlayingPlayer)player).getPlayersID()) {
-            System.out.println(id);
-            if(id!=(player).getPlayerID()){
+            if(!id.equals((player).getPlayerID())){
                 playerBoardToString(((PlayingPlayer) player).getPlayerBoard(id), toPrint);
-                System.out.println("help1");
             }
             else {
                 playerBoardToString(((PlayingPlayer) player).getPlayerBoard(id),((PlayingPlayer) player).getPrivateGoal() , toPrint);
-                System.out.println("help2");
             }
             System.out.println(toPrint);
         }
-        System.out.println(2);
 
-        mainBoardToString(((PlayingPlayer) player).getMainBoard(),toPrint);
-        System.out.println(toPrint);
-        System.out.println("end");
+        mainBoardToString(((PlayingPlayer) player).getMainBoard(),mainBoardToPrint);
         //playerBoardToString(); fare json con board da stampare
     }
 
@@ -551,25 +546,24 @@ public class TUI implements UserInterface{
 
     private void mainBoardToString(MainBoard board, String[][] s){
         for(int x=0;x<board.getColumns();x++)
-            for (int y=0;y<board.getRows();y++)
-                s[x][y]=board.getBoard()[x][y].getColor().toString();
+            for (int y=0;y<board.getRows();y++) {
+                s[x][y] = board.getBoard()[x][y].getColor().toString();
+            }
     }
 
     private void playerBoardToString(PlayerBoard board, String[][] s){
         for(int x=0;x<board.getColumns();x++)
             for (int y=0;y<board.getRows();y++){
                 s[x][y]=board.getBoard()[x][y].getColor().toString();
-                //System.out.println(s[x][y]);
             }
     }
 
     private void playerBoardToString(PlayerBoard board,PositionWithColor[] goal, String[][] s) {
-        System.out.println(board);
         for (int column = 0; column < board.getColumns(); column++) {
             for (int row = 0; row < board.getRows(); row++) {
 
                 for (int i = 0; i < CardColor.values().length; i++) {
-                    if (playerBoard.getColor(column, row).toString().equals(CardColor.values()[i].toString())) {
+                    if (board.getColor(column, row).toString().equals(CardColor.values()[i].toString())) {
                         s[column][row] = ColorCodes.values()[i].get();
                     }
                 }
@@ -588,7 +582,6 @@ public class TUI implements UserInterface{
                 else s[column][row] = s[column][row] + "   ";
             }
         }
-        System.out.println("end");
 
     }
 
