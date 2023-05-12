@@ -14,7 +14,6 @@ import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
 import javax.security.auth.login.LoginException;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -88,7 +87,6 @@ public class Lobby {
         try {
             fileJson = new FileReader(path);
         } catch (FileNotFoundException e) {
-            System.err.println(4);
             throw new RuntimeException(e);
         }
 
