@@ -124,9 +124,12 @@ public class TUI implements UserInterface{
                 ((PlayingPlayer)player).startGame();
 
             } else if (s.startsWith("/chat")) {
-                System.out.println("ffffffffffffffffffffffffffffffffffffffffffffff");
-                msg = s.substring(7,s.length());
-
+                msg = s.substring(6,s.length());
+                try {
+                    ((PlayingPlayer)player).sendMessage(msg);
+                } catch (PlayerNotFoundException e) {
+                    System.out.println(e.getMessage());
+                }
             } else if (s.equals("/help")) {
                 System.out.println("fra ti capisco");
 
@@ -470,7 +473,6 @@ public class TUI implements UserInterface{
     public void finalResults(JsonObject tableJ){
         int n=((PlayingPlayer)player).getPlayersNumber();
         String[][] table = new String[n][n];
-
         for(int i=0;i<n; i++){
             table[i][0]= ((PlayingPlayer)player).getPlayersID()[i];
             table[i][1]= tableJ.get(((PlayingPlayer)player).getPlayersID()[i]).getAsString();
@@ -597,7 +599,7 @@ public class TUI implements UserInterface{
         else System.out.println(whosBoard+"'s board");
     }
 
-    private void xxxprintBoard() {
+    private void printBoard() {
 
 
         /** stampare obiettivi*/
