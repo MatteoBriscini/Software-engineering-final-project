@@ -28,6 +28,7 @@ public class Controller implements Runnable {
     GameMaster game = new GameMaster();
     int playerNum = 0;
     int currentPlayer = -1;  //start game put this to zero to enable the game
+    int[] commonGoalArray;
     boolean alreadyStarted = false;
     boolean endGame = false; //stop playing phase in end game
     JsonObject mainBoardConfig = new JsonObject();
@@ -164,12 +165,14 @@ public class Controller implements Runnable {
 
     public void addClientRMI(PlayingPlayerRemoteInterface client, String playerID){
         controllerManager.addClientRMI(client,playerID);
+        this.autoStart();
     }
     public boolean removeClientRMI(PlayingPlayerRemoteInterface client, String playerID){
         return controllerManager.removeClientRMI(client, playerID);
     }
     public void addClientSOCKET(SOCKET.MultiClientSocketGame client){
         controllerManager.addClientSOCKET(client);
+        this.autoStart();
     }
     public void removeClientSOCKET(SOCKET.MultiClientSocketGame client){
         controllerManager.removeClientSOCKET(client);
@@ -287,9 +290,10 @@ public class Controller implements Runnable {
             if(alreadyStarted) throw new addPlayerToGameException("try to add player in already started game");
             throw new addPlayerToGameException("try to add player in full game");
         }
-        if (playerNum == maxPlayerNumber) this.startGame(game.getPlayerArray().get(0).getPlayerID()); //if the game is full start the game
     }
-
+    synchronized private void autoStart(){
+        if (!alreadyStarted && playerNum == maxPlayerNumber) this.startGame(game.getPlayerArray().get(0).getPlayerID()); //if the game is full start the game
+    }
     /**
      * this method starts the game
      * @param playerID playerID of the client call the method
@@ -350,7 +354,7 @@ public class Controller implements Runnable {
      * @return the array containing id for all common goals
      */
     private int[] setCommonGoals(ArrayList<Integer> numberList,int n){
-        int[] commonGoalArray = new int[commonGoalNumber];
+        commonGoalArray = new int[commonGoalNumber];
 
         for(int i = 0; i<commonGoalNumber; i++){
             try {

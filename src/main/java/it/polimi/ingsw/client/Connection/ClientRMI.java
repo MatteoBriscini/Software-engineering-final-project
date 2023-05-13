@@ -81,46 +81,49 @@ public class ClientRMI extends ConnectionManager implements PlayingPlayerRemoteI
         }
     }
     public void joinGame(String ID) throws addPlayerToGameException{
+        this.setPlayerAsPlaying();
         try {
             this.remoteControllerRef = stub.joinGame(ID);
             stub.joinGameConnection(this, this.playerID, remoteControllerRef);
         } catch (RemoteException e){
             player.disconnectError("server can't respond");
-            return;
+            this.setPlayerAsLobby();
         }
-        this.setPlayerAsPlaying();
+
     }
     public void joinGame(String ID, String searchID) throws addPlayerToGameException{
+        this.setPlayerAsPlaying();
         try {
             this.remoteControllerRef = stub.joinGame(ID, searchID);
             stub.joinGameConnection(this, this.playerID, remoteControllerRef);
         } catch (RemoteException e) {
             player.disconnectError("server can't respond");
-            return;
+            this.setPlayerAsLobby();
         }
-        this.setPlayerAsPlaying();
+
     }
 
     public void createGame(String ID) throws addPlayerToGameException{
+        this.setPlayerAsPlaying();
         try {
             this.remoteControllerRef = stub.createGame(ID);
             stub.joinGameConnection(this, this.playerID, remoteControllerRef);
         } catch (RemoteException e) {
             player.disconnectError("server can't respond");
-            return;
+            this.setPlayerAsLobby();
         }
-        this.setPlayerAsPlaying();
     }
 
     public void createGame(String ID, int maxPlayerNumber) throws addPlayerToGameException{
+        this.setPlayerAsPlaying();
         try {
             this.remoteControllerRef = stub.createGame(ID, maxPlayerNumber);
             stub.joinGameConnection(this, this.playerID, remoteControllerRef);
         } catch (RemoteException e) {
             player.disconnectError("server can't respond");
-            return;
+            this.setPlayerAsLobby();
         }
-        this.setPlayerAsPlaying();
+
     }
 
     /*******************************************************************************

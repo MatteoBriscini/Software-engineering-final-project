@@ -205,7 +205,7 @@ public class ClientSOCKET extends ConnectionManager {
     public void forceDisconnection(JsonObject data) throws IOException {
         validResponse = true;
         quit= true;
-        ((PlayingPlayer)player).disconnectError("disconnection forced by the server " + playerID);
+        ((PlayingPlayer)player).disconnectError("disconnection forced by the server ");
     }
     public void setPlayerAsPlaying(JsonObject data){
         pingPongThread = new Thread(this::pingPong);       //start ping pong
@@ -236,41 +236,53 @@ public class ClientSOCKET extends ConnectionManager {
 
 
     public void joinGame(String ID, String searchID)throws addPlayerToGameException{
+        this.setPlayerAsPlaying();
         JsonObject data = new JsonObject();
         data.addProperty("ID", ID);
         data.addProperty("searchID" ,searchID);
         boolean bool = this.sendMSG(prepareMSG(data, "joinGame"));
-        if(bool) this.setPlayerAsPlaying(data);
-        else throw new addPlayerToGameException("fail to joint the game");
+        if(!bool) {
+            this.setPlayerAsLobby();
+            throw new addPlayerToGameException("fail to joint the game");
+        }
     }
 
     @Override
     public void createGame(String ID) throws addPlayerToGameException {
+        this.setPlayerAsPlaying();
         JsonObject data = new JsonObject();
         data.addProperty("ID", ID);
         data.addProperty("maxPlayerNumber", 0);
         boolean bool = this.sendMSG(prepareMSG(data, "createGame"));
-        if(bool) this.setPlayerAsPlaying(data);
-        else throw new addPlayerToGameException("fail to create the game");
+        if(!bool) {
+            this.setPlayerAsLobby();
+            throw new addPlayerToGameException("fail to joint the game");
+        }
     }
 
     @Override
     public void createGame(String ID, int maxPlayerNumber) throws addPlayerToGameException {
+        this.setPlayerAsPlaying();
         JsonObject data = new JsonObject();
         data.addProperty("ID", ID);
         data.addProperty("maxPlayerNumber", maxPlayerNumber);
         boolean bool = this.sendMSG(prepareMSG(data, "createGame"));
-        if(bool) this.setPlayerAsPlaying(data);
-        else throw new addPlayerToGameException("fail to create the game");
+        if(!bool) {
+            this.setPlayerAsLobby();
+            throw new addPlayerToGameException("fail to joint the game");
+        }
     }
 
     public void joinGame(String ID)throws addPlayerToGameException{
+        this.setPlayerAsPlaying();
         JsonObject data = new JsonObject();
         data.addProperty("ID", ID);
         data.addProperty("searchID" , "null");
         boolean bool = this.sendMSG(prepareMSG(data, "joinGame"));
-        if(bool) this.setPlayerAsPlaying(data);
-        else throw new addPlayerToGameException("fail to joint the game");
+        if(!bool) {
+            this.setPlayerAsLobby();
+            throw new addPlayerToGameException("fail to joint the game");
+        }
     }
     /*************************************************************************
      *                          OUT method

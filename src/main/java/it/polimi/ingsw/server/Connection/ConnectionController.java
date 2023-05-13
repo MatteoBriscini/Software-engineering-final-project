@@ -111,6 +111,6 @@ public abstract class ConnectionController {
     }
 
     public String createGame(String ID, int maxPlayerNumber) throws addPlayerToGameException {
-        return lobby.createGame(ID);
+        return lobby.createGame(ID, maxPlayerNumber);
     }
 }

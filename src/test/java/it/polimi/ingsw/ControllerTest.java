@@ -110,7 +110,9 @@ public class ControllerTest extends TestCase {
         assertEquals(3, test.getPlayerNumber());
         test.addNewPlayer("pinuccia");
         test.setPlayerOnline("pinuccia");
+        test.startGame("piero");
         assertEquals(4, test.getPlayerNumber());   //the game is full it will be start autonomous
+
 
         assertEquals(0, test.getCurrentPlayer());
 
@@ -143,7 +145,7 @@ public class ControllerTest extends TestCase {
         test.addNewPlayer("pierino");
         test.setPlayerOnline("pierino");
         assertEquals(3, test.getPlayerNumber());   //the game is full it will be start autonomous
-
+        test.startGame("piero");
         assertEquals(0, test.getCurrentPlayer());
 
         //print main board
@@ -172,7 +174,7 @@ public class ControllerTest extends TestCase {
         test.addNewPlayer("pierino");
         assertEquals(3, test.getPlayerNumber());   //the game is full it will be start autonomous
         test.setPlayerOnline("pierino");
-
+        test.startGame("piero");
         assertEquals(0, test.getCurrentPlayer());
 
         //test 1
@@ -277,8 +279,8 @@ public class ControllerTest extends TestCase {
         test.setPlayerOnline("pierino");
         assertEquals(3, test.getPlayerNumber());
         test.addNewPlayer("pierina");
-
         test.setPlayerOnline("pierina");
+        test.startGame("piero");
         assertEquals(4, test.getPlayerNumber());   //the game is full it will be start autonomous
 
 
@@ -324,6 +326,7 @@ public class ControllerTest extends TestCase {
         assertEquals(3, test.getPlayerNumber());
         test.addNewPlayer("pierina");
         test.setPlayerOnline("pierina");
+        test.startGame("piero");
         assertEquals(4, test.getPlayerNumber());   //the game is full it will be start autonomous
 
         test.setNotRandomPlayerOrder(players);
@@ -368,6 +371,7 @@ public class ControllerTest extends TestCase {
         assertEquals(1, test.getPlayerNumber());
         test.addNewPlayer("pino");
         test.setPlayerOnline("pino");
+        test.startGame("piero");
         assertEquals(2, test.getPlayerNumber());   //the game is full it will be start autonomous
         assertEquals(0, test.getCurrentPlayer());
 
@@ -432,6 +436,7 @@ public class ControllerTest extends TestCase {
         assertEquals(2, test.getPlayerNumber());
         test.addNewPlayer("pierino");
         test.setPlayerOnline("pierino");
+        test.startGame("piero");
         assertEquals(3, test.getPlayerNumber());  //the game is full it will be start autonomous
 
         test.setNotRandomPlayerOrder(players);
@@ -499,6 +504,7 @@ public class ControllerTest extends TestCase {
         assertEquals(2, test.getPlayerNumber());
         test.addNewPlayer("pierino");
         test.setPlayerOnline("pierino");
+        test.startGame("piero");
         assertEquals(3, test.getPlayerNumber());  //the game is full it will be start autonomous
 
         test.setNotRandomPlayerOrder(players);
@@ -574,6 +580,7 @@ public class ControllerTest extends TestCase {
         assertEquals(2, test.getPlayerNumber());
         test.addNewPlayer("pierino");
         test.setPlayerOnline("pierino");
+        test.startGame("piero");
         assertEquals(3, test.getPlayerNumber());  //the game is full it will be start autonomous
 
         test.setNotRandomPlayerOrder(players);
