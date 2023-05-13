@@ -14,6 +14,7 @@ import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
 import javax.security.auth.login.LoginException;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -31,11 +32,14 @@ public class Lobby {
 
     private ArrayList<Controller> activeGames = new ArrayList<>();
 
-    private static String loginJSONURL = "/home/matteo/Desktop/IDS/AM19/src/main/json/config/registeredPlayers.json";
+    private static String loginJSONURL;
+    private static String directoryJson;
 
     private JsonUrl jsonConfigUrl;
 
     private ArrayList<String[]> playersInGames = new ArrayList<>();
+
+    private ArrayList<String> playersLoggedOn = new ArrayList<>();
 
     private ExecutorService executor;
 
@@ -70,8 +74,12 @@ public class Lobby {
         JsonObject jsonObject = new Gson().fromJson(bufferedReader , JsonObject.class);
         int portRMI = jsonObject.get("defRmiPort").getAsInt();
         int portSOCKET = jsonObject.get("defSocketPort").getAsInt();
+        String json = jsonObject.get("loginJsonUrl").getAsString();
+        String directory = jsonObject.get("directory").getAsString();
         this.standardPORTrmi = portRMI;
         this.getStandardPORTsocket = portSOCKET;
+        loginJSONURL = json;
+        directoryJson = directory;
     }
 
     //Methods
@@ -82,13 +90,15 @@ public class Lobby {
         ArrayList<Integer> PORT;
         boolean f = false;
 
-        String path = loginJSONURL;      //file path
+        String path = System.getProperty("user.home") + loginJSONURL;      //file path
         FileReader fileJson = null;      //file executable
         try {
             fileJson = new FileReader(path);
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            signUp(ID, pwd);
+            return "null";
         }
+
 
         Gson gson = new Gson();
         JsonArray loginJSON = gson.fromJson(fileJson, JsonArray.class);
@@ -135,6 +145,8 @@ public class Lobby {
                     }
                     if(activeG.get(j).isPlayerOffline(ID)){
                         return activeG.get(j).toString();
+                    }else {
+                        throw new LoginException("Player already online");
                     }
 
                 }
@@ -142,12 +154,14 @@ public class Lobby {
 
         }
 
+        checkPlayerLog(ID);
+
         return "null";
     }
 
     public synchronized void signUp(String ID, String pwd) throws LoginException {
 
-        String path = loginJSONURL;   //file path
+        String path = System.getProperty("user.home") + loginJSONURL;   //file path
 
         if(ID.charAt(0) < 65 || (ID.charAt(0) > 90 && ID.charAt(0) < 97) || ID.charAt(0) > 122){
             throw new LoginException("Illegal characters in ID");
@@ -157,14 +171,19 @@ public class Lobby {
         try {
             fileJsonRead = new FileReader(path);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            fileJsonRead = null;
+            new File(System.getProperty("user.home") + directoryJson ).mkdirs();
         }
 
-        JsonArray original = new Gson().fromJson(fileJsonRead, JsonArray.class);
+        JsonArray original = new JsonArray();
 
-        for(int i = 0; i < original.size(); i++){
-            if( original.get(i).getAsJsonObject().get("playerID").getAsString().equals(ID)){
-                throw new LoginException("ID already taken");
+        if(fileJsonRead != null) {
+            original = new Gson().fromJson(fileJsonRead, JsonArray.class);
+
+            for (int i = 0; i < original.size(); i++) {
+                if (original.get(i).getAsJsonObject().get("playerID").getAsString().equals(ID)) {
+                    throw new LoginException("ID already taken");
+                }
             }
         }
 
@@ -185,9 +204,12 @@ public class Lobby {
         update.addProperty("playerID", ID);
         update.addProperty("password", pwd);
 
-        original.add(update);
 
+
+        original.add(update);
         gson.toJson(original, JsonObject.class, writer);
+
+
 
         try {
             writer.close();
@@ -195,6 +217,7 @@ public class Lobby {
             throw new RuntimeException(e);
         }
 
+        checkPlayerLog(ID);
 
     }
 
@@ -313,17 +336,57 @@ public class Lobby {
     }
 
 
+    public synchronized ArrayList<String> getPlayersLoggedOn(){
+        return playersLoggedOn;
+    }
 
     public synchronized ArrayList<Controller> getActiveGames() {
         return activeGames;
     }
 
-    public ArrayList<String[]> getPlayersInGames() {
+    public synchronized ArrayList<String[]> getPlayersInGames() {
         return playersInGames;
     }
 
     public void closeAllGames(){
         executor.shutdown();
     }
+
+    public void setAllPlayersOffline(Controller controller){
+
+        synchronized (playersInGames){
+            synchronized (activeGames){
+                for(int i = 0; i < activeGames.size(); i++){
+                    if(activeGames.get(i) == controller){
+                        activeGames.remove(i);
+                        playersInGames.remove(i);
+                    }
+                }
+            }
+        }
+
+    }
+
+    private void checkPlayerLog(String ID) throws LoginException {
+        synchronized (playersLoggedOn){
+            for(int i = 0; i < playersLoggedOn.size(); i++){
+                if(playersLoggedOn.get(i).equals(ID)){
+                    throw new LoginException("Player already logged on");
+                }
+            }
+            playersLoggedOn.add(ID);
+        }
+    }
+
+    public void removeFromLog(String ID){
+        synchronized (playersLoggedOn){
+            for(int i = 0; i < playersLoggedOn.size(); i++){
+                if(playersLoggedOn.get(i).equals(ID)){
+                    playersLoggedOn.remove(i);
+                }
+            }
+        }
+    }
+
 }
 

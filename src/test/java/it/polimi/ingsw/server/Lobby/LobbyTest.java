@@ -2,11 +2,70 @@ package it.polimi.ingsw.server.Lobby;
 
 import junit.framework.TestCase;
 
+import javax.security.auth.login.LoginException;
+import java.util.ArrayList;
+
 public class LobbyTest extends TestCase {
 
     private Lobby testLobby;
 
     public void testLobby(){
+
+        testLobby = new Lobby(2000, 1999);
+
+        System.out.println("Test 1");
+        String ID = "john";
+        String pwd = "doe";
+
+        try {
+            testLobby.login(ID, pwd);
+        } catch (LoginException e) {
+            System.out.println(e);
+        }
+        System.out.println("Test 1 end");
+
+        System.out.println("Test 2");
+        ID = "rat";
+        pwd = "king";
+
+        try {
+            testLobby.signUp(ID, pwd);
+        } catch (LoginException e) {
+            System.out.println("User already signed up");
+        }
+        System.out.println("Test 2 end");
+
+        ArrayList<String> log = testLobby.getPlayersLoggedOn();
+        System.out.println(log);
+
+        System.out.println("Test 3");
+        ID = "john";
+        pwd = "doe";
+
+        try {
+            testLobby.login(ID, pwd);
+        } catch (LoginException e) {
+            System.out.println(e);
+        }
+
+
+        ID = "rat";
+        pwd = "king";
+
+        try {
+            testLobby.login(ID, pwd);
+        } catch (LoginException e) {
+            System.out.println(e);
+        }
+
+        System.out.println("Test 3 end");
+
+
+
+        log = testLobby.getPlayersLoggedOn();
+        System.out.println(log);
+
+
 /*
         testLobby = new Lobby(2000 , 1999);
 

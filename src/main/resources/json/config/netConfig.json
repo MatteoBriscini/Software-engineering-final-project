@@ -4,5 +4,7 @@
   "serverIP": "127.0.0.1",
   "defRmiPort": "1234",
   "defSocketPort": "1235",
-  "maxUsablePort": "1256"
+  "maxUsablePort": "1256",
+  "loginJsonUrl" : "/config/registeredPlayers.json",
+  "directory" : "/config"
 }
