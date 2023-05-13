@@ -213,7 +213,8 @@ public abstract class ConnectionManager extends UnicastRemoteObject {
      * the client is forced by the server to quit the game
      */
     public void forceDisconnection(){
-        ((PlayingPlayer)player).disconnectError("disconnection forced by the server");
+        ((PlayingPlayer)player).disconnectError("the server has close the game for inactivity of the others players");
+        this.setPlayerAsLobby();
     }
 
     /**************************************************************************

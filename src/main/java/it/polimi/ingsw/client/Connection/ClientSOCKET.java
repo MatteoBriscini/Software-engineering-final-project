@@ -205,7 +205,8 @@ public class ClientSOCKET extends ConnectionManager {
     public void forceDisconnection(JsonObject data) throws IOException {
         validResponse = true;
         quit= true;
-        ((PlayingPlayer)player).disconnectError("disconnection forced by the server ");
+        ((PlayingPlayer)player).disconnectError("the server has close the game for inactivity of the others players");
+        this.setPlayerAsLobby();
     }
     public void setPlayerAsPlaying(JsonObject data){
         pingPongThread = new Thread(this::pingPong);       //start ping pong
