@@ -5,20 +5,16 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox alignment="CENTER" prefHeight="433.0" prefWidth="501.0" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.gui.HelloController">
+<VBox alignment="CENTER" prefHeight="226.0" prefWidth="501.0" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.gui.HelloController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
-   <Label alignment="CENTER" prefHeight="66.0" prefWidth="154.0" text="login" textFill="#0094ff">
+   <Label alignment="CENTER" prefHeight="36.0" prefWidth="258.0" text="select connection type" textFill="#0094ff">
       <font>
-         <Font name="Comic Sans MS" size="47.0" />
+         <Font name="Comic Sans MS" size="24.0" />
       </font>
    </Label>
-
-    <Label fx:id="passwordLabel" alignment="CENTER" prefHeight="18.0" prefWidth="145.0" text="password" />
-   <TextField fx:id="passwordTextField" prefHeight="26.0" prefWidth="200.0" />
-   <Label fx:id="usernameLabel" alignment="CENTER" prefHeight="18.0" prefWidth="142.0" text="username" />
-   <TextField fx:id="usernameTextField" prefHeight="26.0" prefWidth="200.0" />
-    <Button onAction="#onHelloButtonClick" prefHeight="26.0" prefWidth="75.0" text="enter" />
    <Label fx:id="errorLabel" alignment="CENTER" prefHeight="18.0" prefWidth="200.0" textFill="#fc0000" />
+    <Button fx:id="rimiLabel" onAction="#rmiClick" prefHeight="26.0" prefWidth="75.0" text="rmi" />
+   <Button fx:id="socketLabel" mnemonicParsing="false" onAction="#socketClick" prefHeight="32.0" prefWidth="77.0" text="socket" />
 </VBox>

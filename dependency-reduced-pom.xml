@@ -57,7 +57,7 @@
               <outputFile>shade\${project.artifactId}.jar</outputFile>
               <transformers>
                 <transformer>
-                  <mainClass>it.polimi.ingsw.gui.Launcher</mainClass>
+                  <mainClass>it.polimi.ingsw.App</mainClass>
                 </transformer>
               </transformers>
             </configuration>
