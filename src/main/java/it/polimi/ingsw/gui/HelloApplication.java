@@ -19,6 +19,15 @@ public class HelloApplication extends Application implements UserInterface {
 
     GuiView guiView;
 
+    ConnectionManager connection;
+
+    public void setConnection(ConnectionManager connection) {
+        this.connection = connection;
+    }
+
+    public ConnectionManager getConnection() {
+        return connection;
+    }
 
     public void changeView(String viewName) throws IOException {
 
@@ -28,20 +37,12 @@ public class HelloApplication extends Application implements UserInterface {
         Parent root = (Parent) fxmlLoader.load() ;
         guiView = (GuiView) fxmlLoader.getController();
         guiView.setHelloApplication(this);
-        Scene scene = new Scene(root, 580, 500);
+        Scene scene = new Scene(root, 1280, 720);
+        String css = this.getClass().getResource("application.css").toExternalForm();
+        scene.getStylesheets().add(css);
         stage.setTitle("Shelfie!");
         stage.setScene(scene);
         stage.show();
-
-
-       /* Stage stage = new Stage();
-        FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource(viewName));
-        Parent root = (Parent) fxmlLoader.load();
-        guiView = (HelloController)fxmlLoader.getController();
-        guiView.setHelloApplication(this);
-        Scene scene = new Scene(root, 580, 500);
-        stage.setScene(scene);
-        stage.show(); */
 
     }
 
@@ -49,12 +50,15 @@ public class HelloApplication extends Application implements UserInterface {
 
     @Override
     public void start(Stage stage) throws IOException {
+            stage.setResizable(false);
 
             FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("hello-view.fxml"));
             Parent root = (Parent) fxmlLoader.load() ;
             guiView = (HelloController) fxmlLoader.getController();
             guiView.setHelloApplication(this);
-            Scene scene = new Scene(root, 320, 240);
+            Scene scene = new Scene(root, 1280, 720);
+            String css = this.getClass().getResource("application.css").toExternalForm();
+            scene.getStylesheets().add(css);
             stage.setTitle("Shelfie!");
             stage.setScene(scene);
             stage.show();

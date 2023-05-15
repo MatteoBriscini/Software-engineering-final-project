@@ -33,8 +33,6 @@ public class TUI implements UserInterface{
 
     private String printLine;
 
-    private JsonUrl jsonUrl;
-
     private int minPlayers,maxPlayers,minPickable,maxPickable;
 
     private int socketPort,RMIPort;
@@ -62,11 +60,11 @@ public class TUI implements UserInterface{
 
     private void jsonCreate() throws FileNotFoundException{
 
-        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("controllerConfig"));
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(JsonUrl.getUrl("controllerConfig"));
         if(inputStream == null) throw new FileNotFoundException();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
-        InputStream inputStream1 = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl("netConfig"));
+        InputStream inputStream1 = this.getClass().getClassLoader().getResourceAsStream(JsonUrl.getUrl("netConfig"));
         if(inputStream1 == null) throw new FileNotFoundException();
         BufferedReader bufferedReader1 = new BufferedReader(new InputStreamReader(inputStream1));
 

@@ -1,9 +1,41 @@
 .root{
     -fx-background-color: #db9263;
+    -fx-background-image: url("startBackground.jpg");
+    -fx-background-repeat: stretch;
+    -fx-background-size: cover;
+    -fx-background-position: center center;
 }
 .text-field{
     -fx-background-color: #603f2a;
+    -fx-background-radius: 7px;
     -fx-padding: 15px;
     -fx-border-radius: 7px;
-    -fx-color: white;
+    -fx-text-fill: white;
+    -fx-end-margin: 10px;
+    -fx-max-width: 350px;
+}
+.label{
+    -fx-background-color: #db9263;
+    -fx-background-radius: 7px;
+    -fx-text-fill: black !important;
+    -fx-text-origin: left;
+    -fx-font-size: 35px;
+    -fx-font-family: "Bitstream Vera Sans Mono";
+    -fx-padding: 7px;
+    -fx-end-margin: 10px;
+}
+#userText, #pwdText {
+    -fx-start-margin: 600px;
+    -fx-font-size: 15px;
+    -fx-translate-y: 20px;
+}
+#regBut{    -fx-translate-y: 90px;}
+.button{
+    -fx-background-color: rgb(160,82,45);
+    -fx-background-radius: 7px;
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+    -fx-padding: 15px;
+    -fx-border-radius: 7px;
+    -fx-min-width: 50px;
 }

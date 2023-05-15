@@ -9,12 +9,8 @@
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
-   <Label alignment="CENTER" prefHeight="36.0" prefWidth="258.0" text="select connection type" textFill="#0094ff">
-      <font>
-         <Font name="Comic Sans MS" size="24.0" />
-      </font>
+   <Label alignment="CENTER" text="select connection type" textFill="#0094ff">
    </Label>
-   <Label fx:id="errorLabel" alignment="CENTER" prefHeight="18.0" prefWidth="200.0" textFill="#fc0000" />
     <Button fx:id="rimiLabel" onAction="#rmiClick" prefHeight="26.0" prefWidth="75.0" text="rmi" />
    <Button fx:id="socketLabel" mnemonicParsing="false" onAction="#socketClick" prefHeight="32.0" prefWidth="77.0" text="socket" />
 </VBox>

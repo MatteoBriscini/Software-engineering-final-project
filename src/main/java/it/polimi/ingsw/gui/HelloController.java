@@ -1,5 +1,10 @@
 package it.polimi.ingsw.gui;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import it.polimi.ingsw.client.Connection.ClientRMI;
+import it.polimi.ingsw.client.Connection.ClientSOCKET;
+import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,24 +29,25 @@ private Label errorLabel;
 private AnchorPane loginPanel;
 
 
+    int socketPort;
+    int RMIPort;
+    String serverIP;
 
-
-
-    /* @FXML
-    protected void onHelloButtonClick() {
-        this.errorLabel.setText("");
-        if(!this.usernameLabel.getText().matches("example")) this.errorLabel.setText("password or username incorrect");
-        else this.errorLabel.setText("welcome");
-        if(!this.passwordLabel.getText().matches("password")) this.errorLabel.setText("password or username incorrect");
-        else{
-            this.errorLabel.setText("welcome");
-            //to do... new scene
-        } */
-
+    private void jsonCreate() throws FileNotFoundException{
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(JsonUrl.getUrl("netConfig"));
+        if(inputStream == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        JsonObject  jsonObject = new Gson().fromJson(bufferedReader, JsonObject.class);
+        this.serverIP = jsonObject.get("serverIP").getAsString();
+        this.socketPort = jsonObject.get("defSocketPort").getAsInt();
+        this.RMIPort = jsonObject.get("defRmiPort").getAsInt();
+    }
     @FXML
-    protected void rmiClick(ActionEvent actionEvent) throws IOException {
+    protected void rmiClick(ActionEvent actionEvent) throws Exception {
 
+            this.jsonCreate();
 
+            helloApplication.setConnection(new ClientRMI(RMIPort, serverIP));
             helloApplication.changeView("login.fxml");
 
 
@@ -49,9 +55,11 @@ private AnchorPane loginPanel;
 
 
     @FXML
-    protected void socketClick(ActionEvent actionEvent) throws IOException {
+    protected void socketClick(ActionEvent actionEvent) throws Exception {
 
+            this.jsonCreate();
 
+            helloApplication.setConnection(new ClientSOCKET(socketPort, serverIP));
             helloApplication.changeView("login.fxml");
 
     }
