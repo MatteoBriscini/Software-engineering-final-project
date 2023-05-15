@@ -161,9 +161,6 @@ public class SOCKET extends ConnectionController{
         this.sendCommand(clients.get(clients.size()-1).prepareMSG(data, "errorMSG"), clients);
     }
     public void forceClientDisconnection(ArrayList<MultiClientSocketGame> clients) {
-        JsonObject data = new JsonObject();
-        this.sendCommand(clients.get(clients.size()-1).prepareMSG(data,"forceDisconnection"), clients);
-
         for(MultiClientSocketGame client: clients){
             try {
                 client.forceClientDisconnection();
@@ -171,6 +168,8 @@ public class SOCKET extends ConnectionController{
                 throw new RuntimeException(e);
             }
         }
+        JsonObject data = new JsonObject();
+        this.sendCommand(clients.get(clients.size()-1).prepareMSG(data,"forceDisconnection"), clients);
     }
     /**************************************************************************
      ************************************************** chat ******************
@@ -364,7 +363,7 @@ public class SOCKET extends ConnectionController{
                 }
             }
             if(!pingPongResponse){
-                if(cntOn || !quit)setPlayerOffline(clientID);
+                if(cntOn && !quit)setPlayerOffline(clientID);
                 return;
             }
             pingPongResponse = false;

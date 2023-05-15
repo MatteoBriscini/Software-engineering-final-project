@@ -40,7 +40,6 @@ public class Lobby {
 
     private ArrayList<String[]> playersInGames = new ArrayList<>();
 
-    private ArrayList<String> playersLoggedOn = new ArrayList<>();
 
     private ExecutorService executor;
 
@@ -339,9 +338,7 @@ public class Lobby {
     }
 
 
-    public synchronized ArrayList<String> getPlayersLoggedOn(){
-        return playersLoggedOn;
-    }
+
 
     public synchronized ArrayList<Controller> getActiveGames() {
         return activeGames;
@@ -356,14 +353,13 @@ public class Lobby {
     }
 
     public void setAllPlayersOffline(Controller controller){
-
         synchronized (playersInGames){
             synchronized (activeGames){
                 for(int i = 0; i < activeGames.size(); i++){
                     if(activeGames.get(i).equals(controller)){
                         activeGames.remove(i);
                         playersInGames.remove(i);
-                        System.out.println(TextColor.LIGHTBLUE.get() + "game N" + i + " is ended" + TextColor.DEFAULT);
+                        System.out.println(TextColor.YELLOW.get() + "game N " + i + " is ended" + TextColor.DEFAULT.get());
                         return;
                     }
                 }
@@ -373,6 +369,12 @@ public class Lobby {
     }
 
     private void checkPlayerLog(String ID) throws LoginException {
+        synchronized (playersInGames){
+            for(int i = 0; i<playersInGames.size();i++ ){
+                for (String s: playersInGames.get(i))if(s.equals(ID))throw new LoginException("Player already logged on");
+            }
+        }
+        /*
         synchronized (playersLoggedOn){
             for(int i = 0; i < playersLoggedOn.size(); i++){
                 if(playersLoggedOn.get(i).equals(ID)){
@@ -380,17 +382,7 @@ public class Lobby {
                 }
             }
             playersLoggedOn.add(ID);
-        }
-    }
-
-    public void removeFromLog(String ID){
-        synchronized (playersLoggedOn){
-            for(int i = 0; i < playersLoggedOn.size(); i++){
-                if(playersLoggedOn.get(i).equals(ID)){
-                    playersLoggedOn.remove(i);
-                }
-            }
-        }
+        }*/
     }
 
 }

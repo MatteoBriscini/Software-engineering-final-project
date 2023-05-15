@@ -35,8 +35,8 @@ public class LobbyTest extends TestCase {
         }
         System.out.println("Test 2 end");
 
-        ArrayList<String> log = testLobby.getPlayersLoggedOn();
-        System.out.println(log);
+        //ArrayList<String> log = testLobby.getPlayersLoggedOn();
+        //System.out.println(log);
 
         System.out.println("Test 3");
         ID = "john";
@@ -62,8 +62,8 @@ public class LobbyTest extends TestCase {
 
 
 
-        log = testLobby.getPlayersLoggedOn();
-        System.out.println(log);
+        //log = testLobby.getPlayersLoggedOn();
+        //System.out.println(log);
 
 
 /*

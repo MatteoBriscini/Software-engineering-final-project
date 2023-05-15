@@ -198,7 +198,7 @@ public class ClientRMI extends ConnectionManager implements PlayingPlayerRemoteI
      */
     @Override
     public void forceDisconnection(){
-        ((PlayingPlayer)player).disconnectError("disconnection forced by the server");
+        ((PlayingPlayer)player).disconnectError("the server has close the game for inactivity of the others players");
     }
 
     /**************************************************************************

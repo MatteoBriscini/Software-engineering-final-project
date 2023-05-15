@@ -219,6 +219,9 @@ public class Controller implements Runnable {
         }
         if(i==1 && currentPlayer!=-1){
             controllerManager.forceClientDisconnection();
+            for (Player p : game.getPlayerArray()){
+                if(!this.isPlayerOffline(p.getPlayerID()))this.setPlayerOffline(p.getPlayerID());
+            }
         }
         if(i<=1&& currentPlayer!=-1){
             this.currentPlayer = -1;
