@@ -37,7 +37,6 @@ public class ClientRMI extends ConnectionManager implements PlayingPlayerRemoteI
         }
         Thread thread = new Thread(this::pong);       //start ping pong
         thread.start();
-
     }
 
     public void login(String ID, String pwd) throws LoginException{
@@ -186,11 +185,7 @@ public class ClientRMI extends ConnectionManager implements PlayingPlayerRemoteI
             }
         }
         try {
-            if(inGame) {
-                stub.ping();
-            }else {//if the player does a friendly quit
-                return;
-            }
+            stub.ping();
         } catch (RemoteException e) {
             player.disconnectError("server can't respond");
             this.inGame = false;

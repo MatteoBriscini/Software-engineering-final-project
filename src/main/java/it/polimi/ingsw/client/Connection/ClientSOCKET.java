@@ -58,6 +58,7 @@ public class ClientSOCKET extends ConnectionManager {
     }
     @Override
     public void connection() throws IOException {
+        this.startPingPong();
         JsonObject data = new JsonObject();
         data.addProperty("playerID", playerID);
         JsonObject msg = new JsonObject();
@@ -93,7 +94,7 @@ public class ClientSOCKET extends ConnectionManager {
                 throw new RuntimeException(e);
             }
             if(!pingPongResponse){
-                ((PlayingPlayer)player).disconnectError("server can't respond");
+                player.disconnectError("server can't respond");
                 return;
             }
         }
@@ -208,9 +209,11 @@ public class ClientSOCKET extends ConnectionManager {
         ((PlayingPlayer)player).disconnectError("the server has close the game for inactivity of the others players");
         this.setPlayerAsLobby();
     }
-    public void setPlayerAsPlaying(JsonObject data){
+    public void startPingPong(){
         pingPongThread = new Thread(this::pingPong);       //start ping pong
         pingPongThread.start();
+    }
+    public void setPlayerAsPlaying(JsonObject data){
         this.setPlayerAsPlaying();
     }
     /*************************************************************************
