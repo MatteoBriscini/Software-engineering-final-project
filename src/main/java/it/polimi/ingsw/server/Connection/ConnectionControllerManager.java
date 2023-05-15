@@ -27,7 +27,6 @@ public class ConnectionControllerManager {
         this.controller=controller;
     }
     public ConnectionControllerManager(){}
-
     public boolean isRmiActive() {
         return rmiActive;
     }

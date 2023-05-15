@@ -177,7 +177,7 @@ public class ClientSOCKET extends ConnectionManager {
         this.receiveAllPlayerBoard(data.get("playerBoards").toString());
     }
     public void addCardToPlayerBoard(JsonObject data){
-        this.addCardToPlayerBoard(data.get("playerID").toString(), data.get("column").getAsInt(), data.get("cards").toString());
+        this.addCardToPlayerBoard(data.get("playerID").getAsString(), data.get("column").getAsInt(), data.get("cards").toString());
     }
     public void removeCardFromMainBoard(JsonObject data){
         this.removeCardFromMainBoard(data.get("cards").toString());

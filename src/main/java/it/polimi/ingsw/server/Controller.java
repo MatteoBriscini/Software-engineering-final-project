@@ -7,6 +7,7 @@ import it.polimi.ingsw.server.Connection.ConnectionControllerManager;
 import it.polimi.ingsw.server.Connection.RMI.RMI;
 import it.polimi.ingsw.server.Connection.SOCKET;
 import it.polimi.ingsw.server.Exceptions.*;
+import it.polimi.ingsw.server.Lobby.Lobby;
 import it.polimi.ingsw.shared.Cards.Card;
 import it.polimi.ingsw.server.Model.GameMaster;
 import it.polimi.ingsw.shared.Cards.CardColor;
@@ -26,6 +27,7 @@ public class Controller implements Runnable {
      * parameters
      */
     GameMaster game = new GameMaster();
+    private Lobby lobby;
     int playerNum = 0;
     int currentPlayer = -1;  //start game put this to zero to enable the game
     int[] commonGoalArray;
@@ -71,8 +73,9 @@ public class Controller implements Runnable {
     }
 
     public void run() {}
-
-
+    public void setLobby(Lobby lobby){
+        this.lobby = lobby;
+    }
     /**
      * download json file
      * @throws FileNotFoundException if method can't file json file
@@ -197,7 +200,6 @@ public class Controller implements Runnable {
         for (int i = 0; i<players.size(); i++){
             if(players.get(i).getPlayerID().equals(playerID)){
                 if(activePlayers.get(i)) {
-                    System.err.println(players.get(i).getPlayerID() + " lost connection");
                     activePlayers.set(i, false);
                     if(!endGame)this.checkConnectedPlayerNumbers();
                     return;
@@ -221,6 +223,21 @@ public class Controller implements Runnable {
         if(i<=1&& currentPlayer!=-1){
             this.currentPlayer = -1;
             this.endGame = true;
+        }
+        if(i==0){
+            if(lobby!=null)lobby.setAllPlayersOffline(this);
+
+            if(waitForPlayerResponse!=null) {
+                synchronized (waitForPlayerResponse) {
+                    waitForPlayerResponse.notify();
+                }
+            }
+
+            if(endGameThread!=null){
+                synchronized (endGameThread){
+                    endGameThread.notify();
+                }
+            }
         }
     }
 
@@ -246,7 +263,7 @@ public class Controller implements Runnable {
                     //update the main board to all clients
                     controllerManager.sendMainBoard(game.getMainBoard());
 
-                    System.out.println(TextColor.LIGHT_BLUE.get() + "recreate client data after "+ playerID+ " reconnection after a crash" + TextColor.DEFAULT.get());
+                    System.out.println(TextColor.LIGHTBLUE.get() + "recreate client game data after "+ playerID+ " reconnection after a crash" + TextColor.DEFAULT.get());
                     return;
                 }
             }
@@ -417,7 +434,7 @@ public class Controller implements Runnable {
      * @param commonGoalIDArray ids for common goal
      */
     synchronized private void createClientData(int[] commonGoalIDArray){
-        System.out.println(TextColor.LIGHT_BLUE.get() + "create client data" + TextColor.DEFAULT.get());
+        System.out.println(TextColor.LIGHTBLUE.get() + "create client game data" + TextColor.DEFAULT.get());
 
         //send players id list, and game order (broadcast to each client)
         ArrayList<String> playersID = new ArrayList<>();
@@ -484,7 +501,7 @@ public class Controller implements Runnable {
      */
     synchronized public void endGame(){
         endGame = true;
-        System.out.println(TextColor.LIGHT_BLUE.get() + "the game is ended" + TextColor.DEFAULT.get());
+        System.out.println(TextColor.LIGHTBLUE.get() + "the game is ended" + TextColor.DEFAULT.get());
 
         synchronized (waitForPlayerResponse) {
             waitForPlayerResponse.notify();
@@ -512,6 +529,7 @@ public class Controller implements Runnable {
         }
         controllerManager.sendWinner(winner);
         controllerManager.sendEndGamePoint(points);
+        if(lobby!=null)lobby.setAllPlayersOffline(this);
     }
     /*************************************************************************
      ************************************************** in game method *******
@@ -626,7 +644,7 @@ public class Controller implements Runnable {
                 scored.addProperty("playerID", game.getPlayerArray().get(currentPlayer).getPlayerID());
                 scored.addProperty("value", point);
                 controllerManager.sendLastCommonScored(scored);
-                System.out.println(TextColor.LIGHT_BLUE.get() + "send new CommonGoal scorer" + TextColor.DEFAULT.get());
+                System.out.println(TextColor.LIGHTBLUE.get() + "send new CommonGoal scorer" + TextColor.DEFAULT.get());
             }
 
         }
@@ -684,7 +702,7 @@ public class Controller implements Runnable {
      * @param column card on player boards needs to insert in a specific column
      */
     synchronized private void updateClientData(PositionWithColor[] positions, Card[] cards, int column){
-        System.out.println(TextColor.LIGHT_BLUE.get() + "update client data" + TextColor.DEFAULT.get());
+        System.out.println(TextColor.LIGHTBLUE.get() + "update client data" + TextColor.DEFAULT.get());
 
         //update main board (broadcast to each client)
         controllerManager.dellCardFromMainBoard(positions);

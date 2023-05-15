@@ -7,6 +7,7 @@ import com.google.gson.stream.JsonWriter;
 import it.polimi.ingsw.server.Connection.SOCKET;
 import it.polimi.ingsw.server.Controller;
 import it.polimi.ingsw.server.Connection.RMI.RMI;
+import it.polimi.ingsw.shared.TextColor;
 import it.polimi.ingsw.shared.exceptions.addPlayerToGameException;
 import it.polimi.ingsw.shared.Connection.ConnectionType;
 import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
@@ -305,12 +306,14 @@ public class Lobby {
 
     public synchronized String createGame(String ID) throws addPlayerToGameException {
         Controller controller = new Controller();
+        controller.setLobby(this);
         createGameSupport(ID, controller);
         return controller.toString();
     }
 
     public synchronized String createGame(String ID, int maxPlayerNumber) throws addPlayerToGameException {
         Controller controller = new Controller(maxPlayerNumber);
+        controller.setLobby(this);
         createGameSupport(ID, controller);
         return controller.toString();
     }
@@ -357,9 +360,11 @@ public class Lobby {
         synchronized (playersInGames){
             synchronized (activeGames){
                 for(int i = 0; i < activeGames.size(); i++){
-                    if(activeGames.get(i) == controller){
+                    if(activeGames.get(i).equals(controller)){
                         activeGames.remove(i);
                         playersInGames.remove(i);
+                        System.out.println(TextColor.LIGHTBLUE.get() + "game N" + i + " is ended" + TextColor.DEFAULT);
+                        return;
                     }
                 }
             }

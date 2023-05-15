@@ -405,7 +405,7 @@ public class SOCKET extends ConnectionController{
             this.setPlayerOnline(this.clientID);
         }
         public void setPlayerOnline(String playerID){
-            System.out.println(TextColor.LIGHT_BLUE.get()+"client: " + playerID + " join the game (SOCKET)" +TextColor.DEFAULT.get());
+            System.out.println(TextColor.LIGHTBLUE.get()+"client: " + playerID + " join the game (SOCKET)" +TextColor.DEFAULT.get());
             Controller controller = SOCKET.this.getActualController(controllerRef);
             controller.setPlayerOnline(playerID);
             controller.addClientSOCKET(this);
@@ -431,7 +431,7 @@ public class SOCKET extends ConnectionController{
                         quit = false;
                         cntOn = true;
                         sendResponse(true,true);
-                        System.out.println(TextColor.LIGHT_BLUE.get() + "client: " + this.clientID + " join the lobby (SOCKET)" + TextColor.DEFAULT.get());
+                        System.out.println(TextColor.LIGHTBLUE.get() + "client: " + this.clientID + " join the lobby (SOCKET)" + TextColor.DEFAULT.get());
                         break;
                     case ("pingPong"):
                         sendMSG(prepareMSG(new JsonObject(), "pingResponse"));

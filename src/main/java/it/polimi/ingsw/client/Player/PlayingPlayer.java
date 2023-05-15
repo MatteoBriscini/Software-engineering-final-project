@@ -234,19 +234,20 @@ public class PlayingPlayer extends Player{
      * @param column where have to add cards
      * @param cards element added to the player board
      */
-    public void addCardToPlayerBoard(String playerID, int column,Card[] cards){
+    synchronized public void addCardToPlayerBoard(String playerID, int column,Card[] cards){
         for(int i=0; i<playersID.length; i++){
             if(playersID[i].equals(playerID)){
                 playerBoards[i].addCard(column, cards);
             }
-        }if(ui!=null)ui.updatePlayerBoard(playerID, column, cards);
+        }
+        if(ui!=null)ui.updatePlayerBoard(playerID, column, cards);
     }
 
     /**
      * called from server
      * @param position where have to remove cards
      */
-    public void removeCardFromMainBoard(PositionWithColor[] position){
+    synchronized public void removeCardFromMainBoard(PositionWithColor[] position){
         mainBoard.removeCard(position);
         if(ui!=null)ui.updateMainBoard(position);
     }

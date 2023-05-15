@@ -17,15 +17,12 @@ import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
 import it.polimi.ingsw.shared.JsonSupportClasses.Position;
 import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
 import it.polimi.ingsw.shared.PlayerMode;
+import it.polimi.ingsw.shared.TextColor;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 
 import static it.polimi.ingsw.client.View.ColorCodes.*;
-import static java.util.Arrays.deepToString;
 
 
 public class TUI implements UserInterface{
@@ -106,7 +103,7 @@ public class TUI implements UserInterface{
         }
         else{
             joinGame();
-            System.out.println("THIS IS THE WAITING ROOM...");
+            if(((PlayingPlayer)player).getActivePlayer() == null)System.out.println("THIS IS THE WAITING ROOM...");
         }
 
     }
@@ -132,11 +129,19 @@ public class TUI implements UserInterface{
                     System.out.println(e.getMessage());
                 }
             } else if (s.equals("/help")) {
-                System.out.println("fra ti capisco");
-
+                System.out.println(TextColor.YELLOW.get() + "/start" + TextColor.DEFAULT.get() + " to start the game" );
+                System.out.println(TextColor.YELLOW.get() + "/quit" + TextColor.DEFAULT.get() + " to quit the game" );
+                System.out.println(TextColor.YELLOW.get() + "/chat" + TextColor.DEFAULT.get() + " to send message to all the players in this game" );
+                System.out.println(TextColor.YELLOW.get() + "/chat --playerid:" + TextColor.DEFAULT.get() + " to send a message to a specif player id" );
+                System.out.println(TextColor.YELLOW.get() + "/pick [column;x,y;x,y...] " + TextColor.DEFAULT.get() + " to make a move (column, x and y have to be numbers)" );
             } else if (s.startsWith("/pick")) {
-                System.out.println("pick me up");
-
+                int index1 = s.indexOf('[');
+                int index2 = s.indexOf(']');
+                if(index1==-1 || index2 == -1)System.out.println("Invalid command, please try again (/help to see the allowed commands)");
+                else this.takeCard(s.substring(index1+1,index2),
+                        ((PlayingPlayer)player).getPlayerBoard(player.getPlayerID()).getColumns(),
+                        ((PlayingPlayer)player).getMainBoard().getColumns(),
+                        ((PlayingPlayer)player).getMainBoard().getRows());
             } else if (s.equals("/quit")) {
                 do {
                     System.out.println("Are you sure? Y/N");
@@ -248,9 +253,7 @@ public class TUI implements UserInterface{
             if(!logged)
                 printError("Invalid selection, please try again\n");
         }while (!logged || user.equals("/back"));
-
         player.setUi(this);
-
     }
 
 
@@ -283,7 +286,7 @@ public class TUI implements UserInterface{
         boolean success;
 
         do{
-            System.out.println("Insert the name of a player to play with a friend, or /rand to join a random game");
+            System.out.println("Insert the name of a player to play with a friend,\n"+"Insert /rand to join a random game");
             selection = stringCommand();
             if(selection.equals("/rand")){
                 success=((LobbyPlayer)player).joinGame();
@@ -334,23 +337,63 @@ public class TUI implements UserInterface{
      *                               3)selecting the column of the player's board in which the cards need to be inserted
      *                               4)calling the method to insert the cards on the player's board
      */
-    private void takeCard(){
-        String[] picks;
-        Position[] positions;
-        int column;
+    private void takeCard(String cards, int maxPlayerColumns,int maxBoardColumns,int maxBoardsRows){
+        ArrayList<Position> positions = new ArrayList<>();
+        int index = cards.indexOf(';');
+        int index2, x, y;
+        if(index!=1){
+            System.out.println("command pick has an invalid syntax (/help to see the allowed commands)");
+            return;
+        }
+        int column = Integer.parseInt(cards.substring(0, index));
 
+        while (true){
+            cards = cards.substring(index+1);
+            index = cards.indexOf(';');
+            index2 = cards.indexOf(',');
+            x = Integer.parseInt(cards.substring(0,index2));
+            if(index==-1){
+                y = Integer.parseInt(cards.substring(index2+1));
+                if(!checkPick(x, y, maxBoardColumns, maxBoardsRows))return;
+                positions.add(new Position(x,y));
+                break;
+            }
+            y = Integer.parseInt(cards.substring(index2+1, index));
+            if(!checkPick(x, y, maxBoardColumns, maxBoardsRows))return;
+            positions.add(new Position(x,y));
+            if (index !=3 || cards.indexOf(',')!=1){
+                System.out.println("command pick has an invalid syntax (/help to see the allowed commands)");
+                return;
+            }
+        }
 
-        picks= selectCardsFromBoard();
+        if(positions.size()<minPickable){
+            System.out.println("try to take to less cards(/help to see the allowed commands)");
+            return;
+        }
+        if(positions.size()>maxPickable){
+            System.out.println("try to take to many cards(/help to see the allowed commands)");
+            return;
+        }
+        char command;
 
-        reorderCards(picks);
+        do {
+            System.out.println("want to reorder card [y/n]");
+            command = Character.toUpperCase(new Scanner(System.in).next().charAt(0));
+            if(command!= 'Y' && command != 'N'){
+                printError("Invalid selection, please try again\n");
+            }else break;
+        }while (true);
+        if(command == 'Y') this.reorderCards(positions);
 
-        column=selectColumn();
-
-        positions = new Position[picks.length];
-        intCoordinates(picks,positions);
-
-        ((PlayingPlayer)player).takeCard(column,positions);
-
+        ((PlayingPlayer)player).takeCard(column,positions.toArray(new Position[0]));
+    }
+    private boolean checkPick(int x, int y,int maxBoardColumns,int maxBoardsRows){
+        if(x>=maxBoardColumns || y>= maxBoardsRows){
+            System.out.println("not valid position on main board(/help to see the allowed commands)");
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -375,18 +418,18 @@ public class TUI implements UserInterface{
      * @param picks is an array that contains coordinates formatted as Strings [x,y]
      *              This array will be reordered, based on player's choices
      */
-    private void reorderCards(String[] picks){
+    private void reorderCards(ArrayList<Position> picks){
         Scanner sc = new Scanner(System.in);
         String selection;
         String[] tmpPick;
         String tmpPos;
         char sel;
 
-        do{
+        //do{
 
             /** stampare carte selezionate */
 
-            do {
+            /*do {
                 System.out.println("Do you want to change the order of the cards? Y/N");
                 sel = charCommand();
             }while (sel!='Y' && sel!='N');
@@ -405,9 +448,9 @@ public class TUI implements UserInterface{
                     }
                 }
                 else printError("The number of tiles you want to reorder is different from the number of tiles you picked, please try again\n");
-            }while(tmpPick.length!=picks.length);
+            }while(tmpPick.length!=picks.length);*/
 
-        }while (sel=='Y');
+        //}while (sel=='Y');
 
     }
 
@@ -445,14 +488,13 @@ public class TUI implements UserInterface{
         String[][] toPrint = new String[((PlayingPlayer)player).getPlayerBoard(player.getPlayerID()).getColumns()][((PlayingPlayer)player).getPlayerBoard(player.getPlayerID()).getRows()];
         String[][] mainBoardToPrint = new String[((PlayingPlayer) player).getMainBoard().getColumns()][((PlayingPlayer) player).getMainBoard().getRows()];
 
+        playerBoardToString(((PlayingPlayer) player).getPlayerBoard(player.getPlayerID()),((PlayingPlayer) player).getPrivateGoal() , toPrint);
+        this.printBoard(toPrint, ((PlayingPlayer)player).getPlayerBoard(player.getPlayerID()).getColumns(), ((PlayingPlayer)player).getPlayerBoard(player.getPlayerID()).getRows(), player.getPlayerID());
         for(String id : ((PlayingPlayer)player).getPlayersID()) {
-            if(!id.equals((player).getPlayerID())){
+            if(!id.equals(player.getPlayerID())){
                 playerBoardToString(((PlayingPlayer) player).getPlayerBoard(id), toPrint);
+                this.printBoard(toPrint, ((PlayingPlayer)player).getPlayerBoard(player.getPlayerID()).getColumns(), ((PlayingPlayer)player).getPlayerBoard(player.getPlayerID()).getRows(), id);
             }
-            else {
-                playerBoardToString(((PlayingPlayer) player).getPlayerBoard(id),((PlayingPlayer) player).getPrivateGoal() , toPrint);
-            }
-            this.printBoard(toPrint, ((PlayingPlayer)player).getPlayerBoard(player.getPlayerID()).getColumns(), ((PlayingPlayer)player).getPlayerBoard(player.getPlayerID()).getRows(), id);
         }
 
         mainBoardToString(((PlayingPlayer) player).getMainBoard(),mainBoardToPrint);
@@ -462,7 +504,7 @@ public class TUI implements UserInterface{
     }
 
     public void updateMainBoard(PositionWithColor[] p){
-        updateAll();
+        //updateAll();
     }
 
     public void updatePlayerBoard(String id, int column, Card[] c){
@@ -562,14 +604,16 @@ public class TUI implements UserInterface{
 
     private void playerBoardToString(PlayerBoard board,PositionWithColor[] goal, String[][] s) {
         String color;
+
+
         for (int column = 0; column < board.getColumns(); column++) {
             for (int row = 0; row < board.getRows(); row++) {
                 color = ColorCodes.valueOf(board.getBoard()[column][row].getColor().toString()).get() ;
                 s[column][row] = color + "   ";
                 if (color.equals(EMPTY.get())) {
                     for (PositionWithColor p : goal) {
-                        if(p.getX()==row && p.getY() == column){
-                            s[column][row] = TextColorCodes.valueOf(p.getColor().toString()).get()+ color + " * ";
+                        if(p.getX()==column && p.getY() == row){
+                            s[column][row] = TextColor.valueOf(p.getColor().toString()).get() + color + " X ";
                         }
                     }
                 }
@@ -581,19 +625,35 @@ public class TUI implements UserInterface{
     private void printBoard(String[][] board, int columns,int rows, String whosBoard){
         String printLine;
 
-        for(int y=rows-1;y>=0;y--){
-            printLine = EMPTY.get();
-            for(int x=0;x<columns;x++){
-                printLine = printLine + board[x][y];
-            }
-            System.out.println(printLine + EMPTY.get() + "\033[0m");
-        }
         if(whosBoard.equals("main")){
-            System.out.println("Main board");
+            System.out.println("\n\n Main board: ");
         } else if (whosBoard.equals(player.getPlayerID())) {
-            System.out.println("Your board");
+            System.out.println("\n\n Your board: ");
         }
-        else System.out.println(whosBoard+"'s board");
+        else System.out.println("\n\n" + whosBoard+"'s board: ");
+
+        for(int y=rows-1;y>=0;y--){
+
+            printLine = BROWN.get() + "   ";
+            for (int x = 0; x<columns; x++){
+                printLine = printLine + "    ";
+            }
+            printLine = printLine + "   ";
+            System.out.println(printLine + DEFAULT.get());
+
+            printLine = EMPTY.get();
+            for(int x =0 ;x<columns;x++){
+                printLine = printLine + board[x][y] + BROWN.get() + " ";
+            }
+            System.out.println(BROWN.get() + " " + y + " " + DEFAULT.get() + printLine + BROWN.get() + "   " + DEFAULT.get());
+        }
+
+        printLine = BROWN.get() + "   ";
+        for (int x = 0; x<columns; x++){
+            printLine = printLine + " " + x + "  ";
+        }
+        printLine = printLine + "   ";
+        System.out.println(printLine + DEFAULT.get());
     }
 
     private void printBoard() {

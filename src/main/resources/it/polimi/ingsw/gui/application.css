@@ -1,0 +1,9 @@
+.root{
+    -fx-background-color: #db9263;
+}
+.text-field{
+    -fx-background-color: #603f2a;
+    -fx-padding: 15px;
+    -fx-border-radius: 7px;
+    -fx-color: white;
+}

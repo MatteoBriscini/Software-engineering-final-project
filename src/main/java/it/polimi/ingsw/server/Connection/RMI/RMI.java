@@ -113,7 +113,7 @@ public class RMI extends ConnectionController implements LobbyRemoteInterface {
     public synchronized boolean joinGameConnection(PlayingPlayerRemoteInterface client_ref,String playerID, String connectionInterface){
         Controller controller = this.getActualController(connectionInterface);
         if(!controller.getClientsRMImap().containsValue(client_ref)&&!controller.getClientsRMImap().containsKey(playerID) && (controller.getCurrentPlayer()==-1||controller.isPlayerOffline(playerID))&&!controller.isEndGame()) {
-            System.out.println(TextColor.LIGHT_BLUE.get() + "client: " + playerID + " join the game (RMI) " + TextColor.DEFAULT.get());
+            System.out.println(TextColor.LIGHTBLUE.get() + "client: " + playerID + " join the game (RMI) " + TextColor.DEFAULT.get());
 
             controller.addClientRMI(client_ref, playerID);
             controller.setPlayerOnline(playerID);
