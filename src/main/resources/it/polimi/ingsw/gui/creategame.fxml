@@ -6,30 +6,36 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.gui.CreategameController">
 
+ <VBox fx:id="createDiv" alignment="CENTER" prefHeight="226.0" layoutX="10" prefWidth="620.0" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
 
-      <Label fx:id="createLabel" alignment="CENTER" layoutX="52.0" layoutY="60.0" prefHeight="47.0" prefWidth="150.0" text="create game">
+     <Label fx:id="createLabel" alignment="CENTER" layoutX="52.0" layoutY="60.0" prefHeight="47.0" prefWidth="400.0" text="create game">
+         <font>
+             <Font size="24.0" />
+         </font>
+     </Label>
+     <Label fx:id="defaultSettingsLabel"  text="default settings" />
+     <Button fx:id="createDefaultButton"  mnemonicParsing="false" onAction="#createDefault" text="create" />
+
+     <Label fx:id="custonSettingsLabel"  text="custom settings" />
+     <Label fx:id="maxPlayerLabel" text="max player number" />
+
+     <TextField fx:id="maxNumberTextfield"  />
+     <Button fx:id="createCustomButton"  mnemonicParsing="false" onAction="#createCustom" text="create" />
+
+ </VBox>
+
+ <VBox fx:id="loginDiv" alignment="CENTER" prefHeight="226.0" layoutX="650.0" prefWidth="620.0" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+      <Label fx:id="joinLabel" alignment="CENTER"  layoutY="60.0" prefHeight="47.0" prefWidth="400.0" text="join game">
          <font>
             <Font size="24.0" />
          </font>
       </Label>
-      <Label fx:id="maxPlayerLabel" layoutX="76.0" layoutY="247.0" text="max player number" />
-      <Label fx:id="gameIDLabel" layoutX="473.0" layoutY="247.0" text="gameID" />
-      <TextField fx:id="maxNumberTextfield" layoutX="52.0" layoutY="265.0" />
-      <TextField fx:id="gameIDTextfield" layoutX="416.0" layoutY="265.0" />
-      <Button fx:id="createCustomButton" layoutX="103.0" layoutY="291.0" mnemonicParsing="false" onAction="#createCustom" text="create" />
-      <Button fx:id="joinCustomButton" layoutX="473.0" layoutY="291.0" mnemonicParsing="false" onAction="#joinCustom" text="join" />
 
-
-
-      <Label fx:id="joinLabel" alignment="CENTER" layoutX="429.0" layoutY="60.0" prefHeight="47.0" prefWidth="130.0" text="join game">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Label>
-      <Label fx:id="custonSettingsLabel" layoutX="85.0" layoutY="222.0" text="custom settings" />
-      <Button fx:id="createDefaultButton" layoutX="102.0" layoutY="140.0" mnemonicParsing="false" onAction="#createDefault" text="create" />
-      <Label fx:id="defaultSettingsLabel" layoutX="85.0" layoutY="122.0" text="default settings" />
-      <Button fx:id="joinDefaultButton" layoutX="473.0" layoutY="140.0" mnemonicParsing="false" onAction="#joinDefault" text="join" />
-      <Label fx:id="joinRandomLabel" layoutX="442.0" layoutY="122.0" text="join random game" />
-      <Label fx:id="selectGameToJoinLabel" layoutX="443.0" layoutY="222.0" text="select game to join" />
+     <Label fx:id="joinRandomLabel"  text="join random game" />
+     <Button fx:id="joinDefaultButton"  mnemonicParsing="false" onAction="#joinDefault" text="join" />
+     <Label fx:id="selectGameToJoinLabel"  text="select game to join" />
+     <Label fx:id="gameIDLabel" text="gameID" />
+     <TextField fx:id="gameIDTextfield"  />
+     <Button fx:id="joinCustomButton"  mnemonicParsing="false" onAction="#joinCustom" text="join" />
+ </VBox>
 </AnchorPane>

@@ -77,19 +77,7 @@ public class HelloApplication extends Application implements UserInterface {
     }
 
     public static void main(String[] args) {
-
-        if (args.length > 0) {
-            String param0 = args[0];
-            if (param0.equals( "--server") )
-                runAsServer();
-        }else {
-
             launch();
-        }
-    }
-
-    static void runAsServer(){
-        System.out.println("started as server.. bye!");
     }
 
     @Override
