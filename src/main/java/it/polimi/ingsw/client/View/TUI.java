@@ -37,7 +37,10 @@ public class TUI implements UserInterface{
 
     private int socketPort,RMIPort;
     private String serverIP;
-
+    //hide or show elements
+    private boolean otherBoard = true;
+    private boolean commonGoals = true;
+    private boolean privateGoals = true;
     private ConnectionManager connection;
 
     public TUI(){
@@ -106,6 +109,11 @@ public class TUI implements UserInterface{
 
     }
 
+    private void centerContent(int contentSize){
+        int ROWS;
+        if(System.getenv("LINES")==null) ROWS = 32;
+        else ROWS = Integer.parseInt(System.getenv("LINES"));
+    }
 
     private void userInput(){
         Scanner sc = new Scanner(System.in);
@@ -113,33 +121,38 @@ public class TUI implements UserInterface{
         char c;
         String msg;
 
-        while (sc!=null){
-            s=sc.nextLine().toLowerCase();
+        while (sc!=null) {
+            s = sc.nextLine().toLowerCase();
 
-            if(s.equals("/start")){
-                ((PlayingPlayer)player).startGame();
+            if (s.equals("/start")) {
+                ((PlayingPlayer) player).startGame();
 
             } else if (s.startsWith("/chat")) {
-                msg = s.substring(6,s.length());
+                msg = s.substring(6, s.length());
                 try {
-                    ((PlayingPlayer)player).sendMessage(msg);
+                    ((PlayingPlayer) player).sendMessage(msg);
                 } catch (PlayerNotFoundException e) {
                     System.out.println(e.getMessage());
                 }
             } else if (s.equals("/help")) {
-                System.out.println(TextColor.YELLOW.get() + "/start" + TextColor.DEFAULT.get() + " to start the game" );
-                System.out.println(TextColor.YELLOW.get() + "/quit" + TextColor.DEFAULT.get() + " to quit the game" );
-                System.out.println(TextColor.YELLOW.get() + "/chat" + TextColor.DEFAULT.get() + " to send message to all the players in this game" );
-                System.out.println(TextColor.YELLOW.get() + "/chat --playerid:" + TextColor.DEFAULT.get() + " to send a message to a specif player id" );
-                System.out.println(TextColor.YELLOW.get() + "/pick [column;x,y;x,y...] " + TextColor.DEFAULT.get() + " to make a move (column, x and y have to be numbers)" );
+                System.out.println(TextColor.YELLOW.get() + "/start" + TextColor.DEFAULT.get() + " to start the game");
+                System.out.println(TextColor.YELLOW.get() + "/quit" + TextColor.DEFAULT.get() + " to quit the game");
+                System.out.println(TextColor.YELLOW.get() + "/chat" + TextColor.DEFAULT.get() + " to send message to all the players in this game");
+                System.out.println(TextColor.YELLOW.get() + "/chat --playerid:" + TextColor.DEFAULT.get() + " to send a message to a specif player id");
+                System.out.println(TextColor.YELLOW.get() + "/pick [column;x,y;x,y...] " + TextColor.DEFAULT.get() + " to make a move (column, x and y have to be numbers)");
             } else if (s.startsWith("/pick")) {
                 int index1 = s.indexOf('[');
                 int index2 = s.indexOf(']');
-                if(index1==-1 || index2 == -1)System.out.println("Invalid command, please try again (/help to see the allowed commands)");
-                else this.takeCard(s.substring(index1+1,index2),
-                        ((PlayingPlayer)player).getPlayerBoard(player.getPlayerID()).getColumns(),
-                        ((PlayingPlayer)player).getMainBoard().getColumns(),
-                        ((PlayingPlayer)player).getMainBoard().getRows());
+                if (index1 == -1 || index2 == -1)
+                    System.out.println("Invalid command, please try again (/help to see the allowed commands)");
+                else this.takeCard(s.substring(index1 + 1, index2),
+                        ((PlayingPlayer) player).getPlayerBoard(player.getPlayerID()).getColumns(),
+                        ((PlayingPlayer) player).getMainBoard().getColumns(),
+                        ((PlayingPlayer) player).getMainBoard().getRows());
+            } else if (s.startsWith("/hide")) {
+                this.changeSetUp(false, s.substring(5).replaceAll("\\s+",""));
+            } else if(s.startsWith("/show")){
+                this.changeSetUp(true, s.substring(5).replaceAll("\\s+",""));
             } else if (s.equals("/quit")) {
                 do {
                     System.out.println("Are you sure? Y/N");
@@ -159,7 +172,39 @@ public class TUI implements UserInterface{
         }
     }
 
-
+    private void changeSetUp(boolean b, String command){
+        int index = command.indexOf("--");
+        String ex;
+        if(index==-1){
+            printError("invalid command syntax");
+            return;
+        }
+        if(player instanceof LobbyPlayer){
+            printError("you can call this method only when the game is already started");
+            return;
+        }
+        while (index !=-1) {
+            command = command.substring(index + 2);
+            index = command.indexOf("--");
+            ex= command;
+            if(index!=-1)ex = command.substring(0, index);
+            switch (ex){
+                case "board":
+                    this.otherBoard = b;
+                    break;
+                case "commongoal":
+                    this.commonGoals = b;
+                    break;
+                case "privategoal":
+                    this.privateGoals = b;
+                    break;
+                default:
+                    printError("invalid param");
+                    break;
+            }
+            this.updateAll();
+        }
+    }
     private void serverSelection(){
         Scanner sc = new Scanner(System.in);
         char c;
@@ -214,6 +259,8 @@ public class TUI implements UserInterface{
      * this method allows the player to log in or sign up
      */
     private void userIdentification() {
+
+        this.centerContent(3);
 
         Scanner sc = new Scanner(System.in);
         String user;
@@ -483,17 +530,21 @@ public class TUI implements UserInterface{
 
 
     public void updateAll(){
+        System.out.println("CURRENT PLAYER: " + ((PlayingPlayer)player).getActivePlayer());
         String[][] toPrint = new String[((PlayingPlayer)player).getPlayerBoard(player.getPlayerID()).getColumns()][((PlayingPlayer)player).getPlayerBoard(player.getPlayerID()).getRows()];
         String[][] mainBoardToPrint = new String[((PlayingPlayer) player).getMainBoard().getColumns()][((PlayingPlayer) player).getMainBoard().getRows()];
 
-        playerBoardToString(((PlayingPlayer) player).getPlayerBoard(player.getPlayerID()),((PlayingPlayer) player).getPrivateGoal() , toPrint);
+        if(privateGoals)playerBoardToString(((PlayingPlayer) player).getPlayerBoard(player.getPlayerID()),((PlayingPlayer) player).getPrivateGoal() , toPrint);
+        else playerBoardToString(((PlayingPlayer) player).getPlayerBoard(player.getPlayerID()), toPrint);
         this.printBoard(toPrint, ((PlayingPlayer)player).getPlayerBoard(player.getPlayerID()).getColumns(), ((PlayingPlayer)player).getPlayerBoard(player.getPlayerID()).getRows(), player.getPlayerID());
         for(String id : ((PlayingPlayer)player).getPlayersID()) {
-            if(!id.equals(player.getPlayerID())){
+            if(!id.equals(player.getPlayerID()) && otherBoard){
                 playerBoardToString(((PlayingPlayer) player).getPlayerBoard(id), toPrint);
                 this.printBoard(toPrint, ((PlayingPlayer)player).getPlayerBoard(player.getPlayerID()).getColumns(), ((PlayingPlayer)player).getPlayerBoard(player.getPlayerID()).getRows(), id);
             }
         }
+
+        //TODO common goal if(commongGoals)
 
         mainBoardToString(((PlayingPlayer) player).getMainBoard(),mainBoardToPrint);
         this.printBoard(mainBoardToPrint,((PlayingPlayer) player).getMainBoard().getColumns(),((PlayingPlayer) player).getMainBoard().getRows() , "main");
@@ -636,21 +687,21 @@ public class TUI implements UserInterface{
             for (int x = 0; x<columns; x++){
                 printLine = printLine + "    ";
             }
-            printLine = printLine + "   ";
+            printLine = printLine + "  ";
             System.out.println(printLine + DEFAULT.get());
 
             printLine = EMPTY.get();
             for(int x =0 ;x<columns;x++){
                 printLine = printLine + board[x][y] + BROWN.get() + " ";
             }
-            System.out.println(BROWN.get() + " " + y + " " + DEFAULT.get() + printLine + BROWN.get() + "   " + DEFAULT.get());
+            System.out.println(BROWN.get() + " " + y + " " + DEFAULT.get() + printLine + BROWN.get() + "  " + DEFAULT.get());
         }
 
         printLine = BROWN.get() + "   ";
         for (int x = 0; x<columns; x++){
             printLine = printLine + " " + x + "  ";
         }
-        printLine = printLine + "   ";
+        printLine = printLine + "  ";
         System.out.println(printLine + DEFAULT.get());
     }
 
