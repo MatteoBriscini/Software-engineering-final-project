@@ -1,5 +1,5 @@
 {
-  "pingPongTime": 500,
+  "pingPongTime": 5000,
   "socketTimeout": 1000,
   "serverIP": "127.0.0.1",
   "defRmiPort": "1234",
