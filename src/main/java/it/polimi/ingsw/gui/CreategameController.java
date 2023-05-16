@@ -1,6 +1,6 @@
 package it.polimi.ingsw.gui;
 
-
+import it.polimi.ingsw.client.Connection.ConnectionManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,37 +28,29 @@ import java.util.ArrayList;
 public class CreategameController extends GuiView{
 
     @FXML
-    private TextField playerNumber;
+    private TextField maxNumberTextfield;
 
     @FXML
-    private TextField gameID;
+    private TextField gameIDTextfield;
+
     @FXML
-    private Label wrongID;
-    @FXML
-    private Label excededN;
-    int x=0;
+    protected void createCustom(ActionEvent actionEvent){
 
-
-    public void creategame(ActionEvent actionEvent){
-
-        if(!playerNumber.getText().matches("2|3|4")){
-            this.excededN.setText("please, select a number between 2-4");
-            x = x+1;
-            if(x>2){
-                this.excededN.setText("bruh, you dumb?");
-            }
-        }else{
-            //create on backand a game with that player limit and put the current player in
-        }
 
     }
 
-    public void joingame(ActionEvent actionEvent){
-        if(1==1){
-            //do a check on the gamesID, else write an error label
-        }else{
-            this.wrongID.setText("wrong ID selected");
-        }
+    @FXML
+    protected void joinCustom(ActionEvent actionEvent){
+
+    }
+
+    @FXML
+    protected void createDefault(ActionEvent actionEvent){
+
+    }
+
+    @FXML
+    protected  void joinDefault(ActionEvent actionEvent){
 
     }
 

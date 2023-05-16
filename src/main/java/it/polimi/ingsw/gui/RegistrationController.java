@@ -30,25 +30,31 @@ public class RegistrationController extends GuiView{
     private Player player;
     private ConnectionManager connection;
     @FXML
-    private TextField userIDtext;
+    private TextField uerIDtext = new TextField();
     @FXML
-    private TextField passText;
+    private TextField passText = new TextField();
 
-    protected void enterClick() throws IOException {
+    @FXML
+    protected void enterButton(ActionEvent actionEvent) throws IOException {
 
         // connection = getConnection();
 
-       /* String userID;
+        String userID;
         String password;
         boolean logged;
 
-        userID =  userIDtext.getText();
+        userID =  uerIDtext.getText();
+        System.out.println(userID);
         password = passText.getText();
+        System.out.println(password);
         player = new LobbyPlayer(userID,password, helloApplication.getConnection());
         logged = ((LobbyPlayer) player).signUp();
 
-        if(logged)
-          helloApplication.changeView("creategame.fxml"); */
+        if(logged) {
+            helloApplication.changeView("creategame.fxml");
+            helloApplication.setPlayer(player);
+        }
+
 
     }
 
