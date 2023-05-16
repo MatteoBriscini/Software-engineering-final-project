@@ -2,6 +2,7 @@ package it.polimi.ingsw.gui;
 
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.client.Connection.ConnectionManager;
+import it.polimi.ingsw.client.Player.Player;
 import it.polimi.ingsw.client.View.UserInterface;
 import it.polimi.ingsw.shared.Cards.Card;
 import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
@@ -18,7 +19,17 @@ import java.io.IOException;
 public class HelloApplication extends Application implements UserInterface {
 
     GuiView guiView;
+    private Player player;
     private ConnectionManager connection;
+    private Stage stage;
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
 
     public void setConnection(ConnectionManager connection) {
         this.connection = connection;
@@ -29,8 +40,6 @@ public class HelloApplication extends Application implements UserInterface {
     }
 
     public void changeView(String viewName) throws IOException {
-
-        Stage stage = new Stage();
 
         FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource(viewName));
         Parent root = (Parent) fxmlLoader.load() ;
@@ -61,6 +70,7 @@ public class HelloApplication extends Application implements UserInterface {
             stage.setTitle("Shelfie!");
             stage.setScene(scene);
             stage.show();
+            this.stage = stage;
 
 
 

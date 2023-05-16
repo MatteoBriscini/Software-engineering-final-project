@@ -29,9 +29,9 @@ public class LoginController extends GuiView {
     private Player player;
 
     @FXML
-    private TextField passwordTextField;
+    private TextField passwordTestField = new TextField();
     @FXML
-    private TextField userIDTextField;
+    private TextField userIDTextField = new TextField();
 
     @FXML
     private Label regPass;
@@ -52,19 +52,21 @@ public class LoginController extends GuiView {
      public void loginButton(ActionEvent actionEvent) throws IOException {
         //check password and username, else error "password or username incorrect"
 
-        /* String userID;
+         String userID;
          String password;
          boolean logged;
 
          userID =  userIDTextField.getText();
-         password = passwordTextField.getText();
+         password = passwordTestField.getText();
          player = new LobbyPlayer(userID,password, helloApplication.getConnection());
          logged = ((LobbyPlayer) player).login();
          //controlli su texfields vuoti e loop se login non a buon fine
 
 
-        if(logged)
-            helloApplication.changeView("creategame.fxml"); */
+        if(logged) {
+            helloApplication.changeView("creategame.fxml");
+            helloApplication.setPlayer(player);
+        }
 
     }
 }
