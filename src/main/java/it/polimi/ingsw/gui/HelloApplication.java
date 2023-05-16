@@ -18,8 +18,7 @@ import java.io.IOException;
 public class HelloApplication extends Application implements UserInterface {
 
     GuiView guiView;
-
-    ConnectionManager connection;
+    private ConnectionManager connection;
 
     public void setConnection(ConnectionManager connection) {
         this.connection = connection;

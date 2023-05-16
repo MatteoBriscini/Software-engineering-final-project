@@ -1,5 +1,6 @@
 package it.polimi.ingsw.gui;
 
+import it.polimi.ingsw.client.Connection.ConnectionManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,6 +26,12 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
 public class LoginController extends GuiView {
+    private Player player;
+
+    @FXML
+    private TextField passwordTextField;
+    @FXML
+    private TextField userIDTextField;
 
     @FXML
     private Label regPass;
@@ -33,7 +40,11 @@ public class LoginController extends GuiView {
 
 
     public void registerButton(ActionEvent actionEvent) throws IOException {
-            helloApplication.changeView("register.fxml");
+
+          /*  HelloController connection = new HelloController();
+            Object connection1 = connection.getConnection(); */
+
+            helloApplication.changeView("registration.fxml");
         }
 
 
@@ -41,7 +52,19 @@ public class LoginController extends GuiView {
      public void loginButton(ActionEvent actionEvent) throws IOException {
         //check password and username, else error "password or username incorrect"
 
-         helloApplication.changeView("creategame.fxml");
+        /* String userID;
+         String password;
+         boolean logged;
+
+         userID =  userIDTextField.getText();
+         password = passwordTextField.getText();
+         player = new LobbyPlayer(userID,password, helloApplication.getConnection());
+         logged = ((LobbyPlayer) player).login();
+         //controlli su texfields vuoti e loop se login non a buon fine
+
+
+        if(logged)
+            helloApplication.changeView("creategame.fxml"); */
 
     }
 }
