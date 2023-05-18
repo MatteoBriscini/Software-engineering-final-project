@@ -181,6 +181,8 @@ public class TUI implements UserInterface{
                 System.out.println(TextColor.YELLOW.get() + "/chat" + TextColor.DEFAULT.get() + " to send message to all the players in this game");
                 System.out.println(TextColor.YELLOW.get() + "/chat --playerid:" + TextColor.DEFAULT.get() + " to send a message to a specif player id");
                 System.out.println(TextColor.YELLOW.get() + "/pick [column;x,y;x,y...] " + TextColor.DEFAULT.get() + " to make a move (column, x and y have to be numbers)");
+                System.out.println(TextColor.YELLOW.get() + "/hide" + TextColor.DEFAULT.get() + " to hide content of the ui (options: --board --commongoal --privategoal");
+                System.out.println(TextColor.YELLOW.get() + "/show" + TextColor.DEFAULT.get() + " to show content of the ui (options: --board --commongoal --privategoal");
             } else if (s.startsWith("/pick")) {
                 int index1 = s.indexOf('[');
                 int index2 = s.indexOf(']');
@@ -285,14 +287,23 @@ public class TUI implements UserInterface{
             try {
                 connection = new ClientSOCKET(socketPort,serverIP);
             } catch (Exception e) {
-                player.disconnectError("Server is offline");
+                this.printError("apparently the server is offline");
+                System.out.println("press enter to close the app");
+                Scanner sc = new Scanner(System.in);
+                sc.nextLine();
+                System.exit(0);
             }
         }
         else{
             try {
                 connection = new ClientRMI(RMIPort,serverIP);
             } catch (Exception e) {
-                player.disconnectError("Server is offline");
+                this.printError("apparently the server is offline");
+                System.out.println("press enter to close the app");
+                Scanner sc = new Scanner(System.in);
+                sc.nextLine();
+                System.exit(0);
+
             }
         }
     }
@@ -689,7 +700,7 @@ public class TUI implements UserInterface{
     /**
      * @param err is the string to print on the standard error stream
      */
-    synchronized public void printError(String err){
+    public void printError(String err){
         System.err.println(TextColor.RED.get() + err + TextColor.DEFAULT.get());
     }
 

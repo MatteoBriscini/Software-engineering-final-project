@@ -16,7 +16,8 @@ public class LobbyPlayer extends Player{
                 connection.setConnected(true);
             }
         } catch (Exception e) {
-            this.disconnectError("invalid connection config");
+            this.disconnectError("server is offline close the app");
+            connection.setConnected(false);
         }
     }
 

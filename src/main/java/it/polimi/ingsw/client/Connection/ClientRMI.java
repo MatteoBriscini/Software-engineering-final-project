@@ -24,17 +24,13 @@ public class ClientRMI extends ConnectionManager implements PlayingPlayerRemoteI
         super();
         this.PORT = PORT;
         this.serverIP = serverIP;
+        Registry registry = LocateRegistry.getRegistry(serverIP, PORT);
+        stub = (LobbyRemoteInterface) registry.lookup("LobbyRemoteInterface");
     }
 
 
 
     public void connection() throws Exception {
-        try{
-            Registry registry = LocateRegistry.getRegistry(serverIP, PORT);
-            stub = (LobbyRemoteInterface) registry.lookup("LobbyRemoteInterface");
-        }catch(Exception e){
-            throw new Exception();
-        }
         Thread thread = new Thread(this::pong);       //start ping pong
         thread.start();
     }
@@ -61,7 +57,7 @@ public class ClientRMI extends ConnectionManager implements PlayingPlayerRemoteI
             try {
                 stub.joinLobby(this.playerID);
             } catch (RemoteException e) {
-                throw new RuntimeException(e);
+                player.disconnectError("server can't respond");
             }
         }
     }
@@ -76,7 +72,7 @@ public class ClientRMI extends ConnectionManager implements PlayingPlayerRemoteI
             try {
                 stub.joinLobby(this.playerID);
             } catch (RemoteException e) {
-                throw new RuntimeException(e);
+                player.disconnectError("server can't respond");
             }
         }
     }
