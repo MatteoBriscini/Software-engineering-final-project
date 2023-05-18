@@ -28,6 +28,7 @@ import static it.polimi.ingsw.client.View.ColorCodes.*;
 public class TUI implements UserInterface{
 
     MainBoard mainBoard;
+    Scanner scCommand;
     PlayerBoard playerBoard;
     private Player player;
 
@@ -83,47 +84,87 @@ public class TUI implements UserInterface{
         this.RMIPort = jsonObject.get("defRmiPort").getAsInt();
     }
 
-
-
-    public void toRun(){
-        Scanner sc = new Scanner(System.in);
-        char c;
-
-        System.out.println("WELCOME TO My Shelfie");
-
-        do {
-            System.out.println("Hi " + player.getPlayerID() + ", do you want to create a new game or join an existing one?\n[C] Create\n[J] Join");
-            c=charCommand();
-            if (c!='C' && c!='J')
-                printError("Invalid selection, please try again");
-        }while (c!='C' && c!='J');
-
-        if(c=='C'){
-            createGame();
-            System.out.println("THIS IS THE WAITING ROOM...");
+    private int intParser(String s){
+        try {
+            return Integer.parseInt(s);
+        }catch (RuntimeException e) {
+            printError("invalid command syntax");
+            return -1;
         }
-        else{
-            joinGame();
-            if(((PlayingPlayer)player).getActivePlayer() == null)System.out.println("THIS IS THE WAITING ROOM...");
-        }
-
     }
 
-    private void centerContent(int contentSize){
+    private void printTitle(){
+        System.out.println(TextColor.YELLOW.get() +
+                "███╗   ███╗██╗   ██╗    ███████╗██╗  ██╗███████╗██╗     ███████╗██╗███████╗\n" +
+                "████╗ ████║╚██╗ ██╔╝    ██╔════╝██║  ██║██╔════╝██║     ██╔════╝██║██╔════╝\n" +
+                "██╔████╔██║ ╚████╔╝     ███████╗███████║█████╗  ██║     █████╗  ██║█████╗  \n" +
+                "██║╚██╔╝██║  ╚██╔╝      ╚════██║██╔══██║██╔══╝  ██║     ██╔══╝  ██║██╔══╝  \n" +
+                "██║ ╚═╝ ██║   ██║       ███████║██║  ██║███████╗███████╗██║     ██║███████╗\n" +
+                "╚═╝     ╚═╝   ╚═╝       ╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝     ╚═╝╚══════╝\n" +
+                "                                                                           \n" +
+                "\n\n\n\n\n" + TextColor.DEFAULT.get());
+    }
+
+    public void toRun(){
+        char c;
+
+        this.centerContent(4);
+        this.printTitle();
+        do {
+            this.printRun();
+            c=charCommand();
+
+        }while (!runResponse(c));
+    }
+    private void printRun(){
+        System.out.println(TextColor.YELLOW.get() + "Hi " + player.getPlayerID() + ", do you want to create a new game or join an existing one?"+ TextColor.LIGHTBLUE.get() + "\n[C] Create\n[J] Join" + TextColor.DEFAULT.get());
+    }
+
+    private boolean runResponse (char c){
+        if (c!='C' && c!='J') {
+            printError("Invalid selection, please try again");
+            return false;
+        }
+        else if (c=='C'){
+            createGame();
+            this.centerContent(1);
+            this.printTitle();
+            System.out.println(TextColor.LIGHTBLUE.get() + "THIS IS THE WAITING ROOM... \n\n" + TextColor.DEFAULT.get());
+        }
+        else if (c=='J') {
+            joinGame();
+            if(((PlayingPlayer)player).getActivePlayer() == null){
+                this.centerContent(1);
+                this.printTitle();
+                System.out.println(TextColor.LIGHTBLUE.get() + "THIS IS THE WAITING ROOM... \n\n" + TextColor.DEFAULT.get());
+            }
+        }
+        return true;
+    }
+
+    synchronized private void centerContent(int contentSize){
         int ROWS;
-        if(System.getenv("LINES")==null) ROWS = 32;
+        if(System.getenv("LINES")==null) ROWS = 24;
         else ROWS = Integer.parseInt(System.getenv("LINES"));
+        ROWS = ROWS - contentSize;
+        while (ROWS>0){
+            System.out.println("\n");
+            ROWS--;
+        }
     }
 
     private void userInput(){
-        Scanner sc = new Scanner(System.in);
+        scCommand = new Scanner(System.in);
         String s;
         char c;
         String msg;
 
-        while (sc!=null) {
-            s = sc.nextLine().toLowerCase();
-
+        while (scCommand.hasNextLine()) {
+            s = scCommand.nextLine().toLowerCase();
+            if(player instanceof LobbyPlayer) {
+                if(!runResponse(Character.toUpperCase(s.charAt(0)))) this.toRun();
+                break;
+            }
             if (s.equals("/start")) {
                 ((PlayingPlayer) player).startGame();
 
@@ -144,8 +185,8 @@ public class TUI implements UserInterface{
                 int index1 = s.indexOf('[');
                 int index2 = s.indexOf(']');
                 if (index1 == -1 || index2 == -1)
-                    System.out.println("Invalid command, please try again (/help to see the allowed commands)");
-                else this.takeCard(s.substring(index1 + 1, index2),
+                    this.printError("Invalid command, please try again (/help to see the allowed commands)");
+                else this.takeCard(s.substring(index1 + 1, index2).replaceAll("\\s+",""),
                         ((PlayingPlayer) player).getPlayerBoard(player.getPlayerID()).getColumns(),
                         ((PlayingPlayer) player).getMainBoard().getColumns(),
                         ((PlayingPlayer) player).getMainBoard().getRows());
@@ -161,19 +202,16 @@ public class TUI implements UserInterface{
                     if(c=='Y')
                         ((PlayingPlayer) player).quitGame();
                     if(c!='Y' && c!='N')
-                        System.out.println("Invalid selection,please try again");
+                        this.printError("Invalid selection,please try again");
                 }while (c!='Y' && c!='N');
-                if(c=='Y'){
-                    break;
-                }
-
-            }   else System.out.println("Invalid command, please try again (/help to see the allowed commands)");
+            }   else this.printError("Invalid command, please try again (/help to see the allowed commands)");
 
         }
     }
 
     private void changeSetUp(boolean b, String command){
         int index = command.indexOf("--");
+        boolean bol = true;
         String ex;
         if(index==-1){
             printError("invalid command syntax");
@@ -199,19 +237,22 @@ public class TUI implements UserInterface{
                     this.privateGoals = b;
                     break;
                 default:
-                    printError("invalid param");
+                    bol = false;
                     break;
             }
-            this.updateAll();
         }
+        this.updateAll();
+        if(!bol)printError("invalid param");
     }
     private void serverSelection(){
         Scanner sc = new Scanner(System.in);
         char c;
         String ip;
 
+        this.centerContent(1);
         do {
-            System.out.println("Do you want to use de default server? Y/N");
+
+            System.out.println(TextColor.YELLOW.get() + "Do you want to use de default server?"+ TextColor.LIGHTBLUE.get() + " Y/N" + TextColor.DEFAULT.get());
             c = charCommand();
             if (c!='Y' && c!='N')
                 printError("Invalid selection, please try again");
@@ -222,7 +263,7 @@ public class TUI implements UserInterface{
             ip = sc.nextLine();
             this.serverIP = ip;
         }
-
+        this.centerContent(3);
     }
 
     /**
@@ -233,7 +274,8 @@ public class TUI implements UserInterface{
         char c;
 
         do {
-            System.out.println("Select the type of the connection:\n[R] RMI\n[S] Socket");
+
+            System.out.println(TextColor.YELLOW.get() + "Select the type of the connection:"+ TextColor.LIGHTBLUE.get() + "\n[R] RMI\n[S] Socket" + TextColor.DEFAULT.get());
             c = charCommand();
             if(c!='R' && c!='S')
                 printError("Invalid selection, please try again\n");
@@ -273,19 +315,21 @@ public class TUI implements UserInterface{
         do {
             if(user.equals("/back")) {
                 do {
-                    System.out.println("What do you want to do?\n[S]Sign up\n[L]Log in");
+                    System.out.println(TextColor.YELLOW.get() +  "What do you want to do?" + TextColor.LIGHTBLUE.get() + "\n[S]Sign up\n[L]Log in"+ TextColor.DEFAULT.get());
                     selection = charCommand();
                     if (selection != 'S' && selection != 'L')
                         printError("Invalid selection, please try again\n");
                 } while (selection != 'S' && selection != 'L');
+                this.centerContent(4);
             }
 
             logged=false;
-            System.out.println("Enter your username (or /back to return to the previous selection):");
+            System.out.println(TextColor.YELLOW.get() + "Enter your username "+ TextColor.LIGHTBLUE.get() +"(or /back to return to the previous selection):" + TextColor.DEFAULT.get());
             user=stringCommand();
             if(!(user.equals("/back"))) {
-                System.out.println("Enter your password:");
+                System.out.println(TextColor.YELLOW.get() + "Enter your password:"+ TextColor.DEFAULT.get());
                 pwd = sc.nextLine();
+
 
                 player = new LobbyPlayer(user, pwd, connection);
                 if (selection == 'S') {
@@ -295,9 +339,9 @@ public class TUI implements UserInterface{
                 }
             }
 
-            if(!logged)
-                printError("Invalid selection, please try again\n");
+            if(!logged) printError("Invalid selection, please try again\n");
         }while (!logged || user.equals("/back"));
+        this.centerContent(3);
         player.setUi(this);
     }
 
@@ -308,18 +352,21 @@ public class TUI implements UserInterface{
     private void createGame(){
         String selection;
         boolean success;
-
+        int playerNumber;
         success=false;
         do {
-            System.out.println("Insert the number of players for this game (min " +minPlayers+ ", max" +maxPlayers+ ")\nInsert /def to use default settings");
+            System.out.println(TextColor.YELLOW.get() +"Insert the number of players for this game (min " +minPlayers+ ", max" +maxPlayers+ ") "+ TextColor.LIGHTBLUE.get() +"\nInsert /def to use default settings"+ TextColor.DEFAULT.get());
             selection = stringCommand();
             if (selection.equals("/def")) {
                 success=((LobbyPlayer)player).createGame();
-            } else if (Integer.parseInt(selection)>=minPlayers && Integer.parseInt(selection)<=maxPlayers) {
-                success=((LobbyPlayer)player).createGame(Integer.parseInt(selection));
+            } else {
+                playerNumber = this.intParser(selection);
+                if (playerNumber >=minPlayers && playerNumber <=maxPlayers) {
+                    success=((LobbyPlayer)player).createGame(playerNumber);
+                }
             }
             if(!success)
-                System.out.println("Game creation failed, please try again");
+                this.printError("Game creation failed, please try again");
         }while(!success);
     }
 
@@ -331,7 +378,7 @@ public class TUI implements UserInterface{
         boolean success;
 
         do{
-            System.out.println("Insert the name of a player to play with a friend,\n"+"Insert /rand to join a random game");
+            System.out.println(TextColor.YELLOW.get()+"Insert the name of a player to play with a friend\n"+ TextColor.LIGHTBLUE.get() +"Insert /rand to join a random game"+ TextColor.DEFAULT.get());
             selection = stringCommand();
             if(selection.equals("/rand")){
                 success=((LobbyPlayer)player).joinGame();
@@ -387,55 +434,58 @@ public class TUI implements UserInterface{
         int index = cards.indexOf(';');
         int index2, x, y;
         if(index!=1){
-            System.out.println("command pick has an invalid syntax (/help to see the allowed commands)");
+            this.printError("command pick has an invalid syntax (/help to see the allowed commands)");
             return;
         }
-        int column = Integer.parseInt(cards.substring(0, index));
+        int column = this.intParser(cards.substring(0, index));
+        if(column==-1)return;
 
         while (true){
             cards = cards.substring(index+1);
             index = cards.indexOf(';');
             index2 = cards.indexOf(',');
-            x = Integer.parseInt(cards.substring(0,index2));
-            if(index==-1){
-                y = Integer.parseInt(cards.substring(index2+1));
+            x = this.intParser(cards.substring(0,index2));
+            if(index==-1 || index2==-1){
+                y = this.intParser(cards.substring(index2+1));
                 if(!checkPick(x, y, maxBoardColumns, maxBoardsRows))return;
                 positions.add(new Position(x,y));
                 break;
             }
-            y = Integer.parseInt(cards.substring(index2+1, index));
+            y = this.intParser(cards.substring(index2+1, index));
             if(!checkPick(x, y, maxBoardColumns, maxBoardsRows))return;
             positions.add(new Position(x,y));
             if (index !=3 || cards.indexOf(',')!=1){
-                System.out.println("command pick has an invalid syntax (/help to see the allowed commands)");
+                this.printError("command pick has an invalid syntax (/help to see the allowed commands)");
                 return;
             }
         }
 
         if(positions.size()<minPickable){
-            System.out.println("try to take to less cards(/help to see the allowed commands)");
+            this.printError("try to take to less cards(/help to see the allowed commands)");
             return;
         }
         if(positions.size()>maxPickable){
-            System.out.println("try to take to many cards(/help to see the allowed commands)");
+            this.printError("try to take to many cards(/help to see the allowed commands)");
             return;
         }
         char command;
 
+        boolean reorder = false;
         do {
-            System.out.println("want to reorder card [y/n]");
+            System.out.println(TextColor.YELLOW.get() +"want to reorder card"+ TextColor.LIGHTBLUE.get() +" [y/n]"+ TextColor.DEFAULT.get());
             command = Character.toUpperCase(new Scanner(System.in).next().charAt(0));
             if(command!= 'Y' && command != 'N'){
                 printError("Invalid selection, please try again\n");
-            }else break;
-        }while (true);
-        if(command == 'Y') this.reorderCards(positions);
+            }
+        if(command == 'Y') reorder = this.reorderCards(positions);
+        else break;
+        }while (!reorder);
 
         ((PlayingPlayer)player).takeCard(column,positions.toArray(new Position[0]));
     }
     private boolean checkPick(int x, int y,int maxBoardColumns,int maxBoardsRows){
-        if(x>=maxBoardColumns || y>= maxBoardsRows){
-            System.out.println("not valid position on main board(/help to see the allowed commands)");
+        if(x>=maxBoardColumns || y>= maxBoardsRows || x<0 || y<0){
+            this.printError("not valid position on main board(/help to see the allowed commands)");
             return false;
         }
         return true;
@@ -463,40 +513,53 @@ public class TUI implements UserInterface{
      * @param picks is an array that contains coordinates formatted as Strings [x,y]
      *              This array will be reordered, based on player's choices
      */
-    private void reorderCards(ArrayList<Position> picks){
+    private boolean reorderCards(ArrayList<Position> picks){
         Scanner sc = new Scanner(System.in);
-        String selection;
-        String[] tmpPick;
-        String tmpPos;
-        char sel;
+        ArrayList<Integer> order = new ArrayList<>();
+        Integer i;
+        int index;
+        ArrayList<Position> tmp  = new ArrayList<>();
 
-        //do{
+        System.out.println(TextColor.YELLOW.get() + "type the new order"+ TextColor.LIGHTBLUE.get() +" (es: 1,2,0)" + TextColor.DEFAULT.get());
+        String s = sc.nextLine().toLowerCase().replaceAll("\\s+","");
+        for(int j=0; j<picks.size()-1;j++) {
+            index = s.indexOf(',');
+            if(index==-1){
+                this.printError("invalid syntax for reorderCards");
+                return false;
+            }
+            i = this.intParser(s.substring(0,index));
+            if(!checkReorder(i,picks.size(), order)) return false;
+            order.add(i);
+            tmp.add(picks.get(i));
 
-            /** stampare carte selezionate */
+            s = s.substring(index+1);
+        }
+        if(s.indexOf(',')!=-1){
+            this.printError("invalid syntax for reorderCards");
+            return false;
+        }
+        i = this.intParser(s);
+        if(!checkReorder(i,picks.size(), order)) return false;
+        order.add(i);
+        tmp.add(picks.get(i));
 
-            /*do {
-                System.out.println("Do you want to change the order of the cards? Y/N");
-                sel = charCommand();
-            }while (sel!='Y' && sel!='N');
+        picks = tmp;
 
+        return true;
+    }
 
-            do{
-                System.out.println("Insert the new order, from the bottom to the top: bottom card, [...], top card\n");
-                selection = sc.nextLine();
-                tmpPick=selection.split(",");
-
-                if(tmpPick.length==picks.length){
-                    for(int i=0;i<picks.length;i++) {
-                        tmpPos = picks[i];
-                        picks[i]=picks[Integer.parseInt(tmpPick[i])];
-                        picks[Integer.parseInt(tmpPick[i])]=tmpPos;
-                    }
-                }
-                else printError("The number of tiles you want to reorder is different from the number of tiles you picked, please try again\n");
-            }while(tmpPick.length!=picks.length);*/
-
-        //}while (sel=='Y');
-
+    private boolean checkReorder(int index, int size, ArrayList<Integer> order){
+        if(order.contains(index)){
+            this.printError("can't type two time same number");
+            return false;
+        }
+        if(index>=size){
+            this.printError("you have type too big number");
+            return false;
+        }
+        if(index<0) return false;
+        return true;
     }
 
     /**
@@ -530,9 +593,10 @@ public class TUI implements UserInterface{
 
 
     public void updateAll(){
-        System.out.println("CURRENT PLAYER: " + ((PlayingPlayer)player).getActivePlayer());
         String[][] toPrint = new String[((PlayingPlayer)player).getPlayerBoard(player.getPlayerID()).getColumns()][((PlayingPlayer)player).getPlayerBoard(player.getPlayerID()).getRows()];
         String[][] mainBoardToPrint = new String[((PlayingPlayer) player).getMainBoard().getColumns()][((PlayingPlayer) player).getMainBoard().getRows()];
+
+        this.centerContent(20);
 
         if(privateGoals)playerBoardToString(((PlayingPlayer) player).getPlayerBoard(player.getPlayerID()),((PlayingPlayer) player).getPrivateGoal() , toPrint);
         else playerBoardToString(((PlayingPlayer) player).getPlayerBoard(player.getPlayerID()), toPrint);
@@ -549,7 +613,7 @@ public class TUI implements UserInterface{
         mainBoardToString(((PlayingPlayer) player).getMainBoard(),mainBoardToPrint);
         this.printBoard(mainBoardToPrint,((PlayingPlayer) player).getMainBoard().getColumns(),((PlayingPlayer) player).getMainBoard().getRows() , "main");
 
-        //playerBoardToString(); fare json con board da stampare
+        System.out.println(TextColor.YELLOW.get() +"CURRENT PLAYER: " + ((PlayingPlayer)player).getActivePlayer() + TextColor.DEFAULT.get());
     }
 
     public void updateMainBoard(PositionWithColor[] p){
@@ -588,7 +652,7 @@ public class TUI implements UserInterface{
      * @param n is the number of players connected to the game
      */
     public void receiveNumPlayers(int n){
-        System.out.println("Players connected: "+n);
+        System.out.println(TextColor.LIGHTBLUE.get()+ "Players connected: "+n + TextColor.DEFAULT.get());
     }
 
 
@@ -596,10 +660,15 @@ public class TUI implements UserInterface{
     public void setMode(PlayerMode m){
         player = connection.getPlayer();
         Thread thread = new Thread(()->{this.userInput();});
-
         switch (m){
-            case LOBBY -> toRun();
-            case PLAYING -> thread.start();
+            case LOBBY :
+                this.centerContent(4);
+                this.printTitle();
+                this.printRun();
+                break;
+            case PLAYING:
+                thread.start();
+                break;
         }
 
     }
@@ -615,8 +684,8 @@ public class TUI implements UserInterface{
     /**
      * @param err is the string to print on the standard error stream
      */
-    public void printError(String err){
-        System.err.println(err);
+    synchronized public void printError(String err){
+        System.err.println(TextColor.RED.get() + err + TextColor.DEFAULT.get());
     }
 
 
@@ -675,11 +744,11 @@ public class TUI implements UserInterface{
         String printLine;
 
         if(whosBoard.equals("main")){
-            System.out.println("\n\n Main board: ");
+            System.out.println(TextColor.LIGHTBLUE.get() +"\n\n Main board: " + TextColor.DEFAULT.get());
         } else if (whosBoard.equals(player.getPlayerID())) {
-            System.out.println("\n\n Your board: ");
+            System.out.println(TextColor.YELLOW.get() +"\n\n Your board: " + TextColor.DEFAULT.get());
         }
-        else System.out.println("\n\n" + whosBoard+"'s board: ");
+        else System.out.println(TextColor.LIGHTBLUE.get() +"\n\n" + whosBoard+"'s board: " + TextColor.DEFAULT.get());
 
         for(int y=rows-1;y>=0;y--){
 

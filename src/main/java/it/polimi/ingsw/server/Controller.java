@@ -445,6 +445,7 @@ public class Controller implements Runnable {
             playersID.add(p.getPlayerID());
         }
         controllerManager.sendPlayerList(playersID.toArray(new String[0]));
+        controllerManager.notifyActivePlayer(game.getPlayerArray().get(0).getPlayerID());
 
         //send all commonGoalID (broadcast to each client)
         controllerManager.sendAllCommonGoal(commonGoalIDArray);
@@ -546,6 +547,7 @@ public class Controller implements Runnable {
      */
     synchronized public boolean takeCard(int column, PositionWithColor[] cards, String playerID){
         JsonObject error = new JsonObject();
+        boolean refilMainBoard=false;
         if(!endGame && alreadyStarted && game.getPlayerArray().get(currentPlayer).getPlayerID().equals(playerID)){
             //verify the numbers of cards
             if (cards.length < minTakeCard || cards.length > maxTakeCard){
@@ -565,7 +567,9 @@ public class Controller implements Runnable {
             }
             try {
                 if (game.removeCards(tmpCards)){
+
                     if(!game.fillMainBoard(allowedPositionArray)) this.endGame();
+                    else refilMainBoard= true;
                 }
             } catch (InvalidPickException e) {
                 System.out.println(e.toString());
@@ -611,6 +615,7 @@ public class Controller implements Runnable {
             //calc real time points and add it to current player
             this.updateAllCommonGoal();
             this.updateClientData(cards, tmp.toArray(new Card[0]), column); //update data in clients
+            if(refilMainBoard)controllerManager.sendMainBoard(game.getMainBoard());
             synchronized (waitForPlayerResponse) {
                 waitForPlayerResponse.notify();
             }

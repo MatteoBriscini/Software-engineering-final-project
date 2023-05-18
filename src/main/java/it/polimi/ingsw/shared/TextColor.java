@@ -9,6 +9,7 @@ public enum TextColor {
     GREEN("\033[0;32m"),   // GREEN
     WHITE("\033[0;37m"),   // WHITE
     EMPTY("\033[0;30m"),   // BLACK
+    RED("\u001B[31m"),
     DEFAULT("\u001B[0m");
     private String code;
     TextColor (String code){
