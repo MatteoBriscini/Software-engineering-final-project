@@ -254,7 +254,7 @@ public class Lobby {
         int j = 0;
 
         synchronized (activeGames){
-            if(activeGames.size()==0) throw new addPlayerToGameException("ID not found");
+            if(activeGames.size()==0) throw new addPlayerToGameException("there isn't active game try to create new one");
             tempActiveGames = activeGames;
         }
 
