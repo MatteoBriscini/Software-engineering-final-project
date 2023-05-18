@@ -19,7 +19,9 @@ public abstract class Player {
         this.connection.setPlayer(this, this.playerID);
 
     }
-
+    public void acceptingPlayingCommand(){
+        if(ui!=null)ui.acceptingPlayingCommand();
+    }
     public UserInterface getUI(){
         return ui;
     }

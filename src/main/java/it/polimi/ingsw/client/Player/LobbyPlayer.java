@@ -89,6 +89,7 @@ public class LobbyPlayer extends Player{
             connection.joinGame(playerID);
         }
         catch (addPlayerToGameException e) {
+            connection.setPlayerAsLobby();
             addPlayerToGameError(e.getMessage());
             return false;
         }
@@ -101,6 +102,7 @@ public class LobbyPlayer extends Player{
             connection.joinGame(playerID, searchID);
         } catch (addPlayerToGameException e) {
             addPlayerToGameError(e.getMessage());
+            connection.setPlayerAsLobby();
             return false;
         }
         return true;
@@ -110,6 +112,7 @@ public class LobbyPlayer extends Player{
         try {
             connection.createGame(playerID);
         } catch (addPlayerToGameException e) {
+            connection.setPlayerAsLobby();
             addPlayerToGameError(e.getMessage());
         }
         //clientMain.setPlayerAsPlaying(this);
@@ -120,6 +123,7 @@ public class LobbyPlayer extends Player{
         try {
             connection.createGame(playerID, maxPlayerNumber);
         } catch (addPlayerToGameException e) {
+            connection.setPlayerAsLobby();
             addPlayerToGameError(e.getMessage());
             return false;
         }

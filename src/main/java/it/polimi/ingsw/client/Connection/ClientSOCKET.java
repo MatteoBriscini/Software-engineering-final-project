@@ -249,6 +249,7 @@ public class ClientSOCKET extends ConnectionManager {
             this.setPlayerAsLobby();
             throw new addPlayerToGameException("fail to joint the game");
         }
+        player.acceptingPlayingCommand();
     }
 
     @Override
@@ -262,6 +263,7 @@ public class ClientSOCKET extends ConnectionManager {
             this.setPlayerAsLobby();
             throw new addPlayerToGameException("fail to joint the game");
         }
+        player.acceptingPlayingCommand();
     }
 
     @Override
@@ -275,6 +277,7 @@ public class ClientSOCKET extends ConnectionManager {
             this.setPlayerAsLobby();
             throw new addPlayerToGameException("fail to joint the game");
         }
+        player.acceptingPlayingCommand();
     }
 
     public void joinGame(String ID)throws addPlayerToGameException{
@@ -287,6 +290,7 @@ public class ClientSOCKET extends ConnectionManager {
             this.setPlayerAsLobby();
             throw new addPlayerToGameException("fail to joint the game");
         }
+        player.acceptingPlayingCommand();
     }
     /*************************************************************************
      *                          OUT method

@@ -55,6 +55,7 @@ public class ClientRMI extends ConnectionManager implements PlayingPlayerRemoteI
                 this.setPlayerAsLobby();
                 player.disconnectError("server can't respond");
             }
+            player.acceptingPlayingCommand();
         }
         if(!inGame) {
             try {
@@ -88,7 +89,7 @@ public class ClientRMI extends ConnectionManager implements PlayingPlayerRemoteI
             player.disconnectError("server can't respond");
             this.setPlayerAsLobby();
         }
-
+        player.acceptingPlayingCommand();
     }
     public void joinGame(String ID, String searchID) throws addPlayerToGameException{
         this.setPlayerAsPlaying();
@@ -99,7 +100,7 @@ public class ClientRMI extends ConnectionManager implements PlayingPlayerRemoteI
             player.disconnectError("server can't respond");
             this.setPlayerAsLobby();
         }
-
+        player.acceptingPlayingCommand();
     }
 
     public void createGame(String ID) throws addPlayerToGameException{
@@ -111,6 +112,7 @@ public class ClientRMI extends ConnectionManager implements PlayingPlayerRemoteI
             player.disconnectError("server can't respond");
             this.setPlayerAsLobby();
         }
+        player.acceptingPlayingCommand();
     }
 
     public void createGame(String ID, int maxPlayerNumber) throws addPlayerToGameException{
@@ -122,7 +124,7 @@ public class ClientRMI extends ConnectionManager implements PlayingPlayerRemoteI
             player.disconnectError("server can't respond");
             this.setPlayerAsLobby();
         }
-
+        player.acceptingPlayingCommand();
     }
 
     /*******************************************************************************
@@ -199,6 +201,7 @@ public class ClientRMI extends ConnectionManager implements PlayingPlayerRemoteI
     @Override
     public void forceDisconnection(){
         ((PlayingPlayer)player).disconnectError("the server has close the game for inactivity of the others players");
+        this.setPlayerAsLobby();
     }
 
     /**************************************************************************

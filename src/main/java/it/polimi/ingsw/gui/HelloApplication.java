@@ -119,4 +119,9 @@ public class HelloApplication extends Application implements UserInterface {
     public void printError(String s) {
 
     }
+
+    @Override
+    public void acceptingPlayingCommand() {
+
+    }
 }

@@ -655,11 +655,15 @@ public class TUI implements UserInterface{
         System.out.println(TextColor.LIGHTBLUE.get()+ "Players connected: "+n + TextColor.DEFAULT.get());
     }
 
-
-
+    @Override
+    public void acceptingPlayingCommand(){
+        Thread thread = new Thread(()->{this.userInput();});
+        thread.start();
+    }
+    @Override
     public void setMode(PlayerMode m){
         player = connection.getPlayer();
-        Thread thread = new Thread(()->{this.userInput();});
+
         switch (m){
             case LOBBY :
                 this.centerContent(4);
@@ -667,7 +671,6 @@ public class TUI implements UserInterface{
                 this.printRun();
                 break;
             case PLAYING:
-                thread.start();
                 break;
         }
 
