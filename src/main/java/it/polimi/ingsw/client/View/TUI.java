@@ -429,58 +429,59 @@ public class TUI implements UserInterface{
      *                               3)selecting the column of the player's board in which the cards need to be inserted
      *                               4)calling the method to insert the cards on the player's board
      */
-    private void takeCard(String cards, int maxPlayerColumns,int maxBoardColumns,int maxBoardsRows){
+    private void takeCard(String cards, int maxPlayerColumns,int maxBoardColumns,int maxBoardsRows) {
         ArrayList<Position> positions = new ArrayList<>();
         int index = cards.indexOf(';');
         int index2, x, y;
-        if(index!=1){
+        if (index != 1) {
             this.printError("command pick has an invalid syntax (/help to see the allowed commands)");
             return;
         }
         int column = this.intParser(cards.substring(0, index));
-        if(column==-1)return;
+        if (column == -1) return;
 
-        while (true){
-            cards = cards.substring(index+1);
+        while (true) {
+            cards = cards.substring(index + 1);
             index = cards.indexOf(';');
             index2 = cards.indexOf(',');
-            x = this.intParser(cards.substring(0,index2));
-            if(index==-1 || index2==-1){
-                y = this.intParser(cards.substring(index2+1));
-                if(!checkPick(x, y, maxBoardColumns, maxBoardsRows))return;
-                positions.add(new Position(x,y));
+            x = this.intParser(cards.substring(0, index2));
+            if (index == -1 || index2 == -1) {
+                y = this.intParser(cards.substring(index2 + 1));
+                if (!checkPick(x, y, maxBoardColumns, maxBoardsRows)) return;
+                positions.add(new Position(x, y));
                 break;
             }
-            y = this.intParser(cards.substring(index2+1, index));
-            if(!checkPick(x, y, maxBoardColumns, maxBoardsRows))return;
-            positions.add(new Position(x,y));
-            if (index !=3 || cards.indexOf(',')!=1){
+            y = this.intParser(cards.substring(index2 + 1, index));
+            if (!checkPick(x, y, maxBoardColumns, maxBoardsRows)) return;
+            positions.add(new Position(x, y));
+            if (index != 3 || cards.indexOf(',') != 1) {
                 this.printError("command pick has an invalid syntax (/help to see the allowed commands)");
                 return;
             }
         }
 
-        if(positions.size()<minPickable){
+        if (positions.size() < minPickable) {
             this.printError("try to take to less cards(/help to see the allowed commands)");
             return;
         }
-        if(positions.size()>maxPickable){
+        if (positions.size() > maxPickable) {
             this.printError("try to take to many cards(/help to see the allowed commands)");
             return;
         }
         char command;
 
-        boolean reorder = false;
-        do {
-            System.out.println(TextColor.YELLOW.get() +"want to reorder card"+ TextColor.LIGHTBLUE.get() +" [y/n]"+ TextColor.DEFAULT.get());
-            command = Character.toUpperCase(new Scanner(System.in).next().charAt(0));
-            if(command!= 'Y' && command != 'N'){
-                printError("Invalid selection, please try again\n");
-            }
-        if(command == 'Y') reorder = this.reorderCards(positions);
-        else break;
-        }while (!reorder);
-
+        if (positions.size()>1){
+            boolean reorder = false;
+            do {
+                System.out.println(TextColor.YELLOW.get() + "want to reorder card" + TextColor.LIGHTBLUE.get() + " [y/n]" + TextColor.DEFAULT.get());
+                command = Character.toUpperCase(new Scanner(System.in).next().charAt(0));
+                if (command != 'Y' && command != 'N') {
+                    printError("Invalid selection, please try again\n");
+                }
+                if (command == 'Y') reorder = this.reorderCards(positions);
+                else break;
+            } while (!reorder);
+        }
         ((PlayingPlayer)player).takeCard(column,positions.toArray(new Position[0]));
     }
     private boolean checkPick(int x, int y,int maxBoardColumns,int maxBoardsRows){
@@ -590,8 +591,11 @@ public class TUI implements UserInterface{
             positions[i]= new Position(Integer.parseInt(tmpPick[0]),Integer.parseInt(tmpPick[1]));
         }
     }
-
-
+    @Override
+    public void notifyNewActivePlayer(){
+        System.out.println(TextColor.YELLOW.get() +"CURRENT PLAYER: " + ((PlayingPlayer)player).getActivePlayer() + TextColor.DEFAULT.get());
+    }
+    @Override
     public void updateAll(){
         String[][] toPrint = new String[((PlayingPlayer)player).getPlayerBoard(player.getPlayerID()).getColumns()][((PlayingPlayer)player).getPlayerBoard(player.getPlayerID()).getRows()];
         String[][] mainBoardToPrint = new String[((PlayingPlayer) player).getMainBoard().getColumns()][((PlayingPlayer) player).getMainBoard().getRows()];
@@ -612,14 +616,12 @@ public class TUI implements UserInterface{
 
         mainBoardToString(((PlayingPlayer) player).getMainBoard(),mainBoardToPrint);
         this.printBoard(mainBoardToPrint,((PlayingPlayer) player).getMainBoard().getColumns(),((PlayingPlayer) player).getMainBoard().getRows() , "main");
-
-        System.out.println(TextColor.YELLOW.get() +"CURRENT PLAYER: " + ((PlayingPlayer)player).getActivePlayer() + TextColor.DEFAULT.get());
     }
-
+    @Override
     public void updateMainBoard(PositionWithColor[] p){
         //updateAll();
     }
-
+    @Override
     public void updatePlayerBoard(String id, int column, Card[] c){
         updateAll();
     }

@@ -124,4 +124,9 @@ public class HelloApplication extends Application implements UserInterface {
     public void acceptingPlayingCommand() {
 
     }
+
+    @Override
+    public void notifyNewActivePlayer() {
+
+    }
 }

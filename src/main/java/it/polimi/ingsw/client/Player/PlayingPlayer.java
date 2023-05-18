@@ -93,6 +93,7 @@ public class PlayingPlayer extends Player{
     public void setActivePlayer(String activePlayer) {
         this.activePlayer = activePlayer;
         myTurn = activePlayer.equals(playerID);
+        if(ui!=null) ui.notifyNewActivePlayer();
     }
     public void setCommonGoalID(int[] commonGoalID) {
         CommonGoalID = commonGoalID;

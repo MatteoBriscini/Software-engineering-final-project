@@ -25,4 +25,6 @@ public interface UserInterface {
 
     void acceptingPlayingCommand();
 
+    void notifyNewActivePlayer();
+
 }

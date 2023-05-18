@@ -611,15 +611,19 @@ public class Controller implements Runnable {
                 controllerManager.sendAllPlayerBoard(playersBoard);
                 return false;
             }
-
             //calc real time points and add it to current player
             this.updateAllCommonGoal();
-            this.updateClientData(cards, tmp.toArray(new Card[0]), column); //update data in clients
-            if(refilMainBoard)controllerManager.sendMainBoard(game.getMainBoard());
+
+            //skip to next player
             synchronized (waitForPlayerResponse) {
                 waitForPlayerResponse.notify();
             }
-            this.turn(); //skip to next player
+            this.turn();
+
+            //update data in clients
+            this.updateClientData(cards, tmp.toArray(new Card[0]), column);
+            if(refilMainBoard)controllerManager.sendMainBoard(game.getMainBoard());
+
             return true;
         } else {
             error.addProperty("errorID", "invalid move");
