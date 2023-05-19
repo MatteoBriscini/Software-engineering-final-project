@@ -24,7 +24,7 @@
     -fx-padding: 7px;
     -fx-end-margin: 10px;
 }
-#defaultSettingsLabel, #customSettingsLabel, #joinRandomLabel, #selectGameToJoinLabel{
+#defaultSettingsLabel, #customSettingsLabel, #joinRandomLabel, #selectGameToJoinLabel, #playerGamesLabel{
     -fx-font-size: 25px;
     -fx-border-insets: 35px;
     -fx-background-color: rgb(159, 45, 45);

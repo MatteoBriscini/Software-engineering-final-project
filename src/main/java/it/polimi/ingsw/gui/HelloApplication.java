@@ -8,9 +8,11 @@ import it.polimi.ingsw.shared.Cards.Card;
 import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
 import it.polimi.ingsw.shared.PlayerMode;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -23,6 +25,10 @@ public class HelloApplication extends Application implements UserInterface {
     private Player player;
     private ConnectionManager connection;
     private Stage stage;
+
+    public Stage getStage() {
+        return stage;
+    }
 
     public void setPlayer(Player player) {
         this.player = player;
@@ -60,12 +66,13 @@ public class HelloApplication extends Application implements UserInterface {
     @Override
     public void start(Stage stage) throws IOException {
 
-            stage.setResizable(false);
+            //stage.setResizable(false);
             FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("hello-view.fxml"));
             Parent root = (Parent) fxmlLoader.load() ;
             guiView = (HelloController) fxmlLoader.getController();
             guiView.setHelloApplication(this);
             Scene scene = new Scene(root, 1280, 720);
+            stage.getIcons().add(new Image(this.getClass().getClassLoader().getResourceAsStream("Icon.png")));
             String css = this.getClass().getResource("application.css").toExternalForm();
             scene.getStylesheets().add(css);
             stage.setTitle("My Shelfie!");
@@ -89,7 +96,7 @@ public class HelloApplication extends Application implements UserInterface {
     @Override
     public void receiveNumPlayers(int n) {
 
-        ((WaitingroomController) guiView).changeNumPlayer(n);
+        Platform.runLater(() -> ((WaitingroomController) guiView).changeNumPlayer(n));
     }
 
     @Override
@@ -99,22 +106,21 @@ public class HelloApplication extends Application implements UserInterface {
 
     @Override
     public void updateAll() {
-
-        System.out.println("ciao ciao");
-
-        stage.setResizable(false);
-        FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("game.fxml"));
-        Parent root = null;
-        try {
-            root = (Parent) fxmlLoader.load();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        guiView = (HelloController) fxmlLoader.getController();
-        guiView.setHelloApplication(this);
-        Scene scene = new Scene(root, 1920, 1080);
-        stage.setScene(scene);
-        stage.show();
+        Platform.runLater(() -> {
+            stage.setResizable(false);
+            FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("game.fxml"));
+            Parent root = null;
+            try {
+                root = (Parent) fxmlLoader.load();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            guiView = (GuiView) fxmlLoader.getController();
+            guiView.setHelloApplication(this);
+            Scene scene = new Scene(root, 1920, 1080);
+            stage.setScene(scene);
+            stage.show();
+        });
     }
 
     @Override
@@ -129,8 +135,14 @@ public class HelloApplication extends Application implements UserInterface {
 
     @Override
     public void setMode(PlayerMode m) {
-
         player = connection.getPlayer();
+        if(m.equals(PlayerMode.LOBBY))Platform.runLater(() -> {
+            try {
+                this.changeView("creategame.fxml");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     @Override
@@ -139,9 +151,7 @@ public class HelloApplication extends Application implements UserInterface {
     }
 
     @Override
-    public void acceptingPlayingCommand() {
-
-    }
+    public void acceptingPlayingCommand() {}
 
     @Override
     public void notifyNewActivePlayer() {

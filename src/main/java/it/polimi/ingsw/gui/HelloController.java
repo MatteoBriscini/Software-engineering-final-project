@@ -8,10 +8,13 @@ import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 
 import java.io.*;
@@ -32,7 +35,7 @@ private AnchorPane loginPanel;
     int socketPort;
     int RMIPort;
     String serverIP;
-
+    Alert cntAlert = new Alert(Alert.AlertType.ERROR);
     private void jsonCreate() throws FileNotFoundException{
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(JsonUrl.getUrl("netConfig"));
         if(inputStream == null) throw new FileNotFoundException();
@@ -43,24 +46,33 @@ private AnchorPane loginPanel;
         this.RMIPort = jsonObject.get("defRmiPort").getAsInt();
     }
     @FXML
-    protected void rmiClick(ActionEvent actionEvent) throws Exception {
-
-            this.jsonCreate();
-
+    protected void rmiClick(ActionEvent actionEvent) throws IOException {
+        this.jsonCreate();
+        try {
             helloApplication.setConnection(new ClientRMI(RMIPort, serverIP));
-            helloApplication.changeView("login.fxml");
+        } catch (Exception e) {
+            cntAlert.setTitle("CONNECTION ERROR");
+            cntAlert.setContentText("apparently the server is offline");
+            cntAlert.show();
 
-
+            return;
+        }
+        helloApplication.changeView("login.fxml");
     }
 
 
     @FXML
-    protected void socketClick(ActionEvent actionEvent) throws Exception {
-
-            this.jsonCreate();
-
+    protected void socketClick(ActionEvent actionEvent) throws IOException {
+        this.jsonCreate();
+        try {
             helloApplication.setConnection(new ClientSOCKET(socketPort, serverIP));
-            helloApplication.changeView("login.fxml");
+        } catch (Exception e) {
+            alert.setTitle("connection error");
+            alert.setContentText("apparently the server is offline");
+            alert.show();
+            return;
+        }
+        helloApplication.changeView("login.fxml");
 
     }
 
