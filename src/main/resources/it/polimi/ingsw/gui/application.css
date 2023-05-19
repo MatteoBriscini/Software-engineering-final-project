@@ -35,7 +35,10 @@
     -fx-font-size: 15px;
     -fx-translate-y: 20px;
 }
-#regBut{    -fx-translate-y: 90px;}
+#regBut{
+    -fx-background-color: rgb(159, 45, 45);
+    -fx-translate-y: 90px;
+}
 .button{
     -fx-background-color: rgb(160,82,45);
     -fx-background-radius: 7px;

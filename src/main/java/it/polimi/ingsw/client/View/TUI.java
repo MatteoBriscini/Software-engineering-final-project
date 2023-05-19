@@ -449,7 +449,10 @@ public class TUI implements UserInterface{
             return;
         }
         int column = this.intParser(cards.substring(0, index));
-        if (column == -1) return;
+        if (column <0 || column>((PlayingPlayer)player).getPlayerBoard(player.getPlayerID()).getColumns()) {
+            this.printError("invalid column value (/help to see the allowed commands)");
+            return;
+        }
 
         while (true) {
             cards = cards.substring(index + 1);
