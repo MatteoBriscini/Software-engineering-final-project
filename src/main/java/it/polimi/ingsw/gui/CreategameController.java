@@ -34,24 +34,43 @@ public class CreategameController extends GuiView{
     private TextField gameIDTextfield;
 
     @FXML
-    protected void createCustom(ActionEvent actionEvent){
+    protected void createCustom(ActionEvent actionEvent) throws IOException {
+
+        int x = Integer.parseInt(maxNumberTextfield.getText());
+        Player player = helloApplication.getPlayer();
+
+        if(((LobbyPlayer)player).createGame(x))
+            helloApplication.changeView("waitingroom.fxml");
+    }
+
+    @FXML
+    protected void joinCustom(ActionEvent actionEvent) throws IOException {
+
+        String x = gameIDTextfield.getText();
+        Player player = helloApplication.getPlayer();
+
+        if(((LobbyPlayer)player).joinGame(x))
+            helloApplication.changeView("waitingroom.fxml");
+    }
+
+    @FXML
+    protected void createDefault(ActionEvent actionEvent) throws IOException {
+
+        Player player = helloApplication.getPlayer();
+
+        if(((LobbyPlayer)player).createGame())
+            helloApplication.changeView("waitingroom.fxml");
 
 
     }
 
     @FXML
-    protected void joinCustom(ActionEvent actionEvent){
+    protected  void joinDefault(ActionEvent actionEvent) throws IOException {
 
-    }
+        Player player = helloApplication.getPlayer();
 
-    @FXML
-    protected void createDefault(ActionEvent actionEvent){
-
-    }
-
-    @FXML
-    protected  void joinDefault(ActionEvent actionEvent){
-
+        if(((LobbyPlayer)player).joinGame())
+            helloApplication.changeView("waitingroom.fxml");
     }
 
 

@@ -19,6 +19,7 @@ import java.io.IOException;
 public class HelloApplication extends Application implements UserInterface {
 
     GuiView guiView;
+    private WaitingroomController  waitingroomController;
     private Player player;
     private ConnectionManager connection;
     private Stage stage;
@@ -58,6 +59,7 @@ public class HelloApplication extends Application implements UserInterface {
 
     @Override
     public void start(Stage stage) throws IOException {
+
             stage.setResizable(false);
             FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("hello-view.fxml"));
             Parent root = (Parent) fxmlLoader.load() ;
@@ -87,6 +89,7 @@ public class HelloApplication extends Application implements UserInterface {
     @Override
     public void receiveNumPlayers(int n) {
 
+        ((WaitingroomController) guiView).changeNumPlayer(n);
     }
 
     @Override
@@ -97,6 +100,21 @@ public class HelloApplication extends Application implements UserInterface {
     @Override
     public void updateAll() {
 
+        System.out.println("ciao ciao");
+
+        stage.setResizable(false);
+        FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("game.fxml"));
+        Parent root = null;
+        try {
+            root = (Parent) fxmlLoader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        guiView = (HelloController) fxmlLoader.getController();
+        guiView.setHelloApplication(this);
+        Scene scene = new Scene(root, 1920, 1080);
+        stage.setScene(scene);
+        stage.show();
     }
 
     @Override
@@ -112,6 +130,7 @@ public class HelloApplication extends Application implements UserInterface {
     @Override
     public void setMode(PlayerMode m) {
 
+        player = connection.getPlayer();
     }
 
     @Override
