@@ -24,7 +24,13 @@
     -fx-padding: 7px;
     -fx-end-margin: 10px;
 }
-#userText, #pwdText {
+#defaultSettingsLabel, #customSettingsLabel, #joinRandomLabel, #selectGameToJoinLabel{
+    -fx-font-size: 25px;
+    -fx-border-insets: 35px;
+    -fx-background-color: rgb(159, 45, 45);
+    -fx-text-fill: #db9263;
+}
+#userText, #pwdText,#maxPlayerLabel, #gameIDLabel {
     -fx-start-margin: 600px;
     -fx-font-size: 15px;
     -fx-translate-y: 20px;
@@ -38,4 +44,9 @@
     -fx-padding: 15px;
     -fx-border-radius: 7px;
     -fx-min-width: 50px;
+    -fx-text-fill: #db9263;
+    -fx-cursor: hand;
+}
+#space, #space1, #space2, #space3{
+    -fx-padding: 30px;
 }

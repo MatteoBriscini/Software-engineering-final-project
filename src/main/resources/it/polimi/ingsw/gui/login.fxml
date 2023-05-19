@@ -16,5 +16,4 @@
       <TextField fx:id="passwordTestField" layoutX="225.0" layoutY="209.0" />
       <Button fx:id="logBut" layoutX="278.0" layoutY="248.0" mnemonicParsing="false" onAction="#loginButton" text="login" />
       <Button fx:id="regBut" layoutX="272.0" layoutY="338.0" mnemonicParsing="false" onAction="#registerButton" text="register" />
-
 </VBox>
