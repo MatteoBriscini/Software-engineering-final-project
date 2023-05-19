@@ -243,8 +243,11 @@ public class TUI implements UserInterface{
                     break;
             }
         }
-        this.updateAll();
         if(!bol)printError("invalid param");
+        else {
+            this.updateAll();
+            this.notifyNewActivePlayer();
+        }
     }
     private void serverSelection(){
         Scanner sc = new Scanner(System.in);
