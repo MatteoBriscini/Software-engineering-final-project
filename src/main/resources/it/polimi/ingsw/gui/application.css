@@ -30,7 +30,7 @@
     -fx-background-color: rgb(159, 45, 45);
     -fx-text-fill: #db9263;
 }
-#userText, #pwdText,#maxPlayerLabel, #gameIDLabel {
+#userText, #pwdText,#maxPlayerLabel, #gameIDLabel, #userID, #password {
     -fx-start-margin: 600px;
     -fx-font-size: 15px;
     -fx-translate-y: 20px;

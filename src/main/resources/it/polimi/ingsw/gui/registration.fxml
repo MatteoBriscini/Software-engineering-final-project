@@ -11,9 +11,9 @@
             <Font name="Comic Sans MS" size="24.0" />
          </font>
       </Label>
-      <Label layoutX="284.0" layoutY="108.0" text="userID" />
+      <Label fx:id="userID" layoutX="284.0" layoutY="108.0" text="userID" />
       <TextField fx:id="uerIDtext"/>
-      <Label layoutX="275.0" layoutY="191.0" text="password" />
+      <Label fx:id="password" layoutX="275.0" layoutY="191.0" text="password" />
       <TextField fx:id="passText"/>
       <Button layoutX="274.0" layoutY="267.0" mnemonicParsing="false" onAction="#enterButton" text="enter" />
 </VBox>
