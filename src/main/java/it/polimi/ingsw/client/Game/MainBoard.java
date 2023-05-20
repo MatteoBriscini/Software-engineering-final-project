@@ -59,6 +59,10 @@ public class MainBoard {
             if(positions[i].getX()-positions[0].getX()!=i || positions[i].getY()!=positions[0].getY())
                 valid = 0;
 
+            if(board[positions[i].getX()][positions[i].getY()].getColor().equals(EMPTY)){
+                throw new it.polimi.ingsw.client.Exceptions.InvalidPickException("One or more tiles are EMPTY");
+            }
+
             if(!positions[i].pickable(board)){
                 throw new it.polimi.ingsw.client.Exceptions.InvalidPickException("One or more tiles do not have one side free");
                 }
@@ -70,6 +74,10 @@ public class MainBoard {
             for (int i = 0; i < positions.length; i++) {
                 if (positions[i].getY() - positions[0].getY() != i || positions[i].getX()!=positions[0].getX())
                     throw new it.polimi.ingsw.client.Exceptions.InvalidPickException("The pick is neither a row nor a column, or the tiles are not adjacent");
+
+                if(board[positions[i].getX()][positions[i].getY()].getColor().equals(EMPTY)){
+                    throw new it.polimi.ingsw.client.Exceptions.InvalidPickException("One or more tiles are EMPTY");
+                }
 
                 if(!positions[i].pickable(board))
                     throw new it.polimi.ingsw.client.Exceptions.InvalidPickException("One or more tile does not have one side free");
