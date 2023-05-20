@@ -66,12 +66,13 @@ public class HelloApplication extends Application implements UserInterface {
     @Override
     public void start(Stage stage) throws IOException {
 
-            //stage.setResizable(false);
+            stage.setResizable(false);
             FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("hello-view.fxml"));
             Parent root = (Parent) fxmlLoader.load() ;
-            guiView = (HelloController) fxmlLoader.getController();
+            guiView = (GuiView) fxmlLoader.getController();
             guiView.setHelloApplication(this);
             Scene scene = new Scene(root, 1280, 720);
+           // Scene scene = new Scene(root, 1550, 750);
             stage.getIcons().add(new Image(this.getClass().getClassLoader().getResourceAsStream("Icon.png")));
             String css = this.getClass().getResource("application.css").toExternalForm();
             scene.getStylesheets().add(css);
@@ -117,7 +118,7 @@ public class HelloApplication extends Application implements UserInterface {
             }
             guiView = (GuiView) fxmlLoader.getController();
             guiView.setHelloApplication(this);
-            Scene scene = new Scene(root, 1920, 1080);
+            Scene scene = new Scene(root, 1550, 750);
             stage.setScene(scene);
             stage.show();
         });
