@@ -88,7 +88,7 @@ public class TUI implements UserInterface{
         try {
             return Integer.parseInt(s);
         }catch (RuntimeException e) {
-            printError("invalid command syntax");
+            printError("Invalid command syntax");
             return -1;
         }
     }
@@ -216,11 +216,11 @@ public class TUI implements UserInterface{
         boolean bol = true;
         String ex;
         if(index==-1){
-            printError("invalid command syntax");
+            printError("Invalid command syntax");
             return;
         }
         if(player instanceof LobbyPlayer){
-            printError("you can call this method only when the game is already started");
+            printError("You can call this method only when the game is already started");
             return;
         }
         while (index !=-1) {
@@ -243,7 +243,7 @@ public class TUI implements UserInterface{
                     break;
             }
         }
-        if(!bol)printError("invalid param");
+        if(!bol)printError("Invalid param");
         else {
             this.updateAll();
             this.notifyNewActivePlayer();
@@ -257,7 +257,7 @@ public class TUI implements UserInterface{
         this.centerContent(1);
         do {
 
-            System.out.println(TextColor.YELLOW.get() + "Do you want to use de default server?"+ TextColor.LIGHTBLUE.get() + " Y/N" + TextColor.DEFAULT.get());
+            System.out.println(TextColor.YELLOW.get() + "Do you want to use the default server? ("+ serverIP + ")" + TextColor.LIGHTBLUE.get() + " Y/N" + TextColor.DEFAULT.get());
             c = charCommand();
             if (c!='Y' && c!='N')
                 printError("Invalid selection, please try again");
@@ -290,8 +290,8 @@ public class TUI implements UserInterface{
             try {
                 connection = new ClientSOCKET(socketPort,serverIP);
             } catch (Exception e) {
-                this.printError("apparently the server is offline");
-                System.out.println("press enter to close the app");
+                this.printError("Apparently the server is offline");
+                System.out.println("Press enter to close the app");
                 Scanner sc = new Scanner(System.in);
                 sc.nextLine();
                 System.exit(0);
@@ -301,8 +301,8 @@ public class TUI implements UserInterface{
             try {
                 connection = new ClientRMI(RMIPort,serverIP);
             } catch (Exception e) {
-                this.printError("apparently the server is offline");
-                System.out.println("press enter to close the app");
+                this.printError("Apparently the server is offline");
+                System.out.println("Press enter to close the app");
                 Scanner sc = new Scanner(System.in);
                 sc.nextLine();
                 System.exit(0);
@@ -448,12 +448,12 @@ public class TUI implements UserInterface{
         int index = cards.indexOf(';');
         int index2, x, y;
         if (index != 1) {
-            this.printError("command pick has an invalid syntax (/help to see the allowed commands)");
+            this.printError("Command pick has an invalid syntax (/help to see the allowed commands)");
             return;
         }
         int column = this.intParser(cards.substring(0, index));
         if (column <0 || column>((PlayingPlayer)player).getPlayerBoard(player.getPlayerID()).getColumns()) {
-            this.printError("invalid column value (/help to see the allowed commands)");
+            this.printError("Invalid column value (/help to see the allowed commands)");
             return;
         }
 
@@ -472,17 +472,17 @@ public class TUI implements UserInterface{
             if (!checkPick(x, y, maxBoardColumns, maxBoardsRows)) return;
             positions.add(new Position(x, y));
             if (index != 3 || cards.indexOf(',') != 1) {
-                this.printError("command pick has an invalid syntax (/help to see the allowed commands)");
+                this.printError("Command pick has an invalid syntax (/help to see the allowed commands)");
                 return;
             }
         }
 
         if (positions.size() < minPickable) {
-            this.printError("try to take to less cards(/help to see the allowed commands)");
+            this.printError("You're trying to take too few cards(/help to see the allowed commands)");
             return;
         }
         if (positions.size() > maxPickable) {
-            this.printError("try to take to many cards(/help to see the allowed commands)");
+            this.printError("You're trying to take too many cards(/help to see the allowed commands)");
             return;
         }
         char command;
@@ -490,7 +490,7 @@ public class TUI implements UserInterface{
         if (positions.size()>1){
             boolean reorder = false;
             do {
-                System.out.println(TextColor.YELLOW.get() + "want to reorder card" + TextColor.LIGHTBLUE.get() + " [y/n]" + TextColor.DEFAULT.get());
+                System.out.println(TextColor.YELLOW.get() + "Do you want to reorder the picked cards?" + TextColor.LIGHTBLUE.get() + " [y/n]" + TextColor.DEFAULT.get());
                 command = Character.toUpperCase(new Scanner(System.in).next().charAt(0));
                 if (command != 'Y' && command != 'N') {
                     printError("Invalid selection, please try again\n");
@@ -503,7 +503,7 @@ public class TUI implements UserInterface{
     }
     private boolean checkPick(int x, int y,int maxBoardColumns,int maxBoardsRows){
         if(x>=maxBoardColumns || y>= maxBoardsRows || x<0 || y<0){
-            this.printError("not valid position on main board(/help to see the allowed commands)");
+            this.printError("Not valid position on main board(/help to see the allowed commands)");
             return false;
         }
         return true;
@@ -538,12 +538,12 @@ public class TUI implements UserInterface{
         int index;
         ArrayList<Position> tmp  = new ArrayList<>();
 
-        System.out.println(TextColor.YELLOW.get() + "type the new order"+ TextColor.LIGHTBLUE.get() +" (es: 1,2,0)" + TextColor.DEFAULT.get());
+        System.out.println(TextColor.YELLOW.get() + "Type the new order"+ TextColor.LIGHTBLUE.get() +" (es: 1,2,0)" + TextColor.DEFAULT.get());
         String s = sc.nextLine().toLowerCase().replaceAll("\\s+","");
         for(int j=0; j<picks.size()-1;j++) {
             index = s.indexOf(',');
             if(index==-1){
-                this.printError("invalid syntax for reorderCards");
+                this.printError("Invalid syntax for reorderCards");
                 return false;
             }
             i = this.intParser(s.substring(0,index));
@@ -554,7 +554,7 @@ public class TUI implements UserInterface{
             s = s.substring(index+1);
         }
         if(s.indexOf(',')!=-1){
-            this.printError("invalid syntax for reorderCards");
+            this.printError("Invalid syntax for reorderCards");
             return false;
         }
         i = this.intParser(s);
@@ -569,11 +569,11 @@ public class TUI implements UserInterface{
 
     private boolean checkReorder(int index, int size, ArrayList<Integer> order){
         if(order.contains(index)){
-            this.printError("can't type two time same number");
+            this.printError("Can't type two time same number");
             return false;
         }
         if(index>=size){
-            this.printError("you have type too big number");
+            this.printError("You have typed a number that is too big");
             return false;
         }
         if(index<0) return false;
@@ -588,7 +588,7 @@ public class TUI implements UserInterface{
         int column;
 
         do {
-            System.out.println("select the column on your board:\n");
+            System.out.println("Select the column on your board:\n");
             column = Integer.parseInt(sc.nextLine());
             if(column<0 || column>= ((PlayingPlayer)player).getPlayerBoard(((PlayingPlayer)player).getPlayerID()).getColumns())
                 printError("Invalid column, please try again");
