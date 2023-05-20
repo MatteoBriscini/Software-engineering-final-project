@@ -460,11 +460,7 @@ public class Controller implements Runnable {
             }
             controllerManager.sendPrivateGoal(privateGoal.toArray(new PositionWithColor[0]), p.getPlayerID());
         }
-        //get main board
-        Card[][] mainBoard = game.getMainBoard();
 
-        //send all main board (broadcast to each client)
-        controllerManager.sendMainBoard(mainBoard);
         //get all player board
         ArrayList<Card[][]> playersBoard = new ArrayList<>();
         for(int i = 0; i< game.getPlayerArray().size(); i++){
@@ -474,6 +470,11 @@ public class Controller implements Runnable {
         //send all player board (broadcast to each client)
         controllerManager.sendAllPlayerBoard(playersBoard);
 
+        //get main board
+        Card[][] mainBoard = game.getMainBoard();
+
+        //send all main board (broadcast to each client)
+        controllerManager.sendMainBoard(mainBoard);
     }
 
     /*************************************************************************
@@ -558,7 +559,23 @@ public class Controller implements Runnable {
                 return false;
             }
 
+            //check if there is enough space on the player board
+            if(!game.getPlayerArray().get(currentPlayer).checkBoardSpace(column, cards.length)){
 
+                //send error msg to the client
+                error.addProperty("errorID", "invalid move");
+                error.addProperty("errorMSG", "not enough space on the player board");
+                controllerManager.sendError(error, playerID);
+                game.fixBoard(cards);
+
+                //update all playerBoards in all clients
+                ArrayList<Card[][]> playersBoard = new ArrayList<>();
+                for(int i = 0; i< game.getPlayerArray().size(); i++){
+                    playersBoard.add(game.getPlayerBoard(i));
+                }
+                controllerManager.sendAllPlayerBoard(playersBoard);
+                return false;
+            }
 
             //remove the cards from main board
             PositionWithColor[] tmpCards = new PositionWithColor[cards.length];

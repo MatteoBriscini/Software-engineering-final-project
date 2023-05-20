@@ -487,6 +487,11 @@ public class TUI implements UserInterface{
         }
         char command;
 
+        if(
+                !((PlayingPlayer)player).checkMainBoardMove(positions.toArray(new Position[0])) ||
+                !((PlayingPlayer)player).checkPlayerBoardMove(column, positions.size())
+        ) return;
+
         if (positions.size()>1){
             boolean reorder = false;
             do {

@@ -75,7 +75,9 @@ public class PlayerBoard {
 
     }
     //Methods
-
+    public boolean checkSpace(int column, int cards){
+        return board[column][y - cards].getColor() == EMPTY;
+    }
     /**
      * Adds cards to the PlayerBoard
      * @param column index of column for the player board

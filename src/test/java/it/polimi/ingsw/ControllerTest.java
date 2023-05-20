@@ -638,4 +638,57 @@ public class ControllerTest extends TestCase {
         System.out.println("\nEND TEST\n");
     }
 
+    @Test
+    public void testProblematicRealSituation() throws addPlayerToGameException, FileNotFoundException {
+        System.out.println("START TEST problematicRealSituation\n");
+
+        PositionWithColor[] cards = new PositionWithColor[1];
+
+        ArrayList<Player> players = new ArrayList<>();      //gaming order array list for this test
+        players.add(new Player("piero"));
+        players.add(new Player("pino"));
+
+        test = new Controller(3);
+
+        test.addNewPlayer("piero");     //3 player join the game
+        test.setPlayerOnline("piero");
+        assertEquals(1, test.getPlayerNumber());
+        test.addNewPlayer("pino");
+        test.setPlayerOnline("pino");
+        assertEquals(2, test.getPlayerNumber());
+        test.startGame("piero");
+
+        ArrayList<PositionWithColor> tmpCards = new ArrayList<>();             //clear all the mainBoard
+        for (int i = 0; i<9; i++){
+            for (int j=0; j<9; j++){
+                tmpCards.add(new PositionWithColor(i,j,0, EMPTY));
+            }
+        }
+        PositionWithColor[] cardsArray = tmpCards.toArray(new PositionWithColor[0]);
+        test.fixMainBoard(cardsArray);
+
+        test.setNotRandomPlayerOrder(players);
+        this.setNotRandomBoard("mainBoard4");                       //fill the main board with predetermined colors
+
+        board=test.getMainBoard();
+        System.out.println("\n\n\n\n\n");
+        for(int y=8;y>=0;y--){
+            System.out.println(board[0][y].getColor().toString()+"\t"+board[1][y].getColor().toString()+"\t"+board[2][y].getColor().toString()+"\t"+board[3][y].getColor().toString()+"\t"+board[4][y].getColor().toString()+"\t"+board[5][y].getColor().toString()+"\t"+board[6][y].getColor().toString()+"\t"+board[7][y].getColor().toString()+"\t"+board[8][y].getColor().toString());
+        }
+
+
+        cards = new PositionWithColor[1];
+        cards[0] =new PositionWithColor(2,4,0, YELLOW);
+        assertTrue(test.takeCard(4, cards, "piero"));
+
+        board=test.getMainBoard();
+        System.out.println("\n\n\n\n\n");
+        for(int y=8;y>=0;y--){
+            System.out.println(board[0][y].getColor().toString()+"\t"+board[1][y].getColor().toString()+"\t"+board[2][y].getColor().toString()+"\t"+board[3][y].getColor().toString()+"\t"+board[4][y].getColor().toString()+"\t"+board[5][y].getColor().toString()+"\t"+board[6][y].getColor().toString()+"\t"+board[7][y].getColor().toString()+"\t"+board[8][y].getColor().toString());
+        }
+
+        System.out.println("\nEND TEST\n");
+    }
+
+
 }

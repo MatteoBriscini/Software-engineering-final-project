@@ -31,10 +31,7 @@ public class PlayerBoard {
     }
 
     public boolean checkSpace(int column, int cards){
-
-        if(board[column][y-cards].getColor() == EMPTY){return true;}
-        return false;
-
+        return board[column][y - cards].getColor() == EMPTY;
     }
 
     public int getColumns(){

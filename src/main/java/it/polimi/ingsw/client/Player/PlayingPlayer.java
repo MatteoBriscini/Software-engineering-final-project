@@ -113,6 +113,7 @@ public class PlayingPlayer extends Player{
     }
     synchronized public void createMainBoard(Card[][] board){
         this.mainBoard = new MainBoard(board);
+        if(ui!=null) ui.updateAll();
     }
     synchronized public void createAllClientBoard(ArrayList<Card[][]> boards){
         ArrayList<PlayerBoard> tmpBoards = new ArrayList<>();
@@ -120,7 +121,6 @@ public class PlayingPlayer extends Player{
             tmpBoards.add(new PlayerBoard(c));
         }
         playerBoards = tmpBoards.toArray(new PlayerBoard[0]);
-        if(ui!=null) ui.updateAll();
     }
 
     public void setPrivateGoal(PositionWithColor[] privateGoal) {
@@ -218,7 +218,7 @@ public class PlayingPlayer extends Player{
      * @param nCards how many cards have to insert in the column
      * @return false if the move is not valid (it will print a spontaneous error message)
      */
-    private boolean checkPlayerBoardMove(int column,int nCards){
+    public boolean checkPlayerBoardMove(int column,int nCards){
         if(!playerBoards[myTurnNumber].checkSpace(column, nCards)){
             JsonObject err = new JsonObject();
             err.addProperty("errorID", "invalid move");

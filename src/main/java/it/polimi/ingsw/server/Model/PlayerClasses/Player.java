@@ -134,6 +134,10 @@ public class Player {
         this.pointSum += pointSum;
     }
 
+    public boolean checkBoardSpace(int column, int cards){
+        return board.checkSpace(column,cards);
+    }
+
     public void checkPlayerTarget(){
         int result = personalTarget.checkTarget(board);
         updatePointSum(result);

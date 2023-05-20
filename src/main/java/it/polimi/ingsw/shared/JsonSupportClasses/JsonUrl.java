@@ -10,7 +10,6 @@ public class JsonUrl {
             case "gameConfig": return "gameConfig.json";
             case "couplesAndPokersConfig": return "CouplesAndPokersGoalsConfig.json";
             case "playerBoardConfig": return "playerBoardConfig.json";
-            //case "mainBoardConfigwtf": return "MainBoardConfigwtf.json";
             case "mainBoardConfig": return "MainBoardConfig.json";
             case "mainBoard3Players": return "mainBoard3Players.json";
             case "quiteVoidMainBoard": return "quiteVoidMainBoard.json";
@@ -27,6 +26,7 @@ public class JsonUrl {
             case "personalBoard2": return "personalBoard2.json";
             case "personalBoard3": return "personalBoard3.json";
             case "netConfig": return "netConfig.json";
+            case "mainBoard4": return "mainBoard4.json";
             default: return "invalid";
         }
     }

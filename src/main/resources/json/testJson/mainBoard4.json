@@ -1,0 +1,17 @@
+[
+  {
+    "x":2,
+    "y": 5,
+    "color": "GREEN"
+  },
+  {
+    "x":2,
+    "y": 4,
+    "color": "YELLOW"
+  },
+  {
+    "x":6,
+    "y": 4,
+    "color": "GREEN"
+  }
+]
