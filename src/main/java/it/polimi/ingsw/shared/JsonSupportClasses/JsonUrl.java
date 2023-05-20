@@ -26,6 +26,7 @@ public class JsonUrl {
             case "personalBoard2": return "personalBoard2.json";
             case "personalBoard3": return "personalBoard3.json";
             case "netConfig": return "netConfig.json";
+            case "TUICommonGoalsConfig": return "TUICommonGoalsConfig.json";
             case "mainBoard4": return "mainBoard4.json";
             default: return "invalid";
         }

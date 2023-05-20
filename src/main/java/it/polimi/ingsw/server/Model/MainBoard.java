@@ -154,6 +154,8 @@ public class MainBoard {
             if(deprecatedBoard(positions[i]))
                 throw new InvalidPickException("Client board is deprecated");
 
+            if(positions[i].getColor().equals(EMPTY))
+                throw new InvalidPickException("One or more tiles are EMPTY");
 
             if(!positions[i].pickable(board))
                 throw new InvalidPickException("One or more tiles do not have one side free");
@@ -171,6 +173,8 @@ public class MainBoard {
                 if(deprecatedBoard(positions[i]))
                     throw new InvalidPickException("Client board is deprecated");
 
+                if(positions[i].getColor().equals(EMPTY))
+                    throw new InvalidPickException("One or more tiles are EMPTY");
 
                 if(!positions[i].pickable(board))
                     throw new InvalidPickException("One or more tile does not have one side free");

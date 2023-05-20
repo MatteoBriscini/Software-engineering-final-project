@@ -40,6 +40,8 @@ public class TUI implements UserInterface{
     private String serverIP;
     //hide or show elements
     private boolean otherBoard = true;
+
+    private ArrayList<Integer> commonGoalsList;
     private boolean commonGoals = true;
     private boolean privateGoals = true;
     private ConnectionManager connection;
@@ -82,6 +84,7 @@ public class TUI implements UserInterface{
         this.serverIP = jsonObject.get("serverIP").getAsString();
         this.socketPort = jsonObject.get("defSocketPort").getAsInt();
         this.RMIPort = jsonObject.get("defRmiPort").getAsInt();
+
     }
 
     private int intParser(String s){
