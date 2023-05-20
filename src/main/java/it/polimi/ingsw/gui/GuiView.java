@@ -13,8 +13,8 @@ public abstract class GuiView {
         this.helloApplication = helloApplication;
     }
 
-    public void errorMsg(String errorID, String errorMsg){
-        alert.setTitle(errorID);
+    public void errorMsg(String errorMsg){
+        alert.setTitle("my shelfie");
         alert.setContentText(errorMsg);
         alert.show();
     }

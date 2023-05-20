@@ -147,7 +147,7 @@ public class HelloApplication extends Application implements UserInterface {
 
     @Override
     public void printError(String s) {
-
+        Platform.runLater(() ->guiView.errorMsg(s));
     }
 
     @Override

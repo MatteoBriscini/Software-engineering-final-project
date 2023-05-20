@@ -222,7 +222,6 @@ public class Lobby {
     }
 
     public synchronized String joinGame(String ID, ConnectionType connectionType) throws addPlayerToGameException {
-
         ArrayList<String[]> tempPlayersInGames;
         ArrayList<Controller> tempActiveGames;
         int j = 0;
@@ -235,6 +234,8 @@ public class Lobby {
         synchronized (playersInGames){
             tempPlayersInGames = playersInGames;
         }
+
+
 
         while(j < tempActiveGames.size()){
             if(tempActiveGames.get(j).getMaxPlayerNumber() > tempPlayersInGames.get(j).length && tempActiveGames.get(j).getCurrentPlayer() == -1){
@@ -247,7 +248,6 @@ public class Lobby {
     }
 
     public synchronized String joinGame(String ID, ConnectionType connectionType, String searchID) throws addPlayerToGameException {
-
         ArrayList<String[]> tempPlayersInGames;
         ArrayList<Controller> tempActiveGames;
 
@@ -261,7 +261,6 @@ public class Lobby {
         synchronized (playersInGames){
             tempPlayersInGames = playersInGames;
         }
-
 
         while(tempActiveGames.get(j) != null){
             for(String s : tempPlayersInGames.get(j)){

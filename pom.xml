@@ -74,7 +74,7 @@
                 <directory>src/main/resources/json/goal</directory>
             </resource>
             <resource>
-                <directory>src/main/resources/META-INF</directory>
+                <directory>src/main/resources/fxml_images</directory>
             </resource>
             <resource>
                 <directory>src/main/resources</directory>

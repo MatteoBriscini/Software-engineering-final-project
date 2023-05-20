@@ -140,6 +140,14 @@ public class SOCKET extends ConnectionController{
         data.add("points", points);
 
         this.sendCommand(clients.get(clients.size()-1).prepareMSG(data, "endGameValue"), clients);
+        for (MultiClientSocketGame client : clients) {
+            try {
+                client.forceClientDisconnection();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        //TODO stop ping pong
     }
     public void sendWinner(JsonObject winner, ArrayList<MultiClientSocketGame> clients) {
         JsonObject data = new JsonObject();
