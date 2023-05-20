@@ -81,7 +81,7 @@ public class GameController extends GuiView implements Initializable {
 
 
 
-        Image image4 = new Image(this.getClass().getClassLoader().getResourceAsStream("Personal_goals.png"));
+        Image image4 = new Image(this.getClass().getClassLoader().getResourceAsStream("Personal_Goals.png"));
         personalGoal1.setImage(image4);
 
 

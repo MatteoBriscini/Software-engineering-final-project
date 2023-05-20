@@ -36,22 +36,23 @@ public class LoginController extends GuiView {
         @FXML
      protected void loginButton(ActionEvent actionEvent) throws IOException {
         //check password and username, else error "password or username incorrect"
+            if(!this.userIDTextField.getText().matches("") && !this.passwordTestField.getText().matches("")) {
+                String userID;
+                String password;
+                boolean logged;
 
-         String userID;
-         String password;
-         boolean logged;
-
-         userID =  userIDTextField.getText();
-         password = passwordTestField.getText();
-         player = new LobbyPlayer(userID,password, helloApplication.getConnection());
-         player.setUi(helloApplication);
-         logged = ((LobbyPlayer) player).login();
+                userID = userIDTextField.getText();
+                password = passwordTestField.getText();
+                player = new LobbyPlayer(userID, password, helloApplication.getConnection());
+                player.setUi(helloApplication);
+                logged = ((LobbyPlayer) player).login();
 
 
-        if(logged) {
-            helloApplication.changeView("creategame.fxml");
-            helloApplication.setPlayer(player);
-        }
-
+                if (logged) {
+                    helloApplication.changeView("creategame.fxml");
+                    helloApplication.setPlayer(player);
+                }
+            }else
+             this.errorMsg("password or userID textField empty");
     }
 }

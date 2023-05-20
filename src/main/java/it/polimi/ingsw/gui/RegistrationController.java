@@ -13,7 +13,7 @@ public class RegistrationController extends GuiView{
     private Player player;
     private ConnectionManager connection;
     @FXML
-    private TextField uerIDtext = new TextField();
+    private TextField userIDtext = new TextField();
     @FXML
     private TextField passText = new TextField();
 
@@ -22,23 +22,25 @@ public class RegistrationController extends GuiView{
 
         // connection = getConnection();
 
-        String userID;
-        String password;
-        boolean logged;
+        if(!this.userIDtext.getText().matches("") && !this.passText.getText().matches("")){
+            String userID;
+            String password;
+            boolean logged;
 
-        userID =  uerIDtext.getText();
-        System.out.println(userID);
-        password = passText.getText();
-        System.out.println(password);
-        player = new LobbyPlayer(userID,password, helloApplication.getConnection());
-        player.setUi(helloApplication);
-        logged = ((LobbyPlayer) player).signUp();
+            userID = userIDtext.getText();
+            System.out.println(userID);
+            password = passText.getText();
+            System.out.println(password);
+            player = new LobbyPlayer(userID, password, helloApplication.getConnection());
+            player.setUi(helloApplication);
+            logged = ((LobbyPlayer) player).signUp();
 
-        if(logged) {
-            helloApplication.changeView("creategame.fxml");
-            helloApplication.setPlayer(player);
-        }
-
+            if (logged) {
+                helloApplication.changeView("creategame.fxml");
+                helloApplication.setPlayer(player);
+            }
+        }else
+          this.errorMsg("username or password text field empty");
 
     }
 
