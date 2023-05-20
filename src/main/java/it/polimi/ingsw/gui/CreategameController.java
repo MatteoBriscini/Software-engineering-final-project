@@ -32,25 +32,48 @@ public class CreategameController extends GuiView{
 
     @FXML
     private TextField gameIDTextfield;
+    private int minPlayers;
+    private int maxPlayers;
+
+    private void jsonCreate() throws FileNotFoundException{
+
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(JsonUrl.getUrl("controllerConfig"));
+        if(inputStream == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        JsonObject jsonObject = new Gson().fromJson(bufferedReader, JsonObject.class);
+        this.minPlayers = jsonObject.get("minPlayerNumber").getAsInt();
+        this.maxPlayers = jsonObject.get("maxPlayerNumber").getAsInt();
+    }
 
     @FXML
     protected void createCustom(ActionEvent actionEvent) throws IOException {
 
-        int x = Integer.parseInt(maxNumberTextfield.getText());
-        Player player = helloApplication.getPlayer();
+        this.jsonCreate();
+        int i;
+        i = Integer.parseInt(String.valueOf(this.maxNumberTextfield.getText()));
 
-        if(((LobbyPlayer)player).createGame(x))
-            helloApplication.changeView("waitingroom.fxml");
+        if(!this.maxNumberTextfield.getText().matches("") && i>=minPlayers && i<= maxPlayers) {
+
+            int x = Integer.parseInt(maxNumberTextfield.getText());
+            Player player = helloApplication.getPlayer();
+
+            if (((LobbyPlayer) player).createGame(x))
+                helloApplication.changeView("waitingroom.fxml");
+        }else
+            this.errorMsg("players number incorrect, please put a number between 2-4");
     }
 
     @FXML
     protected void joinCustom(ActionEvent actionEvent) throws IOException {
 
-        String x = gameIDTextfield.getText();
-        Player player = helloApplication.getPlayer();
+        if(!this.maxNumberTextfield.getText().matches("")) {
+            String x = gameIDTextfield.getText();
+            Player player = helloApplication.getPlayer();
 
-        if(((LobbyPlayer)player).joinGame(x))
-            helloApplication.changeView("waitingroom.fxml");
+            if (((LobbyPlayer) player).joinGame(x))
+                helloApplication.changeView("waitingroom.fxml");
+        }else
+         this.errorMsg("invalid GameID");
     }
 
     @FXML

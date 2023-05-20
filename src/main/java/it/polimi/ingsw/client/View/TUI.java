@@ -41,7 +41,8 @@ public class TUI implements UserInterface{
     //hide or show elements
     private boolean otherBoard = true;
 
-    private ArrayList<Integer> commonGoalsList;
+    private String[] commonGoalsList;
+    private int numTotCommonGoals;
     private boolean commonGoals = true;
     private boolean privateGoals = true;
     private ConnectionManager connection;
@@ -74,6 +75,10 @@ public class TUI implements UserInterface{
         if(inputStream1 == null) throw new FileNotFoundException();
         BufferedReader bufferedReader1 = new BufferedReader(new InputStreamReader(inputStream1));
 
+        InputStream inputStream2 = this.getClass().getClassLoader().getResourceAsStream(JsonUrl.getUrl("TUICommonGoalsConfig"));
+        if(inputStream == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader2 = new BufferedReader(new InputStreamReader(inputStream2));
+
         JsonObject jsonObject = new Gson().fromJson(bufferedReader, JsonObject.class);
         this.minPlayers = jsonObject.get("minPlayerNumber").getAsInt();
         this.maxPlayers = jsonObject.get("maxPlayerNumber").getAsInt();
@@ -85,6 +90,12 @@ public class TUI implements UserInterface{
         this.socketPort = jsonObject.get("defSocketPort").getAsInt();
         this.RMIPort = jsonObject.get("defRmiPort").getAsInt();
 
+        jsonObject = new Gson().fromJson(bufferedReader2, JsonObject.class);
+        this.numTotCommonGoals = jsonObject.get("tot").getAsInt();
+        commonGoalsList=new String[numTotCommonGoals];
+        for(int i=0;i<numTotCommonGoals;i++){
+            this.commonGoalsList[i]=(jsonObject.get(String.valueOf(i)).getAsString());
+        }
     }
 
     private int intParser(String s){
@@ -427,7 +438,7 @@ public class TUI implements UserInterface{
      * @param msg is the string that contains the message sent to the player
      */
     public void receiveMsg(String msg){
-        System.out.println(msg);
+        System.out.println(msg+"\n");
     }
 
 
@@ -637,7 +648,7 @@ public class TUI implements UserInterface{
             }
         }
 
-        //TODO common goal if(commongGoals)
+        if(commonGoals) System.out.println("Common goals:\n1)"+ commonGoalsList[((PlayingPlayer) player).getCommonGoalID()[0]]+"\n2)"+ commonGoalsList[((PlayingPlayer) player).getCommonGoalID()[1]]);
 
         mainBoardToString(((PlayingPlayer) player).getMainBoard(),mainBoardToPrint);
         this.printBoard(mainBoardToPrint,((PlayingPlayer) player).getMainBoard().getColumns(),((PlayingPlayer) player).getMainBoard().getRows() , "main");
@@ -658,6 +669,9 @@ public class TUI implements UserInterface{
      * @param tableJ is a JsonObject formatted this way: { "[name1]": points1, [...] , "[nameN]": pointsN}
      */
     public void finalResults(JsonObject tableJ){
+        Scanner sc = new Scanner(System.in);
+        char selection;
+
         int n=((PlayingPlayer)player).getPlayersNumber();
         String[][] table = new String[n][n];
         for(int i=0;i<n; i++){
@@ -667,11 +681,25 @@ public class TUI implements UserInterface{
 
         Arrays.sort(table, Comparator.comparingInt(row->Integer.parseInt(row[1])));
 
+        printTitle();
         System.out.println("FINAL RESULTS:");
         for(int i=0;i<n;i++){
             System.out.println("#"+(i+1)+": "+table[i][0]+"\tpoints: "+table[i][1]);
         }
 
+
+        do{
+            System.out.println("Do you want to start a new game? [Y/N]");
+            selection=charCommand();
+            if(selection!='Y' && selection!='N')
+                printError("Invalid selection, please try again");
+        }while (selection!='Y' && selection!='N');
+
+        if(selection=='Y')
+            connection.setPlayerAsLobby();
+
+        if(selection=='N')
+            System.exit(0);
     }
 
 
@@ -806,8 +834,6 @@ public class TUI implements UserInterface{
 
     private void printBoard() {
 
-
-        /** stampare obiettivi*/
 
 
         for(String id : ((PlayingPlayer) player).getPlayersID()){
