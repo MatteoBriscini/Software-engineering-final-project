@@ -3,6 +3,7 @@ package it.polimi.ingsw.server.Connection.RMI;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.client.Connection.PlayingPlayerRemoteInterface;
+import it.polimi.ingsw.client.Player.PlayingPlayer;
 import it.polimi.ingsw.server.Connection.ConnectionController;
 import it.polimi.ingsw.server.Connection.RMI.SendCommand.*;
 import it.polimi.ingsw.server.Controller;
@@ -218,6 +219,7 @@ public class RMI extends ConnectionController implements LobbyRemoteInterface {
     public void sendEndGamePoint(JsonObject points, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
         Command command = new EndGameCommand(points);
         sendCommand(command, clients, connectionInterface);
+        for (String s: clients.keySet()) connectionInterface.removeClientRMI(clients.get(s), s);
     }
 
     public void sendWinner(JsonObject winner, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {

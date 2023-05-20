@@ -111,11 +111,10 @@ public class PlayingPlayer extends Player{
         this.playersNumber = playersNumber;
         if(ui!=null)ui.receiveNumPlayers(playersNumber);
     }
-    public void createMainBoard(Card[][] board){
+    synchronized public void createMainBoard(Card[][] board){
         this.mainBoard = new MainBoard(board);
-
     }
-    public void createAllClientBoard(ArrayList<Card[][]> boards){
+    synchronized public void createAllClientBoard(ArrayList<Card[][]> boards){
         ArrayList<PlayerBoard> tmpBoards = new ArrayList<>();
         for(Card[][] c : boards){
             tmpBoards.add(new PlayerBoard(c));
