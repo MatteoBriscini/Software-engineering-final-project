@@ -7,41 +7,66 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <AnchorPane prefHeight="500.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.gui.GameController">
 
- <VBox layoutX="1150.0" layoutY="20.0" prefHeight="550.0" prefWidth="342.0" spacing="20">
-    <AnchorPane fx:id="myBookshelfAnchor">
-        <ImageView fx:id="myBookshelfImage" fitHeight="450.0" fitWidth="400.0" pickOnBounds="true" preserveRatio="true" />
-    </AnchorPane>
+ <VBox fx:id="rightDiv" layoutX="1150.0" layoutY="20.0" prefHeight="540.0" prefWidth="342.0" spacing="20" alignment="CENTER">
+    <VBox alignment="CENTER" fx:id="myBookshelfAnchor">
+        <ImageView fx:id="myBookshelfImage" fitHeight="420.0" fitWidth="370.0" pickOnBounds="true" preserveRatio="true" />
+        <Label fx:id="myBoard" text="your board"></Label>
+    </VBox>
+     <VBox fx:id="chat" layoutX="1175.0" layoutY="450.0" prefHeight="530.0" prefWidth="380.0" spacing="20">
+         <ScrollPane fx:id="messageContainer" minHeight="220" maxWidth="360">
+
+         </ScrollPane>
+         <Button fx:id="hideChat" onAction="#hideChat" text="_" ></Button>
+         <HBox spacing="5" fx:id="chatCommandDiv">
+             <ChoiceBox fx:id="chatName" >
+
+             </ChoiceBox>
+             <TextField fx:id="chatMSG" promptText="send message"/>
+             <Button fx:id="sendMSG" text="->"/>
+         </HBox>
+     </VBox>
  </VBox>
 
-   <VBox layoutX="500.0" prefHeight="630.0" prefWidth="932.0" spacing="10.0">
-           <ImageView fx:id="livingRoom" fitHeight="600.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true" />
-
-       <HBox fx:id="bookshelfAnchor" prefHeight="150.0" prefWidth="342.0" spacing="90">
-           <ImageView fx:id="myBookshelfImage1" fitHeight="140.0" fitWidth="150" pickOnBounds="true" preserveRatio="true" />
-           <ImageView fx:id="myBookshelfImage2" fitHeight="140.0" fitWidth="150" pickOnBounds="true" preserveRatio="true" />
-           <ImageView fx:id="myBookshelfImage3" fitHeight="140.0" fitWidth="150" pickOnBounds="true" preserveRatio="true" />
+   <VBox layoutX="500.0" prefHeight="630.0" spacing="20.0">
+       <AnchorPane fx:id="livingRoomBox" maxWidth="570.0" maxHeight="570.0">
+            <ImageView fx:id="livingRoom" fitHeight="565.0" fitWidth="565.0" pickOnBounds="true" preserveRatio="true" />
+       </AnchorPane>
+       <HBox fx:id="bookshelfAnchor" prefHeight="150.0" spacing="70">
+           <VBox alignment="CENTER" fx:id="myBookshelfBox1">
+            <ImageView fx:id="myBookshelfImage1" fitHeight="140.0" fitWidth="150" pickOnBounds="true" preserveRatio="true" />
+               <Label fx:id="shelfID1" text="player1"></Label>
+           </VBox>
+           <VBox alignment="CENTER" fx:id="myBookshelfBox2">
+            <ImageView fx:id="myBookshelfImage2" fitHeight="140.0" fitWidth="150" pickOnBounds="true" preserveRatio="true" />
+               <Label fx:id="shelfID2"  text="player2"></Label>
+           </VBox>
+           <VBox alignment="CENTER" fx:id="myBookshelfBox3">
+            <ImageView fx:id="myBookshelfImage3" fitHeight="140.0" fitWidth="150" pickOnBounds="true" preserveRatio="true" />
+               <Label fx:id="shelfID3"  text="player3"></Label>
+           </VBox>
        </HBox>
    </VBox>
-
-   <HBox fx:id="personalGoals" layoutX="150.0" layoutY="150.0" prefHeight="417.0" prefWidth="472.0">
-       <ImageView fx:id="personalGoal1" fitHeight="300.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true" />
-   </HBox>
-
-   <HBox fx:id="commonGoals" layoutX="15" layoutY="600.0" prefHeight="288.0" prefWidth="513.0" spacing="80">
-       <ImageView fx:id="commonGoal1" fitHeight="250.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-       <ImageView fx:id="commonGoal2" fitHeight="250.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-   </HBox>
-
-   <VBox fx:id="chat" layoutX="1175.0" layoutY="450.0" prefHeight="550.0" prefWidth="342.0" spacing="20">
-       <ChoiceBox>
-
-       </ChoiceBox>
-       <HBox spacing="200" >
-       <TextField/>
-       <Button text="send message"/>
+    <VBox fx:id="leftDiv" prefHeight="750.0" prefWidth="442.0" spacing="40  " alignment="CENTER">
+       <HBox fx:id="personalGoals" prefHeight="241.0" prefWidth="472.0">
+           <ImageView fx:id="personalGoal1" fitHeight="350.0" fitWidth="231.0" pickOnBounds="true" preserveRatio="true" />
+           <Button fx:id="hidePersonal" onAction="#hidePersonal" text="_" ></Button>
        </HBox>
-   </VBox>
+        <HBox fx:id="commonGoals">
+
+           <VBox  prefHeight="288.0" prefWidth="513.0" spacing="20">
+
+               <AnchorPane>
+                    <ImageView fx:id="commonGoal1" fitHeight="131.0" fitWidth="200.0"  pickOnBounds="true" preserveRatio="true" />
+               </AnchorPane>
+               <ImageView fx:id="commonGoal2" fitHeight="131.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+           </VBox>
+            <Button fx:id="hideCommon" text="_" onAction="#hideCommon"></Button>
+        </HBox>
+    </VBox>
+
 
 </AnchorPane>

@@ -20,14 +20,18 @@ import java.io.IOException;
 
 public class HelloApplication extends Application implements UserInterface {
 
-    GuiView guiView;
+    private GuiView guiView;
     private WaitingroomController  waitingroomController;
     private Player player;
     private ConnectionManager connection;
     private Stage stage;
-
+    private Parent root;
     public Stage getStage() {
         return stage;
+    }
+
+    public Parent getRoot() {
+        return root;
     }
 
     public void setPlayer(Player player) {
@@ -49,7 +53,7 @@ public class HelloApplication extends Application implements UserInterface {
     public void changeView(String viewName) throws IOException {
 
         FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource(viewName));
-        Parent root = (Parent) fxmlLoader.load() ;
+        root = (Parent) fxmlLoader.load() ;
         guiView = (GuiView) fxmlLoader.getController();
         guiView.setHelloApplication(this);
         Scene scene = new Scene(root, 1280, 720);
@@ -68,11 +72,10 @@ public class HelloApplication extends Application implements UserInterface {
 
             stage.setResizable(false);
             FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("hello-view.fxml"));
-            Parent root = (Parent) fxmlLoader.load() ;
+            root = (Parent) fxmlLoader.load() ;
             guiView = (GuiView) fxmlLoader.getController();
             guiView.setHelloApplication(this);
             Scene scene = new Scene(root, 1280, 720);
-           // Scene scene = new Scene(root, 1550, 750);
             stage.getIcons().add(new Image(this.getClass().getClassLoader().getResourceAsStream("Icon.png")));
             String css = this.getClass().getResource("application.css").toExternalForm();
             scene.getStylesheets().add(css);
@@ -110,7 +113,6 @@ public class HelloApplication extends Application implements UserInterface {
         Platform.runLater(() -> {
             stage.setResizable(false);
             FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("game.fxml"));
-            Parent root = null;
             try {
                 root = (Parent) fxmlLoader.load();
             } catch (IOException e) {
@@ -120,6 +122,8 @@ public class HelloApplication extends Application implements UserInterface {
             guiView.setHelloApplication(this);
             Scene scene = new Scene(root, 1550, 750);
             stage.setScene(scene);
+            String css = this.getClass().getResource("game.css").toExternalForm();
+            scene.getStylesheets().add(css);
             stage.show();
         });
     }

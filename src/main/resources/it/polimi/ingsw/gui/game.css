@@ -1,0 +1,149 @@
+.root {
+    -fx-background-color: #db9263;
+    -fx-background-image: url("base_pagina2.jpg");
+    -fx-background-repeat: stretch;
+    -fx-background-size: cover;
+    -fx-background-position: center center;
+}
+.label{
+    -fx-font-family: "Bitstream Vera Sans Mono";
+}
+.button{
+    -fx-cursor: hand;
+}
+#bookshelfAnchor{
+    -fx-background-color: #db9263;
+    -fx-arc-width: 1550;
+    -fx-translate-y:  -10px;
+    -fx-translate-x: -15px;
+    -fx-padding:15px25px10px;
+    -fx-background-radius: 25px 25px 0px 0px ;
+}
+#shelfID1, #shelfID2, #shelfID3{
+    -fx-arc-width: 110;
+    -fx-background-color: rgb(160,82,45);
+    -fx-text-fill: #db9263 !important;
+    -fx-padding: 3px;
+    -fx-background-radius: 7px;
+    -fx-translate-y: -15px;
+}
+#livingRoomBox{
+    -fx-background-color: #db9263;
+    -fx-background-radius: 25px;
+    -fx-padding: 5;
+    -fx-arc-width: 500!important;
+    -fx-pref-width: 500!important;
+    -fx-border-image-width: 0;
+}
+#livingRoom{
+    -fx-padding: 5;
+    -fx-translate-y: 5px;
+    -fx-translate-x: 5px;
+}
+#leftDiv{
+    -fx-padding: 20px;
+}
+#personalGoals, #commonGoals{
+    -fx-background-color: #db9263;
+    -fx-padding: 10px;
+    -fx-background-radius: 25px;
+}
+#myBookshelfAnchor{
+    -fx-background-color: #db9263;
+    -fx-padding: 15px 13px -20px 15px;
+    -fx-translate-x: -15px;
+    -fx-translate-y: -2px;
+    -fx-background-radius: 25px;
+}
+#myBookshelfImage{
+    -fx-translate-x: -3px;
+    -fx-translate-y: -3px;
+}
+#myBoard{
+    -fx-arc-width: 110;
+    -fx-background-color: rgb(160,82,45);
+    -fx-text-fill: #db9263 !important;
+    -fx-padding: 7px;
+    -fx-font-size: 20px;
+    -fx-background-radius: 12px;
+    -fx-translate-y: -33px;
+}
+#chat{
+    -fx-translate-x: -15px;
+    -fx-background-color: rgb(160,82,45);
+    -fx-background-radius: 25px;
+    -fx-padding: 0 0 -25px;
+}
+#chatCommandDiv{
+    -fx-translate-x: 5px;
+    -fx-padding: 0010px;
+    -fx-translate-y: -25px;
+}
+#chatName{
+    -fx-min-height: 40px;
+    -fx-min-width: 90px;
+    -fx-background-radius: 12px;
+    -fx-cursor: hand;
+    -fx-background-color: #db9263;
+}
+#sendMSG{
+    -fx-min-height: 40px;
+    -fx-min-width: 40px;
+    -fx-background-radius: 80px;
+    -fx-background-color: #99cc00;
+}
+#chatMSG{
+    -fx-min-height: 40px;
+    -fx-min-width: 230px;
+    -fx-background-radius: 12px;
+    -fx-background-color: #db9263;
+    -fx-prompt-text-fill: white;
+}
+#messageContainer{
+    -fx-translate-x: 20px;
+    -fx-translate-y: 10px;
+    -fx-background-color: rgb(160,82,45);
+}
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+#hidePersonal, #hideCommon, #hideChat {
+    -fx-font-size: 30px;
+    -fx-background-color: rgba(0,0,0,0);
+}
+#hidePersonal{
+    -fx-translate-x: 105px;
+    -fx-translate-y: -35px;
+}
+#hideCommon{
+    -fx-translate-x: 7px;
+    -fx-translate-y: -35px;
+}
+#hideChat{
+    -fx-padding: -50px 0 -90px;
+    -fx-translate-y: -255px;
+    -fx-translate-x: 360px;
+}
+#showChat, #showPersonal, #showCommon{
+    -fx-background-radius: 12px;
+    -fx-padding: 10px;
+    -fx-pref-height: 40;
+    -fx-alignment: "CENTER";
+}
+#showChat{
+    -fx-background-color: rgb(160,82,45);
+    -fx-translate-x: -15px;
+}
+#showPersonal, #showCommon{
+    -fx-background-color: #db9263;
+}
+#showChatButton, #showPersonalButton, #showCommonButton{
+    -fx-background-radius: 60px;
+    -fx-background-color: #99ccff;
+}
+#showChatButton{
+    -fx-translate-x: 140px;
+}
+#showPersonalButton, #showCommonButton{
+    -fx-translate-x: 105px;
+}
