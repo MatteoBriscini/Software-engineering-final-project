@@ -4,6 +4,8 @@ import com.google.gson.JsonObject;
 import it.polimi.ingsw.client.Connection.ConnectionManager;
 import it.polimi.ingsw.client.Player.Player;
 import it.polimi.ingsw.client.View.UserInterface;
+import it.polimi.ingsw.gui.supportClass.Message;
+import it.polimi.ingsw.gui.supportClass.MessageTipe;
 import it.polimi.ingsw.shared.Cards.Card;
 import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
 import it.polimi.ingsw.shared.PlayerMode;
@@ -84,8 +86,6 @@ public class HelloApplication extends Application implements UserInterface {
             stage.show();
             this.stage = stage;
 
-
-
     }
 
     public static void main(String[] args) {
@@ -105,7 +105,12 @@ public class HelloApplication extends Application implements UserInterface {
 
     @Override
     public void receiveMsg(String msg) {
-
+        Message message;
+        if(msg.contains("[PRIVATE]"))message =new Message(msg, MessageTipe.PRIVATE);
+        else message=new Message(msg, MessageTipe.BROADCAST);
+        Platform.runLater(() -> {
+            if(guiView instanceof GameController) ((GameController)guiView).chatReceiveMsg(message);
+        });
     }
 
     @Override
@@ -120,6 +125,7 @@ public class HelloApplication extends Application implements UserInterface {
             }
             guiView = (GuiView) fxmlLoader.getController();
             guiView.setHelloApplication(this);
+            ((GameController)guiView).gameInit();
             Scene scene = new Scene(root, 1550, 750);
             stage.setScene(scene);
             String css = this.getClass().getResource("game.css").toExternalForm();

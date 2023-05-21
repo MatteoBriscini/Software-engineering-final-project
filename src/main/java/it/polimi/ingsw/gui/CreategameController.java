@@ -65,7 +65,6 @@ public class CreategameController extends GuiView{
 
     @FXML
     protected void joinCustom(ActionEvent actionEvent) throws IOException {
-
         if(!this.maxNumberTextfield.getText().matches("")) {
             String x = gameIDTextfield.getText();
             Player player = helloApplication.getPlayer();

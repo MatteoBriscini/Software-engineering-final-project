@@ -1,53 +1,33 @@
 package it.polimi.ingsw.gui;
 
-import it.polimi.ingsw.client.Connection.ConnectionManager;
-import javafx.collections.ObservableList;
+import it.polimi.ingsw.gui.supportClass.Message;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import it.polimi.ingsw.client.Player.LobbyPlayer;
-import it.polimi.ingsw.client.Player.Player;
 import it.polimi.ingsw.client.Player.PlayingPlayer;
-import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
-import it.polimi.ingsw.shared.exceptions.addPlayerToGameException;
-import it.polimi.ingsw.shared.Cards.Card;
-import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
-import javafx.scene.control.TextField;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
 
-import javax.security.auth.login.LoginException;
 import java.io.*;
 import java.net.URL;
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class GameController extends GuiView implements Initializable {
 
 
-    PlayingPlayer player;
+    private PlayingPlayer player;
 
     @FXML
     private ImageView myBookshelfImage = new ImageView();
-
     @FXML
     private ImageView myBookshelfImage1 = new ImageView();
     @FXML
@@ -62,40 +42,43 @@ public class GameController extends GuiView implements Initializable {
     private ImageView commonGoal1 = new ImageView();
     @FXML
     private ImageView commonGoal2 = new ImageView();
+
+    //chat
+    @FXML
+    private ChoiceBox<String> chatName = new ChoiceBox<>();
+    @FXML
+    private ScrollPane messageContainer = new ScrollPane();
+    //ux
     @FXML
     private VBox rightDiv = new VBox();
     @FXML
     private VBox leftDiv = new VBox();
+    private ArrayList<Message> messages =new ArrayList<>();
     @FXML
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    public void initialize(URL url, ResourceBundle resourceBundle) {            //static element init
+        imagesInit(myBookshelfImage, "bookshelf.png"); //load player board img
+        imagesInit(myBookshelfImage1, "bookshelf.png");
+        imagesInit(myBookshelfImage2, "bookshelf.png");
+        imagesInit(myBookshelfImage3, "bookshelf.png");
 
-       // player = (PlayingPlayer) helloApplication.getPlayer();
-
-        Image image = new Image(this.getClass().getClassLoader().getResourceAsStream("bookshelf.png"));
-        myBookshelfImage.setImage(image);
-
-        myBookshelfImage1.setImage(image);
-
-        myBookshelfImage2.setImage(image);
-
-        myBookshelfImage3.setImage(image);  //load the other boards
-
-        Image image1 = new Image(this.getClass().getClassLoader().getResourceAsStream("livingroom.png"));
-        livingRoom.setImage(image1);
+        imagesInit(livingRoom, "livingroom.png");       //load living room png
         this.setBorderRadius(livingRoom, 40);
 
-        Image image2 = new Image(this.getClass().getClassLoader().getResourceAsStream("1.jpg"));
-        commonGoal1.setImage(image2);
+        imagesInit(commonGoal1, "1.jpg");               //load common goal img TODO
         this.setBorderRadius(commonGoal1, 40);
-
-        Image image3 = new Image(this.getClass().getClassLoader().getResourceAsStream("2.jpg"));
-        commonGoal2.setImage(image3);
+        imagesInit(commonGoal2, "2.jpg");
         this.setBorderRadius(commonGoal2, 40);
 
-        Image image4 = new Image(this.getClass().getClassLoader().getResourceAsStream("Personal_Goals.png"));
-        personalGoal1.setImage(image4);
+        imagesInit(personalGoal1, "Personal_Goals.png");//load private goal img TODO
         this.setBorderRadius(personalGoal1, 40);
-
+    }
+    public void gameInit(){                         //dynamic element init
+        player = (PlayingPlayer) helloApplication.getPlayer();
+        chatInit();
+    }
+    private void imagesInit(ImageView imageView, String file){
+        Image image = new Image(this.getClass().getClassLoader().getResourceAsStream(file));
+        imageView.setImage(image);
     }
 
     private void setBorderRadius (ImageView immage, int size){
@@ -107,6 +90,38 @@ public class GameController extends GuiView implements Initializable {
         immage.setClip(clip);
     }
 
+
+    /**********************************************************************
+     *                               CHAT                                 *
+     **********************************************************************/
+
+    private void chatInit(){
+            chatName.getItems().add("ALL");
+            for (String s: player.getPlayersID())if(!s.equals(player.getPlayerID()))chatName.getItems().add(s);
+        chatName.setValue("ALL");
+    }
+
+    public void chatReceiveMsg(Message msg){
+        System.out.println(messageContainer.getContent());
+        System.out.println("ciao");
+            messages.add(msg);
+            VBox group = new VBox();
+            for(int i=messages.size(); i>=0; i--){
+                Label label = new Label();
+                label.setText(msg.getText());
+                group.getChildren().addAll(label);
+            }
+            messageContainer.setContent(group);
+        System.out.println(group.getChildren());
+        System.out.println(messages);
+    }
+
+    /**********************************************************************
+     *                               UX                                   *
+     **********************************************************************
+     * @param actionEvent
+     * @throws IOException
+     */
     @FXML
     protected void hideChat(ActionEvent actionEvent) throws IOException {
         Node bookShelf = rightDiv.getChildren().get(0);

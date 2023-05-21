@@ -77,6 +77,12 @@
                 <directory>src/main/resources/fxml_images</directory>
             </resource>
             <resource>
+                <directory>src/main/resources/fxml_images/commonGoalCards</directory>
+            </resource>
+            <resource>
+                <directory>src/main/resources/fxml_images/personalGoalCards</directory>
+            </resource>
+            <resource>
                 <directory>src/main/resources</directory>
             </resource>
 

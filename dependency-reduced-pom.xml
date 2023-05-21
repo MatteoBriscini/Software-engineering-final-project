@@ -21,6 +21,9 @@
         <directory>src/main/resources/META-INF</directory>
       </resource>
       <resource>
+        <directory>src/main/resources/fxml_images</directory>
+      </resource>
+      <resource>
         <directory>src/main/resources</directory>
       </resource>
       <resource>

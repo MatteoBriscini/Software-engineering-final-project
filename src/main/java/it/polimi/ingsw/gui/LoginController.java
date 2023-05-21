@@ -25,10 +25,6 @@ public class LoginController extends GuiView {
 
     @FXML
     protected void registerButton(ActionEvent actionEvent) throws IOException {
-
-          /*  HelloController connection = new HelloController();
-            Object connection1 = connection.getConnection(); */
-
             helloApplication.changeView("registration.fxml");
         }
 
@@ -49,8 +45,8 @@ public class LoginController extends GuiView {
 
 
                 if (logged) {
-                    helloApplication.changeView("creategame.fxml");
                     helloApplication.setPlayer(player);
+                    helloApplication.changeView("creategame.fxml");
                 }
             }else
              this.errorMsg("password or userID textField empty");
