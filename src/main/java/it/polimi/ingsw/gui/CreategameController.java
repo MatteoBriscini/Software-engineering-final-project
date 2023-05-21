@@ -65,14 +65,15 @@ public class CreategameController extends GuiView{
 
     @FXML
     protected void joinCustom(ActionEvent actionEvent) throws IOException {
-        if(!this.maxNumberTextfield.getText().matches("")) {
+
+        if(!this.gameIDTextfield.getText().matches("")) {
             String x = gameIDTextfield.getText();
             Player player = helloApplication.getPlayer();
 
             if (((LobbyPlayer) player).joinGame(x))
                 helloApplication.changeView("waitingroom.fxml");
         }else
-         this.errorMsg("invalid GameID");
+            this.errorMsg("invalid GameID");
     }
 
     @FXML
