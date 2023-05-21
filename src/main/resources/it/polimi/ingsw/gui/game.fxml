@@ -26,7 +26,7 @@
 
              </ChoiceBox>
              <TextField fx:id="chatMSG" promptText="send message"/>
-             <Button fx:id="sendMSG" text="->"/>
+             <Button fx:id="sendMSG" onAction="#sendMSG" text="->"/>
          </HBox>
      </VBox>
  </VBox>
@@ -38,22 +38,26 @@
        <HBox fx:id="bookshelfAnchor" prefHeight="150.0" spacing="70">
            <VBox alignment="CENTER" fx:id="myBookshelfBox1">
             <ImageView fx:id="myBookshelfImage1" fitHeight="140.0" fitWidth="150" pickOnBounds="true" preserveRatio="true" />
-               <Label fx:id="shelfID1" text="player1"></Label>
+               <Label fx:id="shelfID1" text="void"></Label>
            </VBox>
            <VBox alignment="CENTER" fx:id="myBookshelfBox2">
             <ImageView fx:id="myBookshelfImage2" fitHeight="140.0" fitWidth="150" pickOnBounds="true" preserveRatio="true" />
-               <Label fx:id="shelfID2"  text="player2"></Label>
+               <Label fx:id="shelfID2"  text="void"></Label>
            </VBox>
            <VBox alignment="CENTER" fx:id="myBookshelfBox3">
             <ImageView fx:id="myBookshelfImage3" fitHeight="140.0" fitWidth="150" pickOnBounds="true" preserveRatio="true" />
-               <Label fx:id="shelfID3"  text="player3"></Label>
+               <Label fx:id="shelfID3"  text="void"></Label>
            </VBox>
        </HBox>
    </VBox>
     <VBox fx:id="leftDiv" prefHeight="750.0" prefWidth="442.0" spacing="40  " alignment="CENTER">
        <HBox fx:id="personalGoals" prefHeight="241.0" prefWidth="472.0">
            <ImageView fx:id="personalGoal1" fitHeight="350.0" fitWidth="231.0" pickOnBounds="true" preserveRatio="true" />
-           <Button fx:id="hidePersonal" onAction="#hidePersonal" text="_" ></Button>
+           <VBox>
+               <Button fx:id="hidePersonal" onAction="#hidePersonal" text="_" ></Button>
+               <ImageView fx:id="logo" pickOnBounds="true" preserveRatio="true" />
+           </VBox>
+
        </HBox>
         <HBox fx:id="commonGoals">
 

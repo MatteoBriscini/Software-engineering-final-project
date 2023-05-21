@@ -11,6 +11,9 @@
 .button{
     -fx-cursor: hand;
 }
+#logo{
+    -fx-translate-y: 50px;
+}
 #bookshelfAnchor{
     -fx-background-color: #db9263;
     -fx-arc-width: 1550;
@@ -73,6 +76,16 @@
     -fx-background-color: rgb(160,82,45);
     -fx-background-radius: 25px;
     -fx-padding: 0 0 -25px;
+}
+#chatVbox{
+    -fx-spacing: 10;
+    -fx-translate-x: 5px;
+}
+#chatVbox .label{
+    -fx-padding:5px15px;
+    -fx-border-radius: 7px;
+    -fx-font-size: 15px;
+    -fx-max-width: 320;
 }
 #chatCommandDiv{
     -fx-translate-x: 5px;

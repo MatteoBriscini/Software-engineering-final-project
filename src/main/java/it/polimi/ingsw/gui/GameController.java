@@ -1,19 +1,19 @@
 package it.polimi.ingsw.gui;
 
+import it.polimi.ingsw.client.Exceptions.PlayerNotFoundException;
 import it.polimi.ingsw.gui.supportClass.Message;
+import it.polimi.ingsw.gui.supportClass.MessageTipe;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import it.polimi.ingsw.client.Player.PlayingPlayer;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 import java.io.*;
@@ -24,8 +24,21 @@ import java.util.ResourceBundle;
 public class GameController extends GuiView implements Initializable {
 
 
+    //game
     private PlayingPlayer player;
+    private ArrayList<String> otherPlayers = new ArrayList<>();
 
+    //bookShelf
+    @FXML
+    private Label shelfID1 = new Label();
+    @FXML
+    private Label shelfID2 = new Label();
+    @FXML
+    private Label shelfID3 = new Label();
+
+    //images
+    @FXML
+    public ImageView logo = new ImageView();
     @FXML
     private ImageView myBookshelfImage = new ImageView();
     @FXML
@@ -48,26 +61,28 @@ public class GameController extends GuiView implements Initializable {
     private ChoiceBox<String> chatName = new ChoiceBox<>();
     @FXML
     private ScrollPane messageContainer = new ScrollPane();
+    @FXML
+    private TextField chatMSG = new TextField();
+    private ArrayList<Message> messages =new ArrayList<>();
+
     //ux
     @FXML
     private VBox rightDiv = new VBox();
     @FXML
     private VBox leftDiv = new VBox();
-    private ArrayList<Message> messages =new ArrayList<>();
+
+
+    /**********************************************************************
+     *                              initialize                            *
+     **********************************************************************/
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {            //static element init
         imagesInit(myBookshelfImage, "bookshelf.png"); //load player board img
-        imagesInit(myBookshelfImage1, "bookshelf.png");
-        imagesInit(myBookshelfImage2, "bookshelf.png");
-        imagesInit(myBookshelfImage3, "bookshelf.png");
+
+        imagesInit(logo, "Publisher.png");
 
         imagesInit(livingRoom, "livingroom.png");       //load living room png
         this.setBorderRadius(livingRoom, 40);
-
-        imagesInit(commonGoal1, "1.jpg");               //load common goal img TODO
-        this.setBorderRadius(commonGoal1, 40);
-        imagesInit(commonGoal2, "2.jpg");
-        this.setBorderRadius(commonGoal2, 40);
 
         imagesInit(personalGoal1, "Personal_Goals.png");//load private goal img TODO
         this.setBorderRadius(personalGoal1, 40);
@@ -75,12 +90,54 @@ public class GameController extends GuiView implements Initializable {
     public void gameInit(){                         //dynamic element init
         player = (PlayingPlayer) helloApplication.getPlayer();
         chatInit();
+        playerInit();
+        commonGoalsInit();
     }
     private void imagesInit(ImageView imageView, String file){
         Image image = new Image(this.getClass().getClassLoader().getResourceAsStream(file));
         imageView.setImage(image);
     }
 
+    private void commonGoalsInit(){
+        int[] goals = player.getCommonGoalID();
+        ImageView[] commonGoal = new ImageView[2];
+        commonGoal[0] = commonGoal1; commonGoal[1] = commonGoal2;
+        for(int i=0;i<goals.length;i++){switch (goals[i]){
+            case 0 -> imagesInit(commonGoal[i], "4.jpg");
+            case 1 -> imagesInit(commonGoal[i], "3.jpg");
+            case 2 -> imagesInit(commonGoal[i], "8.jpg");
+            case 3 -> imagesInit(commonGoal[i], "11.jpg");
+            case 4 -> imagesInit(commonGoal[i], "10.jpg");
+            case 5 -> imagesInit(commonGoal[i], "2.jpg");
+            case 6 -> imagesInit(commonGoal[i], "6.jpg");
+            case 7 -> imagesInit(commonGoal[i], "5.jpg");
+            case 8 -> imagesInit(commonGoal[i], "7.jpg");
+            case 9 -> imagesInit(commonGoal[i], "9.jpg");
+            case 10 -> imagesInit(commonGoal[i], "1.jpg");
+            case 11 -> imagesInit(commonGoal[i], "12.jpg");
+            }
+        this.setBorderRadius(commonGoal[i], 40);
+        }
+    }
+
+    private void playerInit(){
+        for(String s: player.getPlayersID())if(!s.equals(player.getPlayerID()))otherPlayers.add(s);
+        imagesInit(myBookshelfImage1, "bookshelf.png");
+        shelfID1.setText(otherPlayers.get(0));
+
+        imagesInit(myBookshelfImage2, "bookshelf_orth.png");
+        imagesInit(myBookshelfImage3, "bookshelf_orth.png");
+
+
+        if(otherPlayers.size()>1) {
+            imagesInit(myBookshelfImage2, "bookshelf.png");
+            shelfID2.setText(otherPlayers.get(1));
+        }
+        if(otherPlayers.size()>2) {
+            imagesInit(myBookshelfImage3, "bookshelf.png");
+            shelfID2.setText(otherPlayers.get(2));
+        }
+    }
     private void setBorderRadius (ImageView immage, int size){
         Rectangle clip = new Rectangle(
                 immage.getFitWidth(), immage.getFitHeight()
@@ -96,31 +153,61 @@ public class GameController extends GuiView implements Initializable {
      **********************************************************************/
 
     private void chatInit(){
-            chatName.getItems().add("ALL");
-            for (String s: player.getPlayersID())if(!s.equals(player.getPlayerID()))chatName.getItems().add(s);
+        chatName.getItems().add("ALL");
+        for (String s: player.getPlayersID())if(!s.equals(player.getPlayerID()))chatName.getItems().add(s);
         chatName.setValue("ALL");
     }
 
     public void chatReceiveMsg(Message msg){
-        System.out.println(messageContainer.getContent());
-        System.out.println("ciao");
-            messages.add(msg);
-            VBox group = new VBox();
-            for(int i=messages.size(); i>=0; i--){
-                Label label = new Label();
-                label.setText(msg.getText());
-                group.getChildren().addAll(label);
+        messages.add(msg);
+        this.printMsg();
+    }
+    @FXML
+    public void sendMSG(ActionEvent actionEvent) throws IOException {
+        String msg = chatMSG.getText();
+        if(msg.matches("")){
+            this.errorMsg("fill the message text field before");
+            return;
+        }
+
+        if(chatName.getValue().equals("ALL")){
+            player.sendBroadcastMsg(msg);
+            messages.add(new Message("your: "+ msg, MessageTipe.MINE));
+        }else {
+            try {
+                player.sendPrivateMSG(chatName.getValue(), msg);
+                messages.add(new Message("your: [PRIVATE] "+ msg, MessageTipe.MINE));
+            } catch (PlayerNotFoundException e) {
+                this.errorMsg("can't find player in this game");
             }
-            messageContainer.setContent(group);
-        System.out.println(group.getChildren());
-        System.out.println(messages);
+        }
+
+
+        this.printMsg();
+    }
+    private void printMsg(){
+        CornerRadii cornerRadii = new CornerRadii(9);
+        VBox group = new VBox();
+        group.setId("chatVbox");
+        for(int i=0; i<=messages.size()-1;i++){
+            Label label = new Label();
+            label.setMaxWidth(320);
+            label.setWrapText(true);
+            label.setText(messages.get(i).getText());
+            switch (messages.get(i).getMsgType()){
+                case BROADCAST -> label.setBackground(new Background(new BackgroundFill(Color.rgb(0, 204, 153), cornerRadii, Insets.EMPTY)));
+                case PRIVATE ->  label.setBackground(new Background(new BackgroundFill(Color.rgb(255, 153, 102), cornerRadii, Insets.EMPTY)));
+                case MINE ->  label.setBackground(new Background(new BackgroundFill(Color.rgb(153, 204, 255), cornerRadii, Insets.EMPTY)));
+            }
+            group.getChildren().addAll(label);
+        }
+        messageContainer.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        messageContainer.setContent(group);
     }
 
     /**********************************************************************
      *                               UX                                   *
      **********************************************************************
-     * @param actionEvent
-     * @throws IOException
      */
     @FXML
     protected void hideChat(ActionEvent actionEvent) throws IOException {
@@ -265,16 +352,10 @@ public class GameController extends GuiView implements Initializable {
 
 
     private void checkID(Button button){
-        switch (button.getId()){
-            case "showChatButton":
-                this.showChatButton();
-                break;
-            case "showPersonalButton":
-                this.showPersonalButton();
-                break;
-            case "showCommonButton":
-                this.showCommonButton();
-                break;
+        switch (button.getId()) {
+            case "showChatButton" -> this.showChatButton();
+            case "showPersonalButton" -> this.showPersonalButton();
+            case "showCommonButton" -> this.showCommonButton();
         }
     }
 
