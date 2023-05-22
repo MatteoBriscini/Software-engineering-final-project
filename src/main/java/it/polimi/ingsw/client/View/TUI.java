@@ -507,16 +507,17 @@ public class TUI implements UserInterface{
         ) return;
 
         if (positions.size()>1){
-            boolean reorder = false;
+            ArrayList<Position> tmp = null;
             do {
                 System.out.println(TextColor.YELLOW.get() + "Do you want to reorder the picked cards?" + TextColor.LIGHTBLUE.get() + " [y/n]" + TextColor.DEFAULT.get());
                 command = Character.toUpperCase(new Scanner(System.in).next().charAt(0));
                 if (command != 'Y' && command != 'N') {
                     printError("Invalid selection, please try again\n");
                 }
-                if (command == 'Y') reorder = this.reorderCards(positions);
+                if (command == 'Y') tmp = this.reorderCards(positions);
                 else break;
-            } while (!reorder);
+            } while (tmp == null);
+            positions = tmp;
         }
         ((PlayingPlayer)player).takeCard(column,positions.toArray(new Position[0]));
     }
@@ -550,7 +551,7 @@ public class TUI implements UserInterface{
      * @param picks is an array that contains coordinates formatted as Strings [x,y]
      *              This array will be reordered, based on player's choices
      */
-    private boolean reorderCards(ArrayList<Position> picks){
+    private ArrayList<Position> reorderCards(ArrayList<Position> picks){
         Scanner sc = new Scanner(System.in);
         ArrayList<Integer> order = new ArrayList<>();
         Integer i;
@@ -563,10 +564,10 @@ public class TUI implements UserInterface{
             index = s.indexOf(',');
             if(index==-1){
                 this.printError("Invalid syntax for reorderCards");
-                return false;
+                return null;
             }
             i = this.intParser(s.substring(0,index));
-            if(!checkReorder(i,picks.size(), order)) return false;
+            if(!checkReorder(i,picks.size(), order)) return null;
             order.add(i);
             tmp.add(picks.get(i));
 
@@ -574,16 +575,14 @@ public class TUI implements UserInterface{
         }
         if(s.indexOf(',')!=-1){
             this.printError("Invalid syntax for reorderCards");
-            return false;
+            return null;
         }
         i = this.intParser(s);
-        if(!checkReorder(i,picks.size(), order)) return false;
+        if(!checkReorder(i,picks.size(), order)) return null;
         order.add(i);
         tmp.add(picks.get(i));
 
-        picks = tmp;
-
-        return true;
+        return tmp;
     }
 
     private boolean checkReorder(int index, int size, ArrayList<Integer> order){
