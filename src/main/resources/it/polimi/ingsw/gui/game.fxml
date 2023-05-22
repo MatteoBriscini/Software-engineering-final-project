@@ -33,7 +33,8 @@
 
    <VBox layoutX="500.0" prefHeight="630.0" spacing="20.0">
        <AnchorPane fx:id="livingRoomBox" maxWidth="570.0" maxHeight="570.0">
-            <ImageView fx:id="livingRoom" fitHeight="565.0" fitWidth="565.0" pickOnBounds="true" preserveRatio="true" />
+           <ImageView fx:id="livingRoom" fitHeight="565.0" fitWidth="565.0" pickOnBounds="true" preserveRatio="true" />
+           <Label fx:id="currentPlayer" text="CURRENT PLAYER: &#xD; null "/>
        </AnchorPane>
        <HBox fx:id="bookshelfAnchor" prefHeight="150.0" spacing="70">
            <VBox alignment="CENTER" fx:id="myBookshelfBox1">

@@ -160,3 +160,10 @@
 #showPersonalButton, #showCommonButton{
     -fx-translate-x: 105px;
 }
+#currentPlayer{
+    -fx-background-color: #db9263;
+    -fx-background-radius: 9px;
+    -fx-padding: 7px;
+    -fx-translate-y: 515;
+    -fx-translate-x: 15;
+}

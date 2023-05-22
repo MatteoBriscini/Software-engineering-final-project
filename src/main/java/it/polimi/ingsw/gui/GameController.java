@@ -35,6 +35,8 @@ public class GameController extends GuiView implements Initializable {
     //game
     private PlayingPlayer player;
     private ArrayList<String> otherPlayers = new ArrayList<>();
+    @FXML
+    private Label currentPlayer = new Label();
 
     //bookShelf
     @FXML
@@ -111,10 +113,12 @@ public class GameController extends GuiView implements Initializable {
         privateGoalsInit();
 
         this.mouseCoordinates();
+        this.notifyNewActivePlayer();
     }
     private void imagesInit(ImageView imageView, String file){
         Image image = new Image(this.getClass().getClassLoader().getResourceAsStream(file));
         imageView.setImage(image);
+
     }
 
     private void commonGoalsInit(){
@@ -122,7 +126,7 @@ public class GameController extends GuiView implements Initializable {
         ImageView[] commonGoal = new ImageView[2];
         commonGoal[0] = commonGoal1; commonGoal[1] = commonGoal2;
         for(int i=0;i<goals.length;i++){
-            imagesInit(commonGoal[i], CommonGoal.getImgName(i));
+            imagesInit(commonGoal[i], CommonGoal.getImgName(goals[i]));
             this.setBorderRadius(commonGoal[i], 40);
         }
     }
@@ -166,6 +170,15 @@ public class GameController extends GuiView implements Initializable {
         clip.setArcWidth(size);
         clip.setArcHeight(size);
         immage.setClip(clip);
+    }
+
+    /**********************************************************************
+     *                               GAME                                 *
+     **********************************************************************/
+
+    public void notifyNewActivePlayer() {
+        String currentPlayer = player.getActivePlayer();
+        this.currentPlayer.setText("CURRENT PLAYER: \n" + currentPlayer);
     }
 
 

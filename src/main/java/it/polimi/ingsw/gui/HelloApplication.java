@@ -166,6 +166,8 @@ public class HelloApplication extends Application implements UserInterface {
 
     @Override
     public void notifyNewActivePlayer() {
-
+        Platform.runLater(() -> {
+            if(guiView instanceof GameController)((GameController)guiView).notifyNewActivePlayer();
+        });
     }
 }
