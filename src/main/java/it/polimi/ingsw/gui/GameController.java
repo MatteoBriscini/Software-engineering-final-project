@@ -1,8 +1,14 @@
 package it.polimi.ingsw.gui;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import it.polimi.ingsw.client.Exceptions.PlayerNotFoundException;
+import it.polimi.ingsw.gui.supportClass.CommonGoal;
 import it.polimi.ingsw.gui.supportClass.Message;
 import it.polimi.ingsw.gui.supportClass.MessageTipe;
+import it.polimi.ingsw.gui.supportClass.PrivateGoal;
+import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -83,15 +89,13 @@ public class GameController extends GuiView implements Initializable {
 
         imagesInit(livingRoom, "livingroom.png");       //load living room png
         this.setBorderRadius(livingRoom, 40);
-
-        imagesInit(personalGoal1, "Personal_Goals.png");//load private goal img TODO
-        this.setBorderRadius(personalGoal1, 40);
     }
     public void gameInit(){                         //dynamic element init
         player = (PlayingPlayer) helloApplication.getPlayer();
         chatInit();
         playerInit();
         commonGoalsInit();
+        privateGoalsInit();
     }
     private void imagesInit(ImageView imageView, String file){
         Image image = new Image(this.getClass().getClassLoader().getResourceAsStream(file));
@@ -102,24 +106,26 @@ public class GameController extends GuiView implements Initializable {
         int[] goals = player.getCommonGoalID();
         ImageView[] commonGoal = new ImageView[2];
         commonGoal[0] = commonGoal1; commonGoal[1] = commonGoal2;
-        for(int i=0;i<goals.length;i++){switch (goals[i]){
-            case 0 -> imagesInit(commonGoal[i], "4.jpg");
-            case 1 -> imagesInit(commonGoal[i], "3.jpg");
-            case 2 -> imagesInit(commonGoal[i], "8.jpg");
-            case 3 -> imagesInit(commonGoal[i], "11.jpg");
-            case 4 -> imagesInit(commonGoal[i], "10.jpg");
-            case 5 -> imagesInit(commonGoal[i], "2.jpg");
-            case 6 -> imagesInit(commonGoal[i], "6.jpg");
-            case 7 -> imagesInit(commonGoal[i], "5.jpg");
-            case 8 -> imagesInit(commonGoal[i], "7.jpg");
-            case 9 -> imagesInit(commonGoal[i], "9.jpg");
-            case 10 -> imagesInit(commonGoal[i], "1.jpg");
-            case 11 -> imagesInit(commonGoal[i], "12.jpg");
-            }
-        this.setBorderRadius(commonGoal[i], 40);
+        for(int i=0;i<goals.length;i++){
+            imagesInit(commonGoal[i], CommonGoal.getImgName(i));
+            this.setBorderRadius(commonGoal[i], 40);
         }
     }
-
+    private void privateGoalsInit(){
+        try {
+            String goalImg = PrivateGoal.getImgName(player.getPrivateGoal(), privateGoalsInitJson());
+            imagesInit(personalGoal1, goalImg);
+            this.setBorderRadius(personalGoal1, 40);
+        } catch (FileNotFoundException e) {
+            System.err.println("GAME CONTROLLER: can't find goal json");
+        }
+    }
+    private JsonArray privateGoalsInitJson() throws FileNotFoundException {
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(JsonUrl.getUrl("playerTarget"));
+        if(inputStream == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        return new Gson().fromJson(bufferedReader, JsonArray.class);
+    }
     private void playerInit(){
         for(String s: player.getPlayersID())if(!s.equals(player.getPlayerID()))otherPlayers.add(s);
         imagesInit(myBookshelfImage1, "bookshelf.png");
