@@ -8,7 +8,10 @@ import it.polimi.ingsw.gui.supportClass.CommonGoal;
 import it.polimi.ingsw.gui.supportClass.Message;
 import it.polimi.ingsw.gui.supportClass.MessageTipe;
 import it.polimi.ingsw.gui.supportClass.PrivateGoal;
+import it.polimi.ingsw.shared.Cards.Card;
+import it.polimi.ingsw.shared.Cards.CardColor;
 import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
+import it.polimi.ingsw.shared.JsonSupportClasses.Position;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -29,6 +32,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import static it.polimi.ingsw.shared.Cards.CardColor.EMPTY;
+
 public class GameController extends GuiView implements Initializable {
 
 
@@ -37,6 +42,7 @@ public class GameController extends GuiView implements Initializable {
     private ArrayList<String> otherPlayers = new ArrayList<>();
     @FXML
     private Label currentPlayer = new Label();
+    private ArrayList<Position> positions = new ArrayList<>();
 
     //bookShelf
     @FXML
@@ -95,16 +101,7 @@ public class GameController extends GuiView implements Initializable {
         this.setBorderRadius(livingRoom, 40);
     }
 
-    public void mouseCoordinates() {
-        livingRoom.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                double x = event.getX();
-                double y = event.getY();
-                System.out.println("Mouse clicked at (" + x + ", " + y + ")");
-            }
-        });
-    }
+
     public void gameInit(){                         //dynamic element init
         player = (PlayingPlayer) helloApplication.getPlayer();
         chatInit();
@@ -179,6 +176,90 @@ public class GameController extends GuiView implements Initializable {
     public void notifyNewActivePlayer() {
         String currentPlayer = player.getActivePlayer();
         this.currentPlayer.setText("CURRENT PLAYER: \n" + currentPlayer);
+    }
+
+    @FXML
+    private int estimateX(double x){  //return the column
+
+        if(x>475 && x < 535) {
+            return 8;
+        }else if(x>420.5) {
+            return 7;
+        }else if (x>363) {
+            return 6;
+        } else if (x>305.4) {
+            return 5;
+        } else if (x>250.2) {
+            return 4;
+        }else if(x>196.6){
+            return 3;
+        } else if (x>138.2) {
+            return 2;
+        } else if (x>82.2) {
+            return 1;
+        } else {
+            return 0;
+        }
+
+    }
+
+    @FXML
+    private int estimateY(double y){ //return the lineY
+
+        if(y>482.5 && y<537.4) {
+            return 0;
+        }else if(y>425.4) {
+            return 1;
+        }else if (y>367) {
+            return 2;
+        } else if (y>311) {
+            return 3;
+        } else if (y>253.4) {
+            return 4;
+        }else if(y>197.4){
+            return 5;
+        } else if (y>140.6) {
+            return 6;
+        } else if (y>81.4) {
+            return 7;
+        } else {
+            return 8;
+        }
+
+    }
+
+    @FXML
+    public void takeCard(double x, double y){
+
+        int columnX, lineY;
+        columnX = this.estimateX(x);
+        lineY = this.estimateY(y);
+
+        Card[][] livingroom = player.getMainBoard().getBoard();
+        CardColor card = livingroom[columnX][lineY].getColor();
+
+        if(card.equals(EMPTY)){
+            errorMsg("invalid pick");
+            return;
+        }
+
+        positions.add(new Position(columnX, lineY));
+    }
+
+
+
+    public void mouseCoordinates() {
+
+        int columnX, columnY;
+        livingRoom.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                double x = event.getX();
+                double y = event.getY();
+                // System.out.println("Mouse clicked at (" + x + ", " + y + ")");
+                GameController.this.takeCard(x,y);
+            }
+        });
     }
 
 
