@@ -10,6 +10,7 @@ import it.polimi.ingsw.gui.supportClass.MessageTipe;
 import it.polimi.ingsw.gui.supportClass.PrivateGoal;
 import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -18,6 +19,7 @@ import javafx.scene.control.*;
 import it.polimi.ingsw.client.Player.PlayingPlayer;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -90,12 +92,25 @@ public class GameController extends GuiView implements Initializable {
         imagesInit(livingRoom, "livingroom.png");       //load living room png
         this.setBorderRadius(livingRoom, 40);
     }
+
+    public void mouseCoordinates() {
+        livingRoom.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                double x = event.getX();
+                double y = event.getY();
+                System.out.println("Mouse clicked at (" + x + ", " + y + ")");
+            }
+        });
+    }
     public void gameInit(){                         //dynamic element init
         player = (PlayingPlayer) helloApplication.getPlayer();
         chatInit();
         playerInit();
         commonGoalsInit();
         privateGoalsInit();
+
+        this.mouseCoordinates();
     }
     private void imagesInit(ImageView imageView, String file){
         Image image = new Image(this.getClass().getClassLoader().getResourceAsStream(file));
