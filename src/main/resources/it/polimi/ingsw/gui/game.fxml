@@ -12,8 +12,8 @@
 <AnchorPane prefHeight="500.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.gui.GameController">
 
  <VBox fx:id="rightDiv" layoutX="1150.0" layoutY="20.0" prefHeight="540.0" prefWidth="342.0" spacing="20" alignment="CENTER">
-    <VBox alignment="CENTER" fx:id="myBookshelfAnchor">
-        <ImageView fx:id="myBookshelfImage" fitHeight="420.0" fitWidth="370.0" pickOnBounds="true" preserveRatio="true" />
+    <VBox alignment="CENTER" fx:id="myBookshelfAnchor" >
+        <AnchorPane fx:id="myBookshelfDiv"><ImageView fx:id="myBookshelfImage" fitHeight="420.0" fitWidth="370.0" pickOnBounds="true" preserveRatio="true" /></AnchorPane>
         <Label fx:id="myBoard" text="your board"></Label>
     </VBox>
      <VBox fx:id="chat" layoutX="1175.0" layoutY="450.0" prefHeight="530.0" prefWidth="380.0" spacing="20">
@@ -35,6 +35,7 @@
        <AnchorPane fx:id="livingRoomBox" maxWidth="570.0" maxHeight="570.0">
            <ImageView fx:id="livingRoom" fitHeight="565.0" fitWidth="565.0" pickOnBounds="true" preserveRatio="true" />
            <Label fx:id="currentPlayer" text="CURRENT PLAYER: &#xD; null "/>
+           <AnchorPane fx:id="livingRoomClickable" prefWidth="565.0" prefHeight="565.0"></AnchorPane>
        </AnchorPane>
        <HBox fx:id="bookshelfAnchor" prefHeight="150.0" spacing="70">
            <VBox alignment="CENTER" fx:id="myBookshelfBox1">

@@ -167,3 +167,7 @@
     -fx-translate-y: 515;
     -fx-translate-x: 15;
 }
+#livingRoomClickable{
+    -fx-translate-x: 5px;
+    -fx-translate-y: 5px;
+}

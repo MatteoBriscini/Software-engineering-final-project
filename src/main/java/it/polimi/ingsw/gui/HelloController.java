@@ -32,6 +32,7 @@ private Label errorLabel;
 private AnchorPane loginPanel;
 
 
+
     int socketPort;
     int RMIPort;
     String serverIP;
