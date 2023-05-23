@@ -29,6 +29,7 @@ public class ControllerTest extends TestCase {
     Card[][] board;
 
 
+    @Test
     private PositionWithColor[] jsonCreate(String name) throws FileNotFoundException {
         Gson gson = new Gson();
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(jsonUrl.getUrl(name));
@@ -37,10 +38,12 @@ public class ControllerTest extends TestCase {
         return new Gson().fromJson(bufferedReader, PositionWithColor[].class);
     }
 
+    @Test
     private void setNotRandomBoard(String url) throws FileNotFoundException {
         test.fixMainBoard(this.jsonCreate(url));
     }
 
+    @Test
     private  Card[][] setNotRandomPlayerBoard(String url) throws FileNotFoundException{
         Card[][] board = new Card[5][6];
         PositionWithColor[] pos = this.jsonCreate(url);
@@ -546,7 +549,7 @@ public class ControllerTest extends TestCase {
         assertEquals(8, test.getPlayerPoint("pino"));
         assertEquals(6, test.getPlayerPoint("pierino"));
 
-        assertTrue(!test.takeCard(0, cards, "pino"));//pino can't play the game is finished
+        assertFalse(test.takeCard(0, cards, "pino"));//pino can't play the game is finished
 
         Thread.sleep(timeout*1000);
 

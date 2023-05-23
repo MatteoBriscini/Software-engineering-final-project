@@ -8,6 +8,7 @@ import it.polimi.ingsw.server.Model.PlayerClasses.Player;
 import it.polimi.ingsw.server.Model.PlayerClasses.PlayerBoard;
 import it.polimi.ingsw.server.Model.PlayerClasses.PlayerTarget;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.io.FileNotFoundException;
 
@@ -17,6 +18,7 @@ public class PlayerTargetTest extends TestCase {
     Card[] cards = new Card[1];
     Card[][] testboard = board.getBoard();
 
+    @Test
     public void testCheckTarget() throws FileNotFoundException, NoSpaceException {
 
         System.out.println("PlayerTarget test start");
@@ -47,7 +49,7 @@ public class PlayerTargetTest extends TestCase {
 
         val = target.checkTarget(board);
 
-        assert(val == 1);
+        assertEquals(1, val);
 
         System.out.println("ok");
         System.out.println("\n");
@@ -66,7 +68,7 @@ public class PlayerTargetTest extends TestCase {
         val = target.checkTarget(board);
 
 
-        assert(val == 2);
+        assertEquals(2, val);
 
         System.out.println("ok");
         System.out.println("\n");
@@ -85,7 +87,7 @@ public class PlayerTargetTest extends TestCase {
         val = target.checkTarget(board);
 
 
-        assert(val == 4);
+        assertEquals(4, val);
 
         System.out.println("ok");
         System.out.println("\n");
@@ -103,7 +105,7 @@ public class PlayerTargetTest extends TestCase {
 
         val = target.checkTarget(board);
 
-        assert(val == 4);
+        assertEquals(4, val);
 
         System.out.println("ok");
         System.out.println("\n");

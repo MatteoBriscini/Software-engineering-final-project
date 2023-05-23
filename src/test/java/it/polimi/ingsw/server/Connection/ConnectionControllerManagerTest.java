@@ -40,7 +40,7 @@ public class ConnectionControllerManagerTest extends TestCase {
     private final int timeout = 2;
     private ClientMain clientMain;
 
-
+    @Test
     private PositionWithColor[] jsonCreate(String name) throws FileNotFoundException {
         Gson gson = new Gson();
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(JsonUrl.getUrl(name));
@@ -48,6 +48,8 @@ public class ConnectionControllerManagerTest extends TestCase {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         return new Gson().fromJson(bufferedReader, PositionWithColor[].class);
     }
+
+    @Test
     private  Card[][] setNotRandomPlayerBoard(String url) throws FileNotFoundException{
         Card[][] board = new Card[5][6];
         PositionWithColor[] pos = this.jsonCreate(url);

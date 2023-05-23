@@ -3,9 +3,10 @@ package it.polimi.ingsw.client.Connection;
 import it.polimi.ingsw.server.Connection.SOCKET;
 import it.polimi.ingsw.server.Lobby.Lobby;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 public class SOCKETTest extends TestCase {
-
+    @Test
     public void testJoinGame() throws InterruptedException {
 /*
         SOCKET socket = new SOCKET(new Lobby(2345, 2344), 2346);

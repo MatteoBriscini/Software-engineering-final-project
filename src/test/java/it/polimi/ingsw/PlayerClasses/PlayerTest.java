@@ -6,6 +6,7 @@ import it.polimi.ingsw.server.Model.PlayerClasses.Player;
 import it.polimi.ingsw.server.Model.PlayerClasses.PlayerBoard;
 import it.polimi.ingsw.server.Model.PlayerClasses.PlayerTarget;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.io.FileNotFoundException;
 
@@ -21,6 +22,7 @@ public class PlayerTest extends TestCase {
     Card[][] board= new Card[4][5]; //library copy for the print used to check if the fill was correct
 
     //testing addCard
+    @Test
     public void testAddCard(){
         player = new Player("player");
         System.out.println("START TEST ADDCARD \n");
@@ -38,6 +40,7 @@ public class PlayerTest extends TestCase {
         System.out.println("end test addCard");
     }
 
+    @Test
     public void testCheckSpots() {
         player = new Player("player");
         System.out.println("START TEST \n");
@@ -47,7 +50,7 @@ public class PlayerTest extends TestCase {
         player.checkSpots();
         int sum;
         sum = player.getPointSum();
-        assert (sum == 0);
+        assertEquals(0, sum);
 
 
         // building library for test
@@ -144,7 +147,7 @@ public class PlayerTest extends TestCase {
         }
 
         player.checkSpots();
-        assert (player.getPointSum() == 0);
+        assertEquals(0, player.getPointSum());
 
         System.out.println("end test");
     }
@@ -157,6 +160,7 @@ public class PlayerTest extends TestCase {
     //
     //
     //
+    @Test
     public void testCheckSpots2() {
         player = new Player("player");
         System.out.println("START TEST 2\n");
@@ -166,7 +170,7 @@ public class PlayerTest extends TestCase {
         player.checkSpots();
         int sum;
         sum = player.getPointSum();
-        assert (sum == 0);
+        assertEquals(0, sum);
 
         // building library for test
 
@@ -270,7 +274,7 @@ public class PlayerTest extends TestCase {
 
         player.checkSpots();
         System.out.println(player.getPointSum());
-        assert (player.getPointSum() == 20);
+        assertEquals(20, player.getPointSum());
 
 
         System.out.println("end test 2");
@@ -288,7 +292,7 @@ public class PlayerTest extends TestCase {
     //
 
 
-
+    @Test
     public void testCheckSpots3() {
         player = new Player("player");
         System.out.println("START TEST 3\n");
@@ -298,7 +302,7 @@ public class PlayerTest extends TestCase {
         player.checkSpots();
         int sum;
         sum = player.getPointSum();
-        assert (sum == 0);
+        assertEquals(0, sum);
 
         // building library for test
 
@@ -402,7 +406,7 @@ public class PlayerTest extends TestCase {
 
         player.checkSpots();
         System.out.println(player.getPointSum());
-        assert (player.getPointSum() == 26);
+        assertEquals(26, player.getPointSum());
 
 
         System.out.println("end test 3");
@@ -413,7 +417,7 @@ public class PlayerTest extends TestCase {
 
 
     //check with empty board (test 4) or with a full board with a single color (test 5)
-
+    @Test
     public void testCheckSpots4(){
         player = new Player("player");
         System.out.println("START TEST 4\n");
@@ -423,7 +427,7 @@ public class PlayerTest extends TestCase {
         player.checkSpots();
         int sum;
         sum = player.getPointSum();
-        assert (sum == 0);
+        assertEquals(0, sum);
 
 
         //print library
@@ -435,12 +439,12 @@ public class PlayerTest extends TestCase {
 
         player.checkSpots();
         System.out.println(player.getPointSum());
-        assert (player.getPointSum() == 0);
+        assertEquals(0, player.getPointSum());
 
         System.out.println("end test 4");
 
     }
-
+    @Test
     public void testCheckSpots5(){
         player = new Player("player");
         System.out.println("START TEST 5\n");
@@ -450,7 +454,7 @@ public class PlayerTest extends TestCase {
         player.checkSpots();
         int sum;
         sum = player.getPointSum();
-        assert (sum == 0);
+        assertEquals(0, sum);
 
         //FILLING LIBRARY
         tmp[0] = new Card(BLUE);
@@ -553,13 +557,13 @@ public class PlayerTest extends TestCase {
 
         player.checkSpots();
         System.out.println(player.getPointSum());
-        assert (player.getPointSum() == 8);
+        assertEquals(8, player.getPointSum());
 
         System.out.println("end test 5");
 
     }
 
-
+    @Test
     public void testSetPlayerTarget() throws FileNotFoundException {
 
         Player playerT = new Player("TEST");

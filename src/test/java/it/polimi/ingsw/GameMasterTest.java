@@ -9,6 +9,7 @@ import it.polimi.ingsw.shared.JsonSupportClasses.Position;
 import it.polimi.ingsw.server.Model.MainBoard;
 import it.polimi.ingsw.server.Model.PlayerClasses.Player;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ public class GameMasterTest extends TestCase {
     Card[] cards;
 
 
+    @Test
     public void testAddNewPlayer() {
         System.out.println("start test addPlayer \n");
 
@@ -46,6 +48,7 @@ public class GameMasterTest extends TestCase {
         System.out.println("end test addPlayer\n");
     }
 
+    @Test
     public void testSetCommonGoal() throws ConstructorException {
         System.out.println("start testSetCommonGoal");
 
@@ -62,7 +65,7 @@ public class GameMasterTest extends TestCase {
 
 
 
-
+    @Test
     public void testSetPrivateGoal() throws FileNotFoundException {
         System.out.println("start test privateGoal \n");
 
@@ -82,6 +85,7 @@ public class GameMasterTest extends TestCase {
         System.out.println("end test privateGoal \n");
     }
 
+    @Test
     public void testFillMainBoard() {
         System.out.println("start test FillBoard");
 
@@ -103,6 +107,7 @@ public class GameMasterTest extends TestCase {
         System.out.println("end test FillBoard");
     }
 
+    @Test
     public void testEndGameCalcPoint() throws FileNotFoundException {
         System.out.println("start test endGameCalcPoints");
 
@@ -121,6 +126,7 @@ public class GameMasterTest extends TestCase {
         System.out.println("end test endGameCalcPoint");
     }
 
+    @Test
     public void testPlayerAddPoints() {
         System.out.println("start test PlayerAddPoints\n");
 
@@ -137,6 +143,7 @@ public class GameMasterTest extends TestCase {
         System.out.println("end test PlayerAddPoints\n");
     }
 
+    @Test
     public void testAddCard() {
         System.out.println("start test addCard");
 

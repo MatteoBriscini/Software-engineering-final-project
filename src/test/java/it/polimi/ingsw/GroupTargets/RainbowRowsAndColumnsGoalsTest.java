@@ -7,6 +7,7 @@ import it.polimi.ingsw.server.Exceptions.NoSpaceException;
 import it.polimi.ingsw.server.Model.PlayerClasses.PlayerBoard;
 import it.polimi.ingsw.server.Model.GroupGoals.RainbowRowsAndColumnsGoals;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 import static it.polimi.ingsw.shared.Cards.CardColor.*;
 
@@ -31,6 +32,7 @@ public class RainbowRowsAndColumnsGoalsTest extends TestCase {
     public RainbowRowsAndColumnsGoalsTest() throws ConstructorException {
     }
 
+    @Test
     public void testCheck() {
         System.out.println("START TEST \n");
 
@@ -49,10 +51,10 @@ public class RainbowRowsAndColumnsGoalsTest extends TestCase {
             System.out.println(board[0][y].getColor().toString()+"\t"+board[1][y].getColor().toString()+"\t"+board[2][y].getColor().toString()+"\t"+board[3][y].getColor().toString()+"\t"+board[4][y].getColor().toString());
         }
 
-        assert (!test5.check(board));
-        assert (!test8.check(board));
-        assert (!test9.check(board));
-        assert (!test10.check(board));
+        assertFalse(test5.check(board));
+        assertFalse(test8.check(board));
+        assertFalse(test9.check(board));
+        assertFalse(test10.check(board));
 
         System.out.println("END TEST 0\n");
 
@@ -78,10 +80,10 @@ public class RainbowRowsAndColumnsGoalsTest extends TestCase {
             System.out.println(board[0][y].getColor().toString()+"\t"+board[1][y].getColor().toString()+"\t"+board[2][y].getColor().toString()+"\t"+board[3][y].getColor().toString()+"\t"+board[4][y].getColor().toString());
         }
 
-        assert (!test5.check(board));
-        assert (!test8.check(board));
-        assert (!test9.check(board));
-        assert (!test10.check(board));
+        assertFalse(test5.check(board));
+        assertFalse(test8.check(board));
+        assertFalse(test9.check(board));
+        assertFalse(test10.check(board));
 
         System.out.println("\n\nEND TEST 1\n");
 
@@ -107,10 +109,10 @@ public class RainbowRowsAndColumnsGoalsTest extends TestCase {
             System.out.println(board[0][y].getColor().toString()+"\t"+board[1][y].getColor().toString()+"\t"+board[2][y].getColor().toString()+"\t"+board[3][y].getColor().toString()+"\t"+board[4][y].getColor().toString());
         }
 
-        assert (test5.check(board));
-        assert (!test8.check(board));
-        assert (!test9.check(board));
-        assert (!test10.check(board));
+        assertTrue(test5.check(board));
+        assertFalse(test8.check(board));
+        assertFalse(test9.check(board));
+        assertFalse(test10.check(board));
 
         System.out.println("\n\nEND TEST 2\n");
 
@@ -137,10 +139,10 @@ public class RainbowRowsAndColumnsGoalsTest extends TestCase {
             System.out.println(board[0][y].getColor().toString()+"\t"+board[1][y].getColor().toString()+"\t"+board[2][y].getColor().toString()+"\t"+board[3][y].getColor().toString()+"\t"+board[4][y].getColor().toString());
         }
 
-        assert (!test5.check(board));
-        assert (!test8.check(board));
-        assert (!test9.check(board));
-        assert (test10.check(board));
+        assertFalse(test5.check(board));
+        assertFalse(test8.check(board));
+        assertFalse(test9.check(board));
+        assertTrue(test10.check(board));
 
         System.out.println("\n\nEND TEST 3\n");
 
@@ -166,10 +168,10 @@ public class RainbowRowsAndColumnsGoalsTest extends TestCase {
         }
 
 
-        assert (!test5.check(board));
-        assert (!test8.check(board));
-        assert (test9.check(board));
-        assert (test10.check(board));
+        assertFalse(test5.check(board));
+        assertFalse(test8.check(board));
+        assertTrue(test9.check(board));
+        assertTrue(test10.check(board));
 
 
         System.out.println("\n\nEND TEST 4\n");
@@ -197,10 +199,10 @@ public class RainbowRowsAndColumnsGoalsTest extends TestCase {
         }
 
 
-        assert (test5.check(board));
-        assert (test8.check(board));
-        assert (test9.check(board));
-        assert (test10.check(board));
+        assertTrue(test5.check(board));
+        assertTrue(test8.check(board));
+        assertTrue(test9.check(board));
+        assertTrue(test10.check(board));
 
 
         System.out.println("\n\nEND TEST 5\n");
@@ -228,10 +230,10 @@ public class RainbowRowsAndColumnsGoalsTest extends TestCase {
         }
 
 
-        assert (!test5.check(board));
-        assert (test8.check(board));
-        assert (!test9.check(board));
-        assert (test10.check(board));
+        assertFalse(test5.check(board));
+        assertTrue(test8.check(board));
+        assertFalse(test9.check(board));
+        assertTrue(test10.check(board));
 
 
         System.out.println("\n\nEND TEST 6\n");
@@ -258,10 +260,10 @@ public class RainbowRowsAndColumnsGoalsTest extends TestCase {
         }
 
 
-        assert (test5.check(board));
-        assert (test8.check(board));
-        assert (!test9.check(board));
-        assert (!test10.check(board));
+        assertTrue(test5.check(board));
+        assertTrue(test8.check(board));
+        assertFalse(test9.check(board));
+        assertFalse(test10.check(board));
 
 
         System.out.println("\n\nEND TEST 7\n");

@@ -7,6 +7,7 @@ import it.polimi.ingsw.server.Exceptions.NoSpaceException;
 import it.polimi.ingsw.server.Model.PlayerClasses.PlayerBoard;
 import it.polimi.ingsw.server.Model.GroupGoals.OneColorPatternGoals;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 import static it.polimi.ingsw.shared.Cards.CardColor.*;
 
@@ -30,6 +31,7 @@ public class OneColorPatternGoalsTest extends TestCase {
      * this method add all card in the player board to create a test case, at the and he print the player board
      * @param testCase is the array with the sequence of card color for the specific test case
      */
+    @Test
     private void createAndPrintTable (CardColor[] testCase){
         Card[][] board= new Card[6][5];
         int i, j, k = 0;
@@ -56,6 +58,7 @@ public class OneColorPatternGoalsTest extends TestCase {
      * actual test case
      * @throws ConstructorException exception threw from the OneColorPatternGoals constructor
      */
+    @Test
     public void testCheck() throws ConstructorException {
         System.out.println("START TEST \n");
         boolean val;
@@ -64,28 +67,28 @@ public class OneColorPatternGoalsTest extends TestCase {
         //check initial state (corner pattern)
         test = new OneColorPatternGoals(2);
         val = test.check(playerBoard.getBoard());
-        assert (!val);
+        assertFalse(val);
 
         //check initial state (cross pattern)
         test = new OneColorPatternGoals(11);
         val = test.check(playerBoard.getBoard());
-        assert (!val);
+        assertFalse(val);
 
         //check initial state (diagonAlley pattern)
         test = new OneColorPatternGoals(7);
         val = test.check(playerBoard.getBoard());
-        assert (!val);
+        assertFalse(val);
 
         //test case 1
         createAndPrintTable(testCase1);
         val = test.check(playerBoard.getBoard());         //check 1 test case (diagonAlley pattern)
-        assert (!val);
+        assertFalse(val);
         test = new OneColorPatternGoals(11);          //check 1 test case (cross pattern)
         val = test.check(playerBoard.getBoard());
-        assert (!val);
+        assertFalse(val);
         test = new OneColorPatternGoals(2);
         val = test.check(playerBoard.getBoard());        //check 1 test case (corner pattern)
-        assert (!val);
+        assertFalse(val);
 
         playerBoard = new PlayerBoard();
         //test case 2
@@ -93,13 +96,13 @@ public class OneColorPatternGoalsTest extends TestCase {
 
 
         val = test.check(playerBoard.getBoard());       //check 2 test case (corner pattern)
-        assert (val);
+        assertTrue(val);
         test = new OneColorPatternGoals(11);          //check 1 test case (cross pattern)
         val = test.check(playerBoard.getBoard());
-        assert (val);
+        assertTrue(val);
         test = new OneColorPatternGoals(7);          //check 2 test case (diagonAlley pattern)
         val = test.check(playerBoard.getBoard());
-        assert (val);
+        assertTrue(val);
 
 
         System.out.println("END TEST WITH NO ERROR \n");

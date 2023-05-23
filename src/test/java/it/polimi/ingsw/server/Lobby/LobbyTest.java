@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.Lobby;
 
 import junit.framework.TestCase;
+import org.junit.Test;
 
 import javax.security.auth.login.LoginException;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ public class LobbyTest extends TestCase {
 
     private Lobby testLobby;
 
+    @Test
     public void testLobby(){
 
         testLobby = new Lobby(2000, 1999);

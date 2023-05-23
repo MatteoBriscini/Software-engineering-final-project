@@ -6,6 +6,7 @@ import it.polimi.ingsw.server.Exceptions.NoSpaceException;
 import it.polimi.ingsw.server.Model.PlayerClasses.PlayerBoard;
 import it.polimi.ingsw.server.Model.GroupGoals.EightEqualsGoal;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 import static it.polimi.ingsw.shared.Cards.CardColor.*;
 import static it.polimi.ingsw.shared.Cards.CardColor.EMPTY;
@@ -24,6 +25,7 @@ public class EightEqualsGoalTest extends TestCase {
 
     private CardColor[] tmpcol3 ={PINK,PINK,PINK,PINK,EMPTY,EMPTY,   EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,  PINK,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,     BLUE,PINK,EMPTY,EMPTY,EMPTY,EMPTY,   PINK,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY};
     Card[][] board= new Card[6][5];
+    @Test
     public void testCheck() {
         System.out.println("START TEST \n");
 
@@ -43,7 +45,7 @@ public class EightEqualsGoalTest extends TestCase {
             System.out.println(board[0][y].getColor().toString()+"\t"+board[1][y].getColor().toString()+"\t"+board[2][y].getColor().toString()+"\t"+board[3][y].getColor().toString()+"\t"+board[4][y].getColor().toString());
         }
 
-        assert (!test.check(board));
+        assertFalse(test.check(board));
         System.out.println("\nEND TEST 0\n");
 
 
@@ -68,7 +70,7 @@ public class EightEqualsGoalTest extends TestCase {
             System.out.println(board[0][y].getColor().toString()+"\t"+board[1][y].getColor().toString()+"\t"+board[2][y].getColor().toString()+"\t"+board[3][y].getColor().toString()+"\t"+board[4][y].getColor().toString());
         }
 
-        assert (test.check(board));
+        assertTrue(test.check(board));
         System.out.println("\nEND TEST 1\n");
 
 
@@ -93,7 +95,7 @@ public class EightEqualsGoalTest extends TestCase {
             System.out.println(board[0][y].getColor().toString()+"\t"+board[1][y].getColor().toString()+"\t"+board[2][y].getColor().toString()+"\t"+board[3][y].getColor().toString()+"\t"+board[4][y].getColor().toString());
         }
 
-        assert (test.check(board));
+        assertTrue(test.check(board));
         System.out.println("\nEND TEST 2\n");
 
 
@@ -119,7 +121,7 @@ public class EightEqualsGoalTest extends TestCase {
             System.out.println(board[0][y].getColor().toString()+"\t"+board[1][y].getColor().toString()+"\t"+board[2][y].getColor().toString()+"\t"+board[3][y].getColor().toString()+"\t"+board[4][y].getColor().toString());
         }
 
-        assert (!test.check(board));
+        assertFalse(test.check(board));
         System.out.println("\nEND TEST 3\n");
 
 
@@ -147,7 +149,7 @@ public class EightEqualsGoalTest extends TestCase {
             System.out.println(board[0][y].getColor().toString()+"\t"+board[1][y].getColor().toString()+"\t"+board[2][y].getColor().toString()+"\t"+board[3][y].getColor().toString()+"\t"+board[4][y].getColor().toString());
         }
 
-        assert (test.check(board));
+        assertTrue(test.check(board));
         System.out.println("\nEND TEST 7\n");
     }
 }

@@ -6,6 +6,7 @@ import it.polimi.ingsw.shared.JsonSupportClasses.Position;
 import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
 import it.polimi.ingsw.server.Model.MainBoard;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class MainBoardTest extends TestCase {
     private Position position[]={new Position(4,1),new Position(5,1),   new Position(3,2),new Position(4,2),new Position(5,2),   new Position(1,3),new Position(2,3),new Position(3,3),new Position(4,3),new Position(5,3),new Position(6,3),    new Position(1,4),new Position(2,4),new Position(3,4),new Position(4,4),new Position(5,4),new Position(6,4), new Position(7,4),   new Position(2,5),new Position(3,5),new Position(4,5),new Position(5,5),new Position(6,5), new Position(7,5),    new Position(3,6),new Position(4,6),new Position(5,6),   new Position(3,7),new Position(4,7) };
 
 
+    @Test
     public void testGetBoard() {
         board=mboard.getBoard();
         System.out.println("\n\n\n\n\n");
@@ -37,9 +39,10 @@ public class MainBoardTest extends TestCase {
         }
     }
 
+    @Test
     public void testFillBoard() {
         bool=mboard.fillBoard(position);
-        assert bool;
+        assertTrue(bool);
         board=mboard.getBoard();
         for(int y=8;y>=0;y--){
             System.out.println(board[0][y].getColor().toString()+"\t"+board[1][y].getColor().toString()+"\t"+board[2][y].getColor().toString()+"\t"+board[3][y].getColor().toString()+"\t"+board[4][y].getColor().toString()+"\t"+board[5][y].getColor().toString()+"\t"+board[6][y].getColor().toString()+"\t"+board[7][y].getColor().toString()+"\t"+board[8][y].getColor().toString());
@@ -51,13 +54,13 @@ public class MainBoardTest extends TestCase {
         try {
             mboard.removeCard(rm2);
         }catch (InvalidPickException e){
-            assert false;
+            assertTrue(false);
         }
 
 
         System.out.println("\n\n\n\n\n");
         bool=mboard.fillBoard(position);
-        assert bool;
+        assertTrue(bool);
         board=mboard.getBoard();
         for(int y=8;y>=0;y--){
             System.out.println(board[0][y].getColor().toString()+"\t"+board[1][y].getColor().toString()+"\t"+board[2][y].getColor().toString()+"\t"+board[3][y].getColor().toString()+"\t"+board[4][y].getColor().toString()+"\t"+board[5][y].getColor().toString()+"\t"+board[6][y].getColor().toString()+"\t"+board[7][y].getColor().toString()+"\t"+board[8][y].getColor().toString());
@@ -65,6 +68,7 @@ public class MainBoardTest extends TestCase {
     }
 
 
+    @Test
     public void testRemoveCard() {
 
         bool=mboard.fillBoard(position);
@@ -74,7 +78,7 @@ public class MainBoardTest extends TestCase {
         try {
             mboard.removeCard(rm);
         }catch (InvalidPickException e){
-            assert false;
+            assertTrue(false);
         }
 
         board=mboard.getBoard();
@@ -94,7 +98,7 @@ public class MainBoardTest extends TestCase {
         }catch (InvalidPickException e){
             bool = true;
         }
-        assert bool;
+        assertTrue(bool);
 
         board=mboard.getBoard();
         System.out.println("\n\n\n\n\n");
@@ -115,7 +119,7 @@ public class MainBoardTest extends TestCase {
         }catch (InvalidPickException e){
             bool = true;
         }
-        assert (bool);
+        assertTrue (bool);
 
         System.out.println("fatto");
         board=mboard.getBoard();
@@ -139,7 +143,7 @@ public class MainBoardTest extends TestCase {
         }catch (InvalidPickException e){
             bool = true;
         }
-        assert bool;
+        assertTrue(bool);
 
         board=mboard.getBoard();
         System.out.println("\n\n\n\n\n");
@@ -159,7 +163,7 @@ public class MainBoardTest extends TestCase {
         }catch (InvalidPickException e){
             bool = true;
         }
-        assert (bool);
+        assertTrue (bool);
 
         System.out.println("fatto");
         board=mboard.getBoard();
@@ -183,7 +187,7 @@ public class MainBoardTest extends TestCase {
         }catch (InvalidPickException e){
             bool = true;
         }
-        assert bool;
+        assertTrue(bool);
 
         board=mboard.getBoard();
         System.out.println("\n\n\n\n\n");
@@ -195,6 +199,7 @@ public class MainBoardTest extends TestCase {
     }
 
 
+    @Test
     public void testFixBoard() {
         rm2[0]=new PositionWithColor(4,1,0,LIGHTBLUE);
         rm2[1]=new PositionWithColor(5,5,0,WHITE);

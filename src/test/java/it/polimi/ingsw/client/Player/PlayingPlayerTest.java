@@ -5,6 +5,7 @@ import it.polimi.ingsw.client.Connection.ClientRMI;
 import it.polimi.ingsw.client.Connection.ConnectionManager;
 import it.polimi.ingsw.server.Lobby.Lobby;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.rmi.RemoteException;
 import java.sql.Connection;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 public class PlayingPlayerTest extends TestCase {
     Lobby lobby;
     private ClientMain clientMain;
+    @Test
     public void testSendMessage() throws Exception {
         System.out.println("START TEST testServerRMIOut\n");
 

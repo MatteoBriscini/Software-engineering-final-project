@@ -19,6 +19,7 @@ import it.polimi.ingsw.shared.JsonSupportClasses.Position;
 import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
 import it.polimi.ingsw.shared.exceptions.addPlayerToGameException;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -35,6 +36,7 @@ public class ControllerSOCKETTest extends TestCase {
     Lobby lobby;
     private ClientMain clientMain = new ClientMain();
 
+    @Test
     private PositionWithColor[] jsonCreate(String name) throws FileNotFoundException {
         Gson gson = new Gson();
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(JsonUrl.getUrl(name));
@@ -42,6 +44,7 @@ public class ControllerSOCKETTest extends TestCase {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         return new Gson().fromJson(bufferedReader, PositionWithColor[].class);
     }
+    @Test
     private  Card[][] setNotRandomPlayerBoard(String url) throws FileNotFoundException {
         Card[][] board = new Card[5][6];
         PositionWithColor[] pos = this.jsonCreate(url);
@@ -55,6 +58,7 @@ public class ControllerSOCKETTest extends TestCase {
         }
         return board;
     }
+    @Test
     public void testServerSOCKETIn() throws RemoteException, InterruptedException, ConnectionControllerManagerException, addPlayerToGameException, FileNotFoundException {
         lobby = new Lobby(8001, 8000);
         ConnectionManager connection;
@@ -154,6 +158,7 @@ public class ControllerSOCKETTest extends TestCase {
         testServer.forceClientDisconnection();
 
     }
+    @Test
     public void testSOCKETchat() throws ConnectionControllerManagerException, RemoteException, addPlayerToGameException, InterruptedException {
         System.out.println("START TEST testServerRMIOut\n");
 

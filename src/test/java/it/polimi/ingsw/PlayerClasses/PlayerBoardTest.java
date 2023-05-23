@@ -4,6 +4,7 @@ import it.polimi.ingsw.shared.Cards.Card;
 import it.polimi.ingsw.server.Exceptions.NoSpaceException;
 import it.polimi.ingsw.server.Model.PlayerClasses.PlayerBoard;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 import static it.polimi.ingsw.shared.Cards.CardColor.*;
 
@@ -18,6 +19,7 @@ public class PlayerBoardTest extends TestCase {
     boolean val2 = false;
 
 
+    @Test
     public void testPlayerBoard(){
 
         System.out.println("PlayerBoard test 1 start");
@@ -28,7 +30,7 @@ public class PlayerBoardTest extends TestCase {
         Card[][] board = PB.getBoard();
         for(int x = 0; x < 5; x++){
             for(int y = 0; y < 6; y++){
-                assert(board[x][y].getColor().equals(EMPTY));
+                assertEquals(EMPTY, board[x][y].getColor());
             }
         }
 
@@ -36,6 +38,7 @@ public class PlayerBoardTest extends TestCase {
 
     }
 
+    @Test
     public void testGetBoard() {
 
         System.out.println("PlayerBoard test 2 start");
@@ -45,7 +48,7 @@ public class PlayerBoardTest extends TestCase {
         PlayerBoard PB = new PlayerBoard();
         Card[][] board = PB.getBoard();
         Card[][] board2 = PB.getBoard();
-        //assert(board.equals(PB.getBoard()));
+        //assertTrue();(board.equals(PB.getBoard()));
         for(int i=0; i<4; i++ ){
             for(int j = 0; j<5; j++){
                 board[i][j].getColor().equals(board2[i][j]);
@@ -56,6 +59,7 @@ public class PlayerBoardTest extends TestCase {
 
     }
 
+    @Test
     public void testAddCard() {
 
         System.out.println("PlayerBoard test 3 start");
@@ -76,9 +80,9 @@ public class PlayerBoardTest extends TestCase {
         }
         board = playerBoard.getBoard();
         for (i = 5; i >=  0; i--){
-            assert(!board[0][i].getColor().equals(EMPTY));
+            assertFalse(board[0][i].getColor().equals(EMPTY));
         }
-        assert(!val2);
+        assertFalse(val2);
         val2 = false;
 
         System.out.println("Checking full column exception");
@@ -92,8 +96,8 @@ public class PlayerBoardTest extends TestCase {
             }
         }
 
-        assert(!val);
-        assert(val2);
+        assertFalse(val);
+        assertTrue(val2);
         val2 = false;
 
         System.out.println("Checking full PlayerBoard check and return value");
@@ -109,8 +113,8 @@ public class PlayerBoardTest extends TestCase {
             }
         }
 
-        assert(val);
-        assert(!val2);
+        assertTrue(val);
+        assertFalse(val2);
 
         System.out.println("Checking insertion with an array of two");
 
@@ -137,7 +141,7 @@ public class PlayerBoardTest extends TestCase {
 
         for (i = 5; i >=  4; i--){
             System.out.println(board[0][i].getColor());
-            assert(board[0][i].getColor().equals(EMPTY));
+            assertTrue(board[0][i].getColor().equals(EMPTY));
         }
 
         System.out.println("Checking insertion with an array of two up to full column");
@@ -153,9 +157,9 @@ public class PlayerBoardTest extends TestCase {
         }
         board = playerBoard.getBoard();
         for (i = 5; i >=  0; i--){
-            assert(!board[2][i].getColor().equals(EMPTY));
+            assertFalse(board[2][i].getColor().equals(EMPTY));
         }
-        assert(!val2);
+        assertFalse(val2);
 
 
         System.out.println("Checking insertion with an array of one");
@@ -173,7 +177,7 @@ public class PlayerBoardTest extends TestCase {
         }
         board = playerBoard.getBoard();
         for (i = 5; i >=  3; i--){
-            assert(board[1][i].getColor().equals(EMPTY));
+            assertEquals(EMPTY, board[1][i].getColor());
         }
 
 
@@ -190,7 +194,7 @@ public class PlayerBoardTest extends TestCase {
         }
         board = playerBoard.getBoard();
         for (i = 5; i >=  0; i--){
-            assert(!board[1][i].getColor().equals(EMPTY));
+            assertFalse(board[1][i].getColor().equals(EMPTY));
         }
 
         System.out.println("PlayerBoard test 3 end");

@@ -5,6 +5,7 @@ import it.polimi.ingsw.shared.Cards.Card;
 import it.polimi.ingsw.shared.Cards.CardColor;
 import it.polimi.ingsw.server.Model.PlayerClasses.PlayerBoard;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 import static it.polimi.ingsw.shared.Cards.CardColor.*;
 
@@ -29,6 +30,8 @@ public class StairsPatternGoalTest extends TestCase {
     private CardColor[] tmpcol6 ={WHITE,WHITE,EMPTY,EMPTY,EMPTY,EMPTY,  WHITE,WHITE,EMPTY,EMPTY,EMPTY,EMPTY,  PINK,PINK,WHITE,WHITE,EMPTY,EMPTY,  PINK,WHITE,WHITE,WHITE,EMPTY,EMPTY,  EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY};
 
     Card[][] board= new Card[6][5];
+
+    @Test
     public void testCheck() {
         System.out.println("START TEST \n");
 
@@ -44,7 +47,7 @@ public class StairsPatternGoalTest extends TestCase {
             System.out.println(board[0][y].getColor().toString()+"\t"+board[1][y].getColor().toString()+"\t"+board[2][y].getColor().toString()+"\t"+board[3][y].getColor().toString()+"\t"+board[4][y].getColor().toString());
         }
 
-        assert (!test.check(board));
+        assertFalse(test.check(board));
         System.out.println("\nEND TEST 0\n");
 
 
@@ -72,7 +75,7 @@ public class StairsPatternGoalTest extends TestCase {
             System.out.println(board[0][y].getColor().toString()+"\t"+board[1][y].getColor().toString()+"\t"+board[2][y].getColor().toString()+"\t"+board[3][y].getColor().toString()+"\t"+board[4][y].getColor().toString());
         }
 
-        assert (test.check(board));
+        assertTrue (test.check(board));
         System.out.println("\nEND TEST 1\n");
 
 
@@ -97,7 +100,7 @@ public class StairsPatternGoalTest extends TestCase {
             System.out.println(board[0][y].getColor().toString()+"\t"+board[1][y].getColor().toString()+"\t"+board[2][y].getColor().toString()+"\t"+board[3][y].getColor().toString()+"\t"+board[4][y].getColor().toString());
         }
 
-        assert (test.check(board));
+        assertTrue (test.check(board));
         System.out.println("\nEND TEST 2\n");
 
 
@@ -122,7 +125,7 @@ public class StairsPatternGoalTest extends TestCase {
             System.out.println(board[0][y].getColor().toString()+"\t"+board[1][y].getColor().toString()+"\t"+board[2][y].getColor().toString()+"\t"+board[3][y].getColor().toString()+"\t"+board[4][y].getColor().toString());
         }
 
-        assert (test.check(board));
+        assertTrue (test.check(board));
         System.out.println("\nEND TEST 3\n");
 
 
@@ -148,7 +151,7 @@ public class StairsPatternGoalTest extends TestCase {
             System.out.println(board[0][y].getColor().toString()+"\t"+board[1][y].getColor().toString()+"\t"+board[2][y].getColor().toString()+"\t"+board[3][y].getColor().toString()+"\t"+board[4][y].getColor().toString());
         }
 
-        assert (test.check(board));
+        assertTrue (test.check(board));
         System.out.println("\nEND TEST 4\n");
 
 
@@ -174,7 +177,7 @@ public class StairsPatternGoalTest extends TestCase {
             System.out.println(board[0][y].getColor().toString()+"\t"+board[1][y].getColor().toString()+"\t"+board[2][y].getColor().toString()+"\t"+board[3][y].getColor().toString()+"\t"+board[4][y].getColor().toString());
         }
 
-        assert (!test.check(board));
+        assertFalse(test.check(board));
         System.out.println("\nEND TEST 5\n");
 
 
@@ -199,7 +202,7 @@ public class StairsPatternGoalTest extends TestCase {
             System.out.println(board[0][y].getColor().toString()+"\t"+board[1][y].getColor().toString()+"\t"+board[2][y].getColor().toString()+"\t"+board[3][y].getColor().toString()+"\t"+board[4][y].getColor().toString());
         }
 
-        assert (!test.check(board));
+        assertFalse(test.check(board));
         System.out.println("\nEND TEST 6\n");
 
 
@@ -227,7 +230,7 @@ public class StairsPatternGoalTest extends TestCase {
             System.out.println(board[0][y].getColor().toString()+"\t"+board[1][y].getColor().toString()+"\t"+board[2][y].getColor().toString()+"\t"+board[3][y].getColor().toString()+"\t"+board[4][y].getColor().toString());
         }
 
-        assert (!test.check(board));
+        assertFalse(test.check(board));
         System.out.println("\nEND TEST 7" +"\n");
     }
 }

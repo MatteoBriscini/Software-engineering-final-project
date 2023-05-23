@@ -7,6 +7,7 @@ import it.polimi.ingsw.server.Exceptions.NoSpaceException;
 import it.polimi.ingsw.server.Model.PlayerClasses.PlayerBoard;
 import it.polimi.ingsw.server.Model.GroupGoals.CouplesAndPokersGoals;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 import static it.polimi.ingsw.shared.Cards.CardColor.*;
 
@@ -29,6 +30,7 @@ public class CouplesAndPokersGoalsTest extends TestCase {
      * this method add all card in the player board to create a test case, at the and he print the player board
      * @param testCase is the array with the sequence of card color for the specific test case
      */
+    @Test
     private void createAndPrintTable (CardColor[] testCase){
         Card[][] board= new Card[6][5];
         int i, j, k = 0;
@@ -55,6 +57,7 @@ public class CouplesAndPokersGoalsTest extends TestCase {
      * actual test case
      * @throws ConstructorException exception threw from the OneColorPatternGoals constructor
      */
+    @Test
     public void testCheck() throws ConstructorException {
         int i, j, k = 0;
         Card[][] board= new Card[6][5];
@@ -66,17 +69,17 @@ public class CouplesAndPokersGoalsTest extends TestCase {
         //check initial state (create a new board and verify if si all empty, al goal have to return false)
         for (Card[] array : playerBoard.getBoard()){
                     for(Card c: array){
-                        assert (c.getColor().equals(EMPTY));
+                        assertEquals (EMPTY, c.getColor());
                     }
         }
 
         test = new CouplesAndPokersGoals(2,6);                      //constructor for couple goal
         boolean val = test.check(playerBoard.getBoard());
-        assert (!val);
+        assertFalse(val);
 
         test = new CouplesAndPokersGoals(4,4);                      //constructor for poker goal
         val = test.check(playerBoard.getBoard());
-        assert (!val);
+        assertFalse(val);
 
 
         //test case 1 (board full blue, have to return false)
@@ -99,10 +102,10 @@ public class CouplesAndPokersGoalsTest extends TestCase {
 
         test = new CouplesAndPokersGoals(4,4);
         val = test.check(playerBoard.getBoard());
-        assert (!val);
+        assertFalse(val);
         test = new CouplesAndPokersGoals(2,6);
         val = test.check(playerBoard.getBoard());
-        assert (!val);
+        assertFalse(val);
 
         //test case 2 (couple goal have to return true, poker have to return false)
         playerBoard = new PlayerBoard();
@@ -110,10 +113,10 @@ public class CouplesAndPokersGoalsTest extends TestCase {
 
         test = new CouplesAndPokersGoals(4,4);
         val = test.check(playerBoard.getBoard());
-        assert (!val);
+        assertFalse(val);
         test = new CouplesAndPokersGoals(2,6);
         val = test.check(playerBoard.getBoard());
-        assert (val);
+        assertTrue(val);
 
         //test case 3 (couple goal have to return true, poker have to return true)
         playerBoard = new PlayerBoard();
@@ -121,10 +124,10 @@ public class CouplesAndPokersGoalsTest extends TestCase {
 
         test = new CouplesAndPokersGoals(4,4);
         val = test.check(playerBoard.getBoard());
-        assert (val);
+        assertTrue (val);
         test = new CouplesAndPokersGoals(2,6);
         val = test.check(playerBoard.getBoard());
-        assert (val);
+        assertTrue (val);
 
         System.out.println("END TEST WITH NO ERROR \n");
     }

@@ -4,6 +4,7 @@ import it.polimi.ingsw.shared.JsonSupportClasses.Position;
 import it.polimi.ingsw.shared.Cards.Card;
 import it.polimi.ingsw.shared.Cards.CardColor;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 import static it.polimi.ingsw.shared.Cards.CardColor.BLUE;
 import static it.polimi.ingsw.shared.Cards.CardColor.EMPTY;
@@ -12,62 +13,64 @@ public class PositionTest extends TestCase {
 
     private Position test;
 
+    @Test
     public void testGetNeighbors() {
         System.out.println("START TEST \n");
 
 
         test = new Position(3, 2);
         Position[] result = test.getNeighbors();
-        assert (result.length == 4);
-        assert (result[0].getX() == 2);
-        assert (result[1].getX() == 3);
-        assert (result[2].getX() == 4);
-        assert (result[3].getX() == 3);
+        assertEquals(4, result.length);
+        assertEquals(2, result[0].getX());
+        assertEquals(3, result[1].getX());
+        assertEquals(4, result[2].getX());
+        assertEquals(3, result[3].getX());
 
-        assert (result[0].getY() == 2);
-        assert (result[1].getY() == 1);
-        assert (result[2].getY() == 2);
-        assert (result[3].getY() == 3);
+        assertEquals(2, result[0].getY());
+        assertEquals(1, result[1].getY());
+        assertEquals(2, result[2].getY());
+        assertEquals(3, result[3].getY());
 
         test = new Position(0, 0);
         result = test.getNeighbors();
-        assert (result.length == 2);
-        assert (result[0].getX() == 1);
-        assert (result[1].getX() == 0);
+        assertEquals(2, result.length);
+        assertEquals(1, result[0].getX());
+        assertEquals(0, result[1].getX());
 
-        assert (result[0].getY() == 0);
-        assert (result[1].getY() == 1);
+        assertEquals(0, result[0].getY());
+        assertEquals(1, result[1].getY());
 
         test = new Position(8, 0);
         result = test.getNeighbors();
-        assert (result.length == 2);
-        assert (result[0].getX() == 7);
-        assert (result[1].getX() == 8);
+        assertEquals(2, result.length);
+        assertEquals(7, result[0].getX());
+        assertEquals(8, result[1].getX());
 
-        assert (result[0].getY() == 0);
-        assert (result[1].getY() == 1);
+        assertEquals(0, result[0].getY());
+        assertEquals(1, result[1].getY());
 
         test = new Position(0, 8);
         result = test.getNeighbors();
-        assert (result.length == 2);
-        assert (result[0].getX() == 0);
-        assert (result[1].getX() == 1);
+        assertEquals(2, result.length);
+        assertEquals(0, result[0].getX());
+        assertEquals(1, result[1].getX());
 
-        assert (result[0].getY() == 7);
-        assert (result[1].getY() == 8);
+        assertEquals(7, result[0].getY());
+        assertEquals(8, result[1].getY());
 
         test = new Position(8, 8);
         result = test.getNeighbors();
-        assert (result.length == 2);
-        assert (result[0].getX() == 7);
-        assert (result[1].getX() == 8);
+        assertEquals(2, result.length);
+        assertEquals(7, result[0].getX());
+        assertEquals(8, result[1].getX());
 
-        assert (result[0].getY() == 8);
-        assert (result[1].getY() == 7);
+        assertEquals(8, result[0].getY());
+        assertEquals(7, result[1].getY());
 
 
         System.out.println("\nEND TEST\n");
     }
+    @Test
     public void testPickable() {
         System.out.println("START TEST \n");
 
@@ -86,19 +89,19 @@ public class PositionTest extends TestCase {
         for(int y=8;y>=0;y--){
             System.out.println(board[0][y].getColor().toString()+"\t"+board[1][y].getColor().toString()+"\t"+board[2][y].getColor().toString()+"\t"+board[3][y].getColor().toString()+"\t"+board[4][y].getColor().toString()+"\t"+board[5][y].getColor().toString()+"\t"+board[6][y].getColor().toString()+"\t"+board[7][y].getColor().toString()+"\t"+board[8][y].getColor().toString());
         }
-        assert (!test.pickable(board));
+        assertFalse(test.pickable(board));
 
         test = new Position(8,8);
-        assert (test.pickable(board));
+        assertTrue (test.pickable(board));
 
         test = new Position(1,1);
-        assert (test.pickable(board));
+        assertTrue (test.pickable(board));
 
         test = new Position(0,3);
-        assert (test.pickable(board));
+        assertTrue (test.pickable(board));
 
         test = new Position(8,3);
-        assert (!test.pickable(board));
+        assertFalse(test.pickable(board));
 
         System.out.println("\nEND TEST\n");
     }
