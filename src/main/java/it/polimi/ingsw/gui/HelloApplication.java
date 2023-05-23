@@ -145,6 +145,11 @@ public class HelloApplication extends Application implements UserInterface {
     }
 
     @Override
+    public void updateLastCommonGoal() {
+
+    }
+
+    @Override
     public void setMode(PlayerMode m) {
         player = connection.getPlayer();
         if(m.equals(PlayerMode.LOBBY))Platform.runLater(() -> {

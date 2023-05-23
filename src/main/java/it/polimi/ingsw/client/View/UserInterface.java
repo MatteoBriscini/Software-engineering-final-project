@@ -27,4 +27,5 @@ public interface UserInterface {
 
     void notifyNewActivePlayer();
 
+    void updateLastCommonGoal();
 }

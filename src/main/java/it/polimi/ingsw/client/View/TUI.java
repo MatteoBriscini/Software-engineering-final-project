@@ -64,7 +64,6 @@ public class TUI implements UserInterface{
         thread.start();
     }
 
-
     private void jsonCreate() throws FileNotFoundException{
 
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(JsonUrl.getUrl("controllerConfig"));
@@ -438,7 +437,7 @@ public class TUI implements UserInterface{
      * @param msg is the string that contains the message sent to the player
      */
     public void receiveMsg(String msg){
-        System.out.println(msg+"\n");
+        System.out.println("\n\n"+msg+"\n\n");
     }
 
 
@@ -630,8 +629,15 @@ public class TUI implements UserInterface{
     public void notifyNewActivePlayer(){
         System.out.println(TextColor.YELLOW.get() +"CURRENT PLAYER: " + ((PlayingPlayer)player).getActivePlayer() + TextColor.DEFAULT.get());
     }
+
+    public void updateLastCommonGoal(){
+        updateAll();
+    }
+
+
     @Override
     public void updateAll(){
+        JsonObject[] commons;
         String[][] toPrint = new String[((PlayingPlayer)player).getPlayerBoard(player.getPlayerID()).getColumns()][((PlayingPlayer)player).getPlayerBoard(player.getPlayerID()).getRows()];
         String[][] mainBoardToPrint = new String[((PlayingPlayer) player).getMainBoard().getColumns()][((PlayingPlayer) player).getMainBoard().getRows()];
 
@@ -647,7 +653,18 @@ public class TUI implements UserInterface{
             }
         }
 
-        if(commonGoals) System.out.println("Common goals:\n1)"+ commonGoalsList[((PlayingPlayer) player).getCommonGoalID()[0]]+"\n2)"+ commonGoalsList[((PlayingPlayer) player).getCommonGoalID()[1]]);
+
+
+
+
+        if(commonGoals) System.out.println("\nCommon goals:\n1)"+ commonGoalsList[((PlayingPlayer) player).getCommonGoalID()[0]]+"\n2)"+ commonGoalsList[((PlayingPlayer) player).getCommonGoalID()[1]]);
+
+        commons=((PlayingPlayer) player).getCommonGoalScored();
+        if(commons!=null) {
+            for (JsonObject obj : commons) {
+                System.out.println("\n" + obj.get("playerID").getAsString() + ": " + obj.get("value").getAsInt());
+            }
+        }
 
         mainBoardToString(((PlayingPlayer) player).getMainBoard(),mainBoardToPrint);
         this.printBoard(mainBoardToPrint,((PlayingPlayer) player).getMainBoard().getColumns(),((PlayingPlayer) player).getMainBoard().getRows() , "main");

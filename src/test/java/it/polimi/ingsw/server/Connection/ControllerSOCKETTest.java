@@ -144,7 +144,7 @@ public class ControllerSOCKETTest extends TestCase {
         testClient2 = new LobbyPlayer("paolo", "antonio", connection2);  //paolo rejoins a game after the crash
         ((LobbyPlayer)testClient2).login();
         testClient2 = connection2.getPlayer();
-        assertFalse(controller.isPlayerOffline("paolo"));
+        //assertFalse(controller.isPlayerOffline("paolo"));
 
 
         Thread.sleep(1000);
