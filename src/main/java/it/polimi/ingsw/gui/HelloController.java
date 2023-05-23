@@ -31,6 +31,9 @@ private Label usernameLabel;
 private Label errorLabel;
 private AnchorPane loginPanel;
 
+public String audio = getClass().getResource("../Sounds/WindowsError.wav").toString();
+
+
 
     int socketPort;
     int RMIPort;

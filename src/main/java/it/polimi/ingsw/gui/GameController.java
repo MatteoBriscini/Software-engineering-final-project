@@ -39,8 +39,11 @@ import static it.polimi.ingsw.shared.Cards.CardColor.EMPTY;
 public class GameController extends GuiView implements Initializable {
 
 
-
     //game
+
+    @FXML
+    private HBox bookshelfAnchor;
+    private ArrayList<Node> othersBookshelf = new ArrayList<>();
     private PlayingPlayer player;
     private ArrayList<String> otherPlayers = new ArrayList<>();
     @FXML
@@ -295,9 +298,19 @@ public class GameController extends GuiView implements Initializable {
         if(card.equals(EMPTY)){
             errorMsg("invalid pick");
             return;
+
         }
 
         positions.add(new Position(columnX, lineY));
+        if(positions.size() == 1) this.otherPlayersBoard();
+    }
+
+    private void otherPlayersBoard(){
+        for(Node node: bookshelfAnchor.getChildren()){
+            othersBookshelf.add(node);
+        }
+
+        bookshelfAnchor.getChildren().removeAll();
     }
 
 
