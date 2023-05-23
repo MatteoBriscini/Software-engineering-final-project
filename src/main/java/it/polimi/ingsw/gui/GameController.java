@@ -57,6 +57,8 @@ public class GameController extends GuiView implements Initializable {
     private ArrayList<Position> positions = new ArrayList<>();
     GridPane mainBoardGrid;
     GridPane myPlayerBoardGrid;
+    @FXML
+    private HBox myTails;
 
     //bookShelf
     @FXML
@@ -302,15 +304,30 @@ public class GameController extends GuiView implements Initializable {
         }
 
         positions.add(new Position(columnX, lineY));
+        System.out.println(positions.size());
         if(positions.size() == 1) this.otherPlayersBoard();
+
     }
 
     private void otherPlayersBoard(){
+        System.out.println(bookshelfAnchor.getChildren());
         for(Node node: bookshelfAnchor.getChildren()){
             othersBookshelf.add(node);
         }
 
-        bookshelfAnchor.getChildren().removeAll();
+        bookshelfAnchor.getChildren().clear();
+        myTails = new HBox();
+        HBox myTails2 = new HBox();
+        myTails2.setSpacing(30);
+        TextField reorderMove = new TextField();
+        reorderMove.setPromptText("reorder cards [es: 2,1,0]");
+        TextField columnMove = new TextField();
+        columnMove.setPromptText("specify column on bookShelf");
+        Button sendMove = new Button();
+        sendMove.setText("enter");
+        myTails2.getChildren().addAll(reorderMove,columnMove,sendMove);
+
+        bookshelfAnchor.getChildren().addAll(myTails, myTails2);
     }
 
 
@@ -327,6 +344,11 @@ public class GameController extends GuiView implements Initializable {
                 GameController.this.takeCard(x,y);
             }
         });
+    }
+
+    public void insertTails(){
+
+
     }
 
 

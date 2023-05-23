@@ -37,7 +37,7 @@
            <Label fx:id="currentPlayer" text="CURRENT PLAYER: &#xD; null "/>
            <AnchorPane fx:id="livingRoomClickable" prefWidth="565.0" prefHeight="565.0"></AnchorPane>
        </AnchorPane>
-       <HBox fx:id="bookshelfAnchor" prefHeight="150.0" spacing="70">
+       <HBox fx:id="bookshelfAnchor" prefHeight="600.0" spacing="70" prefWidth="610">
            <VBox alignment="CENTER" fx:id="myBookshelfBox1">
             <ImageView fx:id="myBookshelfImage1" fitHeight="140.0" fitWidth="150" pickOnBounds="true" preserveRatio="true" />
                <Label fx:id="shelfID1" text="void"></Label>

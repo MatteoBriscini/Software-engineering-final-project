@@ -80,9 +80,6 @@
                 <directory>src/main/resources/fxml_images/tiles</directory>
             </resource>
             <resource>
-                <directory>src/main/resources/audio</directory>
-            </resource>
-            <resource>
                 <directory>src/main/resources/fxml_images/commonGoalCards</directory>
             </resource>
             <resource>
