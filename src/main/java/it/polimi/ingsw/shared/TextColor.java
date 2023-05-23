@@ -2,13 +2,14 @@ package it.polimi.ingsw.shared;
 
 
 public enum TextColor {
-    LIGHTBLUE("\033[0;36m"),    // CYAN
-    YELLOW("\033[0;33m"),  // YELLOW
-    BLUE("\033[0;34m"),    // BLUE
-    PINK("\033[0;35m"),  // PURPLE
-    GREEN("\033[0;32m"),   // GREEN
-    WHITE("\033[0;37m"),   // WHITE
-    EMPTY("\033[0;30m"),   // BLACK
+
+    BLUE("\033[38;2;0;0;255m"),   // BLUE
+    GREEN("\033[38;2;0;255;0m"),  // GREEN
+    LIGHTBLUE("\033[38;2;0;255;255m"),   // CYAN
+    PINK("\033[38;2;255;102;255m"), // PURPLE
+    WHITE("\033[38;2;255;255;255m"),  // WHITE
+    YELLOW("\033[38;2;255;255;0m"), // YELLOW
+    EMPTY("\033[0;0;0m"),   // BLACK
     RED("\u001B[31m"),
     DEFAULT("\u001B[0m");
     private String code;
