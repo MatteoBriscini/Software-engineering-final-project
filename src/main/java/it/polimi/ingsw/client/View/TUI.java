@@ -384,6 +384,9 @@ public class TUI implements UserInterface{
         do {
             System.out.println(TextColor.YELLOW.get() +"Insert the number of players for this game (min " +minPlayers+ ", max" +maxPlayers+ ") "+ TextColor.LIGHTBLUE.get() +"\nInsert /def to use default settings"+ TextColor.DEFAULT.get());
             selection = stringCommand();
+            if(selection.equals("/back")){
+                toRun();
+            }
             if (selection.equals("/def")) {
                 success=((LobbyPlayer)player).createGame();
             } else {
@@ -407,6 +410,9 @@ public class TUI implements UserInterface{
         do{
             System.out.println(TextColor.YELLOW.get()+"Insert the name of a player to play with a friend\n"+ TextColor.LIGHTBLUE.get() +"Insert /rand to join a random game"+ TextColor.DEFAULT.get());
             selection = stringCommand();
+            if(selection.equals("/back")){
+                toRun();
+            }
             if(selection.equals("/rand")){
                 success=((LobbyPlayer)player).joinGame();
             } else {
@@ -531,23 +537,6 @@ public class TUI implements UserInterface{
         return true;
     }
 
-    /**
-     * @return an array of Strings that contains the coordinates of the to be picked from the main board
-     *          format: {[x1,y1],[...],[xn,yn]}
-     */
-    private String[] selectCardsFromBoard(){
-        Scanner sc = new Scanner(System.in);
-        String selection;
-        String[] picks;
-
-        do {
-            System.out.println("Select the positions of the cards you want to take: x1,y1; [...]; xn,yn\n");
-            selection = sc.nextLine();
-            picks = selection.split(";");
-        } while (picks.length<minPickable || picks.length>maxPickable);
-
-        return picks;
-    }
 
     /**
      * @param picks is an array that contains coordinates formatted as Strings [x,y]
@@ -600,34 +589,8 @@ public class TUI implements UserInterface{
         return true;
     }
 
-    /**
-     * @return the index of the columns in which the cards have to be placed
-     */
-    private int selectColumn(){
-        Scanner sc = new Scanner(System.in);
-        int column;
 
-        do {
-            System.out.println("Select the column on your board:\n");
-            column = Integer.parseInt(sc.nextLine());
-            if(column<0 || column>= ((PlayingPlayer)player).getPlayerBoard(((PlayingPlayer)player).getPlayerID()).getColumns())
-                printError("Invalid column, please try again");
-        }while (column<0 || column>= ((PlayingPlayer)player).getPlayerBoard(((PlayingPlayer)player).getPlayerID()).getColumns());
-        return column;
-    }
 
-    /**
-     * @param picks is the array that contains the coordinates as Strings
-     * @param positions is the array that will contain the coordinates as ints
-     */
-    private void intCoordinates(String[] picks,Position[] positions){
-        String[] tmpPick;
-
-        for(int i=0; i< picks.length;i++){
-            tmpPick=picks[i].split(",");
-            positions[i]= new Position(Integer.parseInt(tmpPick[0]),Integer.parseInt(tmpPick[1]));
-        }
-    }
     @Override
     public void notifyNewActivePlayer(){
         System.out.println(TextColor.YELLOW.get() +"CURRENT PLAYER: " + ((PlayingPlayer)player).getActivePlayer() + TextColor.DEFAULT.get());
@@ -640,7 +603,6 @@ public class TUI implements UserInterface{
 
     @Override
     public void updateAll(){
-        JsonObject[] commons;
         String[][] toPrint = new String[((PlayingPlayer)player).getPlayerBoard(player.getPlayerID()).getColumns()][((PlayingPlayer)player).getPlayerBoard(player.getPlayerID()).getRows()];
         String[][] mainBoardToPrint = new String[((PlayingPlayer) player).getMainBoard().getColumns()][((PlayingPlayer) player).getMainBoard().getRows()];
 
@@ -656,21 +618,39 @@ public class TUI implements UserInterface{
             }
         }
 
-
-
-
-
-        if(commonGoals) System.out.println("\nCommon goals:\n1)"+ commonGoalsList[((PlayingPlayer) player).getCommonGoalID()[0]]+"\n2)"+ commonGoalsList[((PlayingPlayer) player).getCommonGoalID()[1]]);
-
-        commons=((PlayingPlayer) player).getCommonGoalScored();
-        if(commons!=null) {
-            for (JsonObject obj : commons) {
-                System.out.println("\n" + obj.get("playerID").getAsString() + ": " + obj.get("value").getAsInt());
-            }
-        }
+        printCommonGoals();
 
         mainBoardToString(((PlayingPlayer) player).getMainBoard(),mainBoardToPrint);
         this.printBoard(mainBoardToPrint,((PlayingPlayer) player).getMainBoard().getColumns(),((PlayingPlayer) player).getMainBoard().getRows() , "main");
+    }
+
+    private void printCommonGoals(){
+        JsonObject[] commons;
+        ArrayList<String> whoGotCommon;
+        String printCommon;
+
+
+        if(commonGoals) System.out.println("\nCommon goals:\n1)\n"+ commonGoalsList[((PlayingPlayer) player).getCommonGoalID()[0]]+"\n\n2)\n"+ commonGoalsList[((PlayingPlayer) player).getCommonGoalID()[1]]);
+
+        commons=((PlayingPlayer) player).getCommonGoalScored();
+        if(commons!=null) {
+            whoGotCommon=new ArrayList<>();
+            for (JsonObject obj : commons) {
+                if(!(whoGotCommon.contains(obj)))
+                    whoGotCommon.add(obj.get("playerID").getAsString());
+            }
+            for (String s: whoGotCommon){
+                printCommon=s;
+                for(JsonObject obj : commons) {
+                    if (s.equals(obj.get("playerID").getAsString())) {
+                        printCommon = printCommon + " ["+obj.get("value").getAsInt()+"]";
+                    }
+                }
+                System.out.println(printCommon);
+            }
+
+
+        }
     }
     @Override
     public void updateMainBoard(PositionWithColor[] p){
@@ -751,14 +731,6 @@ public class TUI implements UserInterface{
     }
 
     /**
-     * this method calls the quitGame method on the server and prints an error message if this procedure fails
-     */
-    private void quitGame(){
-        if(!((PlayingPlayer)player).quitGame())
-            printError("Failed to quit the game");
-    }
-
-    /**
      * @param err is the string to print on the standard error stream
      */
     public void printError(String err){
@@ -808,7 +780,7 @@ public class TUI implements UserInterface{
                 if (color.equals(EMPTY.get())) {
                     for (PositionWithColor p : goal) {
                         if(p.getX()==column && p.getY() == row){
-                            s[column][row] = TextColor.valueOf(p.getColor().toString()).get() + color + " X ";
+                            s[column][row] = TextColor.valueOf( p.getColor().toString()).get() + color + " X ";
                         }
                     }
                 }
@@ -849,50 +821,6 @@ public class TUI implements UserInterface{
         }
         printLine = printLine + "  ";
         System.out.println(printLine + DEFAULT.get());
-    }
-
-    private void printBoard() {
-
-
-
-        for(String id : ((PlayingPlayer) player).getPlayersID()){
-            playerBoard = ((PlayingPlayer)player).getPlayerBoard(id);
-            for(int x=0;x< playerBoard.getColumns();x++) {
-                printLine= EMPTY.get();
-                for (int y = playerBoard.getRows() - 1; y >= 0; y--) {
-                    for (int i = 0; i < CardColor.values().length; i++) {
-                        if(playerBoard.getColor(x, y).toString().equals(CardColor.values()[i].toString())) {
-                            printLine = printLine + ColorCodes.values()[i].get()+"  ";
-                        }
-                    }
-                }
-                System.out.println(printLine + " " + EMPTY.get());
-            }
-            if(id.equals(player.getPlayerID()))
-                System.out.println("Your board");
-            else
-                System.out.println(id+"'s board");
-
-
-            //System.out.println((player).getPlayerID().toString()+"'s board");
-
-
-        }
-
-        mainBoard=((PlayingPlayer)player).getMainBoard();
-        for(int x=0;x< mainBoard.getColumns();x++) {
-            printLine= EMPTY.get();
-            for (int y = mainBoard.getRows() - 1; y >= 0; y--) {
-                for (int i = 0; i < CardColor.values().length; i++) {
-                    if(mainBoard.getColor(x, y).toString().equals(CardColor.values()[i].toString())) {
-                        printLine = printLine + ColorCodes.values()[i].get()+"  ";
-                    }
-                }
-            }
-            System.out.println(printLine + " " + EMPTY.get());
-        }
-        System.out.println("Main board");
-
     }
 
 }
