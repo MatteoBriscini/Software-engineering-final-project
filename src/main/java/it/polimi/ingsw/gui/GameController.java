@@ -21,6 +21,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import it.polimi.ingsw.client.Player.PlayingPlayer;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -35,8 +36,10 @@ import java.util.ResourceBundle;
 
 import static it.polimi.ingsw.shared.Cards.CardColor.BLUE;
 import static it.polimi.ingsw.shared.Cards.CardColor.EMPTY;
+import static javafx.geometry.Pos.CENTER;
 
 public class GameController extends GuiView implements Initializable {
+
 
 
     //game
@@ -60,6 +63,18 @@ public class GameController extends GuiView implements Initializable {
     @FXML
     private HBox myTails;
 
+    private GridPane[] otherPlayerBoardGrid;
+    private ImageView[] otherPlayerBoardBox;
+    @FXML
+    private VBox myBookshelfBox1;
+    @FXML
+    private VBox myBookshelfBox2;
+    @FXML
+    private VBox myBookshelfBox3;
+    @FXML
+    private TextField reorderMove;
+    @FXML
+    private TextField columnMove;
     //bookShelf
     @FXML
     private Label shelfID1 = new Label();
@@ -239,6 +254,7 @@ public class GameController extends GuiView implements Initializable {
                     card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file)));
                     card.setFitHeight(50);
                     card.setFitWidth(50);
+                    card.setId("tile");
                     GridPane.setConstraints(card,x,player.getMainBoard().getColumns()-y);
                     mainBoardGrid.getChildren().add(card);
                 }
@@ -255,7 +271,7 @@ public class GameController extends GuiView implements Initializable {
     public void updateMainBoard(PositionWithColor[] p) {
         for (PositionWithColor pos : p) {
             for(Node n: mainBoardGrid.getChildren()){
-                 if(GridPane.getRowIndex(n) == pos.getY() && GridPane.getColumnIndex(n) == pos.getX())n.setVisible(false);
+                 if(GridPane.getRowIndex(n) == player.getMainBoard().getColumns()-pos.getY() && GridPane.getColumnIndex(n) == pos.getX())n.setVisible(false);
             }
         }
     }
@@ -269,24 +285,51 @@ public class GameController extends GuiView implements Initializable {
         PlayerBoard playerBoard = player.getPlayerBoard(player.getPlayerID());
         Card[][] cards = playerBoard.getBoard();
 
-
-
         for(int x=0;x<playerBoard.getColumns();x++){
             for (int y=0;y<playerBoard.getRows(); y++){
-                if(!cards[x][y].getColor().equals(EMPTY)) {
                     String file = CardImage.getImgName(cards[x][y].getSketch(), cards[x][y].getColor());
                     ImageView card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file)));
                     card.setFitHeight(42);
                     card.setFitWidth(42);
-                    GridPane.setConstraints(card, x, player.getMainBoard().getColumns() - y);
+                    if(cards[x][y].getColor().equals(EMPTY))card.setVisible(false);
+                    GridPane.setConstraints(card, x, player.getMainBoard().getColumns()-y);
                     myPlayerBoardGrid.getChildren().add(card);
-                }
+
             }
         }
 
         myBookshelfDiv.getChildren().add(myPlayerBoardGrid);
-        
     }
+    public void updatePlayerBoard(String id, int column, Card[] c){
+        if(id.equals(player.getPlayerID()))updateMyPlayerBoard(column,c);
+    }
+    private void updateMyPlayerBoard(int column, Card[] c){
+        Card[][] playerBoard = player.getPlayerBoard(player.getPlayerID()).getBoard();
+        Card[] actualColumn = playerBoard[column];
+        int y = actualColumn.length-1;
+
+        while (y>=0) {
+            if (actualColumn[y].getColor() == EMPTY) y--;
+            else break;
+        }
+        y = y -c.length +1;
+
+        for(Card card: c){
+                    String file = CardImage.getImgName(card.getSketch(), card.getColor());
+                    ImageView cardImg = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file)));
+                    cardImg.setFitHeight(42);
+                    cardImg.setFitWidth(42);
+                    GridPane.setConstraints(cardImg, column, player.getMainBoard().getColumns()-y);
+                    myPlayerBoardGrid.getChildren().add(cardImg);
+                    y++;
+        }
+    }
+
+    public void setOtherPlayerBoard(){
+        otherPlayerBoardGrid = new GridPane[player.getPlayersNumber()];
+
+    }
+
     @FXML
     public void takeCard(double x, double y){
 
@@ -303,38 +346,89 @@ public class GameController extends GuiView implements Initializable {
 
         }
 
+        if(positions.size() == 0) this.MoveMode();
+        else if (positions.size() == 3){                    //TODO dynamic number
+            this.errorMsg("can't take more pick");
+            return;
+        }
         positions.add(new Position(columnX, lineY));
-        System.out.println(positions.size());
-        if(positions.size() == 1) this.otherPlayersBoard();
+
+        insertTails(columnX, lineY);
 
     }
 
-    private void otherPlayersBoard(){
-        System.out.println(bookshelfAnchor.getChildren());
-        for(Node node: bookshelfAnchor.getChildren()){
-            othersBookshelf.add(node);
-        }
+    private void MoveMode(){
+        othersBookshelf.addAll(bookshelfAnchor.getChildren());
 
         bookshelfAnchor.getChildren().clear();
+        bookshelfAnchor.setAlignment(CENTER);
+        VBox vBox = new VBox();
+        vBox.setAlignment(CENTER);
+        vBox.setSpacing(10);
         myTails = new HBox();
+        myTails.setAlignment(CENTER);
+        myTails.setId("myTails");
         HBox myTails2 = new HBox();
         myTails2.setSpacing(30);
-        TextField reorderMove = new TextField();
-        reorderMove.setPromptText("reorder cards [es: 2,1,0]");
-        TextField columnMove = new TextField();
-        columnMove.setPromptText("specify column on bookShelf");
+        reorderMove = new TextField();
+        reorderMove.setPromptText("new order");
+        reorderMove.setId("reorderMove");
+        columnMove = new TextField();
+        columnMove.setId("columnMove");
+        columnMove.setPromptText("column");
         Button sendMove = new Button();
         sendMove.setText("enter");
-        myTails2.getChildren().addAll(reorderMove,columnMove,sendMove);
+        sendMove.setId("sendMove");
+        sendMove.setOnAction(event -> checkID(sendMove));
+        Button resetMove = new Button();
+        resetMove.setText("reset");
+        resetMove.setId("resetMove");
+        resetMove.setOnAction(event -> checkID(resetMove));
+        Button changeOrder = new Button();
+        changeOrder.setText("reorder");
+        changeOrder.setId("changeOrder");
+        changeOrder.setOnAction(event -> checkID(changeOrder));
+        myTails2.getChildren().addAll(resetMove, reorderMove, changeOrder, columnMove, sendMove);
 
-        bookshelfAnchor.getChildren().addAll(myTails, myTails2);
+        vBox.getChildren().addAll(myTails, myTails2);
+        bookshelfAnchor.getChildren().add(vBox);
+    }
+
+    private void insertTails(int x, int y){
+
+        Card[][] mainBoard = player.getMainBoard().getBoard();
+
+        String file = CardImage.getImgName(mainBoard[x][y].getSketch(), mainBoard[x][y].getColor());
+        ImageView card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file)));
+        card.setFitHeight(60);
+        card.setFitWidth(60);
+
+        myTails.getChildren().add(card);
+
+        for(Node n: mainBoardGrid.getChildren()){
+            if(GridPane.getRowIndex(n) == player.getMainBoard().getColumns()-y && GridPane.getColumnIndex(n) == x)n.setEffect(new ColorAdjust(0, -1, 0, 0));
+        }
+    }
+
+    private void sendMove(){
+        //TODO controlli su input field
+        int column = Integer.parseInt(columnMove.getText());
+        player.takeCard(column, positions.toArray(new Position[0]));
+        this.resetMove();
+    }
+    private void resetMove(){
+        bookshelfAnchor.getChildren().clear();
+        bookshelfAnchor.getChildren().addAll(othersBookshelf);
+        othersBookshelf = new ArrayList<>();
+        positions = new ArrayList<>();
+    }
+    private void reorderMove(){
+        //TODO
     }
 
 
 
     public void mouseCoordinates() {
-
-        int columnX, columnY;
         livingRoomClickable.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -346,10 +440,6 @@ public class GameController extends GuiView implements Initializable {
         });
     }
 
-    public void insertTails(){
-
-
-    }
 
 
     /**********************************************************************
@@ -560,6 +650,9 @@ public class GameController extends GuiView implements Initializable {
             case "showChatButton" -> this.showChatButton();
             case "showPersonalButton" -> this.showPersonalButton();
             case "showCommonButton" -> this.showCommonButton();
+            case "resetMove" -> this.resetMove();
+            case "sendMove" -> this.sendMove();
+            case "changeOrder" -> this.reorderMove();
         }
     }
 

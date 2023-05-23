@@ -8,7 +8,7 @@
 .label{
     -fx-font-family: "Bitstream Vera Sans Mono";
 }
-.button{
+.button, livingRoomClickable{
     -fx-cursor: hand;
 }
 #logo{
@@ -170,4 +170,35 @@
 #livingRoomClickable{
     -fx-translate-x: 5px;
     -fx-translate-y: 5px;
+}
+#myTails{
+    -fx-spacing: 15;
+    -fx-padding: 15px15px20px;
+    -fx-background-color: rgb(160,82,45);
+    -fx-background-radius: 20px;
+}
+#resetMove{
+    -fx-background-color: rgb(255, 102, 0);
+    -fx-padding: 9px;
+    -fx-background-radius: 7px;
+}
+#sendMove{
+    -fx-background-color: #99cc00;
+    -fx-padding: 9px;
+    -fx-background-radius: 7;
+}
+#changeOrder{
+    -fx-background-color: rgb(102, 204, 255);
+    -fx-padding: 9px;
+    -fx-background-radius: 7;
+}
+#reorderMove, #columnMove{
+    -fx-background-color: rgb(160,82,45);
+    -fx-background-radius: 7px;
+    -fx-padding: 5px;
+    -fx-translate-x: 37;
+    -fx-border-radius: 7px;
+    -fx-text-fill: white;
+    -fx-max-width: 100px;
+    -fx-min-height: 35px;
 }

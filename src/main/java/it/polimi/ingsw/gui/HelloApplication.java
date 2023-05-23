@@ -99,7 +99,6 @@ public class HelloApplication extends Application implements UserInterface {
 
     @Override
     public void receiveNumPlayers(int n) {
-
         Platform.runLater(() -> ((WaitingroomController) guiView).changeNumPlayer(n));
      }
 
@@ -143,7 +142,9 @@ public class HelloApplication extends Application implements UserInterface {
 
     @Override
     public void updatePlayerBoard(String id, int column, Card[] c) {
-
+        Platform.runLater(() -> {
+            if(guiView instanceof GameController)((GameController) guiView).updatePlayerBoard(id,column,c);
+        });
     }
 
     @Override
