@@ -514,10 +514,13 @@ public class TUI implements UserInterface{
                 if (command != 'Y' && command != 'N') {
                     printError("Invalid selection, please try again\n");
                 }
-                if (command == 'Y') tmp = this.reorderCards(positions);
+                if (command == 'Y') {
+                    tmp = this.reorderCards(positions);
+                    positions = tmp;
+                }
                 else break;
             } while (tmp == null);
-            positions = tmp;
+
         }
         ((PlayingPlayer)player).takeCard(column,positions.toArray(new Position[0]));
     }
