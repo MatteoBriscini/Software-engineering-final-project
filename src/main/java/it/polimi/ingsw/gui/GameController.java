@@ -4,14 +4,15 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.client.Exceptions.PlayerNotFoundException;
-import it.polimi.ingsw.gui.supportClass.CommonGoal;
-import it.polimi.ingsw.gui.supportClass.Message;
-import it.polimi.ingsw.gui.supportClass.MessageTipe;
-import it.polimi.ingsw.gui.supportClass.PrivateGoal;
+import it.polimi.ingsw.client.Game.PlayerBoard;
+import it.polimi.ingsw.gui.supportClass.*;
+import it.polimi.ingsw.server.Model.MainBoard;
 import it.polimi.ingsw.shared.Cards.Card;
 import it.polimi.ingsw.shared.Cards.CardColor;
 import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
 import it.polimi.ingsw.shared.JsonSupportClasses.Position;
+import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -32,17 +33,32 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import static it.polimi.ingsw.shared.Cards.CardColor.BLUE;
 import static it.polimi.ingsw.shared.Cards.CardColor.EMPTY;
 
 public class GameController extends GuiView implements Initializable {
 
 
     //game
+
+    @FXML
+    private HBox bookshelfAnchor;
+    private ArrayList<Node> othersBookshelf = new ArrayList<>();
     private PlayingPlayer player;
     private ArrayList<String> otherPlayers = new ArrayList<>();
     @FXML
     private Label currentPlayer = new Label();
+    @FXML
+    private AnchorPane livingRoomBox;
+    @FXML
+    private AnchorPane myBookshelfDiv;
+    @FXML
+    private AnchorPane livingRoomClickable = new AnchorPane();
     private ArrayList<Position> positions = new ArrayList<>();
+    GridPane mainBoardGrid;
+    GridPane myPlayerBoardGrid;
+    @FXML
+    private HBox myTails;
 
     //bookShelf
     @FXML
@@ -93,7 +109,7 @@ public class GameController extends GuiView implements Initializable {
      **********************************************************************/
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {            //static element init
-        imagesInit(myBookshelfImage, "bookshelf.png"); //load player board img
+        imagesInit(myBookshelfImage, "bookshelf_orth.png"); //load player board img
 
         imagesInit(logo, "Publisher.png");
 
@@ -108,6 +124,8 @@ public class GameController extends GuiView implements Initializable {
         playerInit();
         commonGoalsInit();
         privateGoalsInit();
+        setMainBoard();
+        setMyPlayerBoardGrid();
 
         this.mouseCoordinates();
         this.notifyNewActivePlayer();
@@ -115,7 +133,6 @@ public class GameController extends GuiView implements Initializable {
     private void imagesInit(ImageView imageView, String file){
         Image image = new Image(this.getClass().getClassLoader().getResourceAsStream(file));
         imageView.setImage(image);
-
     }
 
     private void commonGoalsInit(){
@@ -144,19 +161,19 @@ public class GameController extends GuiView implements Initializable {
     }
     private void playerInit(){
         for(String s: player.getPlayersID())if(!s.equals(player.getPlayerID()))otherPlayers.add(s);
-        imagesInit(myBookshelfImage1, "bookshelf.png");
+        imagesInit(myBookshelfImage1, "bookshelf_orth.png");
         shelfID1.setText(otherPlayers.get(0));
 
-        imagesInit(myBookshelfImage2, "bookshelf_orth.png");
-        imagesInit(myBookshelfImage3, "bookshelf_orth.png");
+        imagesInit(myBookshelfImage2, "bookshelf.png");
+        imagesInit(myBookshelfImage3, "bookshelf.png");
 
 
         if(otherPlayers.size()>1) {
-            imagesInit(myBookshelfImage2, "bookshelf.png");
+            imagesInit(myBookshelfImage2, "bookshelf_orth.png");
             shelfID2.setText(otherPlayers.get(1));
         }
         if(otherPlayers.size()>2) {
-            imagesInit(myBookshelfImage3, "bookshelf.png");
+            imagesInit(myBookshelfImage3, "bookshelf_orth.png");
             shelfID2.setText(otherPlayers.get(2));
         }
     }
@@ -177,63 +194,105 @@ public class GameController extends GuiView implements Initializable {
         String currentPlayer = player.getActivePlayer();
         this.currentPlayer.setText("CURRENT PLAYER: \n" + currentPlayer);
     }
+    private void setMainBoard(){
 
-    @FXML
-    private int estimateX(double x){  //return the column
+        Node node = livingRoomBox.getChildren().get(2);
+        mainBoardGrid = new GridPane();
+        mainBoardGrid.setVgap(7);
+        mainBoardGrid.setHgap(7);
+        mainBoardGrid.setLayoutX(32);
+        mainBoardGrid.setLayoutY(28);
+        mainBoardGrid.setId("cardGrid");
 
-        if(x>475 && x < 535) {
-            return 8;
-        }else if(x>420.5) {
-            return 7;
-        }else if (x>363) {
-            return 6;
-        } else if (x>305.4) {
-            return 5;
-        } else if (x>250.2) {
-            return 4;
-        }else if(x>196.6){
-            return 3;
-        } else if (x>138.2) {
-            return 2;
-        } else if (x>82.2) {
-            return 1;
-        } else {
-            return 0;
+        //TO FIX BOARD DIMENSION
+        String file = CardImage.getImgName(0,BLUE);
+        ImageView card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file)));
+        card.setFitHeight(50);
+        card.setFitWidth(50);
+        card.setVisible(false);
+        GridPane.setConstraints(card,0,0);
+        mainBoardGrid.getChildren().add(card);
+        card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file)));
+        card.setFitHeight(50);
+        card.setFitWidth(50);
+        card.setVisible(false);
+        GridPane.setConstraints(card,0,9);
+        mainBoardGrid.getChildren().add(card);
+        card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file)));
+        card.setFitHeight(50);
+        card.setFitWidth(50);
+        card.setVisible(false);
+        GridPane.setConstraints(card,8,9);
+        mainBoardGrid.getChildren().add(card);
+        card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file)));
+        card.setFitHeight(50);
+        card.setFitWidth(50);
+        card.setVisible(false);
+        GridPane.setConstraints(card,8,0);
+        mainBoardGrid.getChildren().add(card);
+
+        Card[][] mainBoard = player.getMainBoard().getBoard();
+        for(int x=0;x<player.getMainBoard().getColumns();x++){
+            for (int y=0;y<player.getMainBoard().getRows(); y++){
+                if(!mainBoard[x][y].getColor().equals(EMPTY)){
+                    file = CardImage.getImgName(mainBoard[x][y].getSketch(), mainBoard[x][y].getColor());
+                    card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file)));
+                    card.setFitHeight(50);
+                    card.setFitWidth(50);
+                    GridPane.setConstraints(card,x,player.getMainBoard().getColumns()-y);
+                    mainBoardGrid.getChildren().add(card);
+                }
+            }
         }
 
+        livingRoomBox.getChildren().remove(node);
+        livingRoomBox.getChildren().add(mainBoardGrid);
+        livingRoomClickable.prefHeight(565);
+        livingRoomClickable.prefWidth(565);
+        livingRoomBox.getChildren().add(node);
+
+    }
+    public void updateMainBoard(PositionWithColor[] p) {
+        for (PositionWithColor pos : p) {
+            for(Node n: mainBoardGrid.getChildren()){
+                 if(GridPane.getRowIndex(n) == pos.getY() && GridPane.getColumnIndex(n) == pos.getX())n.setVisible(false);
+            }
+        }
     }
 
-    @FXML
-    private int estimateY(double y){ //return the lineY
+    public void setMyPlayerBoardGrid(){
+        myPlayerBoardGrid = new GridPane();
+        myPlayerBoardGrid.setHgap(17.5);
+        myPlayerBoardGrid.setVgap(9);
+        myPlayerBoardGrid.setLayoutX(42);
+        myPlayerBoardGrid.setLayoutY(-13);
+        PlayerBoard playerBoard = player.getPlayerBoard(player.getPlayerID());
+        Card[][] cards = playerBoard.getBoard();
 
-        if(y>482.5 && y<537.4) {
-            return 0;
-        }else if(y>425.4) {
-            return 1;
-        }else if (y>367) {
-            return 2;
-        } else if (y>311) {
-            return 3;
-        } else if (y>253.4) {
-            return 4;
-        }else if(y>197.4){
-            return 5;
-        } else if (y>140.6) {
-            return 6;
-        } else if (y>81.4) {
-            return 7;
-        } else {
-            return 8;
+
+
+        for(int x=0;x<playerBoard.getColumns();x++){
+            for (int y=0;y<playerBoard.getRows(); y++){
+                if(!cards[x][y].getColor().equals(EMPTY)) {
+                    String file = CardImage.getImgName(cards[x][y].getSketch(), cards[x][y].getColor());
+                    ImageView card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file)));
+                    card.setFitHeight(42);
+                    card.setFitWidth(42);
+                    GridPane.setConstraints(card, x, player.getMainBoard().getColumns() - y);
+                    myPlayerBoardGrid.getChildren().add(card);
+                }
+            }
         }
 
+        myBookshelfDiv.getChildren().add(myPlayerBoardGrid);
+        
     }
-
     @FXML
     public void takeCard(double x, double y){
 
         int columnX, lineY;
-        columnX = this.estimateX(x);
-        lineY = this.estimateY(y);
+        columnX = Estimate.estimateX(x);
+        lineY = Estimate.estimateY(y);
 
         Card[][] livingroom = player.getMainBoard().getBoard();
         CardColor card = livingroom[columnX][lineY].getColor();
@@ -241,9 +300,34 @@ public class GameController extends GuiView implements Initializable {
         if(card.equals(EMPTY)){
             errorMsg("invalid pick");
             return;
+
         }
 
         positions.add(new Position(columnX, lineY));
+        System.out.println(positions.size());
+        if(positions.size() == 1) this.otherPlayersBoard();
+
+    }
+
+    private void otherPlayersBoard(){
+        System.out.println(bookshelfAnchor.getChildren());
+        for(Node node: bookshelfAnchor.getChildren()){
+            othersBookshelf.add(node);
+        }
+
+        bookshelfAnchor.getChildren().clear();
+        myTails = new HBox();
+        HBox myTails2 = new HBox();
+        myTails2.setSpacing(30);
+        TextField reorderMove = new TextField();
+        reorderMove.setPromptText("reorder cards [es: 2,1,0]");
+        TextField columnMove = new TextField();
+        columnMove.setPromptText("specify column on bookShelf");
+        Button sendMove = new Button();
+        sendMove.setText("enter");
+        myTails2.getChildren().addAll(reorderMove,columnMove,sendMove);
+
+        bookshelfAnchor.getChildren().addAll(myTails, myTails2);
     }
 
 
@@ -251,7 +335,7 @@ public class GameController extends GuiView implements Initializable {
     public void mouseCoordinates() {
 
         int columnX, columnY;
-        livingRoom.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        livingRoomClickable.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 double x = event.getX();
@@ -260,6 +344,11 @@ public class GameController extends GuiView implements Initializable {
                 GameController.this.takeCard(x,y);
             }
         });
+    }
+
+    public void insertTails(){
+
+
     }
 
 
@@ -287,7 +376,7 @@ public class GameController extends GuiView implements Initializable {
 
         if(chatName.getValue().equals("ALL")){
             player.sendBroadcastMsg(msg);
-            messages.add(new Message("your: "+ msg, MessageTipe.MINE));
+            messages.add(new Message("You: "+ msg, MessageTipe.MINE));
         }else {
             try {
                 player.sendPrivateMSG(chatName.getValue(), msg);

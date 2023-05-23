@@ -101,7 +101,7 @@ public class HelloApplication extends Application implements UserInterface {
     public void receiveNumPlayers(int n) {
 
         Platform.runLater(() -> ((WaitingroomController) guiView).changeNumPlayer(n));
-    }
+     }
 
     @Override
     public void receiveMsg(String msg) {
@@ -136,7 +136,9 @@ public class HelloApplication extends Application implements UserInterface {
 
     @Override
     public void updateMainBoard(PositionWithColor[] p) {
-
+        Platform.runLater(() -> {
+            if(guiView instanceof GameController)((GameController)guiView).updateMainBoard(p);
+        });
     }
 
     @Override
