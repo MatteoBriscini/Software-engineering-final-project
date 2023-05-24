@@ -72,8 +72,8 @@
            </VBox>
             <Button fx:id="hideCommon" text="_" onAction="#hideCommon"></Button>
         </HBox>
-        <Button fx:id="quitGame" text="quit" onAction="#quitGame"/>
     </VBox>
 
+    <Button fx:id="quitGame" text="quit" onAction="#quitGame"/>
 
 </AnchorPane>
