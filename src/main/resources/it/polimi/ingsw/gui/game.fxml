@@ -71,6 +71,8 @@
                <ImageView fx:id="commonGoal2" fitHeight="131.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
            </VBox>
             <Button fx:id="hideCommon" text="_" onAction="#hideCommon"></Button>
+            <VBox fx:id="commonGoalsScore"  >
+            </VBox>
         </HBox>
     </VBox>
 

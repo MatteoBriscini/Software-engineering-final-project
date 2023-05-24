@@ -149,7 +149,9 @@ public class HelloApplication extends Application implements UserInterface {
 
     @Override
     public void updateLastCommonGoal() {
-
+        Platform.runLater(()->{
+            if(guiView instanceof GameController)((GameController)guiView).updateLastCommonGoal();
+        });
     }
 
     @Override

@@ -37,6 +37,7 @@ import java.util.ResourceBundle;
 import static it.polimi.ingsw.shared.Cards.CardColor.BLUE;
 import static it.polimi.ingsw.shared.Cards.CardColor.EMPTY;
 import static javafx.geometry.Pos.CENTER;
+ // import static jdk.internal.org.jline.utils.Colors.s;
 
 public class GameController extends GuiView implements Initializable {
 
@@ -104,6 +105,8 @@ public class GameController extends GuiView implements Initializable {
     private ImageView commonGoal1 = new ImageView();
     @FXML
     private ImageView commonGoal2 = new ImageView();
+    @FXML
+    private VBox commonGoalsScore = new VBox();
 
     //chat
     @FXML
@@ -415,6 +418,15 @@ public class GameController extends GuiView implements Initializable {
         }
     }
 
+    private void insertAllTails(){
+        for(Position position: positions){
+            insertTails(position.getX(), position.getY());
+
+        }
+
+    }
+
+
     private void sendMove(){
         //TODO controlli su input field
         int column = Integer.parseInt(columnMove.getText());
@@ -430,8 +442,63 @@ public class GameController extends GuiView implements Initializable {
         resetGrey();
     }
     private void reorderMove(){
-        //TODO
+
+        String reorderText;
+        ArrayList<Position> tmpPos = new ArrayList<>();
+        int index,i;
+
+
+
+                if(reorderMove != null ) {
+                    reorderText = reorderMove.getText();
+                    reorderText = reorderText.toLowerCase().replaceAll("\\s+", "");
+                    for (int j = 0; j < positions.size() - 1; j++) {
+                        index = reorderText.indexOf(',');
+                        if (index == -1) {
+                            errorMsg("invalid syntax for reorder");
+                        }
+
+                        i = Integer.parseInt(reorderText.substring(0,index));
+                        tmpPos.add(positions.get(i));
+
+                        reorderText = reorderText.substring(index+1);
+                    }
+
+                    if(reorderText.indexOf(',')!=-1){
+
+                        errorMsg("invalid syntax for reorder");
+                    }
+                    i = Integer.parseInt(reorderText);
+
+                    tmpPos.add(positions.get(i));
+                    positions = tmpPos;
+
+                    myTails.getChildren().clear();
+                    //this.MoveMode();
+
+                    this.insertAllTails();
+                }
     }
+
+    public void updateLastCommonGoal(){
+
+        JsonObject[] goal = player.getCommonGoalScored();
+        for(JsonObject jsonObject: goal){
+            if(jsonObject.get("playerID").getAsString().equals(player.getPlayerID())){
+                String imgFile = CommonGoalScore.getImgName(jsonObject.get("value").getAsInt());
+                Image image = new Image(this.getClass().getClassLoader().getResourceAsStream(imgFile));
+                ImageView imgView = new ImageView(image);
+
+                imgView.setFitHeight(120);
+                imgView.setFitWidth(120);
+                commonGoalsScore.getChildren().add(imgView);
+
+            }
+        }
+    }
+
+
+
     private void resetGrey(){
         for(Node n: greyNode){
             n.setEffect(new ColorAdjust(0, 0, 0, 0));
@@ -452,10 +519,9 @@ public class GameController extends GuiView implements Initializable {
     }
 
     @FXML
-    private void quitGame (ActionEvent actionEvent) throws IOException { //quit button to quit the game and return to the create game lobby
+    private void quitGame (ActionEvent actionEvent) { //quit button to quit the game and return to the create-game lobby
 
-        helloApplication.setPlayer(player);
-        helloApplication.changeView("creategame.fxml");
+        player.quitGame();
     }
 
 
