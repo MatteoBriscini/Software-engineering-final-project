@@ -60,6 +60,14 @@ public class TUI implements UserInterface{
         connectionSelection();
         userIdentification();
 
+        if(player instanceof PlayingPlayer){
+            Thread thread = new Thread(()->{this.userInput();});
+            thread.start();
+            return;
+        }
+
+        this.centerContent(3);
+
         Thread thread = new Thread(()->{this.toRun();});
         thread.start();
     }
@@ -120,7 +128,6 @@ public class TUI implements UserInterface{
 
     public void toRun(){
         char c;
-
         this.centerContent(4);
         this.printTitle();
         do {
@@ -288,9 +295,7 @@ public class TUI implements UserInterface{
      * this method allows the player to choose how to connect to the server (via Socket or RMI)
      */
     private void connectionSelection(){
-
         char c;
-
         do {
 
             System.out.println(TextColor.YELLOW.get() + "Select the type of the connection:"+ TextColor.LIGHTBLUE.get() + "\n[R] RMI\n[S] Socket" + TextColor.DEFAULT.get());
@@ -328,9 +333,7 @@ public class TUI implements UserInterface{
      * this method allows the player to log in or sign up
      */
     private void userIdentification() {
-
         this.centerContent(3);
-
         Scanner sc = new Scanner(System.in);
         String user;
         String pwd;
@@ -359,6 +362,7 @@ public class TUI implements UserInterface{
 
 
                 player = new LobbyPlayer(user, pwd, connection);
+                player.setUi(this);
                 if (selection == 'S') {
                     logged = ((LobbyPlayer) player).signUp();
                 } else {
@@ -368,8 +372,8 @@ public class TUI implements UserInterface{
 
             if(!logged) printError("Invalid selection, please try again\n");
         }while (!logged || user.equals("/back"));
-        this.centerContent(3);
-        player.setUi(this);
+
+
     }
 
 

@@ -169,6 +169,7 @@ public class Controller implements Runnable {
     public void addClientRMI(PlayingPlayerRemoteInterface client, String playerID){
         controllerManager.addClientRMI(client,playerID);
         this.autoStart();
+        if(currentPlayer!=-1)this.recreateClientData();
     }
     public boolean removeClientRMI(PlayingPlayerRemoteInterface client, String playerID){
         return controllerManager.removeClientRMI(client, playerID);
@@ -176,6 +177,7 @@ public class Controller implements Runnable {
     public void addClientSOCKET(SOCKET.MultiClientSocketGame client){
         controllerManager.addClientSOCKET(client);
         this.autoStart();
+        if(currentPlayer!=-1)this.recreateClientData();
     }
     public void removeClientSOCKET(SOCKET.MultiClientSocketGame client){
         controllerManager.removeClientSOCKET(client);
@@ -255,22 +257,14 @@ public class Controller implements Runnable {
                 if(!activePlayers.get(i)) {
                     System.out.println(TextColor.YELLOW.get() + players.get(i).getPlayerID() + " reconnected to the game" + TextColor.DEFAULT.get());
                     activePlayers.set(i, true);
-
-                    //update all playerBoards in all clients
-                    ArrayList<Card[][]> playersBoard = new ArrayList<>();
-                    for(int j = 0; j< game.getPlayerArray().size(); j++){
-                        playersBoard.add(game.getPlayerBoard(j));
-                    }
-                    controllerManager.sendAllPlayerBoard(playersBoard);
-
-                    //update the main board to all clients
-                    controllerManager.sendMainBoard(game.getMainBoard());
-
-                    System.out.println(TextColor.LIGHTBLUE.get() + "recreate client game data after "+ playerID+ " reconnection after a crash" + TextColor.DEFAULT.get());
-                    return;
                 }
             }
         }
+    }
+
+    private void recreateClientData(){
+        this.createClientData(commonGoalArray);
+        System.out.println(TextColor.LIGHTBLUE.get() + "recreate client game data after a rejoin" + TextColor.DEFAULT.get());
     }
     /**************************************************************************
      ************************************************** chat ******************

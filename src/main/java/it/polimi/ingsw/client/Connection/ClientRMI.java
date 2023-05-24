@@ -46,12 +46,12 @@ public class ClientRMI extends ConnectionManager implements PlayingPlayerRemoteI
             this.remoteControllerRef = tmp;
             try {
                 this.setPlayerAsPlaying();
+                player.acceptingPlayingCommand();
                 stub.joinGameConnection(this, this.playerID, remoteControllerRef);
             } catch (RemoteException e){
                 this.setPlayerAsLobby();
                 player.disconnectError("server can't respond");
             }
-            player.acceptingPlayingCommand();
         }
         if(!inGame) {
             try {

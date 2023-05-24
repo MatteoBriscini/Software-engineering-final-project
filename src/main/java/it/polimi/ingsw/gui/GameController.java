@@ -63,6 +63,8 @@ public class GameController extends GuiView implements Initializable {
     @FXML
     private HBox myTails;
 
+    ArrayList<Node> greyNode = new ArrayList<>();
+
     private GridPane[] otherPlayerBoardGrid;
     private ImageView[] otherPlayerBoardBox;
     @FXML
@@ -406,7 +408,10 @@ public class GameController extends GuiView implements Initializable {
         myTails.getChildren().add(card);
 
         for(Node n: mainBoardGrid.getChildren()){
-            if(GridPane.getRowIndex(n) == player.getMainBoard().getColumns()-y && GridPane.getColumnIndex(n) == x)n.setEffect(new ColorAdjust(0, -1, 0, 0));
+            if(GridPane.getRowIndex(n) == player.getMainBoard().getColumns()-y && GridPane.getColumnIndex(n) == x){
+                n.setEffect(new ColorAdjust(0, -1, 0, 0));
+                greyNode.add(n);
+            }
         }
     }
 
@@ -421,11 +426,17 @@ public class GameController extends GuiView implements Initializable {
         bookshelfAnchor.getChildren().addAll(othersBookshelf);
         othersBookshelf = new ArrayList<>();
         positions = new ArrayList<>();
+
+        resetGrey();
     }
     private void reorderMove(){
         //TODO
     }
-
+    private void resetGrey(){
+        for(Node n: greyNode){
+            n.setEffect(new ColorAdjust(0, 0, 0, 0));
+        }
+    }
 
 
     public void mouseCoordinates() {

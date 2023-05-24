@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import it.polimi.ingsw.client.ClientMain;
 import it.polimi.ingsw.client.Connection.ConnectionManager;
 import it.polimi.ingsw.client.View.UserInterface;
+import it.polimi.ingsw.server.Connection.SOCKET;
 import it.polimi.ingsw.shared.PlayerMode;
 
 public abstract class Player {
@@ -17,7 +18,6 @@ public abstract class Player {
         this.pwd = pwd;
         this.connection = connection;
         this.connection.setPlayer(this, this.playerID);
-
     }
     public void acceptingPlayingCommand(){
         if(ui!=null)ui.acceptingPlayingCommand();
