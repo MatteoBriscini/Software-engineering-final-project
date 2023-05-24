@@ -451,6 +451,13 @@ public class GameController extends GuiView implements Initializable {
         });
     }
 
+    @FXML
+    private void quitGame (ActionEvent actionEvent) throws IOException { //quit button to quit the game and return to the create game lobby
+
+        helloApplication.setPlayer(player);
+        helloApplication.changeView("creategame.fxml");
+    }
+
 
 
     /**********************************************************************
