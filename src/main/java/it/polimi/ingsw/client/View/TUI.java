@@ -674,24 +674,14 @@ public class TUI implements UserInterface{
     public void finalResults(JsonObject tableJ){
         player = connection.getPlayer();
 
-        System.err.println("finale result");
-
         Scanner sc = new Scanner(System.in);
         char selection;
-
-        System.out.println(0);
-
-        System.out.println(player);
-
         int n=((PlayingPlayer)player).getPlayersID().length;
         String[][] table = new String[n][n];
         for(int i=0;i<n; i++){
             table[i][0]= ((PlayingPlayer)player).getPlayersID()[i];
             table[i][1]= tableJ.get(((PlayingPlayer)player).getPlayersID()[i]).getAsString();
         }
-
-        System.out.println(1);
-
         Arrays.sort(table, Comparator.comparingInt(row->Integer.parseInt(row[1])));
 
         printTitle();
@@ -699,9 +689,6 @@ public class TUI implements UserInterface{
         for(int i=0;i<n;i++){
             System.out.println("#"+(i+1)+": "+table[i][0]+"\tpoints: "+table[i][1]);
         }
-
-        System.out.println(2);
-
         do{
             System.out.println("Do you want to start a new game? [Y/N]");
             selection=charCommand();
