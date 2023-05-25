@@ -148,6 +148,7 @@ public class GameController extends GuiView implements Initializable {
         setMyPlayerBoardGrid();
         setOtherPlayerBoard();
 
+
         this.mouseCoordinates();
         this.notifyNewActivePlayer();
     }
@@ -215,7 +216,16 @@ public class GameController extends GuiView implements Initializable {
         String currentPlayer = player.getActivePlayer();
         this.currentPlayer.setText("CURRENT PLAYER: \n" + currentPlayer);
     }
-    private void setMainBoard(){
+    public void setMainBoard(){
+
+        ObservableList<Node> nodes = livingRoomBox.getChildren();
+
+        for(Node n : nodes){
+            if(n.getId().equals("cardGrid")){
+                livingRoomBox.getChildren().remove(n);
+                break;
+            }
+        }
 
         Node node = livingRoomBox.getChildren().get(2);
         mainBoardGrid = new GridPane();
@@ -520,22 +530,6 @@ public class GameController extends GuiView implements Initializable {
         }
     }
 
-    public void updateLastCommonGoal(){
-        JsonObject[] goal = player.getCommonGoalScored();
-        for(JsonObject jsonObject: goal){
-            if(jsonObject.get("playerID").getAsString().equals(player.getPlayerID())){
-                String imgFile = CommonGoalScore.getImgName(jsonObject.get("value").getAsInt());
-                Image image = new Image(this.getClass().getClassLoader().getResourceAsStream(imgFile));
-                ImageView imgView = new ImageView(image);
-
-                imgView.setFitHeight(120);
-                imgView.setFitWidth(120);
-                commonGoalsScore.getChildren().add(imgView);
-
-            }
-        }
-    }
-
 
 
     private void resetGrey(){
@@ -557,9 +551,27 @@ public class GameController extends GuiView implements Initializable {
         });
     }
 
+    public void updateLastCommonGoal(){
+        commonGoalsScore.setSpacing(50);
+        commonGoalsScore.setTranslateY(15);
+
+        JsonObject[] goal = player.getCommonGoalScored();
+        System.out.println(goal);
+        for(JsonObject jsonObject: goal){
+            if(jsonObject.get("playerID").getAsString().equals(player.getPlayerID())){
+                String imgFile = CommonGoalScore.getImgName(8);
+                Image image = new Image(this.getClass().getClassLoader().getResourceAsStream(imgFile));
+                ImageView imgView = new ImageView(image);
+
+                imgView.setFitHeight(100);
+                imgView.setFitWidth(100);
+                commonGoalsScore.getChildren().add(imgView);
+            }
+        }
+    }
+
     @FXML
     private void quitGame (ActionEvent actionEvent) { //quit button to quit the game and return to the create-game lobby
-
         player.quitGame();
     }
 

@@ -3,6 +3,7 @@ package it.polimi.ingsw.gui;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.client.Connection.ConnectionManager;
 import it.polimi.ingsw.client.Player.Player;
+import it.polimi.ingsw.client.Player.PlayingPlayer;
 import it.polimi.ingsw.client.View.UserInterface;
 import it.polimi.ingsw.gui.supportClass.Message;
 import it.polimi.ingsw.gui.supportClass.MessageTipe;
@@ -114,6 +115,13 @@ public class HelloApplication extends Application implements UserInterface {
 
     @Override
     public void updateAll() {
+        if(guiView instanceof GameController) {
+            Platform.runLater(() -> {
+                ((GameController)guiView).setMainBoard();
+            });
+            return;
+        }
+
         Platform.runLater(() -> {
             player = connection.getPlayer();
 
@@ -151,8 +159,10 @@ public class HelloApplication extends Application implements UserInterface {
 
     @Override
     public void updateLastCommonGoal() {
+        System.out.println(0);
+
         Platform.runLater(()->{
-            if(guiView instanceof GameController)((GameController)guiView).updateLastCommonGoal();
+            ((GameController)guiView).updateLastCommonGoal();
         });
     }
 

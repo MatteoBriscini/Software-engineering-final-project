@@ -188,7 +188,7 @@ public abstract class ConnectionManager extends UnicastRemoteObject {
      * @param winner json object with playerID and points of the winner
      */
     public void receiveWinner(String winner){
-        ((PlayingPlayer)player).endGameValue(winner);
+        ((PlayingPlayer)player).receiveWinner(winner);
     }
     /**
      * @param scored json object with point for each client

@@ -139,6 +139,7 @@ public class PlayingPlayer extends Player{
         if(commonGoalScored != null) Collections.addAll(tmpScored, commonGoalScored);
         tmpScored.add(scored);
         commonGoalScored = tmpScored.toArray(new JsonObject[0]);
+        if(ui!=null)ui.updateLastCommonGoal();
     }
     /**
      * try to start the game
