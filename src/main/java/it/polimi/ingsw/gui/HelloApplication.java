@@ -115,6 +115,8 @@ public class HelloApplication extends Application implements UserInterface {
     @Override
     public void updateAll() {
         Platform.runLater(() -> {
+            player = connection.getPlayer();
+
             stage.setResizable(false);
             FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("game.fxml"));
             try {

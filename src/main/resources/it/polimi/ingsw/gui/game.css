@@ -169,6 +169,7 @@
 }
 #livingRoomClickable{
     -fx-translate-x: 5px;
+    -fx-cursor: hand;
     -fx-translate-y: 5px;
 }
 #myTails{
@@ -201,4 +202,13 @@
     -fx-text-fill: white;
     -fx-max-width: 100px;
     -fx-min-height: 35px;
+}
+#quitGame{
+    -fx-padding: 5px 20px;
+    -fx-cursor: hand;
+    -fx-background-color: red;
+    -fx-border-radius: 20px;
+    -fx-text-fill: white;
+    -fx-translate-x: 10px;
+    -fx-translate-y: 10px;
 }

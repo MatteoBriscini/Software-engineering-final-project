@@ -114,7 +114,6 @@ public class GameMaster {
      * @return the number of players in the game
      */
     public int addNewPlayer (String playerID){
-
         ArrayList<Player> tmp = new ArrayList<>();
         tmp.add(new Player(playerID));
         this.players.addAll(tmp);

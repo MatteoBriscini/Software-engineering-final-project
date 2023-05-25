@@ -349,6 +349,7 @@ public class Controller implements Runnable {
             this.fillMainBoard();
 
             //send data to the player
+            System.out.println(TextColor.LIGHTBLUE.get() + "create client game data" + TextColor.DEFAULT.get());
             this.createClientData(commonGoalIDArray);
             this.turn();
             return true;
@@ -431,7 +432,6 @@ public class Controller implements Runnable {
      * @param commonGoalIDArray ids for common goal
      */
     synchronized private void createClientData(int[] commonGoalIDArray){
-        System.out.println(TextColor.LIGHTBLUE.get() + "create client game data" + TextColor.DEFAULT.get());
 
         //send players id list, and game order (broadcast to each client)
         ArrayList<String> playersID = new ArrayList<>();

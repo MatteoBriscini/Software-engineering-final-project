@@ -31,8 +31,7 @@ import javafx.scene.shape.Rectangle;
 
 import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import static it.polimi.ingsw.shared.Cards.CardColor.BLUE;
 import static it.polimi.ingsw.shared.Cards.CardColor.EMPTY;
@@ -65,15 +64,15 @@ public class GameController extends GuiView implements Initializable {
     private HBox myTails;
 
     ArrayList<Node> greyNode = new ArrayList<>();
-
-    private GridPane[] otherPlayerBoardGrid;
+    private Map<String, GridPane> otherPlayerBoardGrid = new HashMap<>();
+    private AnchorPane[] otherPlayerBoardAnchors;
     private ImageView[] otherPlayerBoardBox;
     @FXML
-    private VBox myBookshelfBox1;
+    private AnchorPane bookshelfAnchor1;
     @FXML
-    private VBox myBookshelfBox2;
+    private AnchorPane bookshelfAnchor2;
     @FXML
-    private VBox myBookshelfBox3;
+    private AnchorPane bookshelfAnchor3;
     @FXML
     private TextField reorderMove;
     @FXML
@@ -115,6 +114,7 @@ public class GameController extends GuiView implements Initializable {
     private ScrollPane messageContainer = new ScrollPane();
     @FXML
     private TextField chatMSG = new TextField();
+    private boolean chatOpen = true;
     private ArrayList<Message> messages =new ArrayList<>();
 
     //ux
@@ -146,6 +146,7 @@ public class GameController extends GuiView implements Initializable {
         privateGoalsInit();
         setMainBoard();
         setMyPlayerBoardGrid();
+        setOtherPlayerBoard();
 
         this.mouseCoordinates();
         this.notifyNewActivePlayer();
@@ -221,8 +222,9 @@ public class GameController extends GuiView implements Initializable {
         mainBoardGrid.setVgap(7);
         mainBoardGrid.setHgap(7);
         mainBoardGrid.setLayoutX(32);
-        mainBoardGrid.setLayoutY(28);
+        mainBoardGrid.setLayoutY(32);
         mainBoardGrid.setId("cardGrid");
+
 
         //TO FIX BOARD DIMENSION
         String file = CardImage.getImgName(0,BLUE);
@@ -236,13 +238,13 @@ public class GameController extends GuiView implements Initializable {
         card.setFitHeight(50);
         card.setFitWidth(50);
         card.setVisible(false);
-        GridPane.setConstraints(card,0,9);
+        GridPane.setConstraints(card,0,8);
         mainBoardGrid.getChildren().add(card);
         card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file)));
         card.setFitHeight(50);
         card.setFitWidth(50);
         card.setVisible(false);
-        GridPane.setConstraints(card,8,9);
+        GridPane.setConstraints(card,8,8);
         mainBoardGrid.getChildren().add(card);
         card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file)));
         card.setFitHeight(50);
@@ -260,7 +262,7 @@ public class GameController extends GuiView implements Initializable {
                     card.setFitHeight(50);
                     card.setFitWidth(50);
                     card.setId("tile");
-                    GridPane.setConstraints(card,x,player.getMainBoard().getColumns()-y);
+                    GridPane.setConstraints(card,x,player.getMainBoard().getColumns()-y-1);
                     mainBoardGrid.getChildren().add(card);
                 }
             }
@@ -276,7 +278,7 @@ public class GameController extends GuiView implements Initializable {
     public void updateMainBoard(PositionWithColor[] p) {
         for (PositionWithColor pos : p) {
             for(Node n: mainBoardGrid.getChildren()){
-                 if(GridPane.getRowIndex(n) == player.getMainBoard().getColumns()-pos.getY() && GridPane.getColumnIndex(n) == pos.getX())n.setVisible(false);
+                 if(GridPane.getRowIndex(n) == player.getMainBoard().getColumns()-pos.getY()-1 && GridPane.getColumnIndex(n) == pos.getX())n.setVisible(false);
             }
         }
     }
@@ -306,10 +308,11 @@ public class GameController extends GuiView implements Initializable {
         myBookshelfDiv.getChildren().add(myPlayerBoardGrid);
     }
     public void updatePlayerBoard(String id, int column, Card[] c){
-        if(id.equals(player.getPlayerID()))updateMyPlayerBoard(column,c);
+        if(id.equals(player.getPlayerID()))updatePlayerBoard(id,column,c,myPlayerBoardGrid,42);
+        else updatePlayerBoard(id,column,c, otherPlayerBoardGrid.get(id), 17);
     }
-    private void updateMyPlayerBoard(int column, Card[] c){
-        Card[][] playerBoard = player.getPlayerBoard(player.getPlayerID()).getBoard();
+    private void updatePlayerBoard(String playerID, int column, Card[] c, GridPane gridPane, int size){
+        Card[][] playerBoard = player.getPlayerBoard(playerID).getBoard();
         Card[] actualColumn = playerBoard[column];
         int y = actualColumn.length-1;
 
@@ -320,20 +323,53 @@ public class GameController extends GuiView implements Initializable {
         y = y -c.length +1;
 
         for(Card card: c){
-                    String file = CardImage.getImgName(card.getSketch(), card.getColor());
-                    ImageView cardImg = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file)));
-                    cardImg.setFitHeight(42);
-                    cardImg.setFitWidth(42);
-                    GridPane.setConstraints(cardImg, column, player.getMainBoard().getColumns()-y);
-                    myPlayerBoardGrid.getChildren().add(cardImg);
-                    y++;
+            String file = CardImage.getImgName(card.getSketch(), card.getColor());
+            ImageView cardImg = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file)));
+            cardImg.setFitHeight(size);
+            cardImg.setFitWidth(size);
+            GridPane.setConstraints(cardImg, column, player.getMainBoard().getColumns()-y);
+            gridPane.getChildren().add(cardImg);
+            y++;
         }
     }
 
     public void setOtherPlayerBoard(){
-        otherPlayerBoardGrid = new GridPane[player.getPlayersNumber()];
+        ArrayList<String> players = new ArrayList<>(List.of(player.getPlayersID()));
+        players.remove(player.getPlayerID());
 
+        otherPlayerBoardAnchors = new AnchorPane[player.getPlayersID().length-1];
+        otherPlayerBoardAnchors[0] = bookshelfAnchor1;
+        if(otherPlayerBoardAnchors.length>1) otherPlayerBoardAnchors[1] = bookshelfAnchor2;
+        if(otherPlayerBoardAnchors.length>2) otherPlayerBoardAnchors[2] = bookshelfAnchor3;
+
+
+        for(int i =0; i<players.size();i++){
+            GridPane gridPane = new GridPane();
+            gridPane.setVgap(3);
+            gridPane.setHgap(5);
+            gridPane.setLayoutX(17);
+            gridPane.setLayoutY(-4);
+
+            PlayerBoard playerBoard = player.getPlayerBoard(players.get(i));
+            Card[][] cards = playerBoard.getBoard();
+
+            for (int x = 0; x < playerBoard.getColumns(); x++) {
+                for (int y = 0; y < playerBoard.getRows(); y++) {
+                    String file = CardImage.getImgName(cards[x][y].getSketch(), cards[x][y].getColor());
+                    ImageView card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file)));
+                    card.setFitHeight(17);
+                    card.setFitWidth(17);
+                    if(cards[x][y].getColor().equals(EMPTY))card.setVisible(false);
+                    GridPane.setConstraints(card, x, player.getMainBoard().getColumns() - y);
+                    gridPane.getChildren().add(card);
+                }
+            }
+            otherPlayerBoardGrid.put(players.get(i), gridPane);
+            otherPlayerBoardAnchors[i].getChildren().add(gridPane);
+        }
     }
+
+
 
     @FXML
     public void takeCard(double x, double y){
@@ -341,6 +377,10 @@ public class GameController extends GuiView implements Initializable {
         int columnX, lineY;
         columnX = Estimate.estimateX(x);
         lineY = Estimate.estimateY(y);
+
+        for(Position p: positions){
+            if(p.getX()==columnX && p.getY()==lineY)return;
+        }
 
         Card[][] livingroom = player.getMainBoard().getBoard();
         CardColor card = livingroom[columnX][lineY].getColor();
@@ -411,7 +451,7 @@ public class GameController extends GuiView implements Initializable {
         myTails.getChildren().add(card);
 
         for(Node n: mainBoardGrid.getChildren()){
-            if(GridPane.getRowIndex(n) == player.getMainBoard().getColumns()-y && GridPane.getColumnIndex(n) == x){
+            if(GridPane.getRowIndex(n) == player.getMainBoard().getColumns()-y-1 && GridPane.getColumnIndex(n) == x){
                 n.setEffect(new ColorAdjust(0, -1, 0, 0));
                 greyNode.add(n);
             }
@@ -421,7 +461,6 @@ public class GameController extends GuiView implements Initializable {
     private void insertAllTails(){
         for(Position position: positions){
             insertTails(position.getX(), position.getY());
-
         }
 
     }
@@ -438,50 +477,50 @@ public class GameController extends GuiView implements Initializable {
         bookshelfAnchor.getChildren().addAll(othersBookshelf);
         othersBookshelf = new ArrayList<>();
         positions = new ArrayList<>();
-
         resetGrey();
     }
     private void reorderMove(){
-
         String reorderText;
         ArrayList<Position> tmpPos = new ArrayList<>();
         int index,i;
-
-
-
-                if(reorderMove != null ) {
-                    reorderText = reorderMove.getText();
-                    reorderText = reorderText.toLowerCase().replaceAll("\\s+", "");
-                    for (int j = 0; j < positions.size() - 1; j++) {
+        if(reorderMove != null ) {
+            reorderText = reorderMove.getText();
+            reorderText = reorderText.toLowerCase().replaceAll("\\s+", "");
+            for (int j = 0; j < positions.size() - 1; j++) {
                         index = reorderText.indexOf(',');
                         if (index == -1) {
                             errorMsg("invalid syntax for reorder");
                         }
-
-                        i = Integer.parseInt(reorderText.substring(0,index));
+                        i=0;
+                        try {
+                            i = Integer.parseInt(reorderText.substring(0,index));
+                       } catch (Exception e){
+                            errorMsg("invalid syntax for reorder");
+                            return;
+                        }
                         tmpPos.add(positions.get(i));
-
                         reorderText = reorderText.substring(index+1);
-                    }
-
-                    if(reorderText.indexOf(',')!=-1){
-
+            }
+            if(reorderText.indexOf(',')!=-1){
                         errorMsg("invalid syntax for reorder");
-                    }
-                    i = Integer.parseInt(reorderText);
+            }
+            i=0;
+            try {
+                i = Integer.parseInt(reorderText);
+            } catch (Exception e){
+                errorMsg("invalid syntax for reorder");
+                return;
+            }
+            tmpPos.add(positions.get(i));
+            positions = tmpPos;
 
-                    tmpPos.add(positions.get(i));
-                    positions = tmpPos;
+            myTails.getChildren().clear();
 
-                    myTails.getChildren().clear();
-                    //this.MoveMode();
-
-                    this.insertAllTails();
-                }
+            this.insertAllTails();
+        }
     }
 
     public void updateLastCommonGoal(){
-
         JsonObject[] goal = player.getCommonGoalScored();
         for(JsonObject jsonObject: goal){
             if(jsonObject.get("playerID").getAsString().equals(player.getPlayerID())){
@@ -576,11 +615,24 @@ public class GameController extends GuiView implements Initializable {
                 case BROADCAST -> label.setBackground(new Background(new BackgroundFill(Color.rgb(0, 204, 153), cornerRadii, Insets.EMPTY)));
                 case PRIVATE ->  label.setBackground(new Background(new BackgroundFill(Color.rgb(255, 153, 102), cornerRadii, Insets.EMPTY)));
                 case MINE ->  label.setBackground(new Background(new BackgroundFill(Color.rgb(153, 204, 255), cornerRadii, Insets.EMPTY)));
+                case ERROR -> label.setBackground(new Background(new BackgroundFill(Color.rgb(255, 102, 0), cornerRadii, Insets.EMPTY)));
             }
             group.getChildren().addAll(label);
         }
         messageContainer.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         messageContainer.setContent(group);
+    }
+
+    @Override
+    public void errorMsg(String errorMsg){
+        if(chatOpen && !errorMsg.contains("CONNECTION ERROR")) {
+            messages.add(new Message("[error] " + errorMsg, MessageTipe.ERROR));
+            this.printMsg();
+        }else {
+            alert.setTitle("my shelfie");
+            alert.setContentText(errorMsg);
+            alert.show();
+        }
     }
 
     /**********************************************************************
@@ -589,6 +641,7 @@ public class GameController extends GuiView implements Initializable {
      */
     @FXML
     protected void hideChat(ActionEvent actionEvent) throws IOException {
+        chatOpen = false;
         Node bookShelf = rightDiv.getChildren().get(0);
         Node chat = rightDiv.getChildren().get(1);
 
@@ -719,6 +772,7 @@ public class GameController extends GuiView implements Initializable {
     }
     @FXML
     protected void showChatButton(){
+        chatOpen = true;
         Node bookShelf = rightDiv.getChildren().get(0);
         Node chat = rightDiv.getChildren().get(2);
 

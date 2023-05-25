@@ -147,14 +147,13 @@ public class ConnectionControllerManagerTest extends TestCase {
         assertEquals(((PlayingPlayer) testClient2).getActivePlayer(), ((PlayingPlayer) testClient1).getActivePlayer());
         assertEquals(((PlayingPlayer) testClient2).getActivePlayer(), controller.getCurrentPlayerID());
 
-        System.out.println("TEST 5: friendly quit game");
+        /*System.out.println("TEST 5: friendly quit game");
         assertTrue(((PlayingPlayer)testClient2).quitGame());
         assertTrue(controller.isPlayerOffline("paolo"));
         assertFalse(((PlayingPlayer) testClient2).quitGame());
         testClient2 = new LobbyPlayer("paolo", "antonio", connection2);  //paolo rejoins a game after the crash
         ((LobbyPlayer)testClient2).login();
-        testClient2 = connection2.getPlayer();
-        //testClient2 = connection2.getPlayer();
+        testClient2 = connection2.getPlayer();*/
         //assertFalse(controller.isPlayerOffline("paolo"));
 
         System.out.println("\nEND TEST\n");

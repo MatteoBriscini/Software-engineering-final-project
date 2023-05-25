@@ -38,7 +38,6 @@ public class Player {
     //Constructor
 
     public Player(String playerID){
-
         this.playerID = playerID;
         pointSum = 0;
         board = new PlayerBoard();
@@ -130,7 +129,6 @@ public class Player {
     //Other Methods
 
     public void updatePointSum(int pointSum) {
-
         this.pointSum += pointSum;
     }
 

@@ -38,18 +38,22 @@
            <AnchorPane fx:id="livingRoomClickable" prefWidth="565.0" prefHeight="565.0"></AnchorPane>
        </AnchorPane>
        <HBox fx:id="bookshelfAnchor" prefHeight="600.0" spacing="70" prefWidth="610">
+
            <VBox alignment="CENTER" fx:id="myBookshelfBox1">
-            <ImageView fx:id="myBookshelfImage1" fitHeight="140.0" fitWidth="150" pickOnBounds="true" preserveRatio="true" />
+               <AnchorPane fx:id="bookshelfAnchor1"><ImageView fx:id="myBookshelfImage1" fitHeight="140.0" fitWidth="150" pickOnBounds="true" preserveRatio="true" /></AnchorPane>
                <Label fx:id="shelfID1" text="void"></Label>
            </VBox>
+
            <VBox alignment="CENTER" fx:id="myBookshelfBox2">
-            <ImageView fx:id="myBookshelfImage2" fitHeight="140.0" fitWidth="150" pickOnBounds="true" preserveRatio="true" />
+               <AnchorPane fx:id="bookshelfAnchor2"><ImageView fx:id="myBookshelfImage2" fitHeight="140.0" fitWidth="150" pickOnBounds="true" preserveRatio="true" /></AnchorPane>
                <Label fx:id="shelfID2"  text="void"></Label>
            </VBox>
+
            <VBox alignment="CENTER" fx:id="myBookshelfBox3">
-            <ImageView fx:id="myBookshelfImage3" fitHeight="140.0" fitWidth="150" pickOnBounds="true" preserveRatio="true" />
+               <AnchorPane fx:id="bookshelfAnchor3"><ImageView fx:id="myBookshelfImage3" fitHeight="140.0" fitWidth="150" pickOnBounds="true" preserveRatio="true" /></AnchorPane>
                <Label fx:id="shelfID3"  text="void"></Label>
            </VBox>
+
        </HBox>
    </VBox>
     <VBox fx:id="leftDiv" prefHeight="750.0" prefWidth="442.0" spacing="40  " alignment="CENTER">
