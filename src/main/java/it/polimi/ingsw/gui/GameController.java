@@ -551,7 +551,7 @@ public class GameController extends GuiView implements Initializable {
             public void handle(MouseEvent event) {
                 double x = event.getX();
                 double y = event.getY();
-                // System.out.println("Mouse clicked at (" + x + ", " + y + ")");
+                System.out.println("Mouse clicked at (" + x + ", " + y + ")");
                 GameController.this.takeCard(x,y);
             }
         });
