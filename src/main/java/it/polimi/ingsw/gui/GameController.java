@@ -123,7 +123,9 @@ public class GameController extends GuiView implements Initializable {
     @FXML
     private VBox leftDiv = new VBox();
 
-
+    //setup data
+    private int maxTakenCard;
+    private int playerBoardRows;
     /**********************************************************************
      *                              initialize                            *
      **********************************************************************/
@@ -135,8 +137,27 @@ public class GameController extends GuiView implements Initializable {
 
         imagesInit(livingRoom, "livingroom.png");       //load living room png
         this.setBorderRadius(livingRoom, 40);
+
+        try {                                               //load config data
+            jsonCreate();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
+    private void jsonCreate() throws FileNotFoundException{
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(JsonUrl.getUrl("controllerConfig"));
+        if(inputStream == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        JsonObject jsonObject = new Gson().fromJson(bufferedReader, JsonObject.class);
+        this.maxTakenCard = jsonObject.get("maxTakeCard").getAsInt();
+
+        InputStream inputStream1 = this.getClass().getClassLoader().getResourceAsStream(JsonUrl.getUrl("playerBoardConfig"));
+        if(inputStream1 == null) throw new FileNotFoundException();
+        BufferedReader bufferedReader1 = new BufferedReader(new InputStreamReader(inputStream1));
+        JsonObject jsonObject1 = new Gson().fromJson(bufferedReader1, JsonObject.class);
+        this.playerBoardRows = jsonObject1.get("x").getAsInt();
+    }
 
     public void gameInit(){                         //dynamic element init
         player = (PlayingPlayer) helloApplication.getPlayer();
@@ -214,7 +235,14 @@ public class GameController extends GuiView implements Initializable {
 
     public void notifyNewActivePlayer() {
         String currentPlayer = player.getActivePlayer();
-        this.currentPlayer.setText("CURRENT PLAYER: \n" + currentPlayer);
+        if(!Objects.equals(currentPlayer, player.getPlayerID())){
+            this.currentPlayer.setText("CURRENT PLAYER: \n" + currentPlayer);
+            this.currentPlayer.setBorder(new Border(new BorderStroke(Color.TRANSPARENT, BorderStrokeStyle.SOLID, new CornerRadii(0), new BorderWidths(0))));
+        }
+        else{
+            this.currentPlayer.setText("YOUR TURN \n " + currentPlayer);
+            this.currentPlayer.setBorder(new Border(new BorderStroke(Color.rgb(255, 255, 179), BorderStrokeStyle.SOLID, new CornerRadii(9), new BorderWidths(2))));
+        }
     }
     public void setMainBoard(){
 
@@ -402,7 +430,7 @@ public class GameController extends GuiView implements Initializable {
         }
 
         if(positions.size() == 0) this.MoveMode();
-        else if (positions.size() == 3){                    //TODO dynamic number
+        else if (positions.size() == maxTakenCard){
             this.errorMsg("can't take more pick");
             return;
         }

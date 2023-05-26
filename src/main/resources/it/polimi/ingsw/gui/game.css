@@ -212,3 +212,8 @@
     -fx-translate-x: 10px;
     -fx-translate-y: 10px;
 }
+#selected{
+    -fx-border-width: 2;
+    -fx-border-radius: 9;
+    -fx-background-color: yellow;
+}

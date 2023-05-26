@@ -28,7 +28,7 @@
     -fx-font-size: 25px;
     -fx-border-insets: 35px;
     -fx-background-color: rgb(159, 45, 45);
-    -fx-text-fill: #db9263;
+    -fx-text-fill: white;
 }
 #userText, #pwdText,#maxPlayerLabel, #gameIDLabel, #userID, #password {
     -fx-start-margin: 600px;

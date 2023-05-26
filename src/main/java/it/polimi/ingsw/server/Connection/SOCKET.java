@@ -147,7 +147,6 @@ public class SOCKET extends ConnectionController{
                 throw new RuntimeException(e);
             }
         }
-        //TODO stop ping pong
     }
     public void sendWinner(JsonObject winner, ArrayList<MultiClientSocketGame> clients) {
         JsonObject data = new JsonObject();
@@ -417,7 +416,7 @@ public class SOCKET extends ConnectionController{
             controller.setPlayerOnline(playerID);
             controller.addClientSOCKET(this);
         }
-        private void receiveMSG()  throws IOException {  //TODO quit cnt sia qui che in rmi
+        private void receiveMSG()  throws IOException {
             boolean existingMethod;
             JsonObject response = new JsonObject();
             response.addProperty("service", "receiveResponse");
