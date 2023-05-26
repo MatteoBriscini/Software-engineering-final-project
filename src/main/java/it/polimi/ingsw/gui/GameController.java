@@ -584,7 +584,6 @@ public class GameController extends GuiView implements Initializable {
             public void handle(MouseEvent event) {
                 double x = event.getX();
                 double y = event.getY();
-                System.out.println("Mouse clicked at (" + x + ", " + y + ")");
                 GameController.this.takeCard(x,y);
             }
         });
@@ -593,9 +592,9 @@ public class GameController extends GuiView implements Initializable {
     public void updateLastCommonGoal(){
         commonGoalsScore.setSpacing(50);
         commonGoalsScore.setTranslateY(15);
+        commonGoalsScore.getChildren().clear();
 
         JsonObject[] goal = player.getCommonGoalScored();
-        System.out.println(goal);
         for(JsonObject jsonObject: goal){
             if(jsonObject.get("playerID").getAsString().equals(player.getPlayerID())){
                 String imgFile = CommonGoalScore.getImgName(8);

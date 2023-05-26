@@ -667,8 +667,9 @@ public class Controller implements Runnable {
                 JsonObject scored = new JsonObject();
                 scored.addProperty("playerID", game.getPlayerArray().get(currentPlayer).getPlayerID());
                 scored.addProperty("value", point);
+                scored.addProperty("commonGoalId", i);
                 controllerManager.sendLastCommonScored(scored);
-                System.out.println(TextColor.LIGHTBLUE.get() + "send new CommonGoal scorer" + TextColor.DEFAULT.get());
+                System.out.println(TextColor.LIGHTBLUE.get() + "send new CommonGoal scorer (common goal id: " + i + ")" + TextColor.DEFAULT.get());
             }
 
         }
