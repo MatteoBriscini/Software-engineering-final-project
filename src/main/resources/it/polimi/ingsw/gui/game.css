@@ -203,14 +203,29 @@
     -fx-max-width: 100px;
     -fx-min-height: 35px;
 }
-#quitGame{
+#playMusic{
+    -fx-background-color: #99cc00;
+}
+#stopMusic{
+    -fx-background-color: rgb(102, 204, 255);
+}
+#quitGame, #playMusic, #stopMusic{
     -fx-padding: 5px 20px;
     -fx-cursor: hand;
+    -fx-background-radius: 9px !important;
+}
+#quitGame{
     -fx-background-color: red;
-    -fx-border-radius: 20px;
     -fx-text-fill: white;
-    -fx-translate-x: 10px;
+}
+#showMenu{
+    -fx-padding: 5px 20px;
+    -fx-background-radius: 9px !important;
+    -fx-background-color: rgb(160,82,45);
+    -fx-text-fill: white;
     -fx-translate-y: 10px;
+    -fx-translate-x: 10px;
+    -fx-pref-height: 30px;
 }
 #selected{
     -fx-border-width: 2;

@@ -128,7 +128,8 @@ public class GameController extends GuiView implements Initializable {
     private VBox leftDiv = new VBox();
     @FXML
     private AnchorPane main = new AnchorPane();
-    MediaPlayer backgroundMusic;
+    private AnchorPane menu;
+    private MediaPlayer backgroundMusic;
 
     //setup data
     private int maxTakenCard;
@@ -152,8 +153,7 @@ public class GameController extends GuiView implements Initializable {
         }
 
         this.musicInit();
-        //this.musicStart();
-        //this.showMenu();
+        this.musicStart();
     }
 
     private void jsonCreate() throws FileNotFoundException{
@@ -610,7 +610,7 @@ public class GameController extends GuiView implements Initializable {
     }
 
     @FXML
-    private void quitGame (ActionEvent actionEvent) { //quit button to quit the game and return to the create-game lobby
+    private void quitGame () { //quit button to quit the game and return to the create-game lobby
         this.musicStop();
         player.quitGame();
     }
@@ -833,7 +833,51 @@ public class GameController extends GuiView implements Initializable {
         rightDiv.getChildren().clear();
         rightDiv.getChildren().addAll(bookShelf, chat);
     }
+    @FXML
+    protected void showMenu(ActionEvent actionEvent){
+        CornerRadii cornerRadii = new CornerRadii(0);
+        menu = new AnchorPane();
+        menu.setPrefWidth(250);
+        menu.setPrefHeight(1550);
+        menu.setBackground(new Background(new BackgroundFill(Color.rgb(160,82,45), cornerRadii, Insets.EMPTY)));
+        menu.getChildren().clear();
 
+        Label label1 = new Label("MUSIC:");
+        label1.setLayoutY(200);
+        label1.setLayoutX(20);
+        label1.setStyle("-fx-text-fill: white;");
+
+        Button close = new Button("X");
+        close.setBackground(new Background(new BackgroundFill(Color.rgb(160,82,45), cornerRadii, Insets.EMPTY)));
+        close.setLayoutX(220);
+        close.setId("closeMenu");
+        close.setOnAction(event -> checkID(close));
+
+        Button stopMusic = new Button("stop music");
+        stopMusic.setId("stopMusic");
+        stopMusic.setLayoutY(240);
+        stopMusic.setLayoutX(70);
+        stopMusic.setOnAction(event -> checkID(stopMusic));
+
+        Button playMusic = new Button("play music");
+        playMusic.setId("playMusic");
+        playMusic.setLayoutY(300);
+        playMusic.setLayoutX(70);
+        playMusic.setOnAction(event -> checkID(playMusic));
+
+        Button quitGame = new Button("quit game");
+        quitGame.setId("quitGame");
+        quitGame.setLayoutY(710);
+        quitGame.setLayoutX(70);
+        quitGame.setOnAction(event -> checkID(quitGame));
+
+        menu.getChildren().addAll(close, label1, playMusic, stopMusic, quitGame);
+
+        main.getChildren().add(menu);
+    }
+    private void hideMenu(){
+        main.getChildren().remove(menu);
+    }
 
     private void checkID(Button button){
         switch (button.getId()) {
@@ -843,25 +887,14 @@ public class GameController extends GuiView implements Initializable {
             case "resetMove" -> this.resetMove();
             case "sendMove" -> this.sendMove();
             case "changeOrder" -> this.reorderMove();
+            case "quitGame" -> this.quitGame();
+            case "playMusic"  -> this.musicStart();
+            case "stopMusic" -> this.musicStop();
+            case "closeMenu" -> this.hideMenu();
         }
     }
 
-    public void showMenu(){
-        CornerRadii cornerRadii = new CornerRadii(0);
-        VBox menu = new VBox();
-        menu.setMinWidth(250);
-        menu.setMinHeight(1550);
-        menu.setSpacing(45);
-        menu.setAlignment(CENTER);
-        menu.setBackground(new Background(new BackgroundFill(Color.rgb(160,82,45), cornerRadii, Insets.EMPTY)));
 
-        Button quitGame = new Button();
-        quitGame.setText("quit game");
-        quitGame.setId("quitGame");
-        menu.getChildren().add(quitGame);
-
-        main.getChildren().add(menu);
-    }
 
     /**********************************************************************
      *                               music                                *

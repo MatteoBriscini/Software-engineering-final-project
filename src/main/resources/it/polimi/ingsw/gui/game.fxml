@@ -80,6 +80,6 @@
         </HBox>
     </VBox>
 
-    <Button fx:id="quitGame" text="quit" onAction="#quitGame"/>
+    <Button fx:id="showMenu" text="menu" onAction="#showMenu"/>
 
 </AnchorPane>
