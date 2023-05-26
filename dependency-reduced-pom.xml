@@ -30,6 +30,12 @@
         <directory>src/main/resources/fxml_images/personalGoalCards</directory>
       </resource>
       <resource>
+        <directory>src/main/resources/fxml_images/scoringTokens</directory>
+      </resource>
+      <resource>
+        <directory>src/main/resources/audio</directory>
+      </resource>
+      <resource>
         <directory>src/main/resources</directory>
       </resource>
       <resource>

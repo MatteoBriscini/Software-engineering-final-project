@@ -15,6 +15,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.media.Media;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
@@ -29,6 +30,8 @@ public class HelloApplication extends Application implements UserInterface {
     private ConnectionManager connection;
     private Stage stage;
     private Parent root;
+
+
     public Stage getStage() {
         return stage;
     }
@@ -73,24 +76,24 @@ public class HelloApplication extends Application implements UserInterface {
     @Override
     public void start(Stage stage) throws IOException {
 
-            stage.setResizable(false);
-            FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("hello-view.fxml"));
-            root = (Parent) fxmlLoader.load() ;
-            guiView = (GuiView) fxmlLoader.getController();
-            guiView.setHelloApplication(this);
-            Scene scene = new Scene(root, 1280, 720);
-            stage.getIcons().add(new Image(this.getClass().getClassLoader().getResourceAsStream("Icon.png")));
-            String css = this.getClass().getResource("application.css").toExternalForm();
-            scene.getStylesheets().add(css);
-            stage.setTitle("My Shelfie!");
-            stage.setScene(scene);
-            stage.show();
-            this.stage = stage;
+        stage.setResizable(false);
+        FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("hello-view.fxml"));
+        root = (Parent) fxmlLoader.load() ;
+        guiView = (GuiView) fxmlLoader.getController();
+        guiView.setHelloApplication(this);
+        Scene scene = new Scene(root, 1280, 720);
+        stage.getIcons().add(new Image(this.getClass().getClassLoader().getResourceAsStream("Icon.png")));
+        String css = this.getClass().getResource("application.css").toExternalForm();
+        scene.getStylesheets().add(css);
+        stage.setTitle("My Shelfie!");
+        stage.setScene(scene);
+        stage.show();
+        this.stage = stage;
 
     }
 
     public static void main(String[] args) {
-            launch();
+        launch();
     }
 
     @Override
@@ -101,7 +104,7 @@ public class HelloApplication extends Application implements UserInterface {
     @Override
     public void receiveNumPlayers(int n) {
         Platform.runLater(() -> ((WaitingroomController) guiView).changeNumPlayer(n));
-     }
+    }
 
     @Override
     public void receiveMsg(String msg) {
@@ -169,6 +172,7 @@ public class HelloApplication extends Application implements UserInterface {
     @Override
     public void setMode(PlayerMode m) {
         player = connection.getPlayer();
+        if(guiView instanceof GameController) ((GameController)guiView).musicStop();
         if(m.equals(PlayerMode.LOBBY))Platform.runLater(() -> {
             try {
                 this.changeView("creategame.fxml");

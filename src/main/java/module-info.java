@@ -4,6 +4,7 @@ module AM19 {
     requires javafx.fxml;
     requires java.rmi;
     requires com.google.gson;
+    requires javafx.media;
 
     //Method/exception InvocationTargetException;
 

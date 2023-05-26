@@ -26,17 +26,21 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 
 import java.io.*;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.*;
 
 import static it.polimi.ingsw.shared.Cards.CardColor.BLUE;
 import static it.polimi.ingsw.shared.Cards.CardColor.EMPTY;
 import static javafx.geometry.Pos.CENTER;
- // import static jdk.internal.org.jline.utils.Colors.s;
+// import static jdk.internal.org.jline.utils.Colors.s;
 
 public class GameController extends GuiView implements Initializable {
 
@@ -122,6 +126,9 @@ public class GameController extends GuiView implements Initializable {
     private VBox rightDiv = new VBox();
     @FXML
     private VBox leftDiv = new VBox();
+    @FXML
+    private AnchorPane main = new AnchorPane();
+    MediaPlayer backgroundMusic;
 
     //setup data
     private int maxTakenCard;
@@ -143,6 +150,10 @@ public class GameController extends GuiView implements Initializable {
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
+
+        this.musicInit();
+        //this.musicStart();
+        //this.showMenu();
     }
 
     private void jsonCreate() throws FileNotFoundException{
@@ -316,7 +327,7 @@ public class GameController extends GuiView implements Initializable {
     public void updateMainBoard(PositionWithColor[] p) {
         for (PositionWithColor pos : p) {
             for(Node n: mainBoardGrid.getChildren()){
-                 if(GridPane.getRowIndex(n) == player.getMainBoard().getColumns()-pos.getY()-1 && GridPane.getColumnIndex(n) == pos.getX())n.setVisible(false);
+                if(GridPane.getRowIndex(n) == player.getMainBoard().getColumns()-pos.getY()-1 && GridPane.getColumnIndex(n) == pos.getX())n.setVisible(false);
             }
         }
     }
@@ -332,13 +343,13 @@ public class GameController extends GuiView implements Initializable {
 
         for(int x=0;x<playerBoard.getColumns();x++){
             for (int y=0;y<playerBoard.getRows(); y++){
-                    String file = CardImage.getImgName(cards[x][y].getSketch(), cards[x][y].getColor());
-                    ImageView card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file)));
-                    card.setFitHeight(42);
-                    card.setFitWidth(42);
-                    if(cards[x][y].getColor().equals(EMPTY))card.setVisible(false);
-                    GridPane.setConstraints(card, x, player.getMainBoard().getColumns()-y);
-                    myPlayerBoardGrid.getChildren().add(card);
+                String file = CardImage.getImgName(cards[x][y].getSketch(), cards[x][y].getColor());
+                ImageView card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file)));
+                card.setFitHeight(42);
+                card.setFitWidth(42);
+                if(cards[x][y].getColor().equals(EMPTY))card.setVisible(false);
+                GridPane.setConstraints(card, x, player.getMainBoard().getColumns()-y);
+                myPlayerBoardGrid.getChildren().add(card);
 
             }
         }
@@ -525,22 +536,22 @@ public class GameController extends GuiView implements Initializable {
             reorderText = reorderMove.getText();
             reorderText = reorderText.toLowerCase().replaceAll("\\s+", "");
             for (int j = 0; j < positions.size() - 1; j++) {
-                        index = reorderText.indexOf(',');
-                        if (index == -1) {
-                            errorMsg("invalid syntax for reorder");
-                        }
-                        i=0;
-                        try {
-                            i = Integer.parseInt(reorderText.substring(0,index));
-                       } catch (Exception e){
-                            errorMsg("invalid syntax for reorder");
-                            return;
-                        }
-                        tmpPos.add(positions.get(i));
-                        reorderText = reorderText.substring(index+1);
+                index = reorderText.indexOf(',');
+                if (index == -1) {
+                    errorMsg("invalid syntax for reorder");
+                }
+                i=0;
+                try {
+                    i = Integer.parseInt(reorderText.substring(0,index));
+                } catch (Exception e){
+                    errorMsg("invalid syntax for reorder");
+                    return;
+                }
+                tmpPos.add(positions.get(i));
+                reorderText = reorderText.substring(index+1);
             }
             if(reorderText.indexOf(',')!=-1){
-                        errorMsg("invalid syntax for reorder");
+                errorMsg("invalid syntax for reorder");
             }
             i=0;
             try {
@@ -600,6 +611,7 @@ public class GameController extends GuiView implements Initializable {
 
     @FXML
     private void quitGame (ActionEvent actionEvent) { //quit button to quit the game and return to the create-game lobby
+        this.musicStop();
         player.quitGame();
     }
 
@@ -761,7 +773,7 @@ public class GameController extends GuiView implements Initializable {
         leftDiv.getChildren().add(common);
     }
 
-        @FXML
+    @FXML
     protected void showPersonalButton(){
         ArrayList<Node> nodes = new ArrayList<>();
         Node personal = null;
@@ -834,4 +846,37 @@ public class GameController extends GuiView implements Initializable {
         }
     }
 
+    public void showMenu(){
+        CornerRadii cornerRadii = new CornerRadii(0);
+        VBox menu = new VBox();
+        menu.setMinWidth(250);
+        menu.setMinHeight(1550);
+        menu.setSpacing(45);
+        menu.setAlignment(CENTER);
+        menu.setBackground(new Background(new BackgroundFill(Color.rgb(160,82,45), cornerRadii, Insets.EMPTY)));
+
+        Button quitGame = new Button();
+        quitGame.setText("quit game");
+        quitGame.setId("quitGame");
+        menu.getChildren().add(quitGame);
+
+        main.getChildren().add(menu);
+    }
+
+    /**********************************************************************
+     *                               music                                *
+     **********************************************************************
+     */
+    private void musicInit(){
+        Media music = new Media(this.getClass().getClassLoader().getResource("background.wav").toExternalForm());
+        backgroundMusic = new MediaPlayer(music);
+        backgroundMusic.setVolume(0.1);
+        backgroundMusic.setCycleCount(MediaPlayer.INDEFINITE);
+    }
+    private void musicStart(){
+        backgroundMusic.play();
+    }
+    public void musicStop(){
+        backgroundMusic.stop();
+    }
 }

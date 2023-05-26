@@ -19,7 +19,7 @@ public class RegistrationController extends GuiView{
 
     @FXML
     protected void enterButton(ActionEvent actionEvent) throws IOException {
-
+        this.buttonClickedAudio();
         // connection = getConnection();
 
         if(!this.userIDtext.getText().matches("") && !this.passText.getText().matches("")){
@@ -40,7 +40,7 @@ public class RegistrationController extends GuiView{
                 helloApplication.setPlayer(player);
             }
         }else
-          this.errorMsg("username or password text field empty");
+            this.errorMsg("username or password text field empty");
 
     }
 

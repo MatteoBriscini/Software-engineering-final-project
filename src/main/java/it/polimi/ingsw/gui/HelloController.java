@@ -21,15 +21,15 @@ import java.io.*;
 
 public class HelloController extends GuiView{
 
-@FXML
-private Label passwordLabel;
+    @FXML
+    private Label passwordLabel;
 
-@FXML
-private Label usernameLabel;
+    @FXML
+    private Label usernameLabel;
 
-@FXML
-private Label errorLabel;
-private AnchorPane loginPanel;
+    @FXML
+    private Label errorLabel;
+    private AnchorPane loginPanel;
 
 
 
@@ -49,6 +49,9 @@ private AnchorPane loginPanel;
     @FXML
     protected void rmiClick(ActionEvent actionEvent) throws IOException {
         this.jsonCreate();
+
+        this.buttonClickedAudio();
+
         try {
             helloApplication.setConnection(new ClientRMI(RMIPort, serverIP));
         } catch (Exception e) {
@@ -65,6 +68,9 @@ private AnchorPane loginPanel;
     @FXML
     protected void socketClick(ActionEvent actionEvent) throws IOException {
         this.jsonCreate();
+
+        this.buttonClickedAudio();
+
         try {
             helloApplication.setConnection(new ClientSOCKET(socketPort, serverIP));
         } catch (Exception e) {

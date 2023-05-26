@@ -27,7 +27,7 @@ public class WaitingroomController extends GuiView implements Initializable {
 
     @FXML
     protected void startClick(ActionEvent actionEvent){
-
+        this.buttonClickedAudio();
         Player player = helloApplication.getPlayer();
 
         ((PlayingPlayer)player).startGame();

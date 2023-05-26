@@ -47,7 +47,7 @@ public class CreategameController extends GuiView{
 
     @FXML
     protected void createCustom(ActionEvent actionEvent) throws IOException {
-
+        this.buttonClickedAudio();
         this.jsonCreate();
         int i;
         i = Integer.parseInt(String.valueOf(this.maxNumberTextfield.getText()));
@@ -65,7 +65,7 @@ public class CreategameController extends GuiView{
 
     @FXML
     protected void joinCustom(ActionEvent actionEvent) throws IOException {
-
+        this.buttonClickedAudio();
         if(!this.gameIDTextfield.getText().matches("")) {
             String x = gameIDTextfield.getText();
             Player player = helloApplication.getPlayer();
@@ -78,7 +78,7 @@ public class CreategameController extends GuiView{
 
     @FXML
     protected void createDefault(ActionEvent actionEvent) throws IOException {
-
+        this.buttonClickedAudio();
         Player player = helloApplication.getPlayer();
 
         if(((LobbyPlayer)player).createGame())
@@ -89,7 +89,7 @@ public class CreategameController extends GuiView{
 
     @FXML
     protected  void joinDefault(ActionEvent actionEvent) throws IOException {
-
+        this.buttonClickedAudio();
         Player player = helloApplication.getPlayer();
 
         if(((LobbyPlayer)player).joinGame())

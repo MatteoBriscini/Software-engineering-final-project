@@ -17,15 +17,17 @@
          </font>
      </Label>
      <AnchorPane fx:id="space"></AnchorPane>
+     <VBox fx:id="createBox1" alignment="CENTER">
      <Label fx:id="defaultSettingsLabel"  text="default settings" />
      <Button fx:id="createDefaultButton"  mnemonicParsing="false" onAction="#createDefault" text="create" />
+     </VBox>
      <AnchorPane fx:id="space1"></AnchorPane>
+     <VBox fx:id="createBox2" alignment="CENTER">
      <Label fx:id="customSettingsLabel"  text="custom settings" />
      <Label fx:id="maxPlayerLabel" text="max player number" />
-
      <TextField fx:id="maxNumberTextfield"  />
      <Button fx:id="createCustomButton"  mnemonicParsing="false" onAction="#createCustom" text="create" />
-
+     </VBox>
  </VBox>
 
  <VBox fx:id="loginDiv" alignment="CENTER" prefHeight="226.0" layoutX="650.0" prefWidth="620.0" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
@@ -38,12 +40,16 @@
          </font>
       </Label>
      <AnchorPane fx:id="space2"></AnchorPane>
+     <VBox fx:id="createBox3" alignment="CENTER">
      <Label fx:id="joinRandomLabel"  text="join random game" />
      <Button fx:id="joinDefaultButton"  mnemonicParsing="false" onAction="#joinDefault" text="join" />
+     </VBox>
      <AnchorPane fx:id="space3"></AnchorPane>
+     <VBox fx:id="createBox4" alignment="CENTER">
      <Label fx:id="selectGameToJoinLabel"  text="select game to join" />
      <Label fx:id="gameIDLabel" text="gameID" />
      <TextField fx:id="gameIDTextfield"  />
      <Button fx:id="joinCustomButton"  mnemonicParsing="false" onAction="#joinCustom" text="join" />
+     </VBox>
  </VBox>
 </AnchorPane>
