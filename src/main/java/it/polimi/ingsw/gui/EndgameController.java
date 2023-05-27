@@ -50,6 +50,14 @@ public class EndgameController extends GuiView implements Initializable{
     private ImageView podiumImage = new ImageView();
     @FXML
     private VBox placing = new VBox();
+    @FXML
+    public Label p1 = new Label();
+    @FXML
+    public Label p2 = new Label();
+    @FXML
+    public Label p3 = new Label();
+
+
 
 
 
@@ -79,6 +87,20 @@ public class EndgameController extends GuiView implements Initializable{
             label.setText(s + ": " + pointsMap.get(s));
             placing.getChildren().add(label);
         }
+        p1.setText((String) pointsMap.keySet().toArray()[1]);
+        p2.setText((String) pointsMap.keySet().toArray()[0]);
+
+        if(players.length > 2) {
+            p1.setText((String) pointsMap.keySet().toArray()[2]);
+            p2.setText((String) pointsMap.keySet().toArray()[1]);
+            p3.setText((String) pointsMap.keySet().toArray()[0]);
+        }else
+            podium.getChildren().remove(p3);
+
+    }
+
+    private void backToLobby(ActionEvent actionEvent) throws IOException {
+        helloApplication.changeView("creategame.fxml");
     }
 
 }

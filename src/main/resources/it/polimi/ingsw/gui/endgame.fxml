@@ -14,7 +14,7 @@
 
     <AnchorPane fx:id="podium" minWidth="900" minHeight="720" layoutX="0" layoutY="0" >
         <ImageView fx:id="podiumImage" fitHeight="565.0" fitWidth="565.0" pickOnBounds="true" preserveRatio="true" layoutY="440" layoutX="150"/>
-        <Label fx:id="P3" text="3rdPlayer" layoutX="550" layoutY="475"/>
+        <Label fx:id="p3" text="3rdPlayer" layoutX="550" layoutY="475"/>
         <Label fx:id="p2" text="2ndPlayer" layoutX="150" layoutY="455"/>
         <Label fx:id="p1" text="1stPlayer" layoutX="360" layoutY="430"/>
     </AnchorPane>
@@ -23,4 +23,5 @@
         <Label fx:id="placingLabel" text="PLACING:"/>
     </VBox>
 
+    <Button fx:id="back" text="back to lobby" layoutX="272.0" layoutY="338.0" mnemonicParsing="false" onAction="#backToLobby"  />
 </AnchorPane>

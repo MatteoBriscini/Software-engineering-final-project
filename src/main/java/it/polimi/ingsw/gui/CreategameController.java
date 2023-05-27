@@ -32,6 +32,7 @@ public class CreategameController extends GuiView{
 
     @FXML
     private TextField gameIDTextfield;
+
     private int minPlayers;
     private int maxPlayers;
 
