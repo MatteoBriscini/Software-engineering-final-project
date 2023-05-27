@@ -9,11 +9,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 
@@ -30,6 +34,11 @@ public class HelloController extends GuiView{
     @FXML
     private Label errorLabel;
     private AnchorPane loginPanel;
+    @FXML
+    protected VBox main;
+    VBox settingsbox;
+    boolean openSettings = false;
+    TextField IP;
 
 
 
@@ -45,6 +54,40 @@ public class HelloController extends GuiView{
         this.serverIP = jsonObject.get("serverIP").getAsString();
         this.socketPort = jsonObject.get("defSocketPort").getAsInt();
         this.RMIPort = jsonObject.get("defRmiPort").getAsInt();
+    }
+    @FXML
+    protected void settings(ActionEvent actionEvent) throws IOException {
+        if(!openSettings){
+            openSettings = true;
+
+            settingsbox = new VBox();
+            settingsbox.setAlignment(Pos.CENTER);
+            settingsbox.setSpacing(20);
+            settingsbox.setStyle("" +
+                    "-fx-background-color: rgb(160,82,45);" +
+                    "-fx-background-radius: 20px;" +
+                    "-fx-padding: 15px;"+
+                    "-fx-max-width: 290px");
+            IP = new TextField();
+            IP.setId("serverIP");
+            IP.setPromptText("server ip");
+            Button button = new Button("apply");
+            button.setId("applyBt");
+            button.setOnAction(event -> checkID(button));
+            settingsbox.getChildren().addAll(IP, button);
+            main.getChildren().add(settingsbox);
+        } else {
+            openSettings = false;
+            main.getChildren().remove(settingsbox);
+        }
+    }
+    @FXML
+    protected void applySettings(){
+        if(!IP.getText().matches("")) {
+            serverIP = IP.getText();
+           openSettings = false;
+           main.getChildren().remove(settingsbox);
+        }
     }
     @FXML
     protected void rmiClick(ActionEvent actionEvent) throws IOException {
@@ -81,6 +124,12 @@ public class HelloController extends GuiView{
         }
         helloApplication.changeView("login.fxml");
 
+    }
+
+    private void checkID(Button button){
+        switch (button.getId()) {
+            case "applyBt" -> this.applySettings();
+        }
     }
 
 

@@ -499,7 +499,6 @@ public class Controller implements Runnable {
      * this method is called when the game is ended, it's calc points
      */
     synchronized public void endGame(){
-        System.err.println("endGame");
         endGame = true;
         System.out.println(TextColor.LIGHTBLUE.get() + "the game is ended" + TextColor.DEFAULT.get());
 
