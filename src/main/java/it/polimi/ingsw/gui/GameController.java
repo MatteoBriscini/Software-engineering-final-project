@@ -652,7 +652,7 @@ public class GameController extends GuiView implements Initializable {
                 this.errorMsg("can't find player in this game");
             }
         }
-
+        chatMSG.setText("");
 
         this.printMsg();
     }

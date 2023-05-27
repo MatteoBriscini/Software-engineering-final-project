@@ -101,12 +101,14 @@ public class HelloApplication extends Application implements UserInterface {
     public void finalResults(JsonObject tableJ) {
 
         System.out.println(tableJ);
-        try {
-            changeView("endgame.fxml");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        ((EndgameController)guiView).endgamePoints(tableJ);
+        Platform.runLater(()-> {
+            try {
+                changeView("endgame.fxml");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            ((EndgameController)guiView).endgamePoints(tableJ);
+        });
     }
 
     @Override
