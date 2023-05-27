@@ -2,6 +2,8 @@ package it.polimi.ingsw.gui;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
@@ -30,4 +32,10 @@ public abstract class GuiView {
         }
         buttonAudio.play();
     }
+
+    protected void imagesInit(ImageView imageView, String file){
+        Image image = new Image(this.getClass().getClassLoader().getResourceAsStream(file));
+        imageView.setImage(image);
+    }
+
 }

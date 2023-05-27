@@ -67,3 +67,14 @@
     -fx-background-radius: 25px;
     -fx-max-width: 370px;
 }
+
+#podium{
+    -fx-background-color: white;
+}
+
+#placing{
+    -fx-background-color: red;
+    -fx-background-radius: 25px 0px 0px 25px;
+
+}
+

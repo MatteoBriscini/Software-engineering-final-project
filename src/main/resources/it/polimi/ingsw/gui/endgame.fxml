@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="it.polimi.ingsw.gui.EndgameController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <AnchorPane fx:id="podium" minWidth="900" minHeight="720" layoutX="0" layoutY="0" >
+        <ImageView fx:id="podiumImage" fitHeight="565.0" fitWidth="565.0" pickOnBounds="true" preserveRatio="true" layoutY="440" layoutX="150"/>
+        <Label fx:id="P3" text="3rdPlayer" layoutX="550" layoutY="475"/>
+        <Label fx:id="p2" text="2ndPlayer" layoutX="150" layoutY="455"/>
+        <Label fx:id="p1" text="1stPlayer" layoutX="360" layoutY="430"/>
+    </AnchorPane>
+
+    <VBox fx:id="placing" minWidth="400" minHeight="720" layoutX="880" spacing="20">
+        <Label fx:id="placingLabel" text="PLACING:"/>
+    </VBox>
+
+</AnchorPane>

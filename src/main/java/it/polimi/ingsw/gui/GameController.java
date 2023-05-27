@@ -184,10 +184,6 @@ public class GameController extends GuiView implements Initializable {
         this.mouseCoordinates();
         this.notifyNewActivePlayer();
     }
-    private void imagesInit(ImageView imageView, String file){
-        Image image = new Image(this.getClass().getClassLoader().getResourceAsStream(file));
-        imageView.setImage(image);
-    }
 
     private void commonGoalsInit(){
         int[] goals = player.getCommonGoalID();
@@ -516,10 +512,17 @@ public class GameController extends GuiView implements Initializable {
 
 
     private void sendMove(){
-        //TODO controlli su input field
-        int column = Integer.parseInt(columnMove.getText());
-        player.takeCard(column, positions.toArray(new Position[0]));
-        this.resetMove();
+
+        if(!columnMove.getText().equals("")) {
+
+            int column = Integer.parseInt(columnMove.getText())-1;
+
+            if(column >=0 && column <playerBoardRows  ){
+                player.takeCard(column, positions.toArray(new Position[0]));
+                this.resetMove();
+            }else
+                errorMsg("invalid column value");
+        }
     }
     private void resetMove(){
         bookshelfAnchor.getChildren().clear();
@@ -542,7 +545,7 @@ public class GameController extends GuiView implements Initializable {
                 }
                 i=0;
                 try {
-                    i = Integer.parseInt(reorderText.substring(0,index));
+                    i = Integer.parseInt(reorderText.substring(0,index))-1;
                 } catch (Exception e){
                     errorMsg("invalid syntax for reorder");
                     return;
@@ -555,7 +558,7 @@ public class GameController extends GuiView implements Initializable {
             }
             i=0;
             try {
-                i = Integer.parseInt(reorderText);
+                i = Integer.parseInt(reorderText)-1;
             } catch (Exception e){
                 errorMsg("invalid syntax for reorder");
                 return;
