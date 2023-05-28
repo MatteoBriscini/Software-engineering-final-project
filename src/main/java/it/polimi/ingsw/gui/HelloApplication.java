@@ -78,7 +78,8 @@ public class HelloApplication extends Application implements UserInterface {
 
         stage.setResizable(false);
         FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("hello-view.fxml"));
-       // FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("endgame.fxml"));
+
+        //FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("endgame.fxml"));
         root = (Parent) fxmlLoader.load() ;
         guiView = (GuiView) fxmlLoader.getController();
         guiView.setHelloApplication(this);
@@ -99,8 +100,6 @@ public class HelloApplication extends Application implements UserInterface {
 
     @Override
     public void finalResults(JsonObject tableJ) {
-
-        System.out.println(tableJ);
         Platform.runLater(()-> {
             try {
                 changeView("endgame.fxml");

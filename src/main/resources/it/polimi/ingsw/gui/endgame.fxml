@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -12,16 +9,17 @@
             fx:controller="it.polimi.ingsw.gui.EndgameController"
             prefHeight="400.0" prefWidth="600.0">
 
-    <AnchorPane fx:id="podium" minWidth="900" minHeight="720" layoutX="0" layoutY="0" >
+    <AnchorPane fx:id="podium" minWidth="900" minHeight="720" >
+        <ImageView fx:id="logoImage" fitHeight="154.5" fitWidth="500" layoutX="180" layoutY="150" />
         <ImageView fx:id="podiumImage" fitHeight="565.0" fitWidth="565.0" pickOnBounds="true" preserveRatio="true" layoutY="440" layoutX="150"/>
-        <Label fx:id="p3" text="3rdPlayer" layoutX="550" layoutY="475"/>
-        <Label fx:id="p2" text="2ndPlayer" layoutX="150" layoutY="455"/>
-        <Label fx:id="p1" text="1stPlayer" layoutX="360" layoutY="430"/>
+        <Label fx:id="p3" text="3rdPlayer" layoutX="560" layoutY="495"/>
+        <Label fx:id="p2" text="2ndPlayer" layoutX="190" layoutY="475"/>
+        <Label fx:id="p1" text="1stPlayer" layoutX="385" layoutY="450"/>
     </AnchorPane>
 
-    <VBox fx:id="placing" minWidth="400" minHeight="720" layoutX="880" spacing="20">
+    <VBox fx:id="placing" minWidth="400" minHeight="720" layoutX="880" spacing="20" alignment="TOP_CENTER">
         <Label fx:id="placingLabel" text="PLACING:"/>
     </VBox>
 
-    <Button fx:id="back" text="back to lobby" layoutX="272.0" layoutY="338.0" mnemonicParsing="false" onAction="#backToLobby"  />
+    <Button fx:id="back" text="back to lobby" layoutX="1150.0" layoutY="650.0" mnemonicParsing="false" onAction="#backToLobby"  />
 </AnchorPane>

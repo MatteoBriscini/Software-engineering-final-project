@@ -18,7 +18,7 @@
 .label{
     -fx-background-color: #db9263;
     -fx-background-radius: 7px;
-    -fx-text-fill: black !important;
+    -fx-text-fill: black;
     -fx-text-origin: left;
     -fx-font-size: 35px;
     -fx-font-family: "Bitstream Vera Sans Mono";
@@ -70,11 +70,42 @@
 
 #podium{
     -fx-background-color: white;
+    -fx-background-image: url("sfondoParquet.jpg");
+    -fx-background-repeat: stretch;
+    -fx-background-size: cover;
+    -fx-background-position: center center;
 }
 
 #placing{
-    -fx-background-color: red;
+    -fx-background-color: rgb(160,82,45);
     -fx-background-radius: 25px 0px 0px 25px;
 
 }
-
+#p1,#p2, #p3{
+    -fx-font-size: 17px;
+}
+#p3{
+    -fx-background-color: #b08d57;
+}
+#p2{
+    -fx-background-color: #c0c0c0;
+}
+#p1{
+    -fx-background-color: #cda434;
+}
+#placing .label{
+    -fx-translate-x: -10px;
+    -fx-background-color: rgb(160,82,45);
+    -fx-font-size: 17px;
+    -fx-text-fill: white;
+}
+#yourScore{
+    -fx-padding: 15px !important;
+    -fx-background-color: #b08d57 !important;
+    -fx-background-radius: 7px !important;
+}
+#placingLabel{
+    -fx-translate-x: -100px !important;
+    -fx-text-fill: black !important;
+    -fx-font-size: 35px !important;
+}

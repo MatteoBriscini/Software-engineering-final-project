@@ -13,6 +13,7 @@ import it.polimi.ingsw.shared.Cards.CardColor;
 import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
 import it.polimi.ingsw.shared.JsonSupportClasses.Position;
 import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
+import it.polimi.ingsw.shared.PlayerMode;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -49,6 +50,8 @@ public class EndgameController extends GuiView implements Initializable{
     @FXML
     private ImageView podiumImage = new ImageView();
     @FXML
+    private ImageView logoImage = new ImageView();
+    @FXML
     private VBox placing = new VBox();
     @FXML
     public Label p1 = new Label();
@@ -64,27 +67,22 @@ public class EndgameController extends GuiView implements Initializable{
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         imagesInit(podiumImage, "podium.png"); //load player board img
+        imagesInit(logoImage, "Title.png");
     }
 
     public void endgamePoints(JsonObject points){
 
-        System.out.println("0");
         TreeMap<String, Integer> pointsMap = new TreeMap<>();
         PlayingPlayer player = (PlayingPlayer) helloApplication.getPlayer();
         String[] players = player.getPlayersID();
 
-        System.out.println("1");
         for(String s: players){
             pointsMap.put(s, points.get(s).getAsInt());
-
         }
-
-        System.out.println("2");
-        System.out.println(pointsMap);
-       // pointsMap = ((i,j)->)
         for(String s: pointsMap.keySet()){
             Label label = new Label();
             label.setText(s + ": " + pointsMap.get(s));
+            if (s.equals(player.getPlayerID())) label.setId("yourScore");
             placing.getChildren().add(label);
         }
         p1.setText((String) pointsMap.keySet().toArray()[1]);
@@ -98,9 +96,10 @@ public class EndgameController extends GuiView implements Initializable{
             podium.getChildren().remove(p3);
 
     }
-
-    private void backToLobby(ActionEvent actionEvent) throws IOException {
-        helloApplication.changeView("creategame.fxml");
+    @FXML
+    protected void backToLobby(ActionEvent actionEvent){
+        helloApplication.getConnection().setPlayerAsLobby();
+        helloApplication.setMode(PlayerMode.LOBBY);
     }
 
 }

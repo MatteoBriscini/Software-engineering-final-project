@@ -66,6 +66,10 @@ public class GameController extends GuiView implements Initializable {
     GridPane myPlayerBoardGrid;
     @FXML
     private HBox myTails;
+    @FXML
+    private VBox myBookshelfBox2;
+    @FXML
+    private VBox myBookshelfBox3;
 
     ArrayList<Node> greyNode = new ArrayList<>();
     private Map<String, GridPane> otherPlayerBoardGrid = new HashMap<>();
@@ -214,18 +218,15 @@ public class GameController extends GuiView implements Initializable {
         imagesInit(myBookshelfImage1, "bookshelf_orth.png");
         shelfID1.setText(otherPlayers.get(0));
 
-        imagesInit(myBookshelfImage2, "bookshelf.png");
-        imagesInit(myBookshelfImage3, "bookshelf.png");
-
 
         if(otherPlayers.size()>1) {
             imagesInit(myBookshelfImage2, "bookshelf_orth.png");
             shelfID2.setText(otherPlayers.get(1));
-        }
+        } else bookshelfAnchor.getChildren().removeAll(myBookshelfBox2);
         if(otherPlayers.size()>2) {
             imagesInit(myBookshelfImage3, "bookshelf_orth.png");
             shelfID2.setText(otherPlayers.get(2));
-        }
+        } else bookshelfAnchor.getChildren().removeAll(myBookshelfBox3);
     }
     private void setBorderRadius (ImageView immage, int size){
         Rectangle clip = new Rectangle(
