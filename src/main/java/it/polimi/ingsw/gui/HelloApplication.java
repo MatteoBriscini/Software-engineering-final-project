@@ -130,6 +130,8 @@ public class HelloApplication extends Application implements UserInterface {
         if(guiView instanceof GameController) {
             Platform.runLater(() -> {
                 ((GameController)guiView).setMainBoard();
+                ((GameController)guiView).setMyPlayerBoardGrid();
+                ((GameController)guiView).setOtherPlayerBoard();
             });
             return;
         }
