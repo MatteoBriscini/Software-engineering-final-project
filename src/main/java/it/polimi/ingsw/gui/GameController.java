@@ -306,7 +306,7 @@ public class GameController extends GuiView implements Initializable {
                     card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file)));
                     card.setFitHeight(50);
                     card.setFitWidth(50);
-                    if(!mainBoard[x][y].getColor().equals(EMPTY))card.setVisible(false);
+                    if(mainBoard[x][y].getColor().equals(EMPTY))card.setVisible(false);
                     card.setId("tile");
                     GridPane.setConstraints(card,x,player.getMainBoard().getColumns()-y-1);
                     mainBoardGrid.getChildren().add(card);
