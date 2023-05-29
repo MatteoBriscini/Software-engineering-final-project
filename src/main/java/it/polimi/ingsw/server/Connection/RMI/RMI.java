@@ -190,18 +190,21 @@ public class RMI extends ConnectionController implements LobbyRemoteInterface {
         @Override
         public void run() {
             Command call;
-            for(Map.Entry<String, PlayingPlayerRemoteInterface> client : clients.entrySet()){
+            synchronized (rmi) {
                 try {
                     call = commands.take();
-                    System.out.println(call);
+                    //System.out.println(call);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-                boolean bool= call.execute(client.getValue());
-                if(!bool) {
-                    rmi.quitGameConnection(client.getValue(), client.getKey(), connectionInterface);
-                }else {
-                    connectionInterface.setPlayerOnline(client.getKey());
+                for (Map.Entry<String, PlayingPlayerRemoteInterface> client : clients.entrySet()) {
+
+                    boolean bool = call.execute(client.getValue());
+                    if (!bool) {
+                        rmi.quitGameConnection(client.getValue(), client.getKey(), connectionInterface);
+                    } else {
+                        connectionInterface.setPlayerOnline(client.getKey());
+                    }
                 }
             }
         }

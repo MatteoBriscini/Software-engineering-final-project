@@ -727,7 +727,6 @@ public class TUI implements UserInterface{
                 this.printRun();
                 break;
             case PLAYING:
-                System.out.println(player);
                 break;
         }
 

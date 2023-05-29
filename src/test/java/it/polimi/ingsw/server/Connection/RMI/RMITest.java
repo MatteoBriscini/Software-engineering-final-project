@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class RMITest {
+public class RMITest {
 
     @Test
     public void blockingQueueTest(){

@@ -133,9 +133,13 @@ public class ConnectionControllerManagerTest extends TestCase {
         System.out.println(controller.getCurrentPlayer());
         System.out.println(controller.getPlayerNumber());
         assertEquals(0, controller.getCurrentPlayer());
-        assertEquals(((PlayingPlayer) testClient).getActivePlayer(), ((PlayingPlayer) testClient1).getActivePlayer());
-        assertEquals(((PlayingPlayer) testClient2).getActivePlayer(), ((PlayingPlayer) testClient1).getActivePlayer());
-        assertEquals(((PlayingPlayer) testClient2).getActivePlayer(), controller.getCurrentPlayerID());
+
+        Thread.sleep(500);
+
+        assertEquals(controller.getCurrentPlayerID(), ((PlayingPlayer) testClient).getActivePlayer()); //antonio
+        assertEquals(controller.getCurrentPlayerID(), ((PlayingPlayer) testClient1).getActivePlayer()); //marco
+        assertEquals(controller.getCurrentPlayerID(), ((PlayingPlayer) testClient2).getActivePlayer()); //paolo
+
 
         controller.setNotRandomPlayerOrder(players);
 
@@ -147,9 +151,12 @@ public class ConnectionControllerManagerTest extends TestCase {
         assertTrue(((PlayingPlayer)testClient).takeCard(0,pos)); // authorized player try to take card
         assertFalse(((PlayingPlayer) testClient2).takeCard(0, pos));//not authorized player try to take card
         assertEquals(1, controller.getCurrentPlayer());
-        assertEquals(((PlayingPlayer) testClient).getActivePlayer(), ((PlayingPlayer) testClient1).getActivePlayer());
-        assertEquals(((PlayingPlayer) testClient2).getActivePlayer(), ((PlayingPlayer) testClient1).getActivePlayer());
-        assertEquals(((PlayingPlayer) testClient2).getActivePlayer(), controller.getCurrentPlayerID());
+
+        Thread.sleep(500);
+
+        assertEquals(controller.getCurrentPlayerID(), ((PlayingPlayer) testClient).getActivePlayer()); //antonio
+        assertEquals(controller.getCurrentPlayerID(), ((PlayingPlayer) testClient1).getActivePlayer()); //marco
+        assertEquals(controller.getCurrentPlayerID(), ((PlayingPlayer) testClient2).getActivePlayer()); //paolo
 
         /*System.out.println("TEST 5: friendly quit game");
         assertTrue(((PlayingPlayer)testClient2).quitGame());
