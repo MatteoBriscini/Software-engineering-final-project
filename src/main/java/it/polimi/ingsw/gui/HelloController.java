@@ -8,6 +8,7 @@ import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -22,8 +23,10 @@ import javafx.stage.Popup;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class HelloController extends GuiView{
+public class HelloController extends GuiView implements Initializable {
 
     @FXML
     private Label passwordLabel;
@@ -36,9 +39,9 @@ public class HelloController extends GuiView{
     private AnchorPane loginPanel;
     @FXML
     protected VBox main;
-    VBox settingsbox;
+    private VBox settingsbox;
     boolean openSettings = false;
-    TextField IP;
+    private TextField IP;
 
 
 
@@ -91,8 +94,6 @@ public class HelloController extends GuiView{
     }
     @FXML
     protected void rmiClick(ActionEvent actionEvent) throws IOException {
-        this.jsonCreate();
-
         this.buttonClickedAudio();
 
         try {
@@ -110,8 +111,6 @@ public class HelloController extends GuiView{
 
     @FXML
     protected void socketClick(ActionEvent actionEvent) throws IOException {
-        this.jsonCreate();
-
         this.buttonClickedAudio();
 
         try {
@@ -133,4 +132,12 @@ public class HelloController extends GuiView{
     }
 
 
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        try {
+            this.jsonCreate();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
