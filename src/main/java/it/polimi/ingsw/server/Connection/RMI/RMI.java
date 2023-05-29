@@ -3,7 +3,6 @@ package it.polimi.ingsw.server.Connection.RMI;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.client.Connection.PlayingPlayerRemoteInterface;
-import it.polimi.ingsw.client.Player.PlayingPlayer;
 import it.polimi.ingsw.server.Connection.ConnectionController;
 import it.polimi.ingsw.server.Connection.RMI.SendCommand.*;
 import it.polimi.ingsw.server.Controller;
@@ -26,10 +25,14 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class RMI extends ConnectionController implements LobbyRemoteInterface {
     private String playerID;
     private boolean inGame = false;
+
+    private BlockingQueue<Command> commands = new LinkedBlockingQueue<>();
     protected final String cntType;
     private int pingPongTime;
     public RMI(int port, Lobby lobby , String IP) {
@@ -157,12 +160,49 @@ public class RMI extends ConnectionController implements LobbyRemoteInterface {
      * @param command actual command
      */
     public void sendCommand(Command command, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface){
+        commands.add(command);
+        new Thread(new blockingQueueHandler(clients, connectionInterface, this)).start();
+        /*
         for(Map.Entry<String, PlayingPlayerRemoteInterface> client : clients.entrySet()){
             boolean bool= command.execute(client.getValue());
             if(!bool) {
                 this.quitGameConnection(client.getValue(), client.getKey(), connectionInterface);
             }else {
                 connectionInterface.setPlayerOnline(client.getKey());
+            }
+        }
+
+         */
+    }
+
+    private class blockingQueueHandler implements Runnable{
+
+        private Command command;
+        private Map<String, PlayingPlayerRemoteInterface> clients;
+        private Controller connectionInterface;
+        private RMI rmi;
+
+        public blockingQueueHandler(Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface, RMI rmi){
+            this.clients = clients;
+            this.connectionInterface = connectionInterface;
+            this.rmi = rmi;
+        }
+        @Override
+        public void run() {
+            Command call;
+            for(Map.Entry<String, PlayingPlayerRemoteInterface> client : clients.entrySet()){
+                try {
+                    call = commands.take();
+                    System.out.println(call);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                boolean bool= call.execute(client.getValue());
+                if(!bool) {
+                    rmi.quitGameConnection(client.getValue(), client.getKey(), connectionInterface);
+                }else {
+                    connectionInterface.setPlayerOnline(client.getKey());
+                }
             }
         }
     }

@@ -13,6 +13,7 @@ public class NotifyActivePlayerCommand implements Command {
 
     public boolean execute(PlayingPlayerRemoteInterface client) {
         try {
+            System.out.println("test");
             client.notifyActivePlayer(activePlayerId);
         } catch (RemoteException e) {
             return false;
