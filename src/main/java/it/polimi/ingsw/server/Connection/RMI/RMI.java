@@ -231,13 +231,13 @@ public class RMI extends ConnectionController implements LobbyRemoteInterface {
     }
 
     public void addCardToClientBoard(String playerID, int column, Card[] cards, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
-        Command command = new AddCardToClientBoard(playerID, column, cards);
+        Command command = new AddCardToClientBoard(playerID, column, cards, clients, connectionInterface);
         sendCommand(command, clients, connectionInterface);
     }
 
 
     public void dellCardFromMainBoard(PositionWithColor[] cards, Map<String, PlayingPlayerRemoteInterface>clients, Controller connectionInterface) {
-        Command command = new DellCardFromMainBoard(cards);
+        Command command = new DellCardFromMainBoard(cards, clients, connectionInterface);
         sendCommand(command, clients, connectionInterface);
     }
 
@@ -260,7 +260,7 @@ public class RMI extends ConnectionController implements LobbyRemoteInterface {
     }
 
     public void sendEndGamePoint(JsonObject points, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
-        Command command = new EndGameCommand(points);
+        Command command = new EndGameCommand(points, clients, connectionInterface);
         sendCommand(command, clients, connectionInterface);
         for (String s: clients.keySet()) connectionInterface.removeClientRMI(clients.get(s), s);
     }
@@ -276,19 +276,19 @@ public class RMI extends ConnectionController implements LobbyRemoteInterface {
     }
 
     public void sendError(JsonObject error, String playerID, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
-        Command command = new ErrorCommand(error, playerID);
+        Command command = new ErrorCommand(error, playerID, clients, connectionInterface);
         sendCommand(command, clients, connectionInterface);
     }
 
     public void forceClientDisconnection(Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
-        Command command = new ClientDisconnectionCommand();
+        Command command = new ClientDisconnectionCommand(clients, connectionInterface);
         sendCommand(command, clients, connectionInterface);
     }
     /**************************************************************************
      ************************************************** chat ******************
      * ************************************************************************/
     public void sendBroadcastMsg(String msg, String sender, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
-        Command command = new BroadcastChatCommand(msg,sender);
+        Command command = new BroadcastChatCommand(msg,sender,clients,connectionInterface);
         sendCommand(command, clients, connectionInterface);
     }
 
