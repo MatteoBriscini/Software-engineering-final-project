@@ -211,22 +211,22 @@ public class RMI extends ConnectionController implements LobbyRemoteInterface {
     }
 
     public void notifyActivePlayer(String activePlayerID, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
-        Command command = new NotifyActivePlayerCommand(activePlayerID);
+        Command command = new NotifyActivePlayerCommand(activePlayerID,clients,connectionInterface);
         sendCommand(command, clients, connectionInterface);
     }
 
     public void sendPlayerList(String[] players, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
-        Command command = new SendActivePlayerListCommand(players);
+        Command command = new SendActivePlayerListCommand(players,clients,connectionInterface);
         sendCommand(command, clients, connectionInterface);
     }
 
     public void sendPlayersNUmber(int playersNumber, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
-        Command command = new SendPlayersNumberCommand(playersNumber);
+        Command command = new SendPlayersNumberCommand(playersNumber,clients,connectionInterface);
         sendCommand(command, clients, connectionInterface);
     }
 
     public void sendMainBoard(Card[][] mainBoard,Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
-        Command command = new SendMainBoardCommand(mainBoard);
+        Command command = new SendMainBoardCommand(mainBoard,clients,connectionInterface);
         sendCommand(command, clients, connectionInterface);
     }
 
@@ -243,19 +243,19 @@ public class RMI extends ConnectionController implements LobbyRemoteInterface {
 
 
     public void sendAllPlayerBoard(ArrayList<Card[][]> playerBoards, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
-        Command command = new SendAllPlayerBoardCommand(playerBoards);
+        Command command = new SendAllPlayerBoardCommand(playerBoards,clients,connectionInterface);
         sendCommand(command, clients, connectionInterface);
     }
 
 
     public void sendAllCommonGoal(int[] commonGoalID, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
-        Command command = new SendAllCommonGoalCommand(commonGoalID);
+        Command command = new SendAllCommonGoalCommand(commonGoalID,clients,connectionInterface);
         sendCommand(command, clients, connectionInterface);
     }
 
 
     public void sendPrivateGoal(PositionWithColor[] cards, String playerID, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
-        Command command = new SendPrivateGoalCommand(cards,playerID);
+        Command command = new SendPrivateGoalCommand(cards,playerID,clients,connectionInterface);
         sendCommand(command, clients, connectionInterface);
     }
 
@@ -266,12 +266,12 @@ public class RMI extends ConnectionController implements LobbyRemoteInterface {
     }
 
     public void sendWinner(JsonObject winner, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
-        Command command = new WinnerCommand(winner);
+        Command command = new WinnerCommand(winner, clients, connectionInterface);
         sendCommand(command, clients, connectionInterface);
     }
 
     public void sendLastCommonScored(JsonObject scored, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
-        Command command = new SendLastCommonScored(scored);
+        Command command = new SendLastCommonScored(scored, clients, connectionInterface);
         sendCommand(command, clients, connectionInterface);
     }
 
@@ -293,7 +293,7 @@ public class RMI extends ConnectionController implements LobbyRemoteInterface {
     }
 
     public void sendPrivateMSG(String userID, String msg, String sender, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
-        Command command = new PrivateChatCommand(userID, msg,sender);
+        Command command = new PrivateChatCommand(userID, msg,sender,clients,connectionInterface);
         sendCommand(command, clients, connectionInterface);
     }
 
