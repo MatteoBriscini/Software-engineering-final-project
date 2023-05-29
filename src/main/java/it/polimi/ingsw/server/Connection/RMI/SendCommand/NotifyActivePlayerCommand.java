@@ -16,7 +16,6 @@ public class NotifyActivePlayerCommand extends CommandAbstract implements Comman
 
     public boolean execute(PlayingPlayerRemoteInterface client) {
         try {
-            System.out.println("test");
             client.notifyActivePlayer(activePlayerId);
         } catch (RemoteException e) {
             return false;

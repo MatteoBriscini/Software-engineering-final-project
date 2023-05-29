@@ -17,7 +17,6 @@ public class SendPlayersNumberCommand extends CommandAbstract implements Command
     @Override
     public boolean execute(PlayingPlayerRemoteInterface client) {
         try {
-            System.out.println("test");
             client.receivePlayersNumber(playersNumber);
         } catch (RemoteException e) {
             return false;
