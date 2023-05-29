@@ -5,7 +5,7 @@ import it.polimi.ingsw.server.Controller;
 
 import java.util.Map;
 
-public abstract class CommandAbstract {
+public abstract class CommandAbstract implements Command{
     private Map<String, PlayingPlayerRemoteInterface> clients;
     private Controller connectionInterface;
     public CommandAbstract(Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface){
