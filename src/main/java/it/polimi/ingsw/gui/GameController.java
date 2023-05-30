@@ -550,6 +550,11 @@ public class GameController extends GuiView implements Initializable {
                     errorMsg("invalid syntax for reorder");
                     return;
                 }
+                if(i<0||i>=positions.size()){
+                    errorMsg("invalid index for reorder");
+                    return;
+                }
+
                 tmpPos.add(positions.get(i));
                 reorderText = reorderText.substring(index+1);
             }
@@ -561,6 +566,10 @@ public class GameController extends GuiView implements Initializable {
                 i = Integer.parseInt(reorderText)-1;
             } catch (Exception e){
                 errorMsg("invalid syntax for reorder");
+                return;
+            }
+            if(i<0||i>=positions.size()){
+                errorMsg("invalid index for reorder");
                 return;
             }
             tmpPos.add(positions.get(i));
