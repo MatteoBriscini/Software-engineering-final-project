@@ -609,6 +609,15 @@ public class GameController extends GuiView implements Initializable {
         JsonObject[] goal = player.getCommonGoalScored();
         for(JsonObject jsonObject: goal){
             if(jsonObject.get("playerID").getAsString().equals(player.getPlayerID())){
+                if(goal.length == 1 && jsonObject.get("commonGoalId").getAsInt()==1){
+                    String imgFile = CommonGoalScore.getImgName(jsonObject.get("value").getAsInt());
+                    Image image = new Image(this.getClass().getClassLoader().getResourceAsStream(imgFile));
+                    ImageView imgView = new ImageView(image);
+                    imgView.setFitHeight(100);
+                    imgView.setFitWidth(100);
+                    imgView.setVisible(false);
+                    commonGoalsScore.getChildren().add(imgView);
+                }
                 String imgFile = CommonGoalScore.getImgName(jsonObject.get("value").getAsInt());
                 Image image = new Image(this.getClass().getClassLoader().getResourceAsStream(imgFile));
                 ImageView imgView = new ImageView(image);
