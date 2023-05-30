@@ -322,6 +322,8 @@ public class Controller implements Runnable {
      * @return true if the players can start the game false in all other case
      */
     synchronized public boolean startGame(String playerID){
+        System.err.println("start"); //TODO remove sout
+
         Random rand = new Random();
         int n = rand.nextInt(numberOfPossibleCommonGoals-commonGoalNumber);
         int m = rand.nextInt(numberOfPossiblePrivateGoals-maxPlayerNumber);
@@ -360,6 +362,9 @@ public class Controller implements Runnable {
             System.out.println(TextColor.LIGHTBLUE.get() + "create client game data" + TextColor.DEFAULT.get());
             this.createClientData(commonGoalIDArray);
             this.turn();
+
+            System.err.println("end"); //TODO remove sout
+
             return true;
         } else {
             error.addProperty("errorID", "can't start the game");
