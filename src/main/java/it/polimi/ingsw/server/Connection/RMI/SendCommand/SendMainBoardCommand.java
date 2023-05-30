@@ -4,13 +4,16 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import it.polimi.ingsw.client.Connection.PlayingPlayerRemoteInterface;
 
+import it.polimi.ingsw.server.Controller;
 import it.polimi.ingsw.shared.Cards.Card;
 
 import java.rmi.RemoteException;
+import java.util.Map;
 
-public class SendMainBoardCommand implements Command {
+public class SendMainBoardCommand extends CommandAbstract implements Command {
     String mainBoard;
-    public SendMainBoardCommand(Card[][] mainBoard){
+    public SendMainBoardCommand(Card[][] mainBoard, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface){
+        super(clients, connectionInterface);
         JsonArray jsonArray = new Gson().toJsonTree(mainBoard).getAsJsonArray();
         this.mainBoard = jsonArray.toString();
     }

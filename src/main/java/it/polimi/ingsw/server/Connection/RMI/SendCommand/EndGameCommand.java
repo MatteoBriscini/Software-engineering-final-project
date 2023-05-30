@@ -2,12 +2,16 @@ package it.polimi.ingsw.server.Connection.RMI.SendCommand;
 
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.client.Connection.PlayingPlayerRemoteInterface;
+import it.polimi.ingsw.server.Controller;
 
 import java.rmi.RemoteException;
+import java.util.Map;
 
-public class EndGameCommand implements Command{
+public class EndGameCommand extends CommandAbstract implements Command{
     String points;
-    public EndGameCommand(JsonObject points){
+    public EndGameCommand(JsonObject points, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface){
+        super(clients, connectionInterface);
+
         this.points = points.toString();
     }
     @Override
