@@ -79,8 +79,9 @@ public class EndgameController extends GuiView implements Initializable{
         for(String s: players){
             pointsMap.put(s, points.get(s).getAsInt());
         }
-        for(String s: pointsMap.keySet()){
+        for(int i = pointsMap.keySet().size(); i>0;i--){
             Label label = new Label();
+            String s = (String) pointsMap.keySet().toArray()[i];
             label.setText(s + ": " + pointsMap.get(s));
             if (s.equals(player.getPlayerID())) label.setId("yourScore");
             placing.getChildren().add(label);
