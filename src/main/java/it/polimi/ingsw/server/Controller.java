@@ -198,6 +198,14 @@ public class Controller implements Runnable {
      * @param playerID id of the player
      */
     synchronized public void setPlayerOffline(String playerID){
+
+
+        JsonObject error = new JsonObject();
+        error.addProperty("errorID", "connection");
+        error.addProperty("errorMSG", playerID + " quit the game");
+        for (Player player: game.getPlayerArray())
+            if(!player.getPlayerID().equals(playerID))controllerManager.sendError(error, player.getPlayerID());
+
         ArrayList<Player> players = game.getPlayerArray();
         for (int i = 0; i<players.size(); i++){
             if(players.get(i).getPlayerID().equals(playerID)){
