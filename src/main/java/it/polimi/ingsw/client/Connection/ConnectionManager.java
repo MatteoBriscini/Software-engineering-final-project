@@ -140,7 +140,7 @@ public abstract class ConnectionManager extends UnicastRemoteObject {
 
         ArrayList<Card[][]> boards = new ArrayList<>();
         for (int i = 0; i<jsonArray.size();i++){
-            boards.add(new Gson().fromJson(jsonArray.get(0), Card[][].class));
+            boards.add(new Gson().fromJson(jsonArray.get(i), Card[][].class));
         }
         ((PlayingPlayer)player).createAllClientBoard(boards);
     }
