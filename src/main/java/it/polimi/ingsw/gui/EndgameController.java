@@ -79,7 +79,7 @@ public class EndgameController extends GuiView implements Initializable{
         for(String s: players){
             pointsMap.put(s, points.get(s).getAsInt());
         }
-        for(int i = pointsMap.keySet().size(); i>0;i--){
+        for(int i = pointsMap.keySet().size()-1; i>0;i--){
             Label label = new Label();
             String s = (String) pointsMap.keySet().toArray()[i];
             label.setText(s + ": " + pointsMap.get(s));
