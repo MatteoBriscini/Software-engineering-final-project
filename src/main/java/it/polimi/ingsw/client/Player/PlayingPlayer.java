@@ -268,7 +268,7 @@ public class PlayingPlayer extends Player{
      * @param winner  JsonObject {"winnerName": playerID, "points": pointsValue}
      */
     public void receiveWinner(String winner){
-        //TODO necessita metodo lato grafico
+        //necessita metodo lato grafico
     }
 
     /**************************************************************************

@@ -28,7 +28,8 @@ public class CouplesAndPokersGoals extends CommonGoal{
     private JsonArray nCardsArray;
     private JsonArray mGroupsArray;
     private JsonUrl jsonUrl;
-    private final int n, mGroups;
+    private int n;
+    private final int mGroups;
 
     /**
      * constructor of the goals, have different configuration for different goal
@@ -80,6 +81,7 @@ public class CouplesAndPokersGoals extends CommonGoal{
      */
     @Override
     public boolean check(Card[][] board){
+        validCombo = 0;
         int i,j;
         alreadyUsed = new boolean[rowSize][columnSize];
         for (i=0; i<rowSize ; i++){
@@ -93,5 +95,6 @@ public class CouplesAndPokersGoals extends CommonGoal{
             }
         }
         return validCombo >= mGroups;
+
     }
 }
