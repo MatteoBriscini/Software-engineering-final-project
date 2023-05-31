@@ -322,7 +322,6 @@ public class Controller implements Runnable {
      * @return true if the players can start the game false in all other case
      */
     synchronized public boolean startGame(String playerID){
-        System.err.println("start"); //TODO remove sout
 
         Random rand = new Random();
         int n = rand.nextInt(numberOfPossibleCommonGoals-commonGoalNumber);
@@ -362,8 +361,6 @@ public class Controller implements Runnable {
             System.out.println(TextColor.LIGHTBLUE.get() + "create client game data" + TextColor.DEFAULT.get());
             this.createClientData(commonGoalIDArray);
             this.turn();
-
-            System.err.println("end"); //TODO remove sout
 
             return true;
         } else {
@@ -452,7 +449,10 @@ public class Controller implements Runnable {
             playersID.add(p.getPlayerID());
         }
         controllerManager.sendPlayerList(playersID.toArray(new String[0]));
-        controllerManager.notifyActivePlayer(game.getPlayerArray().get(0).getPlayerID());
+
+        int tmpCurrentPlayer = 0;
+        if(currentPlayer!=-1) tmpCurrentPlayer =currentPlayer;
+        controllerManager.notifyActivePlayer(game.getPlayerArray().get(tmpCurrentPlayer).getPlayerID());
 
         //send all commonGoalID (broadcast to each client)
         controllerManager.sendAllCommonGoal(commonGoalIDArray);
@@ -664,7 +664,9 @@ public class Controller implements Runnable {
 
         for(int i = 0; i<commonGoalNumber ; i+=1){
             ArrayList<String> alreadyScored = game.getAlreadyScored(i);
-            if (!alreadyScored.contains(game.getPlayerArray().get(currentPlayer).getPlayerID()) && game.checkCommonGoal(i, currentPlayer)){
+            boolean newScore = game.checkCommonGoal(i, currentPlayer);
+
+            if (!alreadyScored.contains(game.getPlayerArray().get(currentPlayer).getPlayerID()) && newScore){
 
                 //update the list of player has already reached the goal
                 alreadyScored.add(game.getPlayerArray().get(currentPlayer).getPlayerID());
@@ -680,6 +682,7 @@ public class Controller implements Runnable {
                 scored.addProperty("playerID", game.getPlayerArray().get(currentPlayer).getPlayerID());
                 scored.addProperty("value", point);
                 scored.addProperty("commonGoalId", i);
+
                 controllerManager.sendLastCommonScored(scored);
                 System.out.println(TextColor.LIGHTBLUE.get() + "send new CommonGoal scorer (common goal id: " + i + ")" + TextColor.DEFAULT.get());
             }

@@ -30,7 +30,7 @@ public class CouplesAndPokersGoalsTest extends TestCase {
      * this method add all card in the player board to create a test case, at the and he print the player board
      * @param testCase is the array with the sequence of card color for the specific test case
      */
-    @Test
+
     private void createAndPrintTable (CardColor[] testCase){
         Card[][] board= new Card[6][5];
         int i, j, k = 0;
@@ -131,5 +131,57 @@ public class CouplesAndPokersGoalsTest extends TestCase {
 
         System.out.println("END TEST WITH NO ERROR \n");
     }
+    @Test
+    public void testCoplesProblematic() throws ConstructorException {
+        test = new CouplesAndPokersGoals(2,6);                      //constructor for couple goal
+        playerBoard = new PlayerBoard();
+
+        Card[][] board=playerBoard.getBoard(); //print the board
+        for(int y=5;y>=0;y--){
+            System.out.println(board[0][y].getColor().toString()+"\t"+board[1][y].getColor().toString()+"\t"+board[2][y].getColor().toString()+"\t"+board[3][y].getColor().toString()+"\t"+board[4][y].getColor().toString()+"\t");
+        }
+        System.out.println("\n");
+
+        assertFalse(test.check(playerBoard.getBoard()));
+
+        Card[] cards = new Card[2];
+        cards[0] = new Card(BLUE);
+        cards[1] = new Card(BLUE);
+        try {
+            playerBoard.addCard(0, cards);
+        } catch (NoSpaceException e) {
+            throw new RuntimeException(e);
+        }
+        assertFalse(test.check(playerBoard.getBoard()));
+
+        cards = new Card[2];
+        cards[0] = new Card(YELLOW);
+        cards[1] = new Card(BLUE);
+        try {
+            playerBoard.addCard(3, cards);
+        } catch (NoSpaceException e) {
+            throw new RuntimeException(e);
+        }
+        assertFalse(test.check(playerBoard.getBoard()));
+
+        cards = new Card[2];
+        cards[0] = new Card(PINK);
+        cards[1] = new Card(PINK);
+        try {
+            playerBoard.addCard(4, cards);
+        } catch (NoSpaceException e) {
+            throw new RuntimeException(e);
+        }
+
+        board=playerBoard.getBoard(); //print the board
+        for(int y=5;y>=0;y--){
+            System.out.println(board[0][y].getColor().toString()+"\t"+board[1][y].getColor().toString()+"\t"+board[2][y].getColor().toString()+"\t"+board[3][y].getColor().toString()+"\t"+board[4][y].getColor().toString()+"\t");
+        }
+        System.out.println("\n");
+
+        assertFalse(test.check(playerBoard.getBoard()));
+
+    }
+
 
 }
