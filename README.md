@@ -14,26 +14,77 @@ Members: <br>
 ## rulebook
 [original_rulebook](https://github.com/MatteoBriscini/is23-AM19/blob/master/Deliveries/UML/MyShelfie_Ruleboo_ENG.pdf)
 
-...riassunto regole gioco...
+resume of the game rules
+* Objective: The objective of My Shelfie is to create the most aesthetically pleasing and balanced bookshelf by strategically placing and organizing books and decorative items.
+
+* Components: The game includes a game board representing a bookshelf, a deck of book cards, decorative item cards, and rule cards.
+
+* Setup: Each player starts with a blank bookshelf game board. The book cards and decorative item cards are shuffled separately and placed face-down as draw piles. Each player draws a certain number of book cards and a decorative item card to begin.
+
+* Turn Structure: The game is played in turns, with players taking actions one at a time in clockwise order. On your turn, you can perform one of the following actions:
+  a)Draw Cards: Draw a book card from the book card draw pile or a decorative item card from the decorative item card draw pile. You can only draw one card per turn.
+  b)Place Book: Play a book card from your hand onto your bookshelf. Each book card has specific characteristics, such as genre, color, or size, which affect scoring.
+  c)Place Decorative Item: Play a decorative item card from your hand onto your bookshelf. Decorative items enhance the aesthetics of your shelf but do not contribute to scoring.
+  d)Rearrange: Move one book card or decorative item card from your shelf to a different location on your bookshelf. You can only rearrange items within your own shelf.
+  
+* Scoring: Scoring occurs at the end of the game. The shelfie is scored based on various criteria, including:
+  a)Genre Organization: Books of the same genre placed adjacent to each other on the shelf gain bonus points.
+  b)Color Harmony: Books of similar colors placed together create a visually appealing shelf and earn additional points.
+  c)Size Balance: A well-balanced arrangement of different-sized books adds to the overall shelf appeal and scores points.
+  d)Decorative Items: Each decorative item card adds a certain number of points to the final score.
+
+* End of Game: The game ends when all players have placed all their book and decorative item cards on their shelves. Final scoring takes place, and the player with the highest score wins the game.
+
 
 ## requirements
 [original_requirements](https://github.com/MatteoBriscini/is23-AM19/blob/master/Deliveries/UML/requirements.pdf)
 
-..riassunto dei requisiti... 
+Project Requirements:
+
+   The requirements are divided into two groups:
+       Game-specific requirements that relate to the rules and mechanics of the game.
+       Game-agnostic requirements that relate to design, technology, or implementation aspects.
+       
+* Game-Specific Requirements:
+    The game rules are described in the provided rulebook files.
+    Use English for class names, interfaces, methods, variables, comments, and technical documentation.
+    The user interface language can be either English or Italian.
+    Evaluation can be done based on simplified or complete rules, as specified in the rulebook files.
+
+* Game-Agnostic Requirements:
+    Implement a distributed client-server system using the Model-View-Controller (MVC) pattern.
+
+* Server Requirements:
+    Implement game rules using JavaSE.
+    Create a single server instance to handle one game (or multiple games if advanced functionality is implemented).
+    Allow players to take turns using client instances connected to the server via TCP-IP or RMI.
+    Support different technologies for players using different clients.
+
+* Client Requirements:
+    Implement client functionality using JavaSE.
+    Implement a graphical user interface (GUI) using Swing or JavaFX.
+    Allow players to choose between a text-based user interface (TUI) or a graphical user interface (GUI).
+    Support both Socket and RMI communication technologies.
+
+* Advanced Features (Optional):
+    Multiple games: Implement the server to handle multiple games simultaneously. 
+    Persistence: Periodically save the game state on disk for resuming after server crashes.
+    Resilience to disconnections: Allow disconnected players to rejoin the game.
+    Chat: Enable players to communicate via text messages during the game.
 
 ## design and implementation choices
 1. MODELL && CONTROLLER:
-   * most of all game parameters are configurable and saved in JSON file (resources/json/config).
-   * added 3 minutes timer for player to make a move.
-   * on game creation client can specify the number of players for the specific game, the controller start the game autonomous when it's full, only the game creator can start the game when it isn't full.
-   * in case of quit (friendly of not) the player will be marked as offline, his turn will be skipped, it always permitted to a client to rejoin a game.
-   * all movement controls are duplicated on client and server, to decrease message on network. if the controller receive an invalid move it will consider data on all client in that game like obsolete or incorrect.
-   * controller will send to clients all update by delta, to decrease message weight on network, all game data are send to the clients only in 3 case:
+   * the majority of the game parameters are configurable and saved in JSON files (resources/json/config).
+   * the player has a timer of 3 minutes to make a move.
+   * on game creation the client can specify the number of players for the specific game, the controller start the game autonomously when the max player number is reached, only the game creator can start the game when is not reached.
+   * if a player quit (friendly or not) the player will be marked as offline, his turn will be skipped. It is always permitted to a client to rejoin a game.
+   * all movement controls are duplicated on client and server to decrease message on network. if the controller receive an invalid move it will consider the data on all client in that game like obsolete or incorrect.
+   * controller will send to clients all update by delta, to decrease the message weight on the network, all game data are send to the clients only in 3 case:
      1. on game start
      2. if data on clients are marked as obsoleted or incorrect
      3. if a player rejoin a game after a quit
 2. RMI:
-   * implemented blocking que on message from server to client to improve velocity.
+   * implemented blocking que on message from server to client to improve speed.
    * implemented ping pong to detect client or server disconnection.
    * used command pattern on server.
    * all message use JSON to serialize java classes (used GSON).
@@ -56,7 +107,7 @@ Members: <br>
     ```
 
 ## setup step
-1. firs off all make sure you have install on your machine JDK 17 or over and javafx. <br>
+1. firs off all make sure you have installed on your machine JDK 17 or over and javafx. <br>
    *you can download it from this link*:
    * [jdk_17](https://www.oracle.com/it/java/technologies/downloads/#java17)
    * [javafx](https://openjfx.io/) <br>
@@ -71,19 +122,19 @@ in terminal type:
 ```
 java -jar AM19.jar --server
 ```
-if you didn't set it before in the json file you have ti change the ip here
+if you didn't set it before in the json file you have to change the ip here
 ### turn on cli (or tui) client:
 in terminal type:
 ```
 java -jar AM19.jar --tui
 ```
-if you didn't set it before in the json file you have ti change the ip here
+if you didn't set it before in the json file you have to change the ip here
 ### turn on gui client:
 in terminal type:
 ```
 java -jar AM19.jar
 ```
-if you didn't set it before in the json file you have ti change the ip here (by the sett button)
+if you didn't set it before in the json file you have to change the ip here (by the sett button)
 ### probably problem:
 to make rmi client work on ubuntu (or other linux distro) you have to change the host name.<br>
 install vim and type this in terminal:
