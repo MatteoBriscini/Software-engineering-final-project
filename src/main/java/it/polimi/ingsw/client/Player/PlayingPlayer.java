@@ -14,6 +14,7 @@ import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 
@@ -267,7 +268,7 @@ public class PlayingPlayer extends Player{
      * @param winner  JsonObject {"winnerName": playerID, "points": pointsValue}
      */
     public void receiveWinner(String winner){
-        //TODO necessita metodo lato grafico
+        //necessita metodo lato grafico
     }
 
     /**************************************************************************

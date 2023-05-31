@@ -72,28 +72,32 @@ public class EndgameController extends GuiView implements Initializable{
 
     public void endgamePoints(JsonObject points){
 
-        TreeMap<String, Integer> pointsMap = new TreeMap<>();
+        TreeMap<Integer, String> pointsMap = new TreeMap<>();
         PlayingPlayer player = (PlayingPlayer) helloApplication.getPlayer();
         String[] players = player.getPlayersID();
 
         for(String s: players){
-            pointsMap.put(s, points.get(s).getAsInt());
+            pointsMap.put(points.get(s).getAsInt(), s);
         }
-        for(String s: pointsMap.keySet()){
+
+        for(int i = pointsMap.keySet().size()-1; i>=0;i--){
+            Integer index = (Integer) pointsMap.keySet().toArray()[i];
             Label label = new Label();
-            label.setText(s + ": " + pointsMap.get(s));
-            if (s.equals(player.getPlayerID())) label.setId("yourScore");
+            label.setText(pointsMap.get(index)+ ": " + index);
+            if (pointsMap.get(index).equals(player.getPlayerID())) label.setId("yourScore");
             placing.getChildren().add(label);
         }
-        p1.setText((String) pointsMap.keySet().toArray()[1]);
-        p2.setText((String) pointsMap.keySet().toArray()[0]);
+        p1.setText((String) pointsMap.values().toArray()[1]);
+        p2.setText((String) pointsMap.values().toArray()[0]);
+
+
 
         if(players.length > 2) {
-            p1.setText((String) pointsMap.keySet().toArray()[2]);
-            p2.setText((String) pointsMap.keySet().toArray()[1]);
-            p3.setText((String) pointsMap.keySet().toArray()[0]);
-        }else
-            podium.getChildren().remove(p3);
+            p1.setText((String) pointsMap.values().toArray()[2]);
+            p2.setText((String) pointsMap.values().toArray()[1]);
+            p2.setText((String) pointsMap.values().toArray()[0]);
+        }else podium.getChildren().remove(p3);
+
 
     }
     @FXML

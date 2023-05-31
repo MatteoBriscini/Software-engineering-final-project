@@ -3,7 +3,6 @@ package it.polimi.ingsw.server.Connection.RMI;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.client.Connection.PlayingPlayerRemoteInterface;
-import it.polimi.ingsw.client.Player.PlayingPlayer;
 import it.polimi.ingsw.server.Connection.ConnectionController;
 import it.polimi.ingsw.server.Connection.RMI.SendCommand.*;
 import it.polimi.ingsw.server.Controller;
@@ -26,10 +25,14 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class RMI extends ConnectionController implements LobbyRemoteInterface {
     private String playerID;
     private boolean inGame = false;
+
+    private BlockingQueue<Command> commands = new LinkedBlockingQueue<>();
     protected final String cntType;
     private int pingPongTime;
     public RMI(int port, Lobby lobby , String IP) {
@@ -156,102 +159,131 @@ public class RMI extends ConnectionController implements LobbyRemoteInterface {
      * send broadcast command to all the client (a command pattern)
      * @param command actual command
      */
-    public void sendCommand(Command command, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface){
-        for(Map.Entry<String, PlayingPlayerRemoteInterface> client : clients.entrySet()){
-            boolean bool= command.execute(client.getValue());
-            if(!bool) {
-                this.quitGameConnection(client.getValue(), client.getKey(), connectionInterface);
-            }else {
-                connectionInterface.setPlayerOnline(client.getKey());
+    public void sendCommand(Command command){
+        commands.add(command);
+        new Thread(new blockingQueueHandler(this)).start();
+    }
+
+    private class blockingQueueHandler implements Runnable{
+
+        private Command command;
+        private Map<String, PlayingPlayerRemoteInterface> clients;
+        private Controller connectionInterface;
+        private RMI rmi;
+
+        public blockingQueueHandler(RMI rmi){
+            this.rmi = rmi;
+        }
+        @Override
+        public void run() {
+            CommandAbstract call;
+            synchronized (rmi) {
+                try {
+                    call = (CommandAbstract) commands.take();
+                    //System.out.println(call);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                clients = call.getClients();
+                connectionInterface = call.getConnectionInterface();
+                for (Map.Entry<String, PlayingPlayerRemoteInterface> client : clients.entrySet()) {
+
+                    boolean bool = call.execute(client.getValue());
+                    if (!bool) {
+                        rmi.quitGameConnection(client.getValue(), client.getKey(), connectionInterface);
+                    } else {
+                        connectionInterface.setPlayerOnline(client.getKey());
+                    }
+                }
             }
         }
     }
 
     public void notifyActivePlayer(String activePlayerID, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
-        Command command = new NotifyActivePlayerCommand(activePlayerID);
-        sendCommand(command, clients, connectionInterface);
+        Command command = new NotifyActivePlayerCommand(activePlayerID,clients,connectionInterface);
+        sendCommand(command);
     }
 
     public void sendPlayerList(String[] players, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
-        Command command = new SendActivePlayerListCommand(players);
-        sendCommand(command, clients, connectionInterface);
+        Command command = new SendActivePlayerListCommand(players,clients,connectionInterface);
+        sendCommand(command);
     }
 
     public void sendPlayersNUmber(int playersNumber, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
-        Command command = new SendPlayersNumberCommand(playersNumber);
-        sendCommand(command, clients, connectionInterface);
+        Command command = new SendPlayersNumberCommand(playersNumber,clients,connectionInterface);
+        sendCommand(command);
     }
 
     public void sendMainBoard(Card[][] mainBoard,Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
-        Command command = new SendMainBoardCommand(mainBoard);
-        sendCommand(command, clients, connectionInterface);
+        Command command = new SendMainBoardCommand(mainBoard,clients,connectionInterface);
+        sendCommand(command);
     }
 
     public void addCardToClientBoard(String playerID, int column, Card[] cards, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
-        Command command = new AddCardToClientBoard(playerID, column, cards);
-        sendCommand(command, clients, connectionInterface);
+        Command command = new AddCardToClientBoard(playerID, column, cards, clients, connectionInterface);
+        sendCommand(command);
     }
 
 
     public void dellCardFromMainBoard(PositionWithColor[] cards, Map<String, PlayingPlayerRemoteInterface>clients, Controller connectionInterface) {
-        Command command = new DellCardFromMainBoard(cards);
-        sendCommand(command, clients, connectionInterface);
+        Command command = new DellCardFromMainBoard(cards, clients, connectionInterface);
+        sendCommand(command);
     }
 
 
     public void sendAllPlayerBoard(ArrayList<Card[][]> playerBoards, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
-        Command command = new SendAllPlayerBoardCommand(playerBoards);
-        sendCommand(command, clients, connectionInterface);
+        Command command = new SendAllPlayerBoardCommand(playerBoards,clients,connectionInterface);
+        sendCommand(command);
     }
 
 
     public void sendAllCommonGoal(int[] commonGoalID, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
-        Command command = new SendAllCommonGoalCommand(commonGoalID);
-        sendCommand(command, clients, connectionInterface);
+        Command command = new SendAllCommonGoalCommand(commonGoalID,clients,connectionInterface);
+        sendCommand(command);
     }
 
 
     public void sendPrivateGoal(PositionWithColor[] cards, String playerID, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
-        Command command = new SendPrivateGoalCommand(cards,playerID);
-        sendCommand(command, clients, connectionInterface);
+        Command command = new SendPrivateGoalCommand(cards,playerID,clients,connectionInterface);
+        sendCommand(command);
     }
 
     public void sendEndGamePoint(JsonObject points, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
-        Command command = new EndGameCommand(points);
-        sendCommand(command, clients, connectionInterface);
+        Command command = new EndGameCommand(points, clients, connectionInterface);
+        sendCommand(command);
         for (String s: clients.keySet()) connectionInterface.removeClientRMI(clients.get(s), s);
     }
 
     public void sendWinner(JsonObject winner, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
-        Command command = new WinnerCommand(winner);
-        sendCommand(command, clients, connectionInterface);
+        Command command = new WinnerCommand(winner, clients, connectionInterface);
+        sendCommand(command);
     }
 
     public void sendLastCommonScored(JsonObject scored, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
-        Command command = new SendLastCommonScored(scored);
-        sendCommand(command, clients, connectionInterface);
+        Command command = new SendLastCommonScored(scored, clients, connectionInterface);
+        sendCommand(command);
     }
 
     public void sendError(JsonObject error, String playerID, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
-        Command command = new ErrorCommand(error, playerID);
-        sendCommand(command, clients, connectionInterface);
+        Command command = new ErrorCommand(error, playerID, clients, connectionInterface);
+        sendCommand(command);
     }
 
     public void forceClientDisconnection(Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
-        Command command = new ClientDisconnectionCommand();
-        sendCommand(command, clients, connectionInterface);
+        Command command = new ClientDisconnectionCommand(clients, connectionInterface);
+        sendCommand(command);
     }
     /**************************************************************************
      ************************************************** chat ******************
      * ************************************************************************/
     public void sendBroadcastMsg(String msg, String sender, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
-        Command command = new BroadcastChatCommand(msg,sender);
-        sendCommand(command, clients, connectionInterface);
+        Command command = new BroadcastChatCommand(msg,sender,clients,connectionInterface);
+        sendCommand(command);
     }
 
     public void sendPrivateMSG(String userID, String msg, String sender, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
-        Command command = new PrivateChatCommand(userID, msg,sender);
-        sendCommand(command, clients, connectionInterface);
+        Command command = new PrivateChatCommand(userID, msg,sender,clients,connectionInterface);
+        sendCommand(command);
     }
 
 
