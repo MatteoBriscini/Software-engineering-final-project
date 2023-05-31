@@ -56,7 +56,41 @@ Members: <br>
     ```
 
 ## setup step
+1. firs off all make sure you have install on your machine JDK 17 or over and javafx. <br>
+   *you can download it from this link*:
+   * [jdk_17](https://www.oracle.com/it/java/technologies/downloads/#java17)
+   * [javafx](https://openjfx.io/) <br>
 
+2. download the jar file from  [here]().  ...mettere link per il jar definitivo..
+3. open a terminal and navigate to the folder were you have saved the jar.
+
+**note**: you can change server ip and port from a jsonfile in the jar folder (json/config/netConfig.json).<br>
+this take effect in server configuration but also in clients.
+### turn on the server:
+in terminal type:
+```
+java -jar AM19.jar --server
+```
+if you didn't set it before in the json file you have ti change the ip here
+### turn on cli (or tui) client:
+in terminal type:
+```
+java -jar AM19.jar --tui
+```
+if you didn't set it before in the json file you have ti change the ip here
+### turn on gui client:
+in terminal type:
+```
+java -jar AM19.jar
+```
+if you didn't set it before in the json file you have ti change the ip here (by the sett button)
+### probably problem:
+to make rmi client work on ubuntu (or other linux distro) you have to change the host name.<br>
+install vim and type this in terminal:
+```
+sudo vim /etc/hosts
+```
+in this file search the local host ip (127.0.0.1) and replace it with your actual ip.
 ## advance feature 
 
 | Functionality                      | State          |
