@@ -59,11 +59,11 @@ Members: <br>
 
 ## advance feature 
 
-| Functionality                      | State           |
-|------------------------------------|-----------------|
-| chat                               | :green_circle:  |
-| multy game                         | :green_cicrle:  |
-| resilienzy of client disconnection | :gree_cicrcle   |
+| Functionality                      | State          |
+|------------------------------------|----------------|
+| chat                               | :green_circle: |
+| multy game                         | :green_circle: |
+| resilienzy of client disconnection | :green_circle: |
 
 
 ## Development State
