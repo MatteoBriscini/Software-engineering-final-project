@@ -61,15 +61,19 @@ public class EndgameController extends GuiView implements Initializable{
     public Label p3 = new Label();
 
 
-
-
-
+    /**
+     * @param url
+     * @param resourceBundle used to take the resources
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         imagesInit(podiumImage, "podium.png"); //load player board img
         imagesInit(logoImage, "Title.png");
     }
 
+    /**
+     * @param points is the json object for the player points
+     */
     public void endgamePoints(JsonObject points){
 
         TreeMap<String, Integer> pointsMap = new TreeMap<>();

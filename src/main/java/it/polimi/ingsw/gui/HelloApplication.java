@@ -56,6 +56,7 @@ public class HelloApplication extends Application implements UserInterface {
         return connection;
     }
 
+
     public void changeView(String viewName) throws IOException {
 
         FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource(viewName));
@@ -72,7 +73,10 @@ public class HelloApplication extends Application implements UserInterface {
     }
 
 
-
+    /**
+     * @param stage the primary stage for this application, onto which the application scene can be set.
+     *              Applications may create other stages, if needed, but they will not be primary stages.
+     */
     @Override
     public void start(Stage stage) throws IOException {
 
@@ -98,6 +102,9 @@ public class HelloApplication extends Application implements UserInterface {
         launch();
     }
 
+    /**
+     * @param tableJ json object used for get the points at the end
+     */
     @Override
     public void finalResults(JsonObject tableJ) {
         Platform.runLater(()-> {
@@ -157,6 +164,9 @@ public class HelloApplication extends Application implements UserInterface {
         });
     }
 
+    /**
+     * @param p used to identify the cards taken from th livingroom
+     */
     @Override
     public void updateMainBoard(PositionWithColor[] p) {
         Platform.runLater(() -> {
@@ -164,6 +174,11 @@ public class HelloApplication extends Application implements UserInterface {
         });
     }
 
+    /**
+     * @param id used to identify the player needed
+     * @param column used to understand which column was selected to insert the tails
+     * @param c used to identify the cards to put in the bookshelf
+     */
     @Override
     public void updatePlayerBoard(String id, int column, Card[] c) {
         Platform.runLater(() -> {
@@ -178,6 +193,9 @@ public class HelloApplication extends Application implements UserInterface {
         });
     }
 
+    /**
+     * @param m passed to get the player mode
+     */
     @Override
     public void setMode(PlayerMode m) {
         player = connection.getPlayer();

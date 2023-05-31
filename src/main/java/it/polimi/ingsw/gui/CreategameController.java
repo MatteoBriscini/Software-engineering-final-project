@@ -36,6 +36,9 @@ public class CreategameController extends GuiView{
     private int minPlayers;
     private int maxPlayers;
 
+    /**
+     * @throws FileNotFoundException
+     */
     private void jsonCreate() throws FileNotFoundException{
 
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(JsonUrl.getUrl("controllerConfig"));
@@ -46,6 +49,10 @@ public class CreategameController extends GuiView{
         this.maxPlayers = jsonObject.get("maxPlayerNumber").getAsInt();
     }
 
+    /**
+     * @param actionEvent
+     * @throws IOException
+     */
     @FXML
     protected void createCustom(ActionEvent actionEvent) throws IOException {
         this.buttonClickedAudio();
@@ -64,6 +71,10 @@ public class CreategameController extends GuiView{
             this.errorMsg("players number incorrect, please put a number between 2-4");
     }
 
+    /**
+     * @param actionEvent
+     * @throws IOException
+     */
     @FXML
     protected void joinCustom(ActionEvent actionEvent) throws IOException {
         this.buttonClickedAudio();
@@ -77,6 +88,10 @@ public class CreategameController extends GuiView{
             this.errorMsg("invalid GameID");
     }
 
+    /**
+     * @param actionEvent
+     * @throws IOException
+     */
     @FXML
     protected void createDefault(ActionEvent actionEvent) throws IOException {
         this.buttonClickedAudio();
@@ -88,6 +103,10 @@ public class CreategameController extends GuiView{
 
     }
 
+    /**
+     * @param actionEvent
+     * @throws IOException
+     */
     @FXML
     protected  void joinDefault(ActionEvent actionEvent) throws IOException {
         this.buttonClickedAudio();

@@ -207,6 +207,11 @@ public class GameController extends GuiView implements Initializable {
             System.err.println("GAME CONTROLLER: can't find goal json");
         }
     }
+
+    /**
+     * @return initialization for common goals
+     * @throws FileNotFoundException
+     */
     private JsonArray privateGoalsInitJson() throws FileNotFoundException {
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(JsonUrl.getUrl("playerTarget"));
         if(inputStream == null) throw new FileNotFoundException();
@@ -228,13 +233,18 @@ public class GameController extends GuiView implements Initializable {
             shelfID2.setText(otherPlayers.get(2));
         } else bookshelfAnchor.getChildren().removeAll(myBookshelfBox3);
     }
-    private void setBorderRadius (ImageView immage, int size){
+
+    /**
+     * @param image used for the image
+     * @param size used for the size on the gui
+     */
+    private void setBorderRadius (ImageView image, int size){
         Rectangle clip = new Rectangle(
-                immage.getFitWidth(), immage.getFitHeight()
+                image.getFitWidth(), image.getFitHeight()
         );
         clip.setArcWidth(size);
         clip.setArcHeight(size);
-        immage.setClip(clip);
+        image.setClip(clip);
     }
 
     /**********************************************************************
@@ -320,6 +330,10 @@ public class GameController extends GuiView implements Initializable {
         livingRoomBox.getChildren().add(node);
 
     }
+
+    /**
+     * @param p is the parameter for the position
+     */
     public void updateMainBoard(PositionWithColor[] p) {
         for (PositionWithColor pos : p) {
             for(Node n: mainBoardGrid.getChildren()){
@@ -352,10 +366,24 @@ public class GameController extends GuiView implements Initializable {
 
         myBookshelfDiv.getChildren().add(myPlayerBoardGrid);
     }
+
+    /**
+     * @param id used to identify the player
+     * @param column used to identify che column used to insert the chosen tails
+     * @param c is the identifier of the card
+     */
     public void updatePlayerBoard(String id, int column, Card[] c){
         if(id.equals(player.getPlayerID()))updatePlayerBoard(id,column,c,myPlayerBoardGrid,42);
         else updatePlayerBoard(id,column,c, otherPlayerBoardGrid.get(id), 17);
     }
+
+    /**
+     * @param playerID used to identify the player
+     * @param column identifier of the column
+     * @param c identify the ard
+     * @param gridPane
+     * @param size used to fit the cards on the gui
+     */
     private void updatePlayerBoard(String playerID, int column, Card[] c, GridPane gridPane, int size){
         Card[][] playerBoard = player.getPlayerBoard(playerID).getBoard();
         Card[] actualColumn = playerBoard[column];
@@ -415,7 +443,10 @@ public class GameController extends GuiView implements Initializable {
     }
 
 
-
+    /**
+     * @param x parameter used to estimate if the card selected is in a valid position
+     * @param y parameter used to estimate if the card selected is in a valid position
+     */
     @FXML
     public void takeCard(double x, double y){
 
@@ -484,6 +515,10 @@ public class GameController extends GuiView implements Initializable {
         bookshelfAnchor.getChildren().add(vBox);
     }
 
+    /**
+     * @param x parameter used to understand which tail we had to insert
+     * @param y parameter used to understand which tail we had to insert
+     */
     private void insertTails(int x, int y){
 
         Card[][] mainBoard = player.getMainBoard().getBoard();
@@ -592,6 +627,9 @@ public class GameController extends GuiView implements Initializable {
 
     public void mouseCoordinates() {
         livingRoomClickable.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            /**
+             * @param event used to get coordinates when clicked on the mainboard
+             */
             @Override
             public void handle(MouseEvent event) {
                 double x = event.getX();
@@ -638,6 +676,9 @@ public class GameController extends GuiView implements Initializable {
         chatName.setValue("ALL");
     }
 
+    /**
+     * @param msg is the message sent to the chat that the player need to see
+     */
     public void chatReceiveMsg(Message msg){
         messages.add(msg);
         this.printMsg();
@@ -686,6 +727,9 @@ public class GameController extends GuiView implements Initializable {
         messageContainer.setContent(group);
     }
 
+    /**
+     * @param errorMsg is a string used in the pop-up when an error message is needed
+     */
     @Override
     public void errorMsg(String errorMsg){
         if(chatOpen && !errorMsg.contains("CONNECTION ERROR")) {
@@ -890,6 +934,9 @@ public class GameController extends GuiView implements Initializable {
         main.getChildren().remove(menu);
     }
 
+    /**
+     * @param button parameter that indicate the button clicked
+     */
     private void checkID(Button button){
         switch (button.getId()) {
             case "showChatButton" -> this.showChatButton();

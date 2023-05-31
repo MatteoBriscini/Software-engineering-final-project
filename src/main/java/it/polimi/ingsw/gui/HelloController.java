@@ -125,11 +125,13 @@ public class HelloController extends GuiView implements Initializable {
 
     }
 
+
     private void checkID(Button button){
         switch (button.getId()) {
             case "applyBt" -> this.applySettings();
         }
     }
+
 
 
     @Override

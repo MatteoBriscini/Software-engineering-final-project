@@ -33,6 +33,10 @@ public abstract class GuiView {
         buttonAudio.play();
     }
 
+    /**
+     * @param imageView
+     * @param file used to get the correct file from the resources
+     */
     protected void imagesInit(ImageView imageView, String file){
         Image image = new Image(this.getClass().getClassLoader().getResourceAsStream(file));
         imageView.setImage(image);

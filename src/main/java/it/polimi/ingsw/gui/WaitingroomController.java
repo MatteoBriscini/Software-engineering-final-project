@@ -19,6 +19,9 @@ public class WaitingroomController extends GuiView implements Initializable {
     @FXML
     private ImageView titleImage = new ImageView();
 
+    /**
+     * @param resourceBundle is the bundle in which the resources are taken
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Image image = new Image(this.getClass().getClassLoader().getResourceAsStream("Title.png"));
