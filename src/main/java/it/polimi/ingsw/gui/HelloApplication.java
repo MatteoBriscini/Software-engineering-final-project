@@ -223,4 +223,10 @@ public class HelloApplication extends Application implements UserInterface {
             if(guiView instanceof GameController)((GameController)guiView).notifyNewActivePlayer();
         });
     }
+
+    @Override
+    public void stop(){
+        System.exit(0);
+    }
+
 }

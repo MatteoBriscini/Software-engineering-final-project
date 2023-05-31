@@ -214,14 +214,6 @@ public class ConnectionControllerManager {
 
     public void sendEndGamePoint(JsonObject points){
         if (clientsRMImap.size() > 0) {
-            /*
-            try {
-                method.put("sendEndGamePoint");
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
-             */
             rmi.sendEndGamePoint(points, clientsRMImap, controller);
         }
         if (clientsSOCKET.size() > 0){

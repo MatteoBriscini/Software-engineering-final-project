@@ -251,7 +251,7 @@ public class RMI extends ConnectionController implements LobbyRemoteInterface {
     public void sendEndGamePoint(JsonObject points, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
         Command command = new EndGameCommand(points, clients, connectionInterface);
         sendCommand(command);
-        for (String s: clients.keySet()) connectionInterface.removeClientRMI(clients.get(s), s);
+        //for (String s: clients.keySet()) connectionInterface.removeClientRMI(clients.get(s), s);
     }
 
     public void sendWinner(JsonObject winner, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {

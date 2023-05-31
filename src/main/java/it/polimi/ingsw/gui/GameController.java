@@ -549,8 +549,13 @@ public class GameController extends GuiView implements Initializable {
     private void sendMove(){
 
         if(!columnMove.getText().equals("")) {
-
-            int column = Integer.parseInt(columnMove.getText())-1;
+            int column = 0;
+            try {
+                column = Integer.parseInt(columnMove.getText())-1;
+            } catch (Exception e){
+                errorMsg("invalid column value");
+                return;
+            }
 
             if(column >=0 && column <playerBoardRows  ){
                 player.takeCard(column, positions.toArray(new Position[0]));

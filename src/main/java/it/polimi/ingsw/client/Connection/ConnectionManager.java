@@ -204,8 +204,8 @@ public abstract class ConnectionManager extends UnicastRemoteObject {
     public void errorMSG(String error, String playerID){
         JsonObject json= new Gson().fromJson(error, JsonObject.class);
 
-        if(playerID.equals(((PlayingPlayer)player).getPlayerID())){
-            ((PlayingPlayer)player).errMsg(json);
+        if(playerID.equals(player.getPlayerID())){
+            player.errMsg(json);
         }
 
     }

@@ -199,6 +199,7 @@ public class Controller implements Runnable {
      */
     synchronized public void setPlayerOffline(String playerID){
 
+        if(endGame) return;
 
         JsonObject error = new JsonObject();
         error.addProperty("errorID", "connection");
@@ -541,6 +542,7 @@ public class Controller implements Runnable {
         }
         controllerManager.sendWinner(winner);
         controllerManager.sendEndGamePoint(points);
+
         if(lobby!=null)lobby.setAllPlayersOffline(this);
     }
     /*************************************************************************
