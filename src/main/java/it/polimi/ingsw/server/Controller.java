@@ -35,8 +35,9 @@ public class Controller implements Runnable {
     boolean endGame = false; //stop playing phase in end game
     JsonObject mainBoardConfig = new JsonObject();
     private Position[] allowedPositionArray;    //array of allowed position fill based on main board and player number (in start game method)
-    private Thread waitForPlayerResponse;
+    private Timer waitForPlayerResponse;
     private Thread endGameThread = new Thread();
+    private Timer lastPlayerTimer;
     boolean firstPlayer;
     //connection
     private ConnectionControllerManager controllerManager = new ConnectionControllerManager();
@@ -45,6 +46,7 @@ public class Controller implements Runnable {
     //configuration value for controller
     private JsonUrl jsonUrl;
     private int timeout; //wait for player time (in seconds)
+    private int noPlayerTimeout;
     private int numberOfPossibleCommonGoals;
     private int numberOfPossiblePrivateGoals;
     private int commonGoalNumber;
@@ -91,6 +93,7 @@ public class Controller implements Runnable {
         //load default settings for the game
         JsonObject controller = new Gson().fromJson(bufferedReader , JsonObject.class);
         this.timeout = controller.get("timeout").getAsInt();
+        this.noPlayerTimeout = controller.get("noPlayerTimeout").getAsInt();
         this.numberOfPossibleCommonGoals =  controller.get("numberOfPossibleCommonGoals").getAsInt();
         this.numberOfPossiblePrivateGoals =  controller.get("numberOfPossiblePrivateGoal").getAsInt();
         this.commonGoalNumber = controller.get("commonGoalNumber").getAsInt();
@@ -155,30 +158,56 @@ public class Controller implements Runnable {
     /**************************************************************************
      ************************************************** connection management *
      * ************************************************************************
+     * *
+     * setup all classes need to menage connection
      */
-
     public void turnOnCnt(SOCKET socket, RMI rmi){
         controllerManager = new ConnectionControllerManager(rmi, socket, this);
     }
     public ConnectionControllerManager getControllerManager(){
         return controllerManager;
     }
+
+    /**
+     * @return all rmi clients for this controller
+     */
     public Map<String, PlayingPlayerRemoteInterface> getClientsRMImap(){return controllerManager.getClientsRMImap();}
 
 
+    /**
+     * to add a client ref to this controller (rmi)
+     * @param client remote interface of the client
+     * @param playerID name of the player
+     */
     public void addClientRMI(PlayingPlayerRemoteInterface client, String playerID){
         controllerManager.addClientRMI(client,playerID);
         this.autoStart();
         if(currentPlayer!=-1)this.recreateClientData();
     }
+
+    /**
+     * to remove a client ref to this controller (rmi)
+     * @param client remote interface of the client
+     * @param playerID name of the player
+     * @return false if the client isn't in the game
+     */
     public boolean removeClientRMI(PlayingPlayerRemoteInterface client, String playerID){
         return controllerManager.removeClientRMI(client, playerID);
     }
+
+    /**
+     * to add a client ref to this controller (socket)
+     * @param client thread ref who is a manager the client request
+     */
     public void addClientSOCKET(SOCKET.MultiClientSocketGame client){
         controllerManager.addClientSOCKET(client);
         this.autoStart();
         if(currentPlayer!=-1)this.recreateClientData();
     }
+
+    /**
+     * @param client thread ref who is a manager the client request
+     */
     public void removeClientSOCKET(SOCKET.MultiClientSocketGame client){
         controllerManager.removeClientSOCKET(client);
     }
@@ -199,8 +228,6 @@ public class Controller implements Runnable {
      */
     synchronized public void setPlayerOffline(String playerID){
 
-        if(endGame) return;
-
         JsonObject error = new JsonObject();
         error.addProperty("errorID", "connection");
         error.addProperty("errorMSG", playerID + " quit the game");
@@ -210,11 +237,9 @@ public class Controller implements Runnable {
         ArrayList<Player> players = game.getPlayerArray();
         for (int i = 0; i<players.size(); i++){
             if(players.get(i).getPlayerID().equals(playerID)){
-                if(activePlayers.get(i)) {
                     activePlayers.set(i, false);
                     if(!endGame)this.checkConnectedPlayerNumbers();
                     return;
-                }
             }
         }
 
@@ -229,22 +254,23 @@ public class Controller implements Runnable {
             if (b)i++;
         }
         if(i==1 && currentPlayer!=-1){
+            endGame = true;
+            sendLastPlayer();
+            lastPlayerTimer = new Timer();
+            lastPlayerTimer.schedule(new LastPlayerTimer(), noPlayerTimeout*1000L);
+        }
+    }
+
+    private class LastPlayerTimer extends  TimerTask{
+        /**
+         * The action to be performed by this timer task.
+         */
+        @Override
+        public void run() {
             controllerManager.forceClientDisconnection();
-            for (Player p : game.getPlayerArray()){
-                if(!this.isPlayerOffline(p.getPlayerID()))this.setPlayerOffline(p.getPlayerID());
-            }
-        }
-        if(i<=1&& currentPlayer!=-1){
-            this.currentPlayer = -1;
-            this.endGame = true;
-        }
-        if(i==0){
-            if(lobby!=null)lobby.setAllPlayersOffline(this);
 
             if(waitForPlayerResponse!=null) {
-                synchronized (waitForPlayerResponse) {
-                    waitForPlayerResponse.notify();
-                }
+                waitForPlayerResponse.cancel();
             }
 
             if(endGameThread!=null){
@@ -252,7 +278,30 @@ public class Controller implements Runnable {
                     endGameThread.notify();
                 }
             }
+            if(lobby!=null)lobby.setAllPlayersOffline(Controller.this);
         }
+    }
+
+    /**
+     * send error message when only one player is online
+     */
+    private void sendLastPlayer(){
+        JsonObject error = new JsonObject();
+        error.addProperty("errorID", "connection");
+        error.addProperty("errorMSG",  "you are the last player in this game, it will be closed in "+ noPlayerTimeout+ " seconds and you will be considerate as the winner!");
+        for (Player player: game.getPlayerArray())
+            controllerManager.sendError(error, player.getPlayerID());
+    }
+
+    /**
+     * send error message if one player rejoin the game when it is stopped
+     */
+    private void sendRejoin(){
+        JsonObject error = new JsonObject();
+        error.addProperty("errorID", "connection");
+        error.addProperty("errorMSG",  "the game will be resumed");
+        for (Player player: game.getPlayerArray())
+            controllerManager.sendError(error, player.getPlayerID());
     }
 
     /**
@@ -260,6 +309,11 @@ public class Controller implements Runnable {
      * @param playerID id of the player
      */
     synchronized public void setPlayerOnline(String playerID){
+        if(endGame && lastPlayerTimer!=null){
+            endGame = false;
+            lastPlayerTimer.cancel();
+            sendRejoin();
+        }
         ArrayList<Player> players = game.getPlayerArray();
         for (int i = 0; i<players.size(); i++){
             if(players.get(i).getPlayerID().equals(playerID)){
@@ -271,6 +325,9 @@ public class Controller implements Runnable {
         }
     }
 
+    /**
+     * when a player rejoin the game the controller will resend all data to all the client in that game
+     */
     private void recreateClientData(){
         this.createClientData(commonGoalArray);
         System.out.println(TextColor.LIGHTBLUE.get() + "recreate client game data after a rejoin" + TextColor.DEFAULT.get());
@@ -516,10 +573,7 @@ public class Controller implements Runnable {
         endGame = true;
         System.out.println(TextColor.LIGHTBLUE.get() + "the game is ended" + TextColor.DEFAULT.get());
 
-        synchronized (waitForPlayerResponse) {
-            waitForPlayerResponse.notify();
-        }
-
+        waitForPlayerResponse.cancel();
 
         if(endGameThread!=null){
             synchronized (endGameThread){
@@ -645,15 +699,15 @@ public class Controller implements Runnable {
             if(refilMainBoard)controllerManager.sendMainBoard(game.getMainBoard());
 
             //skip to next player
-            synchronized (waitForPlayerResponse) {
-                waitForPlayerResponse.notify();
-            }
+            waitForPlayerResponse.cancel();
+
             this.turn();
 
             return true;
         } else {
             error.addProperty("errorID", "invalid move");
-            error.addProperty("errorMSG", game.getPlayerArray().get(currentPlayer).getPlayerID() + "'s turn, you can't take cards");
+            if(endGame)error.addProperty("errorMSG", "game end or paused, you can't take cards");
+            else error.addProperty("errorMSG", game.getPlayerArray().get(currentPlayer).getPlayerID() + "'s turn, you can't take cards");
             controllerManager.sendError(error, playerID);
             return false;
         }
@@ -720,21 +774,23 @@ public class Controller implements Runnable {
         controllerManager.notifyActivePlayer(game.getPlayerArray().get(currentPlayer).getPlayerID());
 
         //time limit for player response and action
-        waitForPlayerResponse = new Thread(() -> {
-            int tmp = currentPlayer;
-            synchronized (waitForPlayerResponse) {
-                try {
-                    waitForPlayerResponse.wait(timeout* 1000L);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            if (currentPlayer == tmp){
-                turn();
-            } //skip to next player
-        });
-        waitForPlayerResponse.start();
-        waitForPlayerResponse.setName("waitForPlayerResponse");
+        waitForPlayerResponse = new Timer();
+        waitForPlayerResponse.schedule(new WaitForPlayerResponse(currentPlayer), timeout* 1000L);
+    }
+
+    private class WaitForPlayerResponse extends TimerTask{
+        private int currentPlayer;
+        public WaitForPlayerResponse(int currentPlayer){
+            this.currentPlayer = currentPlayer;
+        }
+
+        /**
+         * The action to be performed by this timer task.
+         */
+        @Override
+        public void run() {
+            if(Controller.this.getCurrentPlayer() == currentPlayer)turn();//skip to next player
+        }
     }
 
     /**
