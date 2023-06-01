@@ -1,5 +1,6 @@
 {
   "timeout": 180,
+  "noPlayerTimeout": 60,
   "numberOfPossibleCommonGoals": 12,
   "numberOfPossiblePrivateGoal": 12,
   "commonGoalNumber": 2,
