@@ -25,6 +25,8 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -96,24 +98,43 @@ public class RMI extends ConnectionController implements LobbyRemoteInterface {
      * @param controller game in with the client play
      */
     private void pong(PlayingPlayerRemoteInterface client_ref, String playerID, Controller controller){
+        Timer timer = new Timer();
+        timer.schedule(new PingPong(client_ref, playerID, controller, timer), 15, pingPongTime);
+    }
 
-        synchronized (this) {
+    private class PingPong extends TimerTask {
+        private final PlayingPlayerRemoteInterface client_ref;
+        private final String playerID;
+        private final Controller controller;
+        private final Timer timer;
+        /**
+         * detect the clint crash
+         *
+         * @param client_ref remote client interface
+         * @param playerID   name of the client
+         * @param controller game in with the client play
+         */
+        public PingPong(PlayingPlayerRemoteInterface client_ref, String playerID, Controller controller, Timer timer){
+            this.client_ref = client_ref;
+            this.playerID = playerID;
+            this.controller = controller;
+            this.timer = timer;
+        }
+        /**
+         * The action to be performed by this timer task.
+         */
+        @Override
+        public void run() {
             try {
-                this.wait(pingPongTime);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                if (controller.getClientsRMImap().containsValue(client_ref)) {
+                    client_ref.ping();
+                } else {//if the player does a friendly, quit
+                    timer.cancel();
+                }
+            } catch (RemoteException e) {
+                RMI.this.quitGameConnection(client_ref, playerID, controller);
             }
         }
-        try {
-            if(controller.getClientsRMImap().containsValue(client_ref)) {
-                client_ref.ping();
-            }else {//if the player does a friendly, quit
-                return;
-            }
-        } catch (RemoteException e) {
-            this.quitGameConnection(client_ref, playerID, controller);
-        }
-        this.pong(client_ref, playerID, controller);
     }
 
     /************************************************************************
@@ -132,8 +153,7 @@ public class RMI extends ConnectionController implements LobbyRemoteInterface {
             controller.addClientRMI(client_ref, playerID);
             controller.setPlayerOnline(playerID);
 
-            Thread thread = new Thread(() -> this.pong(client_ref, playerID, controller));       //start ping pong
-            thread.start();
+            this.pong(client_ref, playerID, controller);       //start ping pong
 
             return true;
         }

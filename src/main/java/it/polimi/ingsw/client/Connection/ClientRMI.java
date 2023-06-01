@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import it.polimi.ingsw.client.Player.PlayingPlayer;
 import it.polimi.ingsw.server.Connection.RMI.LobbyRemoteInterface;
+import it.polimi.ingsw.server.Controller;
 import it.polimi.ingsw.shared.exceptions.addPlayerToGameException;
 import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
 
@@ -11,6 +12,8 @@ import javax.security.auth.login.LoginException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ClientRMI extends ConnectionManager implements PlayingPlayerRemoteInterface{
 
@@ -31,8 +34,8 @@ public class ClientRMI extends ConnectionManager implements PlayingPlayerRemoteI
 
 
     public void connection() throws Exception {
-        Thread thread = new Thread(this::pong);       //start ping pong
-        thread.start();
+        Timer timer = new Timer();       //start ping pong
+        timer.schedule(new PingPong(timer),15, pingPongTime);
     }
 
     public void login(String ID, String pwd) throws LoginException{
@@ -174,23 +177,27 @@ public class ClientRMI extends ConnectionManager implements PlayingPlayerRemoteI
     /**
      * recursive method implements ping pong with server
      */
-    private void pong(){
-        synchronized (this) {
+
+    private class PingPong extends TimerTask {
+        private final Timer timer;
+        public PingPong(Timer timer){
+            this.timer = timer;
+        }
+        /**
+         * The action to be performed by this timer task.
+         */
+        @Override
+        public void run() {
             try {
-                this.wait(pingPongTime);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                stub.ping();
+            } catch (RemoteException e) {
+                player.disconnectError("server can't respond");
+                ClientRMI.this.inGame = false;
+                timer.cancel();
             }
         }
-        try {
-            stub.ping();
-        } catch (RemoteException e) {
-            player.disconnectError("server can't respond");
-            this.inGame = false;
-            return;
-        }
-        this.pong();
     }
+
     /**
      * the server can force the disconnection to the clients
      */
