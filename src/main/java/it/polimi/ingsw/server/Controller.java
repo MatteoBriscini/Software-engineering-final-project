@@ -255,6 +255,7 @@ public class Controller implements Runnable {
         }
         if(i==1 && currentPlayer!=-1){
             endGame = true;
+            waitForPlayerResponse.cancel();
             sendLastPlayer();
             lastPlayerTimer = new Timer();
             lastPlayerTimer.schedule(new LastPlayerTimer(), noPlayerTimeout*1000L);
