@@ -32,6 +32,10 @@ public class SOCKET extends ConnectionController{
         this.connection();
     }
     private int pingPongTime = 5000;
+
+    /**
+     * setup rmi connection
+     */
     synchronized public void connection(){
         try {
             serverSocket = new ServerSocket(PORT);  //throw exception if unavailable port
@@ -41,6 +45,10 @@ public class SOCKET extends ConnectionController{
         }
         System.err.println("\u001B[32m" + "Server (socket) ready on port: " + PORT + TextColor.DEFAULT.get());
     }
+
+    /**
+     * loop to accept new client connection
+     */
     public void acceptConnection(){
         ExecutorService executor = Executors.newCachedThreadPool();
         while (true) {
@@ -71,12 +79,23 @@ public class SOCKET extends ConnectionController{
             }
         }
     }
+
+    /**
+     * @param activePlayerID the id of the player have to play now
+     * @param clients list of runnable class managed the client, server have to send command only to this clients
+     */
     public void notifyActivePlayer(String activePlayerID, ArrayList<MultiClientSocketGame> clients) {
         JsonObject data = new JsonObject();
         data.addProperty("playerID", activePlayerID);
 
         this.sendCommand(clients.get(clients.size()-1).prepareMSG(data, "notifyActivePlayer"), clients);
     }
+
+    /**
+     * used when create or recreate client data
+     * @param players the list of players in the game when it starts
+     * @param clients list of runnable class managed the client, server have to send command only to this clients
+     */
     public void sendPlayerList(String[] players, ArrayList<MultiClientSocketGame> clients) {
         JsonObject data = new JsonObject();
         JsonArray jsonArray = new Gson().toJsonTree(players).getAsJsonArray();
@@ -84,12 +103,24 @@ public class SOCKET extends ConnectionController{
 
         this.sendCommand(clients.get(clients.size()-1).prepareMSG(data, "receivePlayerList"), clients);
     }
+
+    /**
+     * used in waiting room to communicate to the game creator the number of player actual in the game
+     * @param playersNumber number of player actual in the game
+     * @param clients list of runnable class managed the client, server have to send command only to this clients
+     */
     public void sendPlayersNUmber(int playersNumber, ArrayList<MultiClientSocketGame> clients) {
         JsonObject data = new JsonObject();
         data.addProperty("playersNumber", playersNumber);
 
         this.sendCommand(clients.get(clients.size()-1).prepareMSG(data, "receivePlayersNumber"),clients);
     }
+
+    /**
+     * used in create or recreate data clients, it will be sent in broadcast
+     * @param mainBoard cardMatrix represent the mainBoard
+     * @param clients list of runnable class managed the client, server have to send command only to this clients
+     */
     public void sendMainBoard(Card[][] mainBoard, ArrayList<MultiClientSocketGame> clients) {
         JsonObject data = new JsonObject();
         JsonArray jsonArray = new Gson().toJsonTree(mainBoard).getAsJsonArray();
@@ -97,6 +128,12 @@ public class SOCKET extends ConnectionController{
 
         this.sendCommand(clients.get(clients.size()-1).prepareMSG(data, "receiveMainBoard"), clients);
     }
+
+    /**
+     * used in create or recreate data clients, it will be sent in broadcast
+     * @param playerBoards arrayList with card matrix who represent all players board of thi specific game
+     * @param clients list of runnable class managed the client, server have to send command only to this clients
+     */
     public void sendAllPlayerBoard(ArrayList<Card[][]> playerBoards, ArrayList<MultiClientSocketGame> clients) {
         JsonObject data = new JsonObject();
         JsonArray jsonArray = new Gson().toJsonTree(playerBoards).getAsJsonArray();
@@ -104,6 +141,14 @@ public class SOCKET extends ConnectionController{
 
         this.sendCommand(clients.get(clients.size()-1).prepareMSG(data, "receiveAllPlayerBoard"), clients);
     }
+
+    /**
+     * update playerBoard by delta, it will be sent in broadcast
+     * @param playerID identify witch playerBoard
+     * @param column position on the playerBoard
+     * @param cards the delta
+     * @param clients list of runnable class managed the client, server have to send command only to this clients
+     */
     public void addCardToClientBoard(String playerID, int column, Card[] cards, ArrayList<MultiClientSocketGame> clients) {
         JsonObject data = new JsonObject();
         data.addProperty("playerID", playerID);
@@ -113,6 +158,12 @@ public class SOCKET extends ConnectionController{
 
         this.sendCommand(clients.get(clients.size()-1).prepareMSG(data, "addCardToPlayerBoard"), clients);
     }
+
+    /**
+     * update mainBoard by delta, it will be sent in broadcast
+     * @param cards the delta
+     * @param clients list of runnable class managed the client, server have to send command only to this clients
+     */
     public void dellCardFromMainBoard(PositionWithColor[] cards, ArrayList<MultiClientSocketGame> clients) {
         JsonObject data = new JsonObject();
         JsonArray jsonArray = new Gson().toJsonTree(cards).getAsJsonArray();
@@ -120,6 +171,12 @@ public class SOCKET extends ConnectionController{
 
         this.sendCommand(clients.get(clients.size()-1).prepareMSG(data, "removeCardFromMainBoard"), clients);
     }
+
+    /**
+     * it will be sent in broadcast
+     * @param commonGoalID array with id of all common goals
+     * @param clients list of runnable class managed the client, server have to send command only to this clients
+     */
     public void sendAllCommonGoal(int[] commonGoalID, ArrayList<MultiClientSocketGame> clients) {
         JsonObject data = new JsonObject();
         JsonArray jsonArray = new Gson().toJsonTree(commonGoalID).getAsJsonArray();
@@ -127,6 +184,12 @@ public class SOCKET extends ConnectionController{
 
         this.sendCommand(clients.get(clients.size()-1).prepareMSG(data, "receiveAllCommonGoal"), clients);
     }
+
+    /**
+     * @param cards position on payer board and color need to respect to achieve private goal
+     * @param playerID recipient of th message
+     * @param clients list of runnable class managed the client, server have to send command only to this clients
+     */
     public void sendPrivateGoal(PositionWithColor[] cards, String playerID, ArrayList<MultiClientSocketGame> clients) {
         JsonObject data = new JsonObject();
         JsonArray jsonArray = new Gson().toJsonTree(cards).getAsJsonArray();
@@ -135,6 +198,11 @@ public class SOCKET extends ConnectionController{
 
         this.sendCommand(clients.get(clients.size()-1).prepareMSG(data, "receivePrivateGoal"), clients);
     }
+
+    /**
+     * @param points jsonObject with all points for all the player in the game, it will be sent in broadcast
+     * @param clients list of runnable class managed the client, server have to send command only to this clients
+     */
     public void sendEndGamePoint(JsonObject points, ArrayList<MultiClientSocketGame> clients) {
         JsonObject data = new JsonObject();
         data.add("points", points);
@@ -148,18 +216,34 @@ public class SOCKET extends ConnectionController{
             }
         }
     }
+
+    /**
+     * @param winner jsonObject with point and name of the winner it will be sent in broadcast
+     * @param clients list of runnable class managed the client, server have to send command only to this clients
+     */
     public void sendWinner(JsonObject winner, ArrayList<MultiClientSocketGame> clients) {
         JsonObject data = new JsonObject();
         data.add("winner", winner);
 
         this.sendCommand(clients.get(clients.size()-1).prepareMSG(data,"receiveWinner"), clients);
     }
+
+    /**
+     * @param scored jsonObject with all point scored by all the player in the game by common goal, it will be sent in broadcast
+     * @param clients list of runnable class managed the client, server have to send command only to this clients
+     */
     public void sendLastCommonScored(JsonObject scored, ArrayList<MultiClientSocketGame> clients) {
         JsonObject data = new JsonObject();
         data.add("scored", scored);
 
         this.sendCommand(clients.get(clients.size()-1).prepareMSG(data, "receiveLastCommonScored"), clients);
     }
+
+    /**
+     * @param error jsonObject with error id and error code
+     * @param playerID recipient of the error msg
+     * @param clients list of runnable class managed the client, server have to send command only to this clients
+     */
     public void sendError(JsonObject error, String playerID, ArrayList<MultiClientSocketGame> clients){
         JsonObject data = new JsonObject();
         data.addProperty("playerID", playerID);
@@ -167,6 +251,10 @@ public class SOCKET extends ConnectionController{
 
         this.sendCommand(clients.get(clients.size()-1).prepareMSG(data, "errorMSG"), clients);
     }
+    /**
+     * server can force the return to the lobby on all client in one game, ending the game
+     * @param clients list of runnable class managed the client, server have to send command only to this clients
+     */
     public void forceClientDisconnection(ArrayList<MultiClientSocketGame> clients) {
         for(MultiClientSocketGame client: clients){
             try {
@@ -178,9 +266,15 @@ public class SOCKET extends ConnectionController{
         JsonObject data = new JsonObject();
         this.sendCommand(clients.get(clients.size()-1).prepareMSG(data,"forceDisconnection"), clients);
     }
+
     /**************************************************************************
      ************************************************** chat ******************
      * ************************************************************************
+     * *
+     * send message in broadcast to all clients
+     * @param MSG message to send
+     * @param sender name of the player who sends the message
+     * @param clients list of clients have to send the message
      */
     public void sendBroadcastMsg(String MSG, String sender, ArrayList<MultiClientSocketGame> clients) {
         JsonObject data = new JsonObject();
@@ -189,6 +283,14 @@ public class SOCKET extends ConnectionController{
 
         this.sendCommand(clients.get(clients.size()-1).prepareMSG(data,"receiveBroadcastMsg"), clients);
     }
+
+    /**
+     * send a message in private to only one client
+     * @param userID id of the player the message is for
+     * @param MSG message to send
+     * @param sender name of the player who sends the message
+     * @param clients list of clients have to send the message
+     */
     public void sendPrivateMSG(String userID, String MSG, String sender, ArrayList<MultiClientSocketGame> clients) {
         JsonObject data = new JsonObject();
         data.addProperty("userID", userID);
@@ -209,10 +311,22 @@ public class SOCKET extends ConnectionController{
             }
         }
     }
+    /**
+     * server receive public message, have to redirect it
+     * @param data all the data need from the method package in a json file
+     * @param ref ref to the runnable class mange the client
+     * @return true if the command goes in the right way
+     */
     public boolean receiveBroadcastMsg(JsonObject data, MultiClientSocketGame ref){
         this.receiveBroadcastMsg(data.get("msg").getAsString(), data.get("sender").getAsString(),ref.getController());
         return true;
     }
+    /**
+     * server receive private message, have to redirect it
+     * @param data all the data need from the method package in a json file
+     * @param ref ref to the runnable class mange the client
+     * @return true if the command goes in the right way
+     */
     public boolean receivePrivateMSG(JsonObject data, MultiClientSocketGame ref){
         this.receivePrivateMSG(data.get("userID").getAsString(), data.get("msg").getAsString(), data.get("sender").getAsString(),ref.getController());
         return true;
@@ -220,11 +334,22 @@ public class SOCKET extends ConnectionController{
     /*************************************************************************
      ************************************************** IN playing methods ************
      * ***********************************************************************
+     /**
+     * to start the game
+     * @param data all the data need from the method package in a json file
+     * @param ref ref to the runnable class mange the client
+     * @return true if the command goes in the right way
      */
     public boolean startGame(JsonObject data, MultiClientSocketGame ref){
         boolean bool = this.startGame(data.get("playerID").getAsString(),ref.getController());
         return bool;
     }
+    /**
+     * to take cards
+     * @param data all the data need from the method package in a json file
+     * @param ref ref to the runnable class mange the client
+     * @return true if the command goes in the right way
+     */
     public boolean takeCard(JsonObject data, MultiClientSocketGame ref){
         boolean bool = this.takeCard(data.get("column").getAsInt(),data.get("cards").toString(),data.get("playerID").getAsString(),ref.getController());
         return bool;
@@ -233,7 +358,12 @@ public class SOCKET extends ConnectionController{
     /*************************************************************************
      ************************************************** IN lobby methods ********
      * ***********************************************************************
-     * */
+     *
+     * to login to the server
+     * @param data all the data need from the method package in a json file
+     * @param ref ref to the runnable class mange the client
+     * @return true if the command goes in the right way
+     */
 
     public boolean login(JsonObject data, MultiClientSocketGame ref){
         try {
@@ -253,8 +383,12 @@ public class SOCKET extends ConnectionController{
         }
         return true;
     }
-
-
+    /**
+     * to sign up to the server
+     * @param data all the data need from the method package in a json file
+     * @param ref ref to the runnable class mange the client
+     * @return true if the command goes in the right way
+     */
     public boolean signUp(JsonObject data, MultiClientSocketGame ref){
         try {
             this.signUp(data.get("ID").getAsString(), data.get("pwd").getAsString());
@@ -264,7 +398,12 @@ public class SOCKET extends ConnectionController{
         return true;
 
     }
-
+    /**
+     * to join a nwe game
+     * @param data all the data need from the method package in a json file
+     * @param ref ref to the runnable class mange the client
+     * @return true if the command goes in the right way
+     */
     public boolean joinGame(JsonObject data, MultiClientSocketGame ref){
         String controllerRef;
         if(!data.get("searchID").getAsString().equals("null")){
@@ -284,7 +423,12 @@ public class SOCKET extends ConnectionController{
         ref.setPlayerOnline();
         return true;
     }
-
+    /**
+     * to create a nwe game
+     * @param data all the data need from the method package in a json file
+     * @param ref ref to the runnable class mange the client
+     * @return true if the command goes in the right way
+     */
     public boolean createGame(JsonObject data, MultiClientSocketGame ref){
         String controllerRef;
         if(data.get("maxPlayerNumber").getAsInt() != 0){
@@ -310,8 +454,9 @@ public class SOCKET extends ConnectionController{
     /***********************************************************************************
      ************************************************** MultiClientSocketGame **********
      * *********************************************************************************
+     *
+     * runnable class, al client are managed on server on a private thread by this class
      */
-
     public class MultiClientSocketGame implements Runnable{
         private final Socket socket;
         private String controllerRef;
