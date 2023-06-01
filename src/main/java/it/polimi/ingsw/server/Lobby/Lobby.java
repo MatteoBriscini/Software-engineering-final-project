@@ -44,6 +44,7 @@ public class Lobby {
     private ExecutorService executor;
 
 
+
     public Lobby(String ID){
         try {
             jsonCreate();
@@ -56,6 +57,10 @@ public class Lobby {
         thread.start();
     }
 
+    /**
+     * @param rmiPort rmi port for creating RMI class
+     * @param socketPort socket port for creating SOCKET class
+     */
     public Lobby(int rmiPort, int socketPort){
         try {
             jsonCreate();
@@ -67,6 +72,10 @@ public class Lobby {
         Thread thread = new Thread(socket::acceptConnection);
         thread.start();
     }
+
+    /**
+     * @throws FileNotFoundException configuration file not found
+     */
     private void jsonCreate() throws FileNotFoundException {  //download json data
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(jsonConfigUrl.getUrl("netConfig"));
         if(inputStream == null) throw new FileNotFoundException();
@@ -84,6 +93,12 @@ public class Lobby {
 
     //Methods
 
+    /**
+     * @param ID player ID for logging into the game
+     * @param pwd player password for logging into the game
+     * @return is either null or a string indicating the controller handling a specific game, in this case the game the player is already in, in case of disconnection
+     * @throws LoginException different errors that may occur during login
+     */
     public synchronized String login(String ID, String pwd) throws LoginException {
         ArrayList<String[]> games;
         ArrayList<Controller> activeG;
@@ -159,6 +174,15 @@ public class Lobby {
         return "null";
     }
 
+    /**
+     * @param ID player ID the player wishes to have
+     * @param pwd setting password for the login
+     * @throws LoginException different errors that may occur during login
+     */
+    /*
+    the method adds the ID and password to a JSON file stored in a config directory in the user's home directory
+    this just memorizes different logins that the player may have
+     */
     public synchronized void signUp(String ID, String pwd) throws LoginException {
 
         String path = System.getProperty("user.home") + loginJSONURL;   //file path
@@ -221,6 +245,15 @@ public class Lobby {
 
     }
 
+    /**
+     * @param ID ID of the player wishing to join a game
+     * @param connectionType type of protocol the player is currently using
+     * @return returns a string indicating the controller of the game to be joined
+     * @throws addPlayerToGameException different errors that may occur while searching for a game to join
+     */
+    /*
+    the method searches for the first game in the list of games that hasn't already started with space in the waiting room and adds the player to it
+     */
     public synchronized String joinGame(String ID, ConnectionType connectionType) throws addPlayerToGameException {
         ArrayList<String[]> tempPlayersInGames;
         ArrayList<Controller> tempActiveGames;
@@ -247,6 +280,16 @@ public class Lobby {
         throw new addPlayerToGameException("not free game at the moment");
     }
 
+    /**
+     * @param ID ID of the player wishing to join a game
+     * @param connectionType type of protocol the player is currently using
+     * @param searchID the game to be joined must have this ID in the player list
+     * @return returns a string indicating the controller of the game to be joined
+     * @throws addPlayerToGameException different errors that may occur while searching for a game to join
+     */
+    /*
+    the method searches for the game with the specified ID in the player list in the list of games that hasn't already started with space in the waiting room and adds the player to it
+     */
     public synchronized String joinGame(String ID, ConnectionType connectionType, String searchID) throws addPlayerToGameException {
         ArrayList<String[]> tempPlayersInGames;
         ArrayList<Controller> tempActiveGames;
@@ -278,6 +321,15 @@ public class Lobby {
         throw new addPlayerToGameException("ID not found");
     }
 
+    /**
+     * @param ID ID of the player that just joined a game
+     * @param connectionType protocol of the player that just joined a game
+     * @param gameNumber number indicating the game the player has joined
+     * @throws addPlayerToGameException different errors that may occur while searching for a game to join
+     */
+    /*
+    the method updates the collections keeping track if the players and the games they are in
+     */
     public synchronized void addPlayerToGame(String ID, ConnectionType connectionType, int gameNumber) throws addPlayerToGameException {
         ArrayList<String[]> tempPlayersInGames;
         ArrayList<Controller> tempActiveGames;
@@ -302,6 +354,14 @@ public class Lobby {
 
     }
 
+    /**
+     * @param ID ID of the player creating the game
+     * @return returns a string indicating the controller of the game that has been created
+     * @throws addPlayerToGameException possible errors
+     */
+    /*
+    the method creates a game with the default maximum number of players
+     */
     public synchronized String createGame(String ID) throws addPlayerToGameException {
         Controller controller = new Controller();
         controller.setLobby(this);
@@ -309,6 +369,15 @@ public class Lobby {
         return controller.toString();
     }
 
+    /**
+     * @param ID ID of the player creating the game
+     * @param maxPlayerNumber maximum number of players for the game
+     * @return returns a string indicating the controller of the game that has been created
+     * @throws addPlayerToGameException possible errors
+     */
+    /*
+    the method creates a game with the specified maximum number of players
+     */
     public synchronized String createGame(String ID, int maxPlayerNumber) throws addPlayerToGameException {
         Controller controller = new Controller(maxPlayerNumber);
         controller.setLobby(this);
@@ -316,6 +385,14 @@ public class Lobby {
         return controller.toString();
     }
 
+    /**
+     * @param ID ID of the player creating the game
+     * @param controller controller of the game just created
+     * @throws addPlayerToGameException possible errors
+     */
+    /*
+    the method updates the collection keeping track of active games and players in games while also launching the executor managing the controller of the new game
+     */
     private synchronized void createGameSupport(String ID, Controller controller) throws addPlayerToGameException {
 
         int i = 0;
@@ -351,6 +428,13 @@ public class Lobby {
         executor.shutdown();
     }
 
+
+    /**
+     * @param controller controller of the terminated game
+     */
+    /*
+    the method removes the game and players from the collections keeping track of active games and players
+     */
     public void setAllPlayersOffline(Controller controller){
         synchronized (playersInGames){
             synchronized (activeGames){
@@ -367,6 +451,13 @@ public class Lobby {
 
     }
 
+    /**
+     * @param ID ID of the player trying to log in
+     * @throws LoginException possible errors
+     */
+    /*
+    the methods checks if a player trying to log in is already logged on on another device
+     */
     private void checkPlayerLog(String ID) throws LoginException {
         synchronized (playersInGames){
             for(int i = 0; i<playersInGames.size();i++ ){

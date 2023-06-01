@@ -269,8 +269,11 @@ public class ClientSOCKET extends ConnectionManager {
     /*************************************************************************
      *                          OUT lobby method
      * ***********************************************************************
+     *
+     * @param ID ID of the player trying to log in
+     * @param pwd password of the player trying to log in
+     * @throws LoginException possible errors
      */
-
     public void login(String ID, String pwd) throws LoginException {
         JsonObject data = new JsonObject();
         data.addProperty("ID", ID);
@@ -279,6 +282,11 @@ public class ClientSOCKET extends ConnectionManager {
         if(!bool)throw new LoginException("fail to login");
     }
 
+    /**
+     * @param ID ID of the player trying to log in
+     * @param pwd password of the player trying to log in
+     * @throws LoginException possible errors
+     */
     @Override
     public void signUp(String ID, String pwd) throws LoginException {
         JsonObject data = new JsonObject();
@@ -289,6 +297,11 @@ public class ClientSOCKET extends ConnectionManager {
     }
 
 
+    /**
+     * @param ID ID of the player trying to join a game
+     * @param searchID the game to be joined must have this ID in the player list
+     * @throws addPlayerToGameException possible errors
+     */
     public void joinGame(String ID, String searchID)throws addPlayerToGameException{
         this.setPlayerAsPlaying();
         JsonObject data = new JsonObject();
@@ -302,6 +315,10 @@ public class ClientSOCKET extends ConnectionManager {
         player.acceptingPlayingCommand();
     }
 
+    /**
+     * @param ID ID of the player creating the game
+     * @throws addPlayerToGameException possible errors
+     */
     @Override
     public void createGame(String ID) throws addPlayerToGameException {
         this.setPlayerAsPlaying();
@@ -316,6 +333,11 @@ public class ClientSOCKET extends ConnectionManager {
         player.acceptingPlayingCommand();
     }
 
+    /**
+     * @param ID ID of the player creating the game
+     * @param maxPlayerNumber maximum number of players in the game to be created
+     * @throws addPlayerToGameException possible errors
+     */
     @Override
     public void createGame(String ID, int maxPlayerNumber) throws addPlayerToGameException {
         this.setPlayerAsPlaying();
@@ -330,6 +352,10 @@ public class ClientSOCKET extends ConnectionManager {
         player.acceptingPlayingCommand();
     }
 
+    /**
+     * @param ID ID of the player trying to join a game
+     * @throws addPlayerToGameException possible errors
+     */
     public void joinGame(String ID)throws addPlayerToGameException{
         this.setPlayerAsPlaying();
         JsonObject data = new JsonObject();

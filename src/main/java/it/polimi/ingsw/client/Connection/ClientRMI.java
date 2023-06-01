@@ -35,6 +35,11 @@ public class ClientRMI extends ConnectionManager implements PlayingPlayerRemoteI
         thread.start();
     }
 
+    /**
+     * @param ID ID of the player trying to log in
+     * @param pwd password of the player trying to log in
+     * @throws LoginException possible errors
+     */
     public void login(String ID, String pwd) throws LoginException{
         String tmp = "null";
         try {
@@ -62,6 +67,11 @@ public class ClientRMI extends ConnectionManager implements PlayingPlayerRemoteI
         }
     }
 
+    /**
+     * @param ID ID of the player trying to log in
+     * @param pwd password of the player trying to log in
+     * @throws LoginException possible errors
+     */
     public void signUp(String ID, String pwd) throws LoginException{
         try {
             stub.signUp(ID, pwd);
@@ -76,6 +86,11 @@ public class ClientRMI extends ConnectionManager implements PlayingPlayerRemoteI
             }
         }
     }
+
+    /**
+     * @param ID ID of the player trying to join a game
+     * @throws addPlayerToGameException possible errors
+     */
     public void joinGame(String ID) throws addPlayerToGameException{
         this.setPlayerAsPlaying();
         try {
@@ -87,6 +102,12 @@ public class ClientRMI extends ConnectionManager implements PlayingPlayerRemoteI
         }
         player.acceptingPlayingCommand();
     }
+
+    /**
+     * @param ID ID of the player trying to join a game
+     * @param searchID the game to be joined must have this ID in the player list
+     * @throws addPlayerToGameException possible errors
+     */
     public void joinGame(String ID, String searchID) throws addPlayerToGameException{
         this.setPlayerAsPlaying();
         try {
@@ -99,6 +120,10 @@ public class ClientRMI extends ConnectionManager implements PlayingPlayerRemoteI
         player.acceptingPlayingCommand();
     }
 
+    /**
+     * @param ID ID of the player creating the game
+     * @throws addPlayerToGameException possible errors
+     */
     public void createGame(String ID) throws addPlayerToGameException{
         this.setPlayerAsPlaying();
         try {
@@ -111,6 +136,11 @@ public class ClientRMI extends ConnectionManager implements PlayingPlayerRemoteI
         player.acceptingPlayingCommand();
     }
 
+    /**
+     * @param ID ID of the player creating the game
+     * @param maxPlayerNumber maximum number of players in the game to be created
+     * @throws addPlayerToGameException possible errors
+     */
     public void createGame(String ID, int maxPlayerNumber) throws addPlayerToGameException{
         this.setPlayerAsPlaying();
         try {
