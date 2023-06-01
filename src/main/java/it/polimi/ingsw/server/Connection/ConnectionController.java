@@ -89,27 +89,59 @@ public abstract class ConnectionController {
     public void joinLobby(String playerID){
         System.out.println("\u001B[36m"+"client: " + playerID + " join the lobby (RMI)" +"\u001B[0m");
     }
+
+    /**
+     * @param ID player id
+     * @param pwd password
+     * @return controller ref if the player is just in the game and is marked as offline "null" in all other case
+     * @throws LoginException if you can't log in
+     */
     public String login(String ID, String pwd) throws LoginException {
         return lobby.login(ID, pwd);
     }
-
-
+    /**
+     * signup to the server
+     * @param ID player id
+     * @param pwd password
+     * @return true if the signup is correct
+     * @throws LoginException if can't sign up
+     */
     public boolean signUp(String ID, String pwd) throws LoginException {
         lobby.signUp(ID, pwd);
         return false;
     }
-
+    /**
+     * @param ID the player who call the command id
+     * @return the game ref (a string with the controller class code)
+     * @throws addPlayerToGameException if can't join the game
+     */
     public String joinGame(String ID) throws addPlayerToGameException {
         return lobby.joinGame(ID, this.connectionType);
     }
+    /**
+     * @param ID the player who call the command id
+     * @param searchID the player id you want to play with
+     * @return the game ref (a string with the controller class code)
+     * @throws addPlayerToGameException if can't join the game
+     */
     public String joinGame(String ID, String searchID) throws addPlayerToGameException {
         return lobby.joinGame(ID, this.connectionType, searchID);
     }
-
+    /**
+     * @param ID the player who call the command id
+     * @return the game ref (a string with the controller class code)
+     * @throws addPlayerToGameException if the game can't be created
+     */
     public String createGame(String ID) throws addPlayerToGameException {
         return lobby.createGame(ID);
     }
 
+    /**
+     * @param ID the player who call the command id
+     * @param maxPlayerNumber max player number for that specific game
+     * @return the game ref (a string with the controller class code)
+     * @throws addPlayerToGameException if the game can't be created
+     */
     public String createGame(String ID, int maxPlayerNumber) throws addPlayerToGameException {
         return lobby.createGame(ID, maxPlayerNumber);
     }

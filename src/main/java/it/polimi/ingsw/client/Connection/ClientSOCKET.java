@@ -12,6 +12,7 @@ import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.Socket;
+import java.rmi.RemoteException;
 
 public class ClientSOCKET extends ConnectionManager {
     int PORT;
@@ -107,9 +108,13 @@ public class ClientSOCKET extends ConnectionManager {
         msg.add("data", data);
         return msg;
     }
+
     /*************************************************************************
      *                           IN method
      * ***********************************************************************
+     *
+     * receive message from the server and parse it calling the method below
+     * @throws IOException if the server is offline
      */
     synchronized private void receiveMSG() throws IOException {
         receiveMsgThread = new Thread(() ->{
@@ -146,6 +151,9 @@ public class ClientSOCKET extends ConnectionManager {
         });
         receiveMsgThread.start();
     }
+    /**
+     * @param data all data needed for the method package in a json file
+     */
     public void receiveResponse(JsonObject data){
         if (!data.get("existingMethod").getAsBoolean()) throw new RuntimeException("can't find method on server");
         synchronized (echoSocket){
@@ -154,35 +162,56 @@ public class ClientSOCKET extends ConnectionManager {
             echoSocket.notify();
         }
     }
-
+    /**
+     * @param data all data needed for the method package in a json file
+     */
     public void notifyActivePlayer(JsonObject data){
         this.notifyActivePlayer(data.get("playerID").getAsString());
     }
-
+    /**
+     * @param data all data needed for the method package in a json file
+     */
     public void receivePlayerList(JsonObject data){
         JsonArray jsonArray = data.get("players").getAsJsonArray();
         String[] players = new  Gson().fromJson(jsonArray, String[].class);
         this.receivePlayerList(players);
     }
+    /**
+     * @param data all data needed for the method package in a json file
+     */
     public void receivePlayersNumber(JsonObject data){
         this.receivePlayersNumber(data.get("playersNumber").getAsInt());
     }
+    /**
+     * @param data all data needed for the method package in a json file
+     */
     public void receiveMainBoard(JsonObject data){
         this.receiveMainBoard(data.get("mainBoard").toString());
     }
+    /**
+     * @param data all data needed for the method package in a json file
+     */
     public void errorMSG(JsonObject data){
         this.errorMSG(data.get("error").toString(), data.get("playerID").getAsString());
-
     }
+    /**
+     * @param data all data needed for the method package in a json file
+     */
     public void receiveAllPlayerBoard(JsonObject data){
         this.receiveAllPlayerBoard(data.get("playerBoards").toString());
     }
+    /**
+     * @param data all data needed for the method package in a json file
+     */
     public void addCardToPlayerBoard(JsonObject data){
         this.addCardToPlayerBoard(data.get("playerID").getAsString(), data.get("column").getAsInt(), data.get("cards").toString());
     }
     public void removeCardFromMainBoard(JsonObject data){
         this.removeCardFromMainBoard(data.get("cards").toString());
     }
+    /**
+     * @param data all data needed for the method package in a json file
+     */
     public void receiveAllCommonGoal(JsonObject data){
         JsonArray jsonArray = data.get("commonGoalID").getAsJsonArray();
         int[] commonGoalID = new int[jsonArray.size()];
@@ -191,24 +220,45 @@ public class ClientSOCKET extends ConnectionManager {
         }
         this.receiveAllCommonGoal(commonGoalID);
     }
+    /**
+     * @param data all data needed for the method package in a json file
+     */
     public void receivePrivateGoal(JsonObject data){
         this.receivePrivateGoal(data.get("cards").toString(), data.get("playerID").getAsString());
     }
+    /**
+     * @param data all data needed for the method package in a json file
+     */
     public void endGameValue(JsonObject data){
         this.endGameValue(data.get("points").toString());
     }
+    /**
+     * @param data all data needed for the method package in a json file
+     */
     public void receiveWinner(JsonObject data){
         this.receiveWinner(data.get("winner").toString());
     }
+
+    /**
+     * @param data all data needed for the method package in a json file
+     */
     public void receiveLastCommonScored(JsonObject data){
         this.receiveLastCommonScored(data.get("scored").toString());
     }
+
+    /**
+     * @param data all data needed for the method package in a json file
+     */
     public void forceDisconnection(JsonObject data) throws IOException {
         validResponse = true;
         quit= true;
         ((PlayingPlayer)player).disconnectError("the server has close the game for inactivity of the others players");
         this.setPlayerAsLobby();
     }
+
+    /**
+     * implement ping pong to detect server crash
+     */
     public void startPingPong(){
         pingPongThread = new Thread(this::pingPong);       //start ping pong
         pingPongThread.start();
@@ -295,9 +345,11 @@ public class ClientSOCKET extends ConnectionManager {
     /*************************************************************************
      *                          OUT method
      * ***********************************************************************
+     * *
+     * called by the method below send the actual socket message to the server
+     * @param msg message have to send to the client
+     * @return true if the message can be parsed by the server
      */
-
-
     private boolean sendMSG (JsonObject msg) {
         synchronized (this){
             this.validResponse=false;
@@ -316,6 +368,13 @@ public class ClientSOCKET extends ConnectionManager {
         }
         return response;
     }
+
+    /**
+     * @param column column on the current player board
+     * @param cards array of taken cards
+     * @return true if the method goes in the correct way
+     * @throws IOException if server are offline
+     */
     @Override
     public boolean takeCard(int column, PositionWithColor[] cards) throws IOException {
         JsonObject data = new JsonObject();
@@ -326,6 +385,13 @@ public class ClientSOCKET extends ConnectionManager {
         boolean bool = this.sendMSG(prepareMSG(data, "takeCard"));
         return bool;
     }
+
+    /**
+     * start the game only the creator can
+     * @param playerID this client player id
+     * @return true if the method goes in the correct way
+     * @throws IOException if server are offline
+     */
     @Override
     public boolean startGame(String playerID) throws IOException {
         JsonObject data = new JsonObject();
@@ -333,6 +399,13 @@ public class ClientSOCKET extends ConnectionManager {
         boolean bool = this.sendMSG(prepareMSG(data, "startGame"));
         return bool;
     }
+
+    /**
+     * to quit the game friendly
+     * @param playerID this client player id
+     * @return true if the quit go in the correct way
+     * @throws IOException if server is offline
+     */
     @Override
     public boolean quitGame(String playerID) throws IOException {
         quit = true;
@@ -342,9 +415,14 @@ public class ClientSOCKET extends ConnectionManager {
         this.setPlayerAsLobby();
         return bool;
     }
+
     /**************************************************************************
      ************************************************** chat ******************
      * ************************************************************************
+     * *
+     * send message in broadcast to all clients
+     * @param MSG message to send
+     * @param sender name of the player who send the message
      */
     public void sendBroadcastMsg(String MSG, String sender) throws IOException {
         JsonObject data = new JsonObject();
@@ -352,6 +430,13 @@ public class ClientSOCKET extends ConnectionManager {
         data.addProperty("sender", sender);
         this.sendMSG(prepareMSG(data, "receiveBroadcastMsg"));
     }
+
+    /**
+     * send a message in private to only one client
+     * @param userID id of the player the message is for
+     * @param MSG message to send
+     * @param sender name of the player who send the message
+     */
     public void sendPrivateMSG(String userID, String MSG, String sender){
         JsonObject data = new JsonObject();
         data.addProperty("userID", userID);
@@ -361,10 +446,16 @@ public class ClientSOCKET extends ConnectionManager {
     }
 
 
-
+    /**
+     * @param data all data needed for the method package in a json file
+     */
     public void receiveBroadcastMsg(JsonObject data){
         this.receiveBroadcastMsg(data.get("msg").getAsString(), data.get("sender").getAsString());
     }
+
+    /**
+     * @param data all data needed for the method package in a json file
+     */
     public void receivePrivateMSG(JsonObject data){
         this.receivePrivateMSG(data.get("userID").getAsString(), data.get("msg").getAsString(), data.get("sender").getAsString());
     }

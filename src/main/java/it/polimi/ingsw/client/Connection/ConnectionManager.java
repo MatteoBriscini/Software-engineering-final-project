@@ -87,15 +87,48 @@ public abstract class ConnectionManager extends UnicastRemoteObject {
             player.setMode(PlayerMode.LOBBY);
         }
     }
+
     /*************************************************************************
      ************************************************** OUT method ***********
      * ***********************************************************************
+     * *
+     * @param column column on the current player board
+     * @param cards array of taken cards
+     * @return true if the method goes in the correct way
+     * @throws RemoteException if server are offline
      */
     public abstract boolean takeCard(int column, PositionWithColor[] cards) throws Exception;
+
+    /**
+     * start the game only the creator can
+     * @param playerID this client player id
+     * @return true if the method goes in the correct way
+     * @throws RemoteException if server are offline
+     */
     public abstract boolean startGame(String playerID) throws Exception;
+
+    /**
+     * to quit the game friendly
+     * @param playerID this client player id
+     * @return true if the quit go in the correct way
+     * @throws RemoteException if server is offline
+     */
     public abstract boolean quitGame(String  playerID) throws Exception;
     public abstract void connection() throws Exception;
+
+    /**
+     * send message in broadcast to all clients
+     * @param msg message to send
+     * @param sender name of the player who send the message
+     */
     public abstract void sendBroadcastMsg(String msg, String sender) throws Exception;
+
+    /**
+     * send a message in private to only one client
+     * @param userID id of the player the message is for
+     * @param msg message to send
+     * @param sender name of the player who send the message
+     */
     public abstract void sendPrivateMSG(String userID, String msg, String sender) throws Exception;
     public abstract void login(String ID, String pwd) throws LoginException;
     public abstract void signUp(String ID, String pwd) throws LoginException;
@@ -220,11 +253,22 @@ public abstract class ConnectionManager extends UnicastRemoteObject {
     /**************************************************************************
      ************************************************** chat ******************
      * ************************************************************************
+     * *
+     * receive message in broadcast to all clients
+     * @param msg message to send
+     * @param sender name of the player who sends the message
      */
 
     public void receiveBroadcastMsg(String msg, String sender){
         ((PlayingPlayer)player).receiveBroadcastMsg(msg, sender);
     }
+
+    /**
+     * receive a message in private to only one client
+     * @param userID id of the player the message is for
+     * @param msg message to send
+     * @param sender name of the player who sends the message
+     */
     public void receivePrivateMSG(String userID, String msg, String sender){
         ((PlayingPlayer)player).receivePrivateMSG(userID, msg, sender);
     }
