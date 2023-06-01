@@ -57,6 +57,10 @@ public class RMI extends ConnectionController implements LobbyRemoteInterface {
         JsonObject jsonObject = new Gson().fromJson(bufferedReader , JsonObject.class);
         this.pingPongTime = jsonObject.get("pingPongTime").getAsInt();
     }
+
+    /**
+     * setup rmi connection
+     */
     synchronized public void connection() {
         LobbyRemoteInterface stub = null;
         try {
@@ -85,6 +89,12 @@ public class RMI extends ConnectionController implements LobbyRemoteInterface {
      * method called from a client in ping pong
      */
     public void ping(){}
+    /**
+     * detect the clint crash
+     * @param client_ref remote client interface
+     * @param playerID name of the client
+     * @param controller game in with the client play
+     */
     private void pong(PlayingPlayerRemoteInterface client_ref, String playerID, Controller controller){
 
         synchronized (this) {
@@ -156,7 +166,7 @@ public class RMI extends ConnectionController implements LobbyRemoteInterface {
      ************************************************** OUT method ***********
      * ***********************************************************************
      * *
-     * send broadcast command to all the client (a command pattern)
+     * add command to blocking que and start a new thread to execute it and remove it from the blocking que
      * @param command actual command
      */
     public void sendCommand(Command command){
@@ -164,6 +174,9 @@ public class RMI extends ConnectionController implements LobbyRemoteInterface {
         new Thread(new blockingQueueHandler(this)).start();
     }
 
+    /**
+     * private class run on a thread take first command claas in the blocking que and execute it on all the client saved in the actual command
+     */
     private class blockingQueueHandler implements Runnable{
 
         private Command command;
@@ -198,89 +211,166 @@ public class RMI extends ConnectionController implements LobbyRemoteInterface {
             }
         }
     }
-
+    /**
+     * @param activePlayerID the id of the player have to play now
+     * @param clients the clients list of the game
+     * @param connectionInterface ref to the controller
+     */
     public void notifyActivePlayer(String activePlayerID, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
         Command command = new NotifyActivePlayerCommand(activePlayerID,clients,connectionInterface);
         sendCommand(command);
     }
 
+    /**
+     * used when create or recreate client data
+     * @param players the list of players in the game when it starts
+     * @param clients the clients list of the game
+     * @param connectionInterface ref to the controller
+     */
     public void sendPlayerList(String[] players, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
         Command command = new SendActivePlayerListCommand(players,clients,connectionInterface);
         sendCommand(command);
     }
-
+    /**
+     * used in waiting room to communicate to the game creator the number of player actual in the game
+     * @param playersNumber number of player actual in the game
+     * @param clients the clients list of the game
+     * @param connectionInterface ref to the controller
+     */
     public void sendPlayersNUmber(int playersNumber, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
         Command command = new SendPlayersNumberCommand(playersNumber,clients,connectionInterface);
         sendCommand(command);
     }
-
+    /**
+     * used in create or recreate data clients, it will be sent in broadcast
+     * @param mainBoard cardMatrix represent the mainBoard
+     * @param clients the clients list of the game
+     * @param connectionInterface ref to the controller
+     */
     public void sendMainBoard(Card[][] mainBoard,Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
         Command command = new SendMainBoardCommand(mainBoard,clients,connectionInterface);
         sendCommand(command);
     }
-
+    /**
+     * update playerBoard by delta, it will be sent in broadcast
+     * @param playerID identify witch playerBoard
+     * @param column position on the playerBoard
+     * @param cards the delta
+     * @param clients the clients list of the game
+     * @param connectionInterface ref to the controller
+     */
     public void addCardToClientBoard(String playerID, int column, Card[] cards, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
         Command command = new AddCardToClientBoard(playerID, column, cards, clients, connectionInterface);
         sendCommand(command);
     }
-
-
+    /**
+     * update mainBoard by delta, it will be sent in broadcast
+     * @param cards the delta
+     * @param clients the clients list of the game
+     * @param connectionInterface ref to the controller
+     */
     public void dellCardFromMainBoard(PositionWithColor[] cards, Map<String, PlayingPlayerRemoteInterface>clients, Controller connectionInterface) {
         Command command = new DellCardFromMainBoard(cards, clients, connectionInterface);
         sendCommand(command);
     }
-
-
+    /**
+     * used in create or recreate data clients, it will be sent in broadcast
+     * @param playerBoards arrayList with card matrix who represent all players board of thi specific game
+     * @param clients the clients list of the game
+     * @param connectionInterface ref to the controller
+     */
     public void sendAllPlayerBoard(ArrayList<Card[][]> playerBoards, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
         Command command = new SendAllPlayerBoardCommand(playerBoards,clients,connectionInterface);
         sendCommand(command);
     }
-
-
+    /**
+     * it will be sent in broadcast
+     * @param commonGoalID array with id of all common goals
+     * @param clients the clients list of the game
+     * @param connectionInterface ref to the controller
+     */
     public void sendAllCommonGoal(int[] commonGoalID, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
         Command command = new SendAllCommonGoalCommand(commonGoalID,clients,connectionInterface);
         sendCommand(command);
     }
-
-
+    /**
+     * @param cards position on payer board and color need to respect to achieve private goal
+     * @param playerID recipient of th message
+     * @param clients the clients list of the game
+     * @param connectionInterface ref to the controller
+     */
     public void sendPrivateGoal(PositionWithColor[] cards, String playerID, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
         Command command = new SendPrivateGoalCommand(cards,playerID,clients,connectionInterface);
         sendCommand(command);
     }
 
+    /**
+     * @param points jsonObject with all points for all the player in the game, it will be sent in broadcast
+     * @param clients the clients list of the game
+     * @param connectionInterface ref to the controller
+     */
     public void sendEndGamePoint(JsonObject points, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
         Command command = new EndGameCommand(points, clients, connectionInterface);
         sendCommand(command);
-        //for (String s: clients.keySet()) connectionInterface.removeClientRMI(clients.get(s), s);
     }
-
+    /**
+     * @param winner jsonObject with point and name of the winner it will be sent in broadcast
+     * @param clients the clients list of the game
+     * @param connectionInterface ref to the controller
+     */
     public void sendWinner(JsonObject winner, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
         Command command = new WinnerCommand(winner, clients, connectionInterface);
         sendCommand(command);
     }
-
+    /**
+     * @param scored jsonObject with all point scored by all the player in the game by common goal, it will be sent in broadcast
+     * @param clients the clients list of the game
+     * @param connectionInterface ref to the controller
+     */
     public void sendLastCommonScored(JsonObject scored, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
         Command command = new SendLastCommonScored(scored, clients, connectionInterface);
         sendCommand(command);
     }
-
+    /**
+     * @param error jsonObject with error id and error code
+     * @param playerID recipient of the error msg
+     * @param clients the clients list of the game
+     * @param connectionInterface ref to the controller
+     */
     public void sendError(JsonObject error, String playerID, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
         Command command = new ErrorCommand(error, playerID, clients, connectionInterface);
         sendCommand(command);
     }
-
+    /**
+     * @param clients the clients list of the game
+     * @param connectionInterface ref to the controller
+     */
     public void forceClientDisconnection(Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
         Command command = new ClientDisconnectionCommand(clients, connectionInterface);
         sendCommand(command);
     }
     /**************************************************************************
      ************************************************** chat ******************
-     * ************************************************************************/
+     * ************************************************************************
+     *
+     * send game chat private message
+     * @param msg actual message
+     * @param sender who send the message
+     * @param clients the clients list of the game
+     * @param connectionInterface ref to the controller
+     */
     public void sendBroadcastMsg(String msg, String sender, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
         Command command = new BroadcastChatCommand(msg,sender,clients,connectionInterface);
         sendCommand(command);
     }
-
+    /**
+     * send game chat private message
+     * @param userID recipient of the message
+     * @param msg actual message
+     * @param sender who send the message
+     * @param clients the clients list of the game
+     * @param connectionInterface ref to the controller
+     */
     public void sendPrivateMSG(String userID, String msg, String sender, Map<String, PlayingPlayerRemoteInterface> clients, Controller connectionInterface) {
         Command command = new PrivateChatCommand(userID, msg,sender,clients,connectionInterface);
         sendCommand(command);
