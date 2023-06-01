@@ -33,18 +33,35 @@ public class ConnectionControllerManager {
         this.controller=controller;
     }
     public ConnectionControllerManager(){}
+
+    /**
+     * @return true if there is rmi client in this game
+     */
     public boolean isRmiActive() {
         return rmiActive;
     }
 
+    /**
+     * @return true if there is socket client in this game
+     */
     public boolean isSocketActive() {
         return socketActive;
     }
-
+    /**
+     * to add a client ref to this controller (rmi)
+     * @param client remote interface of the client
+     * @param playerID name of the player
+     */
     public void addClientRMI(PlayingPlayerRemoteInterface client, String playerID){
         rmiActive = true;
         clientsRMImap.put(playerID, client);
     }
+    /**
+     * to remove a client ref to this controller (rmi)
+     * @param client remote interface of the client
+     * @param playerID name of the player
+     * @return false if the client isn't in the game
+     */
     public boolean removeClientRMI(PlayingPlayerRemoteInterface client, String playerID){
         if(clientsRMImap.get(playerID).equals(client)){
             clientsRMImap.remove(playerID);
@@ -55,10 +72,17 @@ public class ConnectionControllerManager {
     public Map<String, PlayingPlayerRemoteInterface> getClientsRMImap(){
         return clientsRMImap;
     }
+    /**
+     * to add a client ref to this controller (socket)
+     * @param client thread ref who is a manager the client request
+     */
     public void addClientSOCKET(SOCKET.MultiClientSocketGame client){
         socketActive = true;
         clientsSOCKET.add(client);
     }
+    /**
+     * @param client thread ref who is a manager the client request
+     */
     public void removeClientSOCKET(SOCKET.MultiClientSocketGame client){
         clientsSOCKET.remove(client);
     }
@@ -66,145 +90,116 @@ public class ConnectionControllerManager {
     /*************************************************************************
      ************************************************** OUT method ***********
      * ***********************************************************************
+     *
+     * @param activePlayerID the id of the player have to play now
      */
     public void notifyActivePlayer(String activePlayerID){
         if (clientsRMImap.size() > 0){
-            /*
-            try {
-                method.put("notifyActivePlayer");
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
-             */
             rmi.notifyActivePlayer(activePlayerID, clientsRMImap, controller);
         }
         if (clientsSOCKET.size() > 0){
             socket.notifyActivePlayer(activePlayerID, clientsSOCKET);
         }
     }
+
+    /**
+     * used when create or recreate client data
+     * @param players the list of players in the game when it starts
+     */
     public void sendPlayerList(String[] players){
         if (clientsRMImap.size() > 0){
-            /*
-            try {
-                method.put("sendPlayerList");throw new RuntimeException(e)
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
-             */
             rmi.sendPlayerList(players, clientsRMImap, controller);
         }
         if (clientsSOCKET.size() > 0){
             socket.sendPlayerList(players, clientsSOCKET);
         }
     }
+
+    /**
+     * used in waiting room to communicate to the game creator the number of player actual in the game
+     * @param playersNumber number of player actual in the game
+     */
     public void sendPlayersNUmber(int playersNumber){
         if (clientsRMImap.size() > 0){
-            /*
-            try {
-                method.put("sendPlayersNUmber");
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
-             */
             rmi.sendPlayersNUmber(playersNumber, clientsRMImap, controller);
         }
         if (clientsSOCKET.size() > 0){
             socket.sendPlayersNUmber(playersNumber, clientsSOCKET);
         }
     }
+
+    /**
+     * used in create or recreate data clients, it will be sent in broadcast
+     * @param mainBoard cardMatrix represent the mainBoard
+     */
     public void sendMainBoard(Card[][] mainBoard){
         if (clientsRMImap.size() > 0){
-            /*
-            try {
-                method.put("sendMainBoard");
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
-             */
             rmi.sendMainBoard(mainBoard, clientsRMImap, controller);
         }
         if (clientsSOCKET.size() > 0){
             socket.sendMainBoard(mainBoard, clientsSOCKET);
         }
     }
+
+    /**
+     * update playerBoard by delta, it will be sent in broadcast
+     * @param playerID identify witch playerBoard
+     * @param column position on the playerBoard
+     * @param cards the delta
+     */
     public void addCardToClientBoard(String playerID, int column, Card[] cards){
         if (clientsRMImap.size() > 0) {
-            /*
-            try {
-                method.put("addCardToClientBoard");
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
-             */
             rmi.addCardToClientBoard(playerID,column,cards, clientsRMImap, controller);
         }
         if (clientsSOCKET.size() > 0){
             socket.addCardToClientBoard(playerID,column,cards, clientsSOCKET);
         }
     }
+
+    /**
+     * update mainBoard by delta, it will be sent in broadcast
+     * @param cards the delta
+     */
     public void dellCardFromMainBoard(PositionWithColor[] cards){
         if (clientsRMImap.size() > 0) {
-            /*
-            try {
-                method.put("dellCardFromMainBoard");
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
-             */
             rmi.dellCardFromMainBoard(cards, clientsRMImap, controller);
         }
         if (clientsSOCKET.size() > 0){
             socket.dellCardFromMainBoard(cards, clientsSOCKET);
         }
     }
+    /**
+     * used in create or recreate data clients, it will be sent in broadcast
+     * @param playerBoards arrayList with card matrix who represent all players board of thi specific game
+     */
     public void sendAllPlayerBoard(ArrayList<Card[][]> playerBoards){
         if (clientsRMImap.size() > 0) {
-            /*
-            try {
-                method.put("dellCardFromMainBoard");
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
-             */
             rmi.sendAllPlayerBoard(playerBoards, clientsRMImap, controller);
         }
         if (clientsSOCKET.size() > 0){
             socket.sendAllPlayerBoard(playerBoards, clientsSOCKET);
         }
     }
+
+    /**
+     * it will be sent in broadcast
+     * @param commonGoalID array with id of all common goals
+     */
     public void sendAllCommonGoal(int[] commonGoalID){
         if (clientsRMImap.size() > 0) {
-            /*
-            try {
-                method.put("sendAllCommonGoal");
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
-             */
             rmi.sendAllCommonGoal(commonGoalID, clientsRMImap, controller);
         }
         if (clientsSOCKET.size() > 0){
             socket.sendAllCommonGoal(commonGoalID, clientsSOCKET);
         }
     }
+
+    /**
+     * @param cards position on payer board and color need to respect to achieve private goal
+     * @param playerID recipient of th message
+     */
     public void sendPrivateGoal(PositionWithColor[] cards,String playerID){
         if (clientsRMImap.size() > 0) {
-            /*
-            try {
-                method.put("sendPrivateGoal");
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
-             */
             rmi.sendPrivateGoal(cards,playerID, clientsRMImap, controller);
         }
         if (clientsSOCKET.size() > 0){
@@ -212,6 +207,9 @@ public class ConnectionControllerManager {
         }
     }
 
+    /**
+     * @param points jsonObject with all points for all the player in the game, it will be sent in broadcast
+     */
     public void sendEndGamePoint(JsonObject points){
         if (clientsRMImap.size() > 0) {
             rmi.sendEndGamePoint(points, clientsRMImap, controller);
@@ -221,16 +219,11 @@ public class ConnectionControllerManager {
         }
     }
 
+    /**
+     * @param winner jsonObject with point and name of the winner it will be sent in broadcast
+     */
     public void sendWinner(JsonObject winner){
         if (clientsRMImap.size() > 0) {
-            /*
-            try {
-                method.put("sendWinner");
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
-             */
             rmi.sendWinner(winner, clientsRMImap, controller);
         }
         if (clientsSOCKET.size() > 0){
@@ -238,16 +231,11 @@ public class ConnectionControllerManager {
         }
     }
 
+    /**
+     * @param scored jsonObject with all point scored by all the player in the game by common goal, it will be sent in broadcast
+     */
     public void sendLastCommonScored(JsonObject scored){
         if (clientsRMImap.size() > 0) {
-            /*
-            try {
-                method.put("sendLastCommonScored");
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
-             */
             rmi.sendLastCommonScored(scored, clientsRMImap, controller);
         }
         if (clientsSOCKET.size() > 0){
@@ -255,16 +243,12 @@ public class ConnectionControllerManager {
         }
     }
 
+    /**
+     * @param error jsonObject with error id and error code
+     * @param playerID recipient of the error msg
+     */
     public void sendError(JsonObject error, String playerID){
         if (clientsRMImap.size() > 0) {
-            /*
-            try {
-                method.put("sendError");
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
-             */
             rmi.sendError(error, playerID, clientsRMImap, controller);
         }
         if (clientsSOCKET.size() > 0){
@@ -272,47 +256,17 @@ public class ConnectionControllerManager {
         }
     }
 
+    /**
+     * server can force the return to the lobby on all client in one game, ending the game
+     */
     public void forceClientDisconnection(){
         if (clientsRMImap.size() > 0) {
-            /*
-            try {
-                method.put("forceClientDisconnection");
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
-             */
             rmi.forceClientDisconnection(clientsRMImap, controller);
         }
         if (clientsSOCKET.size() > 0){
             socket.forceClientDisconnection(clientsSOCKET);
         }
     }
-
-    /*
-    private class blockedQueueHandler implements Runnable{
-
-
-        public void run(){
-            String methodToCall;
-            while(true){
-                try {
-                    methodToCall = method.take();
-                } catch (InterruptedException e) {
-                    return;
-                }
-                switch(methodToCall){
-                    case "":
-
-
-                }
-            }
-        }
-
-    }
-
-     */
-
     /**************************************************************************
      ************************************************** chat ******************
      * ************************************************************************
