@@ -40,6 +40,7 @@ public class RMI extends ConnectionController implements LobbyRemoteInterface {
     public RMI(int port, Lobby lobby , String IP) {
         super(lobby, port, ConnectionType.RMI);
 
+        System.getProperties().setProperty("sun.rmi.transport.tcp.responseTimeout", String.valueOf(pingPongTime));
         System.setProperty("java.rmi.server.hostname", IP);
 
         this.cntType = "RMI";

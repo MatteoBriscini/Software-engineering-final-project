@@ -27,6 +27,9 @@ public class ClientRMI extends ConnectionManager implements PlayingPlayerRemoteI
         super();
         this.PORT = PORT;
         this.serverIP = serverIP;
+
+        System.getProperties().setProperty("sun.rmi.transport.tcp.responseTimeout", String.valueOf(pingPongTime));
+
         Registry registry = LocateRegistry.getRegistry(serverIP, PORT);
         stub = (LobbyRemoteInterface) registry.lookup("LobbyRemoteInterface");
     }
