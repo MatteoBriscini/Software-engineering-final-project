@@ -11,7 +11,9 @@ Members: <br>
 
 ...introduzione sul corso...
 
-## rulebook
+[Example](#Setup-steps)
+
+## Rulebook
 
 resume of the game rules
 * **Objective:** The objective of My Shelfie is to create the most aesthetically pleasing and balanced bookshelf by strategically placing and organizing books and decorative items.
@@ -72,7 +74,7 @@ resume of the game rules
 <br> <br>
   [original_requirements](https://github.com/MatteoBriscini/is23-AM19/blob/master/Deliveries/UML/requirements.pdf)
 
-## design and implementation choices
+## Design and implementation choices
 1. MODELL && CONTROLLER:
    * the majority of the game parameters are configurable and saved in JSON files (resources/json/config). <br> the most important one are:
        1. common goal number for game and value
@@ -113,7 +115,7 @@ resume of the game rules
    booleanResponse = (boolean) getNameMethod.invoke(SOCKET.this, arg0, arg1...);
     ```
 
-## setup steps
+## Setup steps
 1. firs off all make sure you have installed on your machine JDK 17 or over and javafx. <br>
    *you can download it from this link*:
    * [jdk_17](https://www.oracle.com/it/java/technologies/downloads/#java17)
@@ -149,7 +151,7 @@ install vim and type this in terminal:
 sudo vim /etc/hosts
 ```
 in this file search the local host ip (127.0.0.1) and replace it with your actual ip.
-## advance feature 
+## Advance feature 
 more info in the project requirement chapter.
 
 | Functionality                        | State          |
