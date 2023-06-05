@@ -9,9 +9,22 @@ Members: <br>
   * Davide Arcaini: *davide1.arcaini@mail.polimi.it*
   * Riccardo Caprioglio: *riccardo.caprioglio@mail.polimi.it*
 
-...introduzione sul corso...
+this is the final prove of software engineering (a course of third year in Politecnico di Milano), the goal of the project is to implement a real board game into a client-server application based on Java and JavaFx, working on argument theoretically studied during the course.<br>
+in the course students learn object orientation programming (in Java), functional programming in java, principles of structural and functional testing.
 
-[Example](#Setup-steps)
+[official course program](https://www11.ceda.polimi.it/schedaincarico/schedaincarico/controller/scheda_pubblica/SchedaPublic.do?&evn_default=evento&c_classe=744411&__pj0=0&__pj1=af5130f72fce92f31f70af22602dfa8c)
+
+### INDEX: <br>
+1. [Rulebook](#Rulebook)
+2. [Project Requirements](#Project-Requirements)
+3. [Design and implementation choices](#Design-and-implementation-choices)
+4. [Setup steps](#Setup-steps)
+   * [server](#turn-on-the-server)
+   * [cli client](#turn-on-cli-client)
+   * [gui client](#turn-on-gui-client)
+   * [probably problem](#probably-problem)
+5. [Advance feature](#advance-feature-)
+6. [Development State](#development-state)
 
 ## Rulebook
 
@@ -132,7 +145,7 @@ in terminal type:
 java -jar AM19.jar --server
 ```
 if you didn't set it before in the json file you have to change the ip here
-### turn on cli (or tui) client:
+### turn on cli client:
 in terminal type:
 ```
 java -jar AM19.jar --tui
