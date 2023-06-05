@@ -90,7 +90,7 @@ Resume of the game's rules
 
 ## Design and implementation choices
 1. MODELL && CONTROLLER:
-   * The majority of the game parameters are configurable and saved in JSON files (resources/json/config). <br> The most important one are: 
+   * The majority of the game parameters are configurable and saved in JSON files [(resources/json/config)](https://github.com/MatteoBriscini/is23-AM19/tree/master/src/main/resources/json/config). <br> The most important one are: 
        1. common goal number for a match and their value
        2. private goal configuration value, making possible to add new private goal (similar to existing one) without modify the code
        3. spots value, min and max size
