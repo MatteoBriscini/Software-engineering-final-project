@@ -171,19 +171,19 @@ in terminal type:
 ```
 java -jar AM19.jar --server
 ```
->If you didn't set it before in the JSON file you have to change the IP here
+>**Note**: If you didn't set it before in the JSON file you have to change the IP here
 ### Turn on CLI client:
 in terminal type:
 ```
 java -jar AM19.jar --tui
 ```
->If you didn't set it before in the JSON file you have to change the IP here
+>**Note**: If you didn't set it before in the JSON file you have to change the IP here
 ### Turn on GUI client:
 in terminal type:
 ```
 java -jar AM19.jar
 ```
->If you didn't set it before in the JSON file you have to change the IP here (by the settings' button)
+>**Note**: If you didn't set it before in the JSON file you have to change the IP here (by the settings' button)
 ### Possible problems:
 To make RMI client works on ubuntu (or other linux distro) you have to change the host name.<br>
 Install VIM and type this in terminal:
