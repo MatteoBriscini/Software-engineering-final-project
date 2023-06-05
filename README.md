@@ -3,28 +3,29 @@
 # ingegneria del software project [2022-2023]
 ### is23-AM19
 
-Members: <br>
-  * Matteo Briscini: *matteo.briscini@mail.polimi.it*
-  * Luca Castelli: *luca6.castelli@mail.polimi.it*
-  * Davide Arcaini: *davide1.arcaini@mail.polimi.it*
-  * Riccardo Caprioglio: *riccardo.caprioglio@mail.polimi.it*
+>Members: <br>
+>  * Matteo Briscini: *matteo.briscini@mail.polimi.it*
+>  * Luca Castelli: *luca6.castelli@mail.polimi.it*
+> * Davide Arcaini: *davide1.arcaini@mail.polimi.it*
+  >* Riccardo Caprioglio: *riccardo.caprioglio@mail.polimi.it*
 
 this is the final prove of software engineering (a course of third year in Politecnico di Milano), the goal of the project is to implement a real board game into a client-server application based on Java and JavaFx, working on argument theoretically studied during the course.<br>
 in the course students learn object orientation programming (in Java), functional programming in java, principles of structural and functional testing.
 
 [official course program](https://www11.ceda.polimi.it/schedaincarico/schedaincarico/controller/scheda_pubblica/SchedaPublic.do?&evn_default=evento&c_classe=744411&__pj0=0&__pj1=af5130f72fce92f31f70af22602dfa8c)
 
-### INDEX: <br>
+#### INDEX: <br>
 1. [Rulebook](#Rulebook)
 2. [Project Requirements](#Project-Requirements)
 3. [Design and implementation choices](#Design-and-implementation-choices)
-4. [Setup steps](#Setup-steps)
+4. [Testing](#testing)
+5. [Setup steps](#Setup-steps)
    * [server](#turn-on-the-server)
    * [cli client](#turn-on-cli-client)
    * [gui client](#turn-on-gui-client)
    * [probably problem](#probably-problem)
-5. [Advance feature](#advance-feature-)
-6. [Development State](#development-state)
+6. [Advance feature](#advance-feature-)
+7. [Development State](#development-state)
 
 ## Rulebook
 
@@ -128,6 +129,32 @@ resume of the game rules
    booleanResponse = (boolean) getNameMethod.invoke(SOCKET.this, arg0, arg1...);
     ```
 
+## Testing 
+all class and method on the server are tested (with junit) with limit cases, connection logic (rmi and socket) is partially tested, client is fulled tested except for gui or tui class and methods.<br>
+totally the test has a class coverage of 63% (61/96) and a method coverage of 61% (407/658), following some interesting stats.
+<details>
+<summary> 
+    more detailed data
+</summary>
+
+| package or class | Class, % | Class   | Method, % | Method    |
+|------------------|----------|---------|-----------|-----------|
+|                  |          |         |           |           |
+| Lobby            | ---      | ---     | 68%       | 11 / 16   |
+| model            | 100%     | 12 / 12 | 96%       | 78 / 81   |
+| Controller       | ---      | ---     | 90%       | 48 / 53   |
+|                  |          |         |           |           |
+| clientController | 100%     | 3 / 3   | 63%       | 35 / 55   |
+| remoteView       | 100%     | 2 / 2   | 53%       | 8 / 15    |
+|                  |          |         |           |           |
+| clientConnection | 100%     | 4 / 4   | 83%       | 65 / 82   |
+| serverConnection | 83%      | 20 / 24 | 83%       | 125 / 149 |
+
+
+</details>
+
+ you can find all test code [here!](https://github.com/MatteoBriscini/is23-AM19/tree/master/src/test/java/it/polimi/ingsw)
+
 ## Setup steps
 1. firs off all make sure you have installed on your machine JDK 17 or over and javafx. <br>
    *you can download it from this link*:
@@ -176,6 +203,11 @@ more info in the project requirement chapter.
 
 ## Development State
 
+<details>
+<summary> 
+    all development state
+</summary>
+
 | Functionality                                                      | State          | Current                               | Comment                                                                                                                         |
 |--------------------------------------------------------------------|----------------|---------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
 | class: NColorsGroup                                                | :green_circle: | Matteo Briscini                       | <b>implemented && tested </b><br/> it groups the funcionalities of previouse classes (DifferentTarget,EqualTarget,NElementsTarget) |
@@ -205,3 +237,5 @@ more info in the project requirement chapter.
 | TUI                                                                | :green_circle: | Luca Castelli + Matteo Briscini                       | <b>implemented</b>                                                                                                              |
 | GUI                                                                | :green_circle: | Davide Arcaini  + Matteo Briscini                        | <b>implemented</b>                                                                                                                       |
 | Lobby                                                              | :green_circle: |  Riccardo Caprioglio                                     | <b>implemented && tested</b>                                                                                                    |
+
+</details>
