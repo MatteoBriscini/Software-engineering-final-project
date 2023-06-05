@@ -9,28 +9,28 @@
 > * Davide Arcaini: *davide1.arcaini@mail.polimi.it*
   >* Riccardo Caprioglio: *riccardo.caprioglio@mail.polimi.it*
 
-this is the final prove of software engineering (a course of third year in Politecnico di Milano), the goal of the project is to implement a real board game into a client-server application based on Java and JavaFx, working on argument theoretically studied during the course.<br>
-in the course students learn object orientation programming (in Java), functional programming in java, principles of structural and functional testing.
+This is the final exam of software engineering (a course of third year in Polytechnic of Milan). <br> 
+The goal's project is to implement a real board game into a client-server application based on Java and JavaFx, using the theoretically subjects and instruments studied during the course.<br>
+In the course students had learnt object orientation programming (in Java), functional programming in Java, principles of structural and functional testing.
 
 [official course program](https://www11.ceda.polimi.it/schedaincarico/schedaincarico/controller/scheda_pubblica/SchedaPublic.do?&evn_default=evento&c_classe=744411&__pj0=0&__pj1=af5130f72fce92f31f70af22602dfa8c)
 
 #### INDEX: <br>
-1. [Rulebook](#Rulebook)
+1. [Game's rulebook](#Games-rulebook)
 2. [Project Requirements](#Project-Requirements)
 3. [Design and implementation choices](#Design-and-implementation-choices)
-4. [Testing](#testing)
+4. [Testing](#testing-)
 5. [Setup steps](#Setup-steps)
    * [server](#turn-on-the-server)
    * [cli client](#turn-on-cli-client)
    * [gui client](#turn-on-gui-client)
-   * [probably problem](#probably-problem)
-6. [Advance feature](#advance-feature-)
+   * [Possible problems](#possible-problems)
+6. [Advance feature](#advance-features)
 7. [Development State](#development-state)
 
-## Rulebook
-
-resume of the game rules
-* **Objective:** The objective of My Shelfie is to create the most aesthetically pleasing and balanced bookshelf by strategically placing and organizing books and decorative items.
+## Game's rulebook
+Resume of the game's rules
+* **Goal:** The goal of My Shelfie is to create the most aesthetically pleasing and balanced bookshelf by strategically placing and organizing books and decorative items.
 
 * **Components:** The game includes a game board representing a bookshelf, a deck of book cards, decorative item cards, and rule cards.
 
@@ -90,30 +90,30 @@ resume of the game rules
 
 ## Design and implementation choices
 1. MODELL && CONTROLLER:
-   * the majority of the game parameters are configurable and saved in JSON files (resources/json/config). <br> the most important one are:
-       1. common goal number for game and value
-       2. private goal config vale, make possible to add new private goal (similar to existing one) without modify the code.
-       3. spot vale, min and max size
+   * The majority of the game parameters are configurable and saved in JSON files (resources/json/config). <br> The most important one are: 
+       1. common goal number for a match and their value
+       2. private goal configuration value, making possible to add new private goal (similar to existing one) without modify the code
+       3. spots value, min and max size
        4. player board size
        5. main board size and shape
-       6. min and max player in a game
-   * the player has a timer of 3 minutes (configurable from json) to make a move.
-   * when there is only one player in the game, and no one rejoin in 1 minutes (configurable from json), the game will end.
-   * on game creation the client can specify the number of players for the specific game, the controller start the game autonomously when the max player number is reached, only the game creator can start the game when is not reached.
-   * if a player quit (friendly or not) the player will be marked as offline, his turn will be skipped. It is always permitted to a client to rejoin a game.
-   * all movement controls are duplicated on client and server to decrease message on network. if the controller receive an invalid move it will consider the data on all client in that game like obsolete or incorrect.
-   * controller will send to clients all update by delta, to decrease the message weight on the network, all game data are send to the clients only in 3 case:
+       6. min and max player in a match
+   * The player has a 3 minutes timer (configurable from json) to make a move.
+   * When there is only one player in the match, and no one rejoin in 1 minutes (configurable from json), the game will be terminated.
+   * On game creation the client can specify the number of players for the specific match; the Controller start the game autonomously when the max player number is reached. Only the game creator can start the game when is not full.
+   * If a player quit (friendly or not) it will be marked as offline, his turn will be skipped. It is always permitted to a client to rejoin a game.
+   * All movement checks are duplicated on client and server to decrease message on network. If the controller receive an invalid move it will consider the data on all clients, in that march, like obsolete or incorrect.
+   * Controller will send to clients all update by delta, to decrease the message weight on the network, all game data are sent to all the clients only in 3 cases:
      1. on game start
      2. if data on clients are marked as obsoleted or incorrect
-     3. if a player rejoin a game after a quit
+     3. if a player rejoin the game after a quit
 2. RMI:
-   * implemented blocking que on message from server to client to improve speed.
+   * implemented blocking que on message from server to client to improve the speed.
    * implemented ping pong to detect client or server disconnection.
-   * used command pattern on server.
-   * all message use JSON to serialize java classes (used GSON).
+   * used command pattern on the server, to implement messages.
+   * all messages use JSON to serialize java classes (used GSON).
 3. SOCKET:
    * implemented ping pong to detect client or server disconnection.
-   * all message use JSON to serialize java classes, all json are for formats like that:
+   * all message use JSON to serialize java classes. <br> All JSON are formatted like that:
     ```
     {
       "service": "methodName" //needed for message parsing
@@ -122,7 +122,7 @@ resume of the game rules
       }
     }
     ```
-   * used java.lang.reflect.Method to simplify message parsing
+   * used java.lang.reflect.Method to simplify message parsing:
     ``` 
     getNameMethod = SOCKET.this.getClass().getMethod(methodName, arg0, arg1...);//simplified code respect to real implementation
   
@@ -130,14 +130,14 @@ resume of the game rules
     ```
 
 ## Testing 
-all class and method on the server are tested (with junit) with limit cases, connection logic (rmi and socket) is partially tested, client is fulled tested except for gui or tui class and methods.<br>
-totally the test has a class coverage of 63% (61/96) and a method coverage of 61% (407/658), following some interesting stats.
+All classes and methods on the server are tested (with junit) with limit cases. Connection logic (rmi and socket) is partially tested. Client is fulled tested excepted for GUI or CLI classes and methods.<br>
+Globally the test has a Class coverage of 63% (61/96) and a Method coverage of 61% (407/658).<br> Following some interesting statistics.
 <details>
 <summary> 
-    more detailed data
+    More detailed data
 </summary>
 
-| package or class | Class, % | Class   | Method, % | Method    |
+| Package or class | Class, % | Class   | Method, % | Method    |
 |------------------|----------|---------|-----------|-----------|
 |                  |          |         |           |           |
 | Lobby            | ---      | ---     | 68%       | 11 / 16   |
@@ -153,46 +153,46 @@ totally the test has a class coverage of 63% (61/96) and a method coverage of 61
 
 </details>
 
- you can find all test code [here!](https://github.com/MatteoBriscini/is23-AM19/tree/master/src/test/java/it/polimi/ingsw)
+ You can find all test code [here!](https://github.com/MatteoBriscini/is23-AM19/tree/master/src/test/java/it/polimi/ingsw)
 
 ## Setup steps
-1. firs off all make sure you have installed on your machine JDK 17 or over and javafx. <br>
-   *you can download it from this link*:
+1. First of all make sure you have installed on your machine JDK 17 (or over) and Javafx. <br>
+   *You can download it from the following links*:
    * [jdk_17](https://www.oracle.com/it/java/technologies/downloads/#java17)
    * [javafx](https://openjfx.io/) <br>
 
-2. download the jar file from  [here]().  ...mettere link per il jar definitivo..
-3. open a terminal and navigate to the folder were you have saved the jar.
+2. Download the AM19.jar file from  [here]().  ...mettere link per il jar definitivo..
+3. Open a terminal and navigate to the folder were you have saved the AM19.jar.
 
-**note**: you can change server ip and port from a jsonfile in the jar folder (json/config/netConfig.json).<br>
-this take effect in server configuration but also in clients.
-### turn on the server:
+>**Note**: you can change server IP and PORT from a JSON file in the AM19.jar folder (json/config/netConfig.json).<br>
+This will have effect in server configuration, but also in clients.
+### Turn on the server:
 in terminal type:
 ```
 java -jar AM19.jar --server
 ```
-if you didn't set it before in the json file you have to change the ip here
-### turn on cli client:
+>If you didn't set it before in the JSON file you have to change the IP here
+### Turn on CLI client:
 in terminal type:
 ```
 java -jar AM19.jar --tui
 ```
-if you didn't set it before in the json file you have to change the ip here
-### turn on gui client:
+>If you didn't set it before in the JSON file you have to change the IP here
+### Turn on GUI client:
 in terminal type:
 ```
 java -jar AM19.jar
 ```
-if you didn't set it before in the json file you have to change the ip here (by the sett button)
-### probably problem:
-to make rmi client work on ubuntu (or other linux distro) you have to change the host name.<br>
-install vim and type this in terminal:
+>If you didn't set it before in the JSON file you have to change the IP here (by the settings' button)
+### Possible problems:
+To make RMI client works on ubuntu (or other linux distro) you have to change the host name.<br>
+Install VIM and type this in terminal:
 ```
 sudo vim /etc/hosts
 ```
-in this file search the local host ip (127.0.0.1) and replace it with your actual ip.
-## Advance feature 
-more info in the project requirement chapter.
+In this file search the local-host IP (127.0.0.1) and replace it with your actual IP.
+## Advance features
+More info in the [project requirement](#project-requirements) chapter.
 
 | Functionality                        | State          |
 |--------------------------------------|----------------|
@@ -205,7 +205,7 @@ more info in the project requirement chapter.
 
 <details>
 <summary> 
-    all development state
+    All development state
 </summary>
 
 | Functionality                                                      | State          | Current                               | Comment                                                                                                                         |
