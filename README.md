@@ -148,7 +148,7 @@ Don't forget to turn on volume! a relaxing music will accompany you during all y
 </details>
 
 ## Command Line Interface
-
+![alt text](https://github.com/MatteoBriscini/is23-AM19/blob/master/Deliveries/UML/TuiPresImg.png)
 
 ## Testing 
 All classes and methods on the server are tested (with junit) with limit cases. Connection logic (rmi and socket) is partially tested. Client is fulled tested excepted for GUI or CLI classes and methods.<br>
