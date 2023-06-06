@@ -174,7 +174,7 @@ the result is a quite nice and playable version of the game from command line.
 * Type a massage
     ``` 
   /chat "messageBody"  //for broadcast messages
-  /chat --"playerName": "messageBody //for private messages 
+  /chat --"playerName": "messageBody" //for private messages 
     ```
 * Hide interface section<br>
 parameters list: (board, commonGoal, privateGoal)
