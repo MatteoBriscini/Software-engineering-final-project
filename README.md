@@ -25,8 +25,9 @@ In the course students had learnt object orientation programming (in Java), func
    * [cli client](#turn-on-cli-client)
    * [gui client](#turn-on-gui-client)
    * [Possible problems](#possible-problems)
-6. [Advance feature](#advance-features)
-7. [Development State](#development-state)
+6. [GUI](#graphical-user-interface)
+7. [Advance feature](#advance-features)
+8. [Development State](#development-state)
 
 ## Game's rulebook
 Resume of the game's rules
@@ -128,7 +129,8 @@ Resume of the game's rules
   
    booleanResponse = (boolean) getNameMethod.invoke(SOCKET.this, arg0, arg1...);
     ```
-
+## Graphical User Interface
+![alt text](https://github.com/MatteoBriscini/is23-AM19/blob/master/Deliveries/UML/GuiPresImg.png)
 ## Testing 
 All classes and methods on the server are tested (with junit) with limit cases. Connection logic (rmi and socket) is partially tested. Client is fulled tested excepted for GUI or CLI classes and methods.<br>
 Globally the test has a Class coverage of 63% (61/96) and a Method coverage of 61% (407/658).<br> Following some interesting statistics.
