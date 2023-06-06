@@ -26,8 +26,9 @@ In the course students had learnt object orientation programming (in Java), func
    * [gui client](#turn-on-gui-client)
    * [Possible problems](#possible-problems)
 6. [GUI](#graphical-user-interface)
-7. [Advance feature](#advance-features)
-8. [Development State](#development-state)
+7. [CLI](#command-line-interface)
+8. [Advance feature](#advance-features)
+9. [Development State](#development-state)
 
 ## Game's rulebook
 Resume of the game's rules
@@ -132,10 +133,11 @@ Resume of the game's rules
 ## Graphical User Interface
 ![alt text](https://github.com/MatteoBriscini/is23-AM19/blob/master/Deliveries/UML/GuiPresImg.png)
 
-UI isn't only the way as most of all players will play the game, is the first impression with user and will represent yours game concept. <br>
-Different players has different way to play and need different UIs, so we chose to develop a full configurable GUI where all not mandatory (chat, common and private goal) elements can be dynamical squeeze to reach the maximus concentration. <br>
-technically the user interface is made with JavaFx and some file of CSS to make it look better. For improving speed (according to javaFx limitation) all update are created by delta, similar to what was done for the network logic. <br>
-main board is a large clickable element, the selected tiles is deduced by click coordinates. When tiles are selected a new menu is showed, where is possible to reorder the move, select the column on your player board or reset the entire move.
+UI isn't only the way as most of players will play the game, is the first impression with user and will represent yours game concept. <br>
+Different players has different way to play and need different UI, so we chose to develop a full configurable GUI where all not mandatory (chat, common and private goal) elements can be dynamical squeeze to reach the maximus concentration. <br>
+Technically the user interface is made with JavaFx and some file of CSS to make it look better. For improving speed (according to javaFx limitation) all update are created by delta, similar to what was done for the network logic. <br>
+Main board is a large clickable element, the selected tiles is deduced by click coordinates. When tiles are selected a new menu is showed, where is possible to reorder the move, select the column on your player board or reset the entire move.
+Don't forget to turn on volume! a relaxing music will accompany you during all your games
 
 <details>
 <summary> 
@@ -144,6 +146,9 @@ main board is a large clickable element, the selected tiles is deduced by click 
    <br> the advance feature for chat ask to give to players the possibility to send private or public message, in the gui we take trace of all the chat history (including your messages) distinguishing message type with different colors. <br>
    also error and game message will be showed as messages in the chat, if the chat it's closed error messages it will be showed in some popups.
 </details>
+
+## Command Line Interface
+
 
 ## Testing 
 All classes and methods on the server are tested (with junit) with limit cases. Connection logic (rmi and socket) is partially tested. Client is fulled tested excepted for GUI or CLI classes and methods.<br>
