@@ -90,7 +90,7 @@ Resume of the game's rules
   [original_requirements](https://github.com/MatteoBriscini/is23-AM19/blob/master/Deliveries/UML/requirements.pdf)
 
 ## Design and implementation choices
-1. MODELL && CONTROLLER:
+1. MODEL && CONTROLLER:
    * The majority of the game parameters are configurable and saved in JSON files [(resources/json/config)](https://github.com/MatteoBriscini/is23-AM19/tree/master/src/main/resources/json/config). <br> The most important one are: 
        1. common goal number for a match and their value
        2. private goal configuration value, making possible to add new private goal (similar to existing one) without modify the code
@@ -131,6 +131,20 @@ Resume of the game's rules
     ```
 ## Graphical User Interface
 ![alt text](https://github.com/MatteoBriscini/is23-AM19/blob/master/Deliveries/UML/GuiPresImg.png)
+
+UI isn't only the way as most of all players will play the game, is the first impression with user and will represent yours game concept. <br>
+Different players has different way to play and need different UIs, so we chose to develop a full configurable GUI where all not mandatory (chat, common and private goal) elements can be dynamical squeeze to reach the maximus concentration. <br>
+technically the user interface is made with JavaFx and some file of CSS to make it look better. For improving speed (according to javaFx limitation) all update are created by delta, similar to what was done for the network logic. <br>
+main board is a large clickable element, the selected tiles is deduced by click coordinates. When tiles are selected a new menu is showed, where is possible to reorder the move, select the column on your player board or reset the entire move.
+
+<details>
+<summary> 
+    insights into the chat
+</summary>
+   <br> the advance feature for chat ask to give to players the possibility to send private or public message, in the gui we take trace of all the chat history (including your messages) distinguishing message type with different colors. <br>
+   also error and game message will be showed as messages in the chat, if the chat it's closed error messages it will be showed in some popups.
+</details>
+
 ## Testing 
 All classes and methods on the server are tested (with junit) with limit cases. Connection logic (rmi and socket) is partially tested. Client is fulled tested excepted for GUI or CLI classes and methods.<br>
 Globally the test has a Class coverage of 63% (61/96) and a Method coverage of 61% (407/658).<br> Following some interesting statistics.
@@ -156,6 +170,7 @@ Globally the test has a Class coverage of 63% (61/96) and a Method coverage of 6
 </details>
 
  You can find all test code [here!](https://github.com/MatteoBriscini/is23-AM19/tree/master/src/test/java/it/polimi/ingsw)
+
 
 ## Setup steps
 1. First of all make sure you have installed on your machine JDK 17 (or over) and Javafx. <br>
@@ -199,8 +214,8 @@ More info in the [project requirement](#project-requirements) chapter.
 | Functionality                        | State          |
 |--------------------------------------|----------------|
 | chat                                 | :green_circle: |
-| multy game                           | :green_circle: |
-| resilienzy from client disconnection | :green_circle: |
+| multi game                           | :green_circle: |
+| resiliency from client disconnection | :green_circle: |
 
 
 ## Development State
@@ -210,34 +225,34 @@ More info in the [project requirement](#project-requirements) chapter.
     All development state
 </summary>
 
-| Functionality                                                      | State          | Current                               | Comment                                                                                                                         |
-|--------------------------------------------------------------------|----------------|---------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
-| class: NColorsGroup                                                | :green_circle: | Matteo Briscini                       | <b>implemented && tested </b><br/> it groups the funcionalities of previouse classes (DifferentTarget,EqualTarget,NElementsTarget) |
-| CornersGoal <br> <b>class</b>: OneColorPatternGoal                 | :green_circle: | Luca Castelli + Matteo Briscini       | <b>implemented && tested</b>                                                                                                    |
-| class: EightEqualsTarget                                           | :green_circle: | Luca Castelli                         | implemented && tested                                                                                                           |
-| NColorsColumsGoal <br> <b>class</b>: RainbowRowsAndColumnsGoals    | :green_circle: | Luca Castelli                         | <b>implemented && tested</b>                                                                                                    |
-| NColorsRowsGoal <br> <b>class</b>: RainbowRowsAndColumnsGoals      | :green_circle: | Luca Castelli                         | <b>implemented && tested</b>                                                                                                    |
-| GroupGoals                                                         | :green_circle: | Luca Castelli                         | <b>implemented && tested</b>                                                                                                    |
-| class : StairsPattern                                              | :green_circle: | Luca Castelli                         | <b>implemented && tested</b>                                                                                                    |
-| DifferentColomnsGoal <br> <b>class</b>: RainbowRowsAndColumnsGoals | :green_circle: | Luca Castelli + Matteo Briscini       | <b>implemented && tested</b>                                                                                                    |
-| DifferentRowsGoal  <br> <b>class</b>: RainbowRowsAndColumnsGoals   | :green_circle: | Luca Castelli + Matteo Briscini       | <b>implemented && tested</b>                                                                                                    |
-| DiagonAlleyGoal <br> <b>class</b>: OneColorPatternGoal             | :green_circle: | Matteo Briscini                       | <b>implemented && tested</b>                                                                                                    |
-| CrossTarget   <br> <b>class</b>: OneColorPatternGoal               | :green_circle: | Matteo Briscini                       | <b>implemented && tested</b>                                                                                                    |
-| CouplesGoal <br> <b>class</b>: CouplesAndPokersGoals               | :green_circle: | Matteo Briscini                       | <b>implemented && tested</b>                                                                                                    |
-| PokerGoal <br> <b>class</b>: CouplesAndPokersGoals                 | :green_circle: | Matteo Briscini                       | <b>implemented && tested</b>                                                                                                    |
-| class : Player                                                     | :green_circle: | Davide Arcaini + Riccardo Caprioglio  | <b>implemented && tested</b>                                                                                                    |
-| class : SquaresGoal                                                | :green_circle: | Luca Castelli                         | <b>implemented && tested</b>                                                                                                    |
-| class : MainBoard                                                  | :green_circle: | Luca Castelli                         | <b>implemented && tested</b>                                                                                                    |
-| class : PlayerBoard                                                | :green_circle: | Riccardo Caprioglio                   | <b>implemented && tested</b>                                                                                                    |            
-| class : PlayerTarget                                               | :green_circle: | Riccardo Caprioglio                   | <b>implemented && tested</b>                                                                                                    |    
-| class : Chat                                                       | :green_circle: | Matteo Briscini                       | <b>implemented && tested</b>                                                                                                    |    
-| Controller                                                         | :green_circle: | Matteo Briscini                       | <b>implemented && tested</b>                                                                                                    |    
-| ConnectionControllerManager                                        | :green_circle: | Matteo Briscini                       | <b>implemented && tested</b>                                                                                                    |    
-| RMI                                                                | :green_circle: | Matteo Briscini + Riccardo Caprioglio | implemented && partially tested                                                                                                 |    
-| SOCKET                                                   | :green_circle: | Matteo Briscini + Riccardo Caprioglio | implemented && partially tested                                                                                                 |    
-| GameMaster                                                         | :green_circle: | Davide Arcaini                        | <b>implemented && tested<b>                                                                                                     |
-| TUI                                                                | :green_circle: | Luca Castelli + Matteo Briscini                       | <b>implemented</b>                                                                                                              |
-| GUI                                                                | :green_circle: | Davide Arcaini  + Matteo Briscini                        | <b>implemented</b>                                                                                                                       |
-| Lobby                                                              | :green_circle: |  Riccardo Caprioglio                                     | <b>implemented && tested</b>                                                                                                    |
+| Functionality                                                      | State          | Current                               | Comment                                                                                                                            |
+|--------------------------------------------------------------------|----------------|---------------------------------------|------------------------------------------------------------------------------------------------------------------------------------|
+| class: NColorsGroup                                                | :green_circle: | Matteo Briscini                       | <b>implemented && tested </b><br/> it groups the functionalities of previous classes (DifferentTarget,EqualTarget,NElementsTarget) |
+| CornersGoal <br> <b>class</b>: OneColorPatternGoal                 | :green_circle: | Luca Castelli + Matteo Briscini       | <b>implemented && tested</b>                                                                                                       |
+| class: EightEqualsTarget                                           | :green_circle: | Luca Castelli                         | implemented && tested                                                                                                              |
+| NColorsColumsGoal <br> <b>class</b>: RainbowRowsAndColumnsGoals    | :green_circle: | Luca Castelli                         | <b>implemented && tested</b>                                                                                                       |
+| NColorsRowsGoal <br> <b>class</b>: RainbowRowsAndColumnsGoals      | :green_circle: | Luca Castelli                         | <b>implemented && tested</b>                                                                                                       |
+| GroupGoals                                                         | :green_circle: | Luca Castelli                         | <b>implemented && tested</b>                                                                                                       |
+| class : StairsPattern                                              | :green_circle: | Luca Castelli                         | <b>implemented && tested</b>                                                                                                       |
+| DifferentColomnsGoal <br> <b>class</b>: RainbowRowsAndColumnsGoals | :green_circle: | Luca Castelli + Matteo Briscini       | <b>implemented && tested</b>                                                                                                       |
+| DifferentRowsGoal  <br> <b>class</b>: RainbowRowsAndColumnsGoals   | :green_circle: | Luca Castelli + Matteo Briscini       | <b>implemented && tested</b>                                                                                                       |
+| DiagonAlleyGoal <br> <b>class</b>: OneColorPatternGoal             | :green_circle: | Matteo Briscini                       | <b>implemented && tested</b>                                                                                                       |
+| CrossTarget   <br> <b>class</b>: OneColorPatternGoal               | :green_circle: | Matteo Briscini                       | <b>implemented && tested</b>                                                                                                       |
+| CouplesGoal <br> <b>class</b>: CouplesAndPokersGoals               | :green_circle: | Matteo Briscini                       | <b>implemented && tested</b>                                                                                                       |
+| PokerGoal <br> <b>class</b>: CouplesAndPokersGoals                 | :green_circle: | Matteo Briscini                       | <b>implemented && tested</b>                                                                                                       |
+| class : Player                                                     | :green_circle: | Davide Arcaini + Riccardo Caprioglio  | <b>implemented && tested</b>                                                                                                       |
+| class : SquaresGoal                                                | :green_circle: | Luca Castelli                         | <b>implemented && tested</b>                                                                                                       |
+| class : MainBoard                                                  | :green_circle: | Luca Castelli                         | <b>implemented && tested</b>                                                                                                       |
+| class : PlayerBoard                                                | :green_circle: | Riccardo Caprioglio                   | <b>implemented && tested</b>                                                                                                       |            
+| class : PlayerTarget                                               | :green_circle: | Riccardo Caprioglio                   | <b>implemented && tested</b>                                                                                                       |    
+| class : Chat                                                       | :green_circle: | Matteo Briscini                       | <b>implemented && tested</b>                                                                                                       |    
+| Controller                                                         | :green_circle: | Matteo Briscini                       | <b>implemented && tested</b>                                                                                                       |    
+| ConnectionControllerManager                                        | :green_circle: | Matteo Briscini                       | <b>implemented && tested</b>                                                                                                       |    
+| RMI                                                                | :green_circle: | Matteo Briscini + Riccardo Caprioglio | implemented && partially tested                                                                                                    |    
+| SOCKET                                                             | :green_circle: | Matteo Briscini + Riccardo Caprioglio | implemented && partially tested                                                                                                    |    
+| GameMaster                                                         | :green_circle: | Davide Arcaini                        | <b>implemented && tested<b>                                                                                                        |
+| TUI                                                                | :green_circle: | Luca Castelli + Matteo Briscini       | <b>implemented</b>                                                                                                                 |
+| GUI                                                                | :green_circle: | Davide Arcaini  + Matteo Briscini     | <b>implemented</b>                                                                                                                 |
+| Lobby                                                              | :green_circle: | Riccardo Caprioglio                   | <b>implemented && tested</b>                                                                                                       |
 
 </details>
