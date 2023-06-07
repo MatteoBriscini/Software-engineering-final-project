@@ -38,7 +38,7 @@ public class ClientRMI extends ConnectionManager implements PlayingPlayerRemoteI
 
     public void connection() throws Exception {
         Timer timer = new Timer();       //start ping pong
-        timer.schedule(new PingPong(timer),15, pingPongTime);
+        timer.schedule(new PingPong(timer),pingPongTime, pingPongTime);
     }
 
     /**

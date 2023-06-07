@@ -100,7 +100,7 @@ public class RMI extends ConnectionController implements LobbyRemoteInterface {
      */
     private void pong(PlayingPlayerRemoteInterface client_ref, String playerID, Controller controller){
         Timer timer = new Timer();
-        timer.schedule(new PingPong(client_ref, playerID, controller, timer), 15, pingPongTime);
+        timer.schedule(new PingPong(client_ref, playerID, controller, timer), pingPongTime, pingPongTime);
     }
 
     private class PingPong extends TimerTask {
