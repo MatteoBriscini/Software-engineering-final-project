@@ -203,6 +203,7 @@ public class TUI implements UserInterface{
                 System.out.println(TextColor.YELLOW.get() + "/pick [column;x,y;x,y...] " + TextColor.DEFAULT.get() + " to make a move (column, x and y have to be numbers)");
                 System.out.println(TextColor.YELLOW.get() + "/hide" + TextColor.DEFAULT.get() + " to hide content of the ui (options: --board --commongoal --privategoal");
                 System.out.println(TextColor.YELLOW.get() + "/show" + TextColor.DEFAULT.get() + " to show content of the ui (options: --board --commongoal --privategoal");
+                System.out.println(TextColor.YELLOW.get() + "/current" + TextColor.DEFAULT.get() + " to see the current player");
             } else if (s.startsWith("/pick")) {
                 int index1 = s.indexOf('[');
                 int index2 = s.indexOf(']');
@@ -226,7 +227,11 @@ public class TUI implements UserInterface{
                     if(c!='Y' && c!='N')
                         this.printError("Invalid selection,please try again");
                 }while (c!='Y' && c!='N');
-            }   else this.printError("Invalid command, please try again (/help to see the allowed commands)");
+            }
+            else if(s.equals("/current")){
+                System.out.println(TextColor.YELLOW.get() +"CURRENT PLAYER: " + ((PlayingPlayer)player).getActivePlayer() + TextColor.DEFAULT.get());
+            }
+            else this.printError("Invalid command, please try again (/help to see the allowed commands)");
 
         }
     }
@@ -582,7 +587,7 @@ public class TUI implements UserInterface{
 
     private boolean checkReorder(int index, int size, ArrayList<Integer> order){
         if(order.contains(index)){
-            this.printError("Can't type two time same number");
+            this.printError("Can't type two times the same number");
             return false;
         }
         if(index>=size){
@@ -678,7 +683,7 @@ public class TUI implements UserInterface{
         char selection;
         int n=((PlayingPlayer)player).getPlayersID().length;
         String[][] table = new String[n][n];
-        for(int i=0;i<n; i++){
+        for(int i=n-1;i>0; i--){
             table[i][0]= ((PlayingPlayer)player).getPlayersID()[i];
             table[i][1]= tableJ.get(((PlayingPlayer)player).getPlayersID()[i]).getAsString();
         }
