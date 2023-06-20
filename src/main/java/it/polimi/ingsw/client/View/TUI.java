@@ -692,7 +692,7 @@ public class TUI implements UserInterface{
         printTitle();
         System.out.println("FINAL RESULTS:");
         for(int i=n-1;i>=0;i--){
-            System.out.println("#"+(i+1)+": "+table[i][0]+"\tpoints: "+table[i][1]);
+            System.out.println("#"+(n-i)+": "+table[i][0]+"\tpoints: "+table[i][1]);
         }
         do{
             System.out.println("Do you want to start a new game? [Y/N]");
