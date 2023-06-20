@@ -108,12 +108,18 @@ Resume of the game's rules
      1. on game start
      2. if data on clients are marked as obsoleted or incorrect
      3. if a player rejoin the game after a quit
-2. RMI:
+2. LOBBY:
+   * implemented local sign up and login system using a JSON file saved in a config directory in the user home directory
+   * implemented reconnection to game if player disconnects
+   * implemented multiple games
+   * the player can choose to enter a random game or a game with a selected player
+   * the player can create a game with the standard number of players or with a maximum number of players that can join
+3. RMI:
    * implemented blocking que on message from server to client to improve the speed.
    * implemented ping pong to detect client or server disconnection.
    * used command pattern on the server, to implement messages.
    * all messages use JSON to serialize java classes (used GSON).
-3. SOCKET:
+4. SOCKET:
    * implemented ping pong to detect client or server disconnection.
    * all message use JSON to serialize java classes. <br> All JSON are formatted like that:
     ```
