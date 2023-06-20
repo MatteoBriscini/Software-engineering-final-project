@@ -423,8 +423,6 @@ public class GameController extends GuiView implements Initializable {
             gridPane.setLayoutX(17);
             gridPane.setLayoutY(-4);
 
-            System.out.println(i + " " + players);
-
             PlayerBoard playerBoard = player.getPlayerBoard(players.get(i));
             Card[][] cards = playerBoard.getBoard();
 
