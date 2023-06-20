@@ -76,32 +76,30 @@ public class EndgameController extends GuiView implements Initializable{
      */
     public void endgamePoints(JsonObject points){
 
-        TreeMap<Integer, String> pointsMap = new TreeMap<>();
         PlayingPlayer player = (PlayingPlayer) helloApplication.getPlayer();
-        String[] players = player.getPlayersID();
-
-        for(String s: players){
-            pointsMap.put(points.get(s).getAsInt(), s);
+        Scanner sc = new Scanner(System.in);
+        char selection;
+        int n=((PlayingPlayer)player).getPlayersID().length;
+        String[][] table = new String[n][n];
+        for(int i=0;i<n; i++){
+            table[i][0]= ((PlayingPlayer)player).getPlayersID()[i];
+            table[i][1]= points.get(((PlayingPlayer)player).getPlayersID()[i]).getAsString();
         }
+        Arrays.sort(table, Comparator.comparingInt(row->Integer.parseInt(row[1])));
 
-        for(int i = pointsMap.keySet().size()-1; i>=0;i--){
-            Integer index = (Integer) pointsMap.keySet().toArray()[i];
+        for(int i=n-1;i>=0;i--){
             Label label = new Label();
-            label.setText(pointsMap.get(index)+ ": " + index);
-            if (pointsMap.get(index).equals(player.getPlayerID())) label.setId("yourScore");
+            label.setText(table[i][0]+ ": " + table[i][1]);
+            if (table[i][0].equals(player.getPlayerID())) label.setId("yourScore");
             placing.getChildren().add(label);
         }
-        p1.setText((String) pointsMap.values().toArray()[1]);
-        p2.setText((String) pointsMap.values().toArray()[0]);
 
+        p1.setText((String) table[table.length-1][0]);
+        p2.setText((String) table[table.length-2][0]);
 
-
-        if(players.length > 2) {
-            p1.setText((String) pointsMap.values().toArray()[2]);
-            p2.setText((String) pointsMap.values().toArray()[1]);
-            p3.setText((String) pointsMap.values().toArray()[0]);
+        if(table.length > 2) {
+            p3.setText((String) table[table.length-3][0]);
         }else podium.getChildren().remove(p3);
-
 
     }
     @FXML
