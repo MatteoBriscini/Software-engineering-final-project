@@ -99,7 +99,7 @@ public class EndgameController extends GuiView implements Initializable{
         if(players.length > 2) {
             p1.setText((String) pointsMap.values().toArray()[2]);
             p2.setText((String) pointsMap.values().toArray()[1]);
-            p2.setText((String) pointsMap.values().toArray()[0]);
+            p3.setText((String) pointsMap.values().toArray()[0]);
         }else podium.getChildren().remove(p3);
 
 

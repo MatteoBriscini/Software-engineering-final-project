@@ -230,7 +230,7 @@ public class GameController extends GuiView implements Initializable {
         } else bookshelfAnchor.getChildren().removeAll(myBookshelfBox2);
         if(otherPlayers.size()>2) {
             imagesInit(myBookshelfImage3, "bookshelf_orth.png");
-            shelfID2.setText(otherPlayers.get(2));
+            shelfID3.setText(otherPlayers.get(2));
         } else bookshelfAnchor.getChildren().removeAll(myBookshelfBox3);
     }
 
@@ -422,6 +422,8 @@ public class GameController extends GuiView implements Initializable {
             gridPane.setHgap(5);
             gridPane.setLayoutX(17);
             gridPane.setLayoutY(-4);
+
+            System.out.println(i + " " + players);
 
             PlayerBoard playerBoard = player.getPlayerBoard(players.get(i));
             Card[][] cards = playerBoard.getBoard();
