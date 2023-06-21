@@ -463,7 +463,7 @@ public class GameController extends GuiView implements Initializable {
         }
         positions.add(new Position(columnX, lineY));
 
-        insertTails(columnX, lineY);
+        insertTails(columnX, lineY, positions.size()-1);
 
     }
 
@@ -508,12 +508,20 @@ public class GameController extends GuiView implements Initializable {
      * @param x parameter used to understand which tail we had to insert
      * @param y parameter used to understand which tail we had to insert
      */
-    private void insertTails(int x, int y){
+    private void insertTails(int x, int y, int pose){
 
         Card[][] mainBoard = player.getMainBoard().getBoard();
 
         String file = CardImage.getImgName(mainBoard[x][y].getSketch(), mainBoard[x][y].getColor());
         ImageView card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file), 60, 60, false, false));
+        card.setId("takenCard");
+        card.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                onClickReorde(pose);
+            }
+        });
+
         myTails.getChildren().add(card);
 
         for(Node n: mainBoardGrid.getChildren()){
@@ -524,9 +532,18 @@ public class GameController extends GuiView implements Initializable {
         }
     }
 
+    private void onClickReorde(int pose){
+        Position tmp = positions.get(pose);
+        positions.remove(pose);
+        positions.add(0, tmp);
+
+        myTails.getChildren().clear();
+        this.insertAllTails();
+    }
+
     private void insertAllTails(){
-        for(Position position: positions){
-            insertTails(position.getX(), position.getY());
+        for(int i=0;i< positions.size();i++){
+            insertTails(positions.get(i).getX(), positions.get(i).getY(),i);
         }
 
     }
@@ -551,7 +568,7 @@ public class GameController extends GuiView implements Initializable {
         }
     }
 
-    void removeTakenCard(int x, int y){
+    private void removeTakenCard(int x, int y){
         positions.removeIf(p -> p.getX() == x && p.getY() == y);
         for(Node n: mainBoardGrid.getChildren()){
             if(GridPane.getRowIndex(n) == player.getMainBoard().getColumns()-y-1 && GridPane.getColumnIndex(n) == x){

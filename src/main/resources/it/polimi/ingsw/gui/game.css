@@ -8,7 +8,7 @@
 .label{
     -fx-font-family: "Bitstream Vera Sans Mono";
 }
-.button, #myPlayerBoardGrid{
+.button, #myPlayerBoardGrid, #takenCard{
     -fx-cursor: hand;
 }
 #logo{
