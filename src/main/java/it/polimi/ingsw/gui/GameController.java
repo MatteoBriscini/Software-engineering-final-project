@@ -18,6 +18,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import it.polimi.ingsw.client.Player.PlayingPlayer;
@@ -338,6 +339,7 @@ public class GameController extends GuiView implements Initializable {
         myPlayerBoardGrid.setVgap(9);
         myPlayerBoardGrid.setLayoutX(42);
         myPlayerBoardGrid.setLayoutY(-13);
+        myPlayerBoardGrid.setId("myPlayerBoardGrid");
         PlayerBoard playerBoard = player.getPlayerBoard(player.getPlayerID());
         Card[][] cards = playerBoard.getBoard();
 
@@ -439,7 +441,10 @@ public class GameController extends GuiView implements Initializable {
         lineY = Estimate.estimateY(y);
 
         for(Position p: positions){
-            if(p.getX()==columnX && p.getY()==lineY)return;
+            if(p.getX()==columnX && p.getY()==lineY){
+                removeTakenCard(p.getX(),p.getY());
+                return;
+            }
         }
 
         Card[][] livingroom = player.getMainBoard().getBoard();
@@ -545,6 +550,19 @@ public class GameController extends GuiView implements Initializable {
                 errorMsg("invalid column value");
         }
     }
+
+    void removeTakenCard(int x, int y){
+        positions.removeIf(p -> p.getX() == x && p.getY() == y);
+        for(Node n: mainBoardGrid.getChildren()){
+            if(GridPane.getRowIndex(n) == player.getMainBoard().getColumns()-y-1 && GridPane.getColumnIndex(n) == x){
+                n.setEffect(new ColorAdjust(0, 0, 0, 0));
+            }
+        }
+        myTails.getChildren().clear();
+
+        this.insertAllTails();
+        if(positions.size()==0)resetMove();
+    }
     private void resetMove(){
         bookshelfAnchor.getChildren().clear();
         bookshelfAnchor.getChildren().addAll(othersBookshelf);
@@ -621,6 +639,35 @@ public class GameController extends GuiView implements Initializable {
                 double x = event.getX();
                 double y = event.getY();
                 GameController.this.takeCard(x,y);
+            }
+        });
+
+        myPlayerBoardGrid.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if(positions.size()>0){
+                    double x = event.getX();
+                    if(x<43){
+                        player.takeCard(0, positions.toArray(new Position[0]));
+                        GameController.this.resetMove();
+                    }
+                    else if(x>61&&x<104){
+                        player.takeCard(1, positions.toArray(new Position[0]));
+                        GameController.this.resetMove();
+                    }
+                    else if(x>120&&x<163){
+                        player.takeCard(2, positions.toArray(new Position[0]));
+                        GameController.this.resetMove();
+                    }
+                    else if(x>179&&x<222){
+                        player.takeCard(3, positions.toArray(new Position[0]));
+                        GameController.this.resetMove();
+                    }
+                    else if(x>237){
+                        player.takeCard(4, positions.toArray(new Position[0]));
+                        GameController.this.resetMove();
+                    }
+                }
             }
         });
     }

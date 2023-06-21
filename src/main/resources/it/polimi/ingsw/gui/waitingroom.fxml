@@ -12,6 +12,6 @@
       <ImageView fx:id="titleImage" fitHeight="550.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true" />
       <Label layoutX="255.0" layoutY="600.0" text="this is the waiting room" />
       <AnchorPane fx:id="space" />
-      <Label fx:id="playerGamesLabel" layoutX="196.0" layoutY="200.0" prefHeight="18.0" prefWidth="250.0" text="PLAYER GAMES: " />
+      <Label fx:id="playerGamesLabel" layoutX="196.0" layoutY="200.0" prefHeight="18.0" prefWidth="320.0" text="PLAYERS IN GAME: " />
       <Button layoutX="274.0" layoutY="305.0" mnemonicParsing="false" onAction="#startClick" text="start" />
 </VBox>

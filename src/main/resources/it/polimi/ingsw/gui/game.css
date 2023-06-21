@@ -8,7 +8,7 @@
 .label{
     -fx-font-family: "Bitstream Vera Sans Mono";
 }
-.button, livingRoomClickable{
+.button, #myPlayerBoardGrid{
     -fx-cursor: hand;
 }
 #logo{

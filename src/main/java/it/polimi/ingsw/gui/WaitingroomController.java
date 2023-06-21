@@ -38,7 +38,7 @@ public class WaitingroomController extends GuiView implements Initializable {
     }
 
     public void changeNumPlayer(int num){
-        playerGamesLabel.setText("PLAYER GAMES: " + num);
+        playerGamesLabel.setText("PLAYERS IN GAME: " + num);
     }
 
 
