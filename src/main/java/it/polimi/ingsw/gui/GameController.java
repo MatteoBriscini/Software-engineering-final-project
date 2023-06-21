@@ -284,27 +284,19 @@ public class GameController extends GuiView implements Initializable {
 
         //TO FIX BOARD DIMENSION
         String file = CardImage.getImgName(0,BLUE);
-        ImageView card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file)));
-        card.setFitHeight(50);
-        card.setFitWidth(50);
+        ImageView card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file), 50, 50, false, false));
         card.setVisible(false);
         GridPane.setConstraints(card,0,0);
         mainBoardGrid.getChildren().add(card);
-        card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file)));
-        card.setFitHeight(50);
-        card.setFitWidth(50);
+        card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file), 50, 50, false, false));
         card.setVisible(false);
         GridPane.setConstraints(card,0,8);
         mainBoardGrid.getChildren().add(card);
-        card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file)));
-        card.setFitHeight(50);
-        card.setFitWidth(50);
+        card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file), 50, 50, false, false));
         card.setVisible(false);
         GridPane.setConstraints(card,8,8);
         mainBoardGrid.getChildren().add(card);
-        card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file)));
-        card.setFitHeight(50);
-        card.setFitWidth(50);
+        card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file), 50, 50, false, false));
         card.setVisible(false);
         GridPane.setConstraints(card,8,0);
         mainBoardGrid.getChildren().add(card);
@@ -313,9 +305,7 @@ public class GameController extends GuiView implements Initializable {
         for(int x=0;x<player.getMainBoard().getColumns();x++){
             for (int y=0;y<player.getMainBoard().getRows(); y++){
                     file = CardImage.getImgName(mainBoard[x][y].getSketch(), mainBoard[x][y].getColor());
-                    card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file)));
-                    card.setFitHeight(50);
-                    card.setFitWidth(50);
+                    card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file), 50, 50, false, false));
                     if(mainBoard[x][y].getColor().equals(EMPTY))card.setVisible(false);
                     card.setId("tile");
                     GridPane.setConstraints(card,x,player.getMainBoard().getColumns()-y-1);
@@ -354,9 +344,7 @@ public class GameController extends GuiView implements Initializable {
         for(int x=0;x<playerBoard.getColumns();x++){
             for (int y=0;y<playerBoard.getRows(); y++){
                 String file = CardImage.getImgName(cards[x][y].getSketch(), cards[x][y].getColor());
-                ImageView card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file)));
-                card.setFitHeight(42);
-                card.setFitWidth(42);
+                ImageView card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file), 42, 42, false, false));
                 if(cards[x][y].getColor().equals(EMPTY))card.setVisible(false);
                 GridPane.setConstraints(card, x, player.getMainBoard().getColumns()-y);
                 myPlayerBoardGrid.getChildren().add(card);
@@ -397,9 +385,7 @@ public class GameController extends GuiView implements Initializable {
 
         for(Card card: c){
             String file = CardImage.getImgName(card.getSketch(), card.getColor());
-            ImageView cardImg = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file)));
-            cardImg.setFitHeight(size);
-            cardImg.setFitWidth(size);
+            ImageView cardImg = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file), size, size, false, false));
             GridPane.setConstraints(cardImg, column, player.getMainBoard().getColumns()-y);
             gridPane.getChildren().add(cardImg);
             y++;
@@ -429,9 +415,7 @@ public class GameController extends GuiView implements Initializable {
             for (int x = 0; x < playerBoard.getColumns(); x++) {
                 for (int y = 0; y < playerBoard.getRows(); y++) {
                     String file = CardImage.getImgName(cards[x][y].getSketch(), cards[x][y].getColor());
-                    ImageView card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file)));
-                    card.setFitHeight(17);
-                    card.setFitWidth(17);
+                    ImageView card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file), 17, 17, false, false));
                     if(cards[x][y].getColor().equals(EMPTY))card.setVisible(false);
                     GridPane.setConstraints(card, x, player.getMainBoard().getColumns() - y);
                     gridPane.getChildren().add(card);
@@ -524,10 +508,7 @@ public class GameController extends GuiView implements Initializable {
         Card[][] mainBoard = player.getMainBoard().getBoard();
 
         String file = CardImage.getImgName(mainBoard[x][y].getSketch(), mainBoard[x][y].getColor());
-        ImageView card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file)));
-        card.setFitHeight(60);
-        card.setFitWidth(60);
-
+        ImageView card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file), 60, 60, false, false));
         myTails.getChildren().add(card);
 
         for(Node n: mainBoardGrid.getChildren()){
@@ -649,26 +630,20 @@ public class GameController extends GuiView implements Initializable {
         commonGoalsScore.setTranslateY(15);
         commonGoalsScore.getChildren().clear();
 
-        JsonObject[] goal = player.getCommonGoalScored();
+        ArrayList<JsonObject> goal = new ArrayList<>(List.of(player.getCommonGoalScored()));
+        goal.removeIf(jsonObject -> !jsonObject.get("playerID").getAsString().equals(player.getPlayerID()));
         for(JsonObject jsonObject: goal){
-            if(jsonObject.get("playerID").getAsString().equals(player.getPlayerID())){
-                if(goal.length == 1 && jsonObject.get("commonGoalId").getAsInt()==1){
+                if(goal.size() == 1 && jsonObject.get("commonGoalId").getAsInt()==1){
                     String imgFile = CommonGoalScore.getImgName(jsonObject.get("value").getAsInt());
-                    Image image = new Image(this.getClass().getClassLoader().getResourceAsStream(imgFile));
+                    Image image = new Image(this.getClass().getClassLoader().getResourceAsStream(imgFile), 100, 100, false, false);
                     ImageView imgView = new ImageView(image);
-                    imgView.setFitHeight(100);
-                    imgView.setFitWidth(100);
                     imgView.setVisible(false);
                     commonGoalsScore.getChildren().add(imgView);
                 }
                 String imgFile = CommonGoalScore.getImgName(jsonObject.get("value").getAsInt());
-                Image image = new Image(this.getClass().getClassLoader().getResourceAsStream(imgFile));
+                Image image = new Image(this.getClass().getClassLoader().getResourceAsStream(imgFile), 100, 100, false, false);
                 ImageView imgView = new ImageView(image);
-
-                imgView.setFitHeight(100);
-                imgView.setFitWidth(100);
                 commonGoalsScore.getChildren().add(imgView);
-            }
         }
     }
 
