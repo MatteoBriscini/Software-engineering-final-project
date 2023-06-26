@@ -1,5 +1,5 @@
 
-![alt text](https://github.com/MatteoBriscini/is23-AM19/blob/master/Deliveries/UML/Display_1.jpg)
+![alt text](https://github.com/MatteoBriscini/is23-AM19/blob/master/Deliveries/others/Display_1.jpg)
 # ingegneria del software project [2022-2023]
 ### is23-AM19
 
@@ -52,7 +52,7 @@ Resume of the game's rules
 
 * **End of Game:** The game ends when all players have placed all their book and decorative item cards on their shelves. Final scoring takes place, and the player with the highest score wins the game.
 <br> <br> <br>
-[original_rulebook](https://github.com/MatteoBriscini/is23-AM19/blob/master/Deliveries/UML/MyShelfie_Ruleboo_ENG.pdf)
+[original_rulebook](https://github.com/MatteoBriscini/is23-AM19/blob/master/Deliveries/MyShelfie_Ruleboo_ENG.pdf)
 
 
 ## Project Requirements
@@ -88,7 +88,7 @@ Resume of the game's rules
     Resilience to disconnections: Allow disconnected players to rejoin the game. <br>
     Chat: Enable players to communicate via text messages during the game. <br>
 <br> <br>
-  [original_requirements](https://github.com/MatteoBriscini/is23-AM19/blob/master/Deliveries/UML/requirements.pdf)
+  [original_requirements](https://github.com/MatteoBriscini/is23-AM19/blob/master/Deliveries/requirements.pdf)
 
 ## Design and implementation choices
 1. MODEL && CONTROLLER:
@@ -137,7 +137,7 @@ Resume of the game's rules
    booleanResponse = (boolean) getNameMethod.invoke(SOCKET.this, arg0, arg1...);
     ```
 ## Graphical User Interface
-![alt text](https://github.com/MatteoBriscini/is23-AM19/blob/master/Deliveries/UML/GuiPresImg.png)
+![alt text](https://github.com/MatteoBriscini/is23-AM19/blob/master/Deliveries/others/GuiPresImg.png)
 
 UI isn't only the way as most of the players will play the game, is the first impression with user and will represent yours game concept. <br>
 Different players has different way to play and need different UI, so we chose to develop a full configurable GUI where all not mandatory (chat, common and private goal) elements can be dynamical squeeze to reach the maximus concentration. <br>
@@ -154,7 +154,7 @@ Don't forget to turn on volume! a relaxing music will accompany you during all y
 </details>
 
 ## Command Line Interface
-![alt text](https://github.com/MatteoBriscini/is23-AM19/blob/master/Deliveries/UML/TuiPresImg.png)
+![alt text](https://github.com/MatteoBriscini/is23-AM19/blob/master/Deliveries/others/TuiPresImg.png)
 
 develop a CLI is match faster than develop and design a GUI, so we had start to develop CLI and GUI in parallel to have as soon as possible a playable version of the game to test it.
 the result is a quite nice and playable version of the game from command line.
