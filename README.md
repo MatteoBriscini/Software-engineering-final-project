@@ -154,11 +154,11 @@ Don't forget to turn on volume! a relaxing music will accompany you during all y
 ## Command Line Interface
 ![alt text](https://github.com/MatteoBriscini/is23-AM19/blob/master/Deliveries/others/TuiPresImg.png)
 
-Develop a CLI is much faster than develop and design a GUI, so we had started to develop CLI and GUI in parallel to have, as soon as possible, a playable version of the game to test it. <br>
-The result is a quite nice and playable version of the game from the command line.
+develop a CLI is match faster than develop and design a GUI, so we had start to develop CLI and GUI in parallel to have as soon as possible a playable version of the game to test it.
+the result is a quite nice and playable version of the game from command line.
 
 > **knew problem:**
-> if the client receive un update or a chat message, during typing, the update wil be printed and input command will be broke, we had chosen not to solve it.
+> if the client receive un update or a chat message during typing the update wil be printed and input command will be broke, we had chose not to solve it.
 
 <details>
     <summary>command list (for in game phase)</summary>
