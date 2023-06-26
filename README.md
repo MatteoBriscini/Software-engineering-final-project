@@ -31,64 +31,62 @@ In the course students had learnt object orientation programming (in Java), func
 9. [Development State](#development-state)
 
 ## Game's rulebook
-Resume of the game's rules
-* **Goal:** The goal of My Shelfie is to create the most aesthetically pleasing and balanced bookshelf by strategically placing and organizing books and decorative items.
+Resume of the game's rules:
+* **Goal:** the goal of My Shelfie is to create the most aesthetically pleasing and balanced bookshelf by strategically placing and organizing books and decorative items.
 
-* **Components:** The game includes a game board representing a bookshelf, a deck of book cards, decorative item cards, and rule cards.
+* **Components:** the game includes a main board, 4 player boards representing a bookshelf, a deck of tiles, goal cards, and a rule card.
 
-* **Setup:** Each player starts with a blank bookshelf game board. The book cards and decorative item cards are shuffled separately and placed face-down as draw piles. Each player draws a certain number of book cards and a decorative item card to begin.
+* **Setup:** each player starts with a blank bookshelf game board. The book cards and goal cards are shuffled separately and placed face-down as draw piles. Each player draws a certain number of book cards and a goal card to begin.
 
-* **Turn Structure:** The game is played in turns, with players taking actions one at a time in clockwise order. On your turn, you can perform one of the following actions: <br>
-  1. Draw Cards: Draw a book card from the book card draw pile or a decorative item card from the decorative item card draw pile. You can only draw one card per turn. <br>
-  2. Place Book: Play a book card from your hand onto your bookshelf. Each book card has specific characteristics, such as genre, color, or size, which affect scoring. <br>
-  3. Place Decorative Item: Play a decorative item card from your hand onto your bookshelf. Decorative items enhance the aesthetics of your shelf but do not contribute to scoring. <br>
-  4. Rearrange: Move one book card or decorative item card from your shelf to a different location on your bookshelf. You can only rearrange items within your own shelf. <br>
+* **Turn structure:** the game is played in turns, with players taking actions one at a time in clockwise order. On your turn, you can perform one of the following actions: <br>
+  1. Draw cards: draw a book card from the main board, in group from one to three, adjacent and placed on the same row or column. <br>
+  2. Place book: place the book cards from your hand onto your bookshelf, all in the same column. Each book card has specific characteristics, such as genre, or color, which affect scoring. <br>
   
-* **Scoring:** Scoring occurs at the end of the game. The shelfie is scored based on various criteria, including: <br>
-  1. Genre Organization: Books of the same genre placed adjacent to each other on the shelf gain bonus points. <br>
-  2. Color Harmony: Books of similar colors placed together create a visually appealing shelf and earn additional points. <br>
-  3. Size Balance: A well-balanced arrangement of different-sized books adds to the overall shelf appeal and scores points. <br>
-  4. Decorative Items: Each decorative item card adds a certain number of points to the final score. <br>
+* **Scoring:** scoring calculation occurs at the end of the game. The shelfie is scored based on various criteria, including: <br>
+  1. Genre organization: books of the same type, placed adjacent to each other on the shelf, gain bonus points. <br>
+  2. Color harmony: books of same colors, placed together, create a visually appealing shelf and earn additional points. <br>
+  3. Goal items: each goal card adds a certain number of points to the final score. <br>
 
-* **End of Game:** The game ends when all players have placed all their book and decorative item cards on their shelves. Final scoring takes place, and the player with the highest score wins the game.
+* **End of game:** the game end when one players has completely filled his bookshelf. Final scoring calculation takes place, and the player with the highest score wins the game.
 <br> <br> <br>
+
 [original_rulebook](https://github.com/MatteoBriscini/is23-AM19/blob/master/Deliveries/MyShelfie_Ruleboo_ENG.pdf)
 
 
 ## Project Requirements
 
    The requirements are divided into two groups: <br>
-       Game-specific requirements that relate to the rules and mechanics of the game. <br>
-       Game-agnostic requirements that relate to design, technology, or implementation aspects.
+   1. Game specific requirements: relate to the rules and mechanics of the game. <br>
+   2. Game agnostic requirements: relate to design, technology, or implementation aspects.
        
-* **Game-Specific** Requirements: <br>
-    The game rules are described in the provided rulebook files.
-    Use English for class names, interfaces, methods, variables, comments, and technical documentation.
-    The user interface language can be either English or Italian.
-    Evaluation can be done based on simplified or complete rules, as specified in the rulebook files.
+* **Game specific requirements:** <br>
+    the game rules are described in the provided rulebook file; <br>
+    use English for class names, interfaces, methods, variables, comments, and technical documentation; <br>
+    yhe project can be done based on simplified or complete game rules, as specified in the rulebook file; <br>
 
-* **Game-Agnostic Requirements:** <br>
+* **Game agnostic requirements:** <br>
     Implement a distributed client-server system using the Model-View-Controller (MVC) pattern.
 
-* **Server Requirements:** <br>
-    Implement game rules using JavaSE. <br>
-    Create a single server instance to handle one game (or multiple games if advanced functionality is implemented). <br>
-    Allow players to take turns using client instances connected to the server via TCP-IP or RMI. <br>
-    Support different technologies for players using different clients. <br>
+  * **Server requirements:** <br>
+      implement game rules using JavaSE; <br>
+      create a single server instance to handle one game (or multiple games if advanced functionality is implemented); <br>
+      allow players to take turns using client instances connected to the server via TCP-IP or RMI; <br>
+      support different technologies for players using several clients; <br>
 
-* **Client Requirements:** <br>
-    Implement client functionality using JavaSE. <br>
-    Implement a graphical user interface (GUI) using Swing or JavaFX. <br>
-    Allow players to choose between a text-based user interface (TUI) or a graphical user interface (GUI). <br>
-    Support both Socket and RMI communication technologies. <br>
+  * **Client requirements:** <br>
+      implement client functionality using JavaSE; <br>
+      allow players to choose between a text-based user interface (TUI) or a graphical user interface (GUI); <br>
+      implement a graphical user interface (GUI) using Swing or JavaFX; <br>
+      support both Socket and RMI communication technologies; <br>
 
-* **Advanced Features (Optional):** <br>
-    Multiple games: Implement the server to handle multiple games simultaneously. <br>
-    Persistence: Periodically save the game state on disk for resuming after server crashes. <br>
-    Resilience to disconnections: Allow disconnected players to rejoin the game. <br>
-    Chat: Enable players to communicate via text messages during the game. <br>
-<br> <br>
-  [original_requirements](https://github.com/MatteoBriscini/is23-AM19/blob/master/Deliveries/requirements.pdf)
+  * **Advanced features (optional):** <br>
+      multiple games: implement the server to handle multiple games simultaneously; <br>
+      persistence: periodically save the game state on disk for resuming after server crashes; <br>
+      resilience to disconnections: allow disconnected players to rejoin the game; <br>
+      chat: enable players to communicate via text messages (private or public) during the game; <br>
+  <br> <br>
+  
+[original_requirements](https://github.com/MatteoBriscini/is23-AM19/blob/master/Deliveries/requirements.pdf)
 
 ## Design and implementation choices
 1. MODEL && CONTROLLER:
@@ -139,28 +137,28 @@ Resume of the game's rules
 ## Graphical User Interface
 ![alt text](https://github.com/MatteoBriscini/is23-AM19/blob/master/Deliveries/others/GuiPresImg.png)
 
-UI isn't only the way as most of the players will play the game, is the first impression with user and will represent yours game concept. <br>
-Different players has different way to play and need different UI, so we chose to develop a full configurable GUI where all not mandatory (chat, common and private goal) elements can be dynamical squeeze to reach the maximus concentration. <br>
-Technically the user interface is made with JavaFx and some file of CSS to make it look better. For improving speed (according to javaFx limitation) all update are created by delta, similar to what was done for the network logic. <br>
-Main board is a large clickable element, the selected tiles is deduced by click coordinates. When tiles are selected a new menu is showed, where is possible to reorder the move, select the column on your player board or reset the entire move.
-Don't forget to turn on volume! a relaxing music will accompany you during all your games
+UI isn't only the way as most of the players will play the game, it is the first impression with user and it will represent yours game concept. <br>
+Different players have several way to play, and they need a specific UI; so we choose to develop a full configurable GUI, where all not mandatory elements (chat, common and private goal) can be dynamical squeeze to reach the maximus concentration. <br>
+Technically the user interface is made with JavaFx and some file of CSS to make it look better. For improving speed (according to javaFx limitation) all updates are created by delta, similar to what was done for the network logic. <br>
+Main board and Player board are large clickable elements, the selected tiles or column is deduced by clicked coordinates. When some tiles are selected a new menu is showed, where it is possible to reorder the move, select the column on your player board or reset the entire move. <br>
+Don't forget to turn on volume! a relaxing music will accompany you during all your games.
 
 <details>
 <summary> 
-    insights into the chat
+    Insights into the chat
 </summary>
-   <br> the advance feature for chat ask to give to players the possibility to send private or public message, in the gui we take trace of all the chat history (including your messages) distinguishing message type with different colors. <br>
-   also error and game message will be showed as messages in the chat, if the chat it's closed error messages it will be showed in some popups.
+   <br> The advance feature for chat ask to give to players the possibility to send private or public message. In the GUI we maintain trace of all the chat history (including your messages), distinguishing message type by different colors. <br>
+    Error and game message will be also showed as messages in the chat. If the chat it's squeezed the error messages will be showed in some popups.
 </details>
 
 ## Command Line Interface
 ![alt text](https://github.com/MatteoBriscini/is23-AM19/blob/master/Deliveries/others/TuiPresImg.png)
 
-develop a CLI is match faster than develop and design a GUI, so we had start to develop CLI and GUI in parallel to have as soon as possible a playable version of the game to test it.
-the result is a quite nice and playable version of the game from command line.
+Develop a CLI is much faster than develop and design a GUI, so we had started to develop CLI and GUI in parallel to have, as soon as possible, a playable version of the game to test it. <br>
+The result is a quite nice and playable version of the game from the command line.
 
 > **knew problem:**
-> if the client receive un update or a chat message during typing the update wil be printed and input command will be broke, we had chose not to solve it.
+> if the client receive un update or a chat message, during typing, the update wil be printed and input command will be broke, we had chosen not to solve it.
 
 <details>
     <summary>command list (for in game phase)</summary>
@@ -237,7 +235,7 @@ Globally the test has a Class coverage of 63% (61/96) and a Method coverage of 6
    * [jdk_17](https://www.oracle.com/it/java/technologies/downloads/#java17)
    * [javafx](https://openjfx.io/) <br>
 
-2. Download the AM19.jar file from  [here]().  ...mettere link per il jar definitivo..
+2. Download the AM19.jar file from  [here](https://github.com/MatteoBriscini/is23-AM19/releases)!
 3. Open a terminal and navigate to the folder were you have saved the AM19.jar.
 
 >**Note**: you can change server IP and PORT from a JSON file in the AM19.jar folder (json/config/netConfig.json).<br>
