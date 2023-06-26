@@ -237,7 +237,7 @@ Globally the test has a Class coverage of 63% (61/96) and a Method coverage of 6
    * [jdk_17](https://www.oracle.com/it/java/technologies/downloads/#java17)
    * [javafx](https://openjfx.io/) <br>
 
-2. Download the AM19.jar file from  [here]().  ...mettere link per il jar definitivo..
+2. Download the AM19.jar file from  [here](https://github.com/MatteoBriscini/is23-AM19/releases)!
 3. Open a terminal and navigate to the folder were you have saved the AM19.jar.
 
 >**Note**: you can change server IP and PORT from a JSON file in the AM19.jar folder (json/config/netConfig.json).<br>
