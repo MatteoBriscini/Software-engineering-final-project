@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.client.Connection.ClientRMI;
 import it.polimi.ingsw.client.Connection.ClientSOCKET;
+import it.polimi.ingsw.gui.supportClass.Title;
 import it.polimi.ingsw.shared.JsonSupportClasses.JsonUrl;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -24,6 +25,7 @@ import javafx.stage.Stage;
 
 import java.io.*;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class HelloController extends GuiView implements Initializable {
@@ -49,6 +51,8 @@ public class HelloController extends GuiView implements Initializable {
     int RMIPort;
     String serverIP;
     Alert cntAlert = new Alert(Alert.AlertType.ERROR);
+
+
     private void jsonCreate() throws FileNotFoundException{
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(JsonUrl.getUrl("netConfig"));
         if(inputStream == null) throw new FileNotFoundException();

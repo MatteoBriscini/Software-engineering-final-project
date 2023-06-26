@@ -41,7 +41,6 @@ import java.util.*;
 import static it.polimi.ingsw.shared.Cards.CardColor.BLUE;
 import static it.polimi.ingsw.shared.Cards.CardColor.EMPTY;
 import static javafx.geometry.Pos.CENTER;
-// import static jdk.internal.org.jline.utils.Colors.s;
 
 public class GameController extends GuiView implements Initializable {
 
@@ -95,7 +94,7 @@ public class GameController extends GuiView implements Initializable {
     private Label shelfID3 = new Label();
 
     //images
-    ArrayList<Title> titles = new ArrayList<>();
+
     @FXML
     public ImageView logo = new ImageView();
     @FXML
@@ -294,25 +293,25 @@ public class GameController extends GuiView implements Initializable {
 
 
         //TO FIX BOARD DIMENSION
-        ImageView card = new ImageView(createImage(0, BLUE, titles));
+        ImageView card = new ImageView(createImage(0, BLUE, helloApplication.getTitles()));
         card.setFitHeight(50);
         card.setFitWidth(50);
         card.setVisible(false);
         GridPane.setConstraints(card,0,0);
         mainBoardGrid.getChildren().add(card);
-        card = new ImageView(createImage(0, BLUE, titles));
+        card = new ImageView(createImage(0, BLUE, helloApplication.getTitles()));
         card.setFitHeight(50);
         card.setFitWidth(50);
         card.setVisible(false);
         GridPane.setConstraints(card,0,8);
         mainBoardGrid.getChildren().add(card);
-        card = new ImageView(createImage(0, BLUE, titles));
+        card = new ImageView(createImage(0, BLUE, helloApplication.getTitles()));
         card.setFitHeight(50);
         card.setFitWidth(50);
         card.setVisible(false);
         GridPane.setConstraints(card,8,8);
         mainBoardGrid.getChildren().add(card);
-        card = new ImageView(createImage(0, BLUE, titles));
+        card = new ImageView(createImage(0, BLUE, helloApplication.getTitles()));
         card.setFitHeight(50);
         card.setFitWidth(50);
         card.setVisible(false);
@@ -322,7 +321,7 @@ public class GameController extends GuiView implements Initializable {
         Card[][] mainBoard = player.getMainBoard().getBoard();
         for(int x=0;x<player.getMainBoard().getColumns();x++){
             for (int y=0;y<player.getMainBoard().getRows(); y++){
-                    card = new ImageView(createImage(mainBoard[x][y].getSketch(), mainBoard[x][y].getColor(), titles));
+                    card = new ImageView(createImage(mainBoard[x][y].getSketch(), mainBoard[x][y].getColor(), helloApplication.getTitles()));
                     card.setFitHeight(50);
                     card.setFitWidth(50);
                     if(mainBoard[x][y].getColor().equals(EMPTY))card.setVisible(false);
@@ -363,7 +362,7 @@ public class GameController extends GuiView implements Initializable {
 
         for(int x=0;x<playerBoard.getColumns();x++){
             for (int y=0;y<playerBoard.getRows(); y++){
-                ImageView card = new ImageView(createImage(cards[x][y].getSketch(), cards[x][y].getColor(), titles));
+                ImageView card = new ImageView(createImage(cards[x][y].getSketch(), cards[x][y].getColor(), helloApplication.getTitles()));
                 card.setFitHeight(42);
                 card.setFitWidth(42);
                 if(cards[x][y].getColor().equals(EMPTY))card.setVisible(false);
@@ -405,7 +404,7 @@ public class GameController extends GuiView implements Initializable {
         y = y -c.length +1;
 
         for(Card card: c){
-            ImageView cardImg = new ImageView(createImage(card.getSketch(), card.getColor(), titles));
+            ImageView cardImg = new ImageView(createImage(card.getSketch(), card.getColor(), helloApplication.getTitles()));
             cardImg.setFitHeight(size);
             cardImg.setFitWidth(size);
             GridPane.setConstraints(cardImg, column, player.getMainBoard().getColumns()-y);
@@ -436,7 +435,7 @@ public class GameController extends GuiView implements Initializable {
 
             for (int x = 0; x < playerBoard.getColumns(); x++) {
                 for (int y = 0; y < playerBoard.getRows(); y++) {
-                    ImageView card = new ImageView(createImage(cards[x][y].getSketch(),cards[x][y].getColor(), titles));
+                    ImageView card = new ImageView(createImage(cards[x][y].getSketch(),cards[x][y].getColor(), helloApplication.getTitles()));
                     card.setFitHeight(17);
                     card.setFitWidth(17);
                     if(cards[x][y].getColor().equals(EMPTY))card.setVisible(false);
@@ -532,7 +531,7 @@ public class GameController extends GuiView implements Initializable {
     private void insertTails(int x, int y, int pose){
 
         Card[][] mainBoard = player.getMainBoard().getBoard();
-        ImageView card = new ImageView(createImage(mainBoard[x][y].getSketch(), mainBoard[x][y].getColor(), titles));
+        ImageView card = new ImageView(createImage(mainBoard[x][y].getSketch(), mainBoard[x][y].getColor(), helloApplication.getTitles()));
         card.setFitHeight(60);
         card.setFitWidth(60);
         card.setId("takenCard");

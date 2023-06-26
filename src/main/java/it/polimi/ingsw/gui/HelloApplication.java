@@ -7,6 +7,7 @@ import it.polimi.ingsw.client.Player.PlayingPlayer;
 import it.polimi.ingsw.client.View.UserInterface;
 import it.polimi.ingsw.gui.supportClass.Message;
 import it.polimi.ingsw.gui.supportClass.MessageTipe;
+import it.polimi.ingsw.gui.supportClass.Title;
 import it.polimi.ingsw.shared.Cards.Card;
 import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
 import it.polimi.ingsw.shared.PlayerMode;
@@ -20,6 +21,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 
 public class HelloApplication extends Application implements UserInterface {
@@ -54,6 +56,10 @@ public class HelloApplication extends Application implements UserInterface {
 
     public ConnectionManager getConnection() {
         return connection;
+    }
+    private final ArrayList<Title> titles = new ArrayList<>();
+    public ArrayList<Title> getTitles() {
+        return titles;
     }
 
 
@@ -137,8 +143,6 @@ public class HelloApplication extends Application implements UserInterface {
         if(guiView instanceof GameController) {
             Platform.runLater(() -> {
                 ((GameController)guiView).setMainBoard();
-                ((GameController)guiView).setMyPlayerBoardGrid();
-                ((GameController)guiView).setOtherPlayerBoard();
             });
             return;
         }
