@@ -95,6 +95,7 @@ public class GameController extends GuiView implements Initializable {
     private Label shelfID3 = new Label();
 
     //images
+    ArrayList<Title> titles = new ArrayList<>();
     @FXML
     public ImageView logo = new ImageView();
     @FXML
@@ -251,7 +252,16 @@ public class GameController extends GuiView implements Initializable {
     /**********************************************************************
      *                               GAME                                 *
      **********************************************************************/
-
+    public Image createImage(int sketch, CardColor color, ArrayList<Title> titles){
+        Title tmp = new Title(color , sketch);
+        if(titles.contains(tmp)){
+            for (Title title: titles)if(title.equals(tmp))return title.getImage();
+        }
+        String file = CardImage.getImgName(sketch,color);
+        Image image = new Image(this.getClass().getClassLoader().getResourceAsStream(file), 60, 60, false, false);
+        titles.add(new Title(image, color, sketch));
+        return image;
+    }
     public void notifyNewActivePlayer() {
         String currentPlayer = player.getActivePlayer();
         if(!Objects.equals(currentPlayer, player.getPlayerID())){
@@ -284,20 +294,27 @@ public class GameController extends GuiView implements Initializable {
 
 
         //TO FIX BOARD DIMENSION
-        String file = CardImage.getImgName(0,BLUE);
-        ImageView card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file), 50, 50, false, false));
+        ImageView card = new ImageView(createImage(0, BLUE, titles));
+        card.setFitHeight(50);
+        card.setFitWidth(50);
         card.setVisible(false);
         GridPane.setConstraints(card,0,0);
         mainBoardGrid.getChildren().add(card);
-        card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file), 50, 50, false, false));
+        card = new ImageView(createImage(0, BLUE, titles));
+        card.setFitHeight(50);
+        card.setFitWidth(50);
         card.setVisible(false);
         GridPane.setConstraints(card,0,8);
         mainBoardGrid.getChildren().add(card);
-        card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file), 50, 50, false, false));
+        card = new ImageView(createImage(0, BLUE, titles));
+        card.setFitHeight(50);
+        card.setFitWidth(50);
         card.setVisible(false);
         GridPane.setConstraints(card,8,8);
         mainBoardGrid.getChildren().add(card);
-        card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file), 50, 50, false, false));
+        card = new ImageView(createImage(0, BLUE, titles));
+        card.setFitHeight(50);
+        card.setFitWidth(50);
         card.setVisible(false);
         GridPane.setConstraints(card,8,0);
         mainBoardGrid.getChildren().add(card);
@@ -305,8 +322,9 @@ public class GameController extends GuiView implements Initializable {
         Card[][] mainBoard = player.getMainBoard().getBoard();
         for(int x=0;x<player.getMainBoard().getColumns();x++){
             for (int y=0;y<player.getMainBoard().getRows(); y++){
-                    file = CardImage.getImgName(mainBoard[x][y].getSketch(), mainBoard[x][y].getColor());
-                    card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file), 50, 50, false, false));
+                    card = new ImageView(createImage(mainBoard[x][y].getSketch(), mainBoard[x][y].getColor(), titles));
+                    card.setFitHeight(50);
+                    card.setFitWidth(50);
                     if(mainBoard[x][y].getColor().equals(EMPTY))card.setVisible(false);
                     card.setId("tile");
                     GridPane.setConstraints(card,x,player.getMainBoard().getColumns()-y-1);
@@ -345,8 +363,9 @@ public class GameController extends GuiView implements Initializable {
 
         for(int x=0;x<playerBoard.getColumns();x++){
             for (int y=0;y<playerBoard.getRows(); y++){
-                String file = CardImage.getImgName(cards[x][y].getSketch(), cards[x][y].getColor());
-                ImageView card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file), 42, 42, false, false));
+                ImageView card = new ImageView(createImage(cards[x][y].getSketch(), cards[x][y].getColor(), titles));
+                card.setFitHeight(42);
+                card.setFitWidth(42);
                 if(cards[x][y].getColor().equals(EMPTY))card.setVisible(false);
                 GridPane.setConstraints(card, x, player.getMainBoard().getColumns()-y);
                 myPlayerBoardGrid.getChildren().add(card);
@@ -386,8 +405,9 @@ public class GameController extends GuiView implements Initializable {
         y = y -c.length +1;
 
         for(Card card: c){
-            String file = CardImage.getImgName(card.getSketch(), card.getColor());
-            ImageView cardImg = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file), size, size, false, false));
+            ImageView cardImg = new ImageView(createImage(card.getSketch(), card.getColor(), titles));
+            cardImg.setFitHeight(size);
+            cardImg.setFitWidth(size);
             GridPane.setConstraints(cardImg, column, player.getMainBoard().getColumns()-y);
             gridPane.getChildren().add(cardImg);
             y++;
@@ -416,8 +436,9 @@ public class GameController extends GuiView implements Initializable {
 
             for (int x = 0; x < playerBoard.getColumns(); x++) {
                 for (int y = 0; y < playerBoard.getRows(); y++) {
-                    String file = CardImage.getImgName(cards[x][y].getSketch(), cards[x][y].getColor());
-                    ImageView card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file), 17, 17, false, false));
+                    ImageView card = new ImageView(createImage(cards[x][y].getSketch(),cards[x][y].getColor(), titles));
+                    card.setFitHeight(17);
+                    card.setFitWidth(17);
                     if(cards[x][y].getColor().equals(EMPTY))card.setVisible(false);
                     GridPane.setConstraints(card, x, player.getMainBoard().getColumns() - y);
                     gridPane.getChildren().add(card);
@@ -511,9 +532,9 @@ public class GameController extends GuiView implements Initializable {
     private void insertTails(int x, int y, int pose){
 
         Card[][] mainBoard = player.getMainBoard().getBoard();
-
-        String file = CardImage.getImgName(mainBoard[x][y].getSketch(), mainBoard[x][y].getColor());
-        ImageView card = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream(file), 60, 60, false, false));
+        ImageView card = new ImageView(createImage(mainBoard[x][y].getSketch(), mainBoard[x][y].getColor(), titles));
+        card.setFitHeight(60);
+        card.setFitWidth(60);
         card.setId("takenCard");
         card.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override

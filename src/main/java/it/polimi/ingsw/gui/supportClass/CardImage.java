@@ -1,6 +1,9 @@
 package it.polimi.ingsw.gui.supportClass;
 
 import it.polimi.ingsw.shared.Cards.CardColor;
+import javafx.scene.image.Image;
+
+import java.util.ArrayList;
 
 public class CardImage {
     private static final String[] blue = {"Cornici1.1.png", "Cornici1.2.png", "Cornici1.3.png"};
@@ -20,4 +23,6 @@ public class CardImage {
             default -> lightBlue[sketch];
         };
     }
+
+
 }
