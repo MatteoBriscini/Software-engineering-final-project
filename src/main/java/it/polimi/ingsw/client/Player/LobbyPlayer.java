@@ -7,6 +7,11 @@ import it.polimi.ingsw.shared.exceptions.addPlayerToGameException;
 import javax.security.auth.login.LoginException;
 
 public class LobbyPlayer extends Player{
+    /**
+     * @param playerID id of the player
+     * @param pwd password of the player
+     * @param connection type of connection selected by the player
+     */
     public LobbyPlayer(String playerID, String pwd, ConnectionManager connection){
         super(playerID, pwd, connection);
         this.connection.setInGame(false);
@@ -45,8 +50,10 @@ public class LobbyPlayer extends Player{
     //Errors
 
 
-
-
+    /**
+     * @param msg error message
+     *            sends an error message in case of an error in the login
+     */
     public void loginError(String msg){
         JsonObject err = new JsonObject();
         err.addProperty("errorID", "login error");
@@ -55,6 +62,10 @@ public class LobbyPlayer extends Player{
 
     }
 
+    /**
+     * @param msg error message
+     *            sends an error message in case of an error while adding the player to a game
+     */
     public void addPlayerToGameError(String msg){
         JsonObject err = new JsonObject();
         err.addProperty("errorID", "game error");
@@ -65,6 +76,9 @@ public class LobbyPlayer extends Player{
 
     //Methods
 
+    /**
+     * @return true if the login is successful, false if and error occurred
+     */
     public boolean login(){
         try {
             connection.login(playerID, pwd);
@@ -75,6 +89,9 @@ public class LobbyPlayer extends Player{
         return true;
     }
 
+    /**
+     * @return true if the signup is successful, false if and error occurred
+     */
     public boolean signUp(){
         try {
             connection.signUp(playerID, pwd);
@@ -85,6 +102,9 @@ public class LobbyPlayer extends Player{
         return true;
     }
 
+    /**
+     * @return true if the join game is successful, false if and error occurred
+     */
     public boolean joinGame(){
         try {
             connection.joinGame(playerID);
@@ -98,6 +118,9 @@ public class LobbyPlayer extends Player{
 
     }
 
+    /**
+     * @return true if the join game is successful, false if and error occurred
+     */
     public boolean joinGame(String searchID){
         try {
             connection.joinGame(playerID, searchID);
@@ -109,6 +132,9 @@ public class LobbyPlayer extends Player{
         return true;
     }
 
+    /**
+     * @return true if the create game is successful, false if and error occurred
+     */
     public boolean createGame(){
         try {
             connection.createGame(playerID);
@@ -120,6 +146,9 @@ public class LobbyPlayer extends Player{
         return true;
     }
 
+    /**
+     * @return true if the create game is successful, false if and error occurred
+     */
     public boolean createGame(int maxPlayerNumber){
         try {
             connection.createGame(playerID, maxPlayerNumber);
