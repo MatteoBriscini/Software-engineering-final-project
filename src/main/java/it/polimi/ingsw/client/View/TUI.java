@@ -524,7 +524,7 @@ public class TUI implements UserInterface{
 
         if(
                 !((PlayingPlayer)player).checkMainBoardMove(positions.toArray(new Position[0])) ||
-                !((PlayingPlayer)player).checkPlayerBoardMove(column, positions.size())
+                        !((PlayingPlayer)player).checkPlayerBoardMove(column, positions.size())
         ) return;
 
         if (positions.size()>1){
@@ -783,6 +783,11 @@ public class TUI implements UserInterface{
         return (sc.nextLine().toLowerCase());
     }
 
+    /**
+     * convert main board object to string has to print
+     * @param board main board
+     * @param s string pointer
+     */
     private void mainBoardToString(MainBoard board, String[][] s){
         for(int x=0;x<board.getColumns();x++)
             for (int y=0;y<board.getRows();y++) {
@@ -790,6 +795,11 @@ public class TUI implements UserInterface{
             }
     }
 
+    /**
+     * convert player board object to string has to print
+     * @param board player board
+     * @param s string pointer
+     */
     private void playerBoardToString(PlayerBoard board, String[][] s){
         for(int x=0;x<board.getColumns();x++)
             for (int y=0;y<board.getRows();y++){
@@ -823,6 +833,13 @@ public class TUI implements UserInterface{
 
     }
 
+    /**
+     * print the board in the command line
+     * @param board actual string has to print
+     * @param columns horizontal size of the board
+     * @param rows vertical size of the board
+     * @param whosBoard player name
+     */
     private void printBoard(String[][] board, int columns,int rows, String whosBoard){
         String printLine;
 
