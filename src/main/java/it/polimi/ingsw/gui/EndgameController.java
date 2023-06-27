@@ -33,11 +33,6 @@ public class EndgameController extends GuiView implements Initializable{
     @FXML
     public Label p3 = new Label();
 
-
-    /**
-     * @param url
-     * @param resourceBundle used to take the resources
-     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         imagesInit(podiumImage, "podium.png"); //load player board img
@@ -45,13 +40,11 @@ public class EndgameController extends GuiView implements Initializable{
     }
 
     /**
-     * @param points is the json object for the player points
+     * print the final classification
      */
     public void endgamePoints(JsonObject points){
 
         PlayingPlayer player = (PlayingPlayer) helloApplication.getPlayer();
-        Scanner sc = new Scanner(System.in);
-        char selection;
         int n=((PlayingPlayer)player).getPlayersID().length;
         String[][] table = new String[n][n];
         for(int i=0;i<n; i++){
@@ -75,6 +68,9 @@ public class EndgameController extends GuiView implements Initializable{
         }else podium.getChildren().remove(p3);
 
     }
+    /**
+     * change scene back to select game scene
+     */
     @FXML
     protected void backToLobby(ActionEvent actionEvent){
         helloApplication.getConnection().setPlayerAsLobby();

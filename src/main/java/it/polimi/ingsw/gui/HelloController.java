@@ -53,6 +53,10 @@ public class HelloController extends GuiView implements Initializable {
     Alert cntAlert = new Alert(Alert.AlertType.ERROR);
 
 
+    /**
+     * download all needed data from json file
+     * @throws FileNotFoundException if can't find json file
+     */
     private void jsonCreate() throws FileNotFoundException{
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(JsonUrl.getUrl("netConfig"));
         if(inputStream == null) throw new FileNotFoundException();
@@ -62,6 +66,10 @@ public class HelloController extends GuiView implements Initializable {
         this.socketPort = jsonObject.get("defSocketPort").getAsInt();
         this.RMIPort = jsonObject.get("defRmiPort").getAsInt();
     }
+
+    /**
+     * open settings menu
+     */
     @FXML
     protected void settings(ActionEvent actionEvent) throws IOException {
         if(!openSettings){
@@ -88,6 +96,9 @@ public class HelloController extends GuiView implements Initializable {
             main.getChildren().remove(settingsbox);
         }
     }
+    /**
+     * apply new setting
+     */
     @FXML
     protected void applySettings(){
         if(!IP.getText().matches("")) {
@@ -96,6 +107,9 @@ public class HelloController extends GuiView implements Initializable {
            main.getChildren().remove(settingsbox);
         }
     }
+    /**
+     * start up a rmi connection with the server
+     */
     @FXML
     protected void rmiClick(ActionEvent actionEvent) throws IOException {
         this.buttonClickedAudio();
@@ -112,7 +126,9 @@ public class HelloController extends GuiView implements Initializable {
         helloApplication.changeView("login.fxml");
     }
 
-
+    /**
+     * start up a socket connection with the server
+     */
     @FXML
     protected void socketClick(ActionEvent actionEvent) throws IOException {
         this.buttonClickedAudio();

@@ -19,15 +19,15 @@ public class WaitingroomController extends GuiView implements Initializable {
     @FXML
     private ImageView titleImage = new ImageView();
 
-    /**
-     * @param resourceBundle is the bundle in which the resources are taken
-     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Image image = new Image(this.getClass().getClassLoader().getResourceAsStream("Title.png"));
         titleImage.setImage(image);
     }
 
+    /**
+     * start the game
+     */
     @FXML
     protected void startClick(ActionEvent actionEvent){
         this.buttonClickedAudio();
@@ -37,6 +37,9 @@ public class WaitingroomController extends GuiView implements Initializable {
 
     }
 
+    /**
+     * called from the server when a new player log the game, print the number of the player in the game
+     */
     public void changeNumPlayer(int num){
         playerGamesLabel.setText("PLAYERS IN GAME: " + num);
     }

@@ -37,7 +37,8 @@ public class CreategameController extends GuiView{
     private int maxPlayers;
 
     /**
-     * @throws FileNotFoundException
+     * download all needed data from json file
+     * @throws FileNotFoundException if can't find json file
      */
     private void jsonCreate() throws FileNotFoundException{
 
@@ -50,8 +51,7 @@ public class CreategameController extends GuiView{
     }
 
     /**
-     * @param actionEvent
-     * @throws IOException
+     * create a new game with specified max player number
      */
     @FXML
     protected void createCustom(ActionEvent actionEvent) throws IOException {
@@ -72,8 +72,7 @@ public class CreategameController extends GuiView{
     }
 
     /**
-     * @param actionEvent
-     * @throws IOException
+     * join a game with the id of a player in that game
      */
     @FXML
     protected void joinCustom(ActionEvent actionEvent) throws IOException {
@@ -89,8 +88,7 @@ public class CreategameController extends GuiView{
     }
 
     /**
-     * @param actionEvent
-     * @throws IOException
+     * create a game with default settings
      */
     @FXML
     protected void createDefault(ActionEvent actionEvent) throws IOException {
@@ -104,8 +102,7 @@ public class CreategameController extends GuiView{
     }
 
     /**
-     * @param actionEvent
-     * @throws IOException
+     * join a random free game
      */
     @FXML
     protected  void joinDefault(ActionEvent actionEvent) throws IOException {

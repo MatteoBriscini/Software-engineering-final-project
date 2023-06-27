@@ -17,6 +17,9 @@ public class RegistrationController extends GuiView{
     @FXML
     private TextField passText = new TextField();
 
+    /**
+     * send registration data to the server
+     */
     @FXML
     protected void enterButton(ActionEvent actionEvent) throws IOException {
         this.buttonClickedAudio();

@@ -19,12 +19,19 @@ public abstract class GuiView {
         this.helloApplication = helloApplication;
     }
 
+    /**
+     * print error message in a popup
+     * @param errorMsg error message
+     */
     public void errorMsg(String errorMsg){
         alert.setTitle("my shelfie");
         alert.setContentText(errorMsg);
         alert.show();
     }
 
+    /**
+     * audio effect for button click
+     */
     protected void buttonClickedAudio(){
         if(buttonAudio == null) {
             Media click = new Media(this.getClass().getClassLoader().getResource("page-flip-10.wav").toExternalForm());
@@ -34,7 +41,7 @@ public abstract class GuiView {
     }
 
     /**
-     * @param imageView
+     * @param imageView UI element where has to show image
      * @param file used to get the correct file from the resources
      */
     protected void imagesInit(ImageView imageView, String file){

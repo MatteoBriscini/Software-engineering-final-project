@@ -63,6 +63,11 @@ public class HelloApplication extends Application implements UserInterface {
     }
 
 
+    /**
+     * change java fx scene
+     * @param viewName name of the scene have to set up
+     * @throws IOException if the scene isn't available
+     */
     public void changeView(String viewName) throws IOException {
 
         FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource(viewName));
@@ -123,11 +128,19 @@ public class HelloApplication extends Application implements UserInterface {
         });
     }
 
+    /**
+     * called from the server during waiting room phase
+     * @param n num player in the game
+     */
     @Override
     public void receiveNumPlayers(int n) {
         Platform.runLater(() -> ((WaitingroomController) guiView).changeNumPlayer(n));
     }
 
+    /**
+     * called from the server when there is new chat messages
+     * @param msg chat message
+     */
     @Override
     public void receiveMsg(String msg) {
         Message message;
@@ -138,6 +151,9 @@ public class HelloApplication extends Application implements UserInterface {
         });
     }
 
+    /**
+     * called from the server when it is necessary to recreate all the game view
+     */
     @Override
     public void updateAll() {
         if(guiView instanceof GameController) {
@@ -190,6 +206,9 @@ public class HelloApplication extends Application implements UserInterface {
         });
     }
 
+    /**
+     * called from server when a common goal is scored
+     */
     @Override
     public void updateLastCommonGoal() {
         Platform.runLater(()->{
@@ -213,14 +232,24 @@ public class HelloApplication extends Application implements UserInterface {
         });
     }
 
+    /**
+     * called from server when an error occurs, this method print the message error
+     * @param s error message
+     */
     @Override
     public void printError(String s) {
         Platform.runLater(() ->guiView.errorMsg(s));
     }
 
+    /**
+     * start to accept game command
+     */
     @Override
     public void acceptingPlayingCommand() {}
 
+    /**
+     * called from server when the current player change
+     */
     @Override
     public void notifyNewActivePlayer() {
         Platform.runLater(() -> {
@@ -228,6 +257,9 @@ public class HelloApplication extends Application implements UserInterface {
         });
     }
 
+    /**
+     * kill the application
+     */
     @Override
     public void stop(){
         System.exit(0);

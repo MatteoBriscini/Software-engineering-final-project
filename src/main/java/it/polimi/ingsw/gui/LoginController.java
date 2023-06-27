@@ -23,6 +23,9 @@ public class LoginController extends GuiView {
     private TextField errP;
 
 
+    /**
+     * change scene -> registration scene
+     */
     @FXML
     protected void registerButton(ActionEvent actionEvent) throws IOException {
         this.buttonClickedAudio();
@@ -31,6 +34,9 @@ public class LoginController extends GuiView {
     }
 
 
+    /**
+     * send login data to the server and change view if they were correct
+     */
     @FXML
     protected void loginButton(ActionEvent actionEvent) throws IOException {
         this.buttonClickedAudio();
