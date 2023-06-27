@@ -44,6 +44,11 @@ public class EightEqualsGoal extends CommonGoal {
     }
 
 
+    /**
+     * this functions checks the relative goal
+     * @param board is an array that contains the cards of the PlayerBoard
+     * @return true if the goal has been reached, false otherwise
+     */
     @Override
     public boolean check(Card[][] board){
         int[] color=new int[values().length-1]; //this array is used to count the occurrences of each color (the order is the same of the enum in CardColor)

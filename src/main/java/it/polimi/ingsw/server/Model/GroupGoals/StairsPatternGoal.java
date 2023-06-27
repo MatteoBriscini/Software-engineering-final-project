@@ -37,6 +37,12 @@ public class StairsPatternGoal extends CommonGoal {
          this.maxY = stair.get("y").getAsInt()-1;
 
      }
+
+    /**
+     * this functions checks the relative goal
+     * @param board is an array that contains the cards of the PlayerBoard
+     * @return true if the goal has been reached, false otherwise
+     */
     @Override
     public boolean check(Card[][] board){
         int x=0;

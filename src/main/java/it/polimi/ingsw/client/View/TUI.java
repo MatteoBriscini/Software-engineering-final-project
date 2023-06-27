@@ -126,6 +126,9 @@ public class TUI implements UserInterface{
                 "\n\n\n\n\n" + TextColor.DEFAULT.get());
     }
 
+    /**
+     * this function is used to start the TUI
+     */
     public void toRun(){
         char c;
         this.centerContent(4);
@@ -274,6 +277,10 @@ public class TUI implements UserInterface{
             this.notifyNewActivePlayer();
         }
     }
+
+    /**
+     * this function allows the user to select the ip of the server to connect to
+     */
     private void serverSelection(){
         Scanner sc = new Scanner(System.in);
         char c;
@@ -633,6 +640,9 @@ public class TUI implements UserInterface{
         this.printBoard(mainBoardToPrint,((PlayingPlayer) player).getMainBoard().getColumns(),((PlayingPlayer) player).getMainBoard().getRows() , "main");
     }
 
+    /**
+     * this function prints the common goals as strings of text
+     */
     private void printCommonGoals(){
         JsonObject[] commons;
         ArrayList<String> whoGotCommon;
@@ -661,10 +671,21 @@ public class TUI implements UserInterface{
 
         }
     }
+
+    /**
+     * this function doesn't do anything, but the server need it to properly communicate with the client
+     */
     @Override
     public void updateMainBoard(PositionWithColor[] p){
         //updateAll();
     }
+
+    /**
+     * this function is called by the server once it has received a move from a player
+     * @param id is player's ID
+     * @param column is the column of the PlayerBoard that has been modified by the move
+     * @param c is the array that contains the cards that need to be inserted in the board
+     */
     @Override
     public void updatePlayerBoard(String id, int column, Card[] c){
         updateAll();
@@ -776,6 +797,12 @@ public class TUI implements UserInterface{
             }
     }
 
+    /**
+     * this function convert a PlayerBoard into an array of strings
+     * @param board is the PlayerBoard to print
+     * @param goal is an array that contains all the infos about the private goal of the player whom the board is related to
+     * @param s is the array in which the strings to print will be saved
+     */
     private void playerBoardToString(PlayerBoard board,PositionWithColor[] goal, String[][] s) {
         String color;
 
