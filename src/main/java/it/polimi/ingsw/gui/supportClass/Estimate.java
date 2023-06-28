@@ -1,5 +1,8 @@
 package it.polimi.ingsw.gui.supportClass;
 
+/**
+ * estimate selected tiles on the main board by the clicked position
+ */
 public class Estimate{
     public static int estimateX(double x){  //return the column
         if(x>475 && x < 535) {

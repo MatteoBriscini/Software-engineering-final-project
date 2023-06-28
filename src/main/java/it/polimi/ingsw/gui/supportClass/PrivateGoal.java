@@ -6,6 +6,9 @@ import com.google.gson.JsonObject;
 import it.polimi.ingsw.shared.Cards.CardColor;
 import it.polimi.ingsw.shared.JsonSupportClasses.PositionWithColor;
 
+/**
+ * this class convert private goal data into the correct image
+ */
 public class PrivateGoal {
     private static final String[] personalImgName = {"Personal_Goals1.png", "Personal_Goals2.png", "Personal_Goals3.png", "Personal_Goals4.png", "Personal_Goals5.png", "Personal_Goals6.png", "Personal_Goals7.png", "Personal_Goals8.png", "Personal_Goals9.png", "Personal_Goals10.png", "Personal_Goals11.png", "Personal_Goals12.png"};
     public static String getImgName(PositionWithColor[] pos , JsonArray privateGoals){

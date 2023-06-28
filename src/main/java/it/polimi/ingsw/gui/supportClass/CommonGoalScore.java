@@ -1,5 +1,7 @@
 package it.polimi.ingsw.gui.supportClass;
-
+/**
+ * this class convert common goal score value into the correct image name
+ */
 public class CommonGoalScore {
     public static String getImgName(int i){
          return switch(i){

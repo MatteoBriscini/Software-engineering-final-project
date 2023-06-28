@@ -5,6 +5,9 @@ import javafx.scene.image.Image;
 
 import java.util.ArrayList;
 
+/**
+ * this class convert tiles data into the correct image name
+ */
 public class CardImage {
     private static final String[] blue = {"Cornici1.1.png", "Cornici1.2.png", "Cornici1.3.png"};
     private static final String[] green = {"Gatti1.1.png","Gatti1.2.png", "Gatti1.3.png"};

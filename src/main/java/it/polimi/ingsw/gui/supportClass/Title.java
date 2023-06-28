@@ -3,6 +3,9 @@ package it.polimi.ingsw.gui.supportClass;
 import it.polimi.ingsw.shared.Cards.CardColor;
 import javafx.scene.image.Image;
 
+/**
+ * this class is used to store tiles image in the ram (just once for each color and sketch)
+ */
 public class Title {
     Image image;
     CardColor color;

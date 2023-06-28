@@ -1,8 +1,8 @@
 package it.polimi.ingsw.gui.supportClass;
 
 public enum MessageTipe {
-    BROADCAST,
-    PRIVATE,
-    ERROR,
-    MINE;
+    BROADCAST,  /** broadcast message */
+    PRIVATE,/** private message */
+    ERROR,/** error message */
+    MINE; /** message send from me */
 }

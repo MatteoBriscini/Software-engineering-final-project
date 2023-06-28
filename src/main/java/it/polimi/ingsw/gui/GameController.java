@@ -43,11 +43,7 @@ import static it.polimi.ingsw.shared.Cards.CardColor.EMPTY;
 import static javafx.geometry.Pos.CENTER;
 
 public class GameController extends GuiView implements Initializable {
-
-
-
     //game
-
     @FXML
     private HBox bookshelfAnchor;
     private ArrayList<Node> othersBookshelf = new ArrayList<>();
@@ -139,9 +135,10 @@ public class GameController extends GuiView implements Initializable {
     //setup data
     private int maxTakenCard;
     private int playerBoardRows;
-    /**********************************************************************
-     *                              initialize                            *
-     **********************************************************************/
+
+    /**
+     * initialize all static images
+     */
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {            //static element init
         imagesInit(myBookshelfImage, "bookshelf_orth.png"); //load player board img
@@ -161,6 +158,10 @@ public class GameController extends GuiView implements Initializable {
         this.musicStart();
     }
 
+    /**
+     * download all data from json files
+     * @throws FileNotFoundException if one file isn't present
+     */
     private void jsonCreate() throws FileNotFoundException{
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(JsonUrl.getUrl("controllerConfig"));
         if(inputStream == null) throw new FileNotFoundException();
@@ -175,6 +176,9 @@ public class GameController extends GuiView implements Initializable {
         this.playerBoardRows = jsonObject1.get("x").getAsInt();
     }
 
+    /**
+     * initialize all dynamic images (related to game state) to the initial state
+     */
     public void gameInit(){                         //dynamic element init
         player = (PlayingPlayer) helloApplication.getPlayer();
         chatInit();
@@ -190,6 +194,9 @@ public class GameController extends GuiView implements Initializable {
         this.notifyNewActivePlayer();
     }
 
+    /**
+     * initialize common goals images
+     */
     private void commonGoalsInit(){
         int[] goals = player.getCommonGoalID();
         ImageView[] commonGoal = new ImageView[2];
@@ -199,6 +206,10 @@ public class GameController extends GuiView implements Initializable {
             this.setBorderRadius(commonGoal[i], 40);
         }
     }
+
+    /**
+     * initialize private goals images
+     */
     private void privateGoalsInit(){
         try {
             String goalImg = PrivateGoal.getImgName(player.getPrivateGoal(), privateGoalsInitJson());
@@ -210,8 +221,9 @@ public class GameController extends GuiView implements Initializable {
     }
 
     /**
+     * download the json file from private goal (used to deduce the images you need to download)
      * @return initialization for common goals
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException if can't find the file
      */
     private JsonArray privateGoalsInitJson() throws FileNotFoundException {
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(JsonUrl.getUrl("playerTarget"));
@@ -219,6 +231,10 @@ public class GameController extends GuiView implements Initializable {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         return new Gson().fromJson(bufferedReader, JsonArray.class);
     }
+
+    /**
+     * init all bookshelf to the initial state
+     */
     private void playerInit(){
         for(String s: player.getPlayersID())if(!s.equals(player.getPlayerID()))otherPlayers.add(s);
         imagesInit(myBookshelfImage1, "bookshelf_orth.png");
@@ -236,8 +252,9 @@ public class GameController extends GuiView implements Initializable {
     }
 
     /**
-     * @param image used for the image
-     * @param size used for the size on the gui
+     * used to set boarder radius to all the images
+     * @param image  the image to which border radius should be set
+     * @param size size of the border radius
      */
     private void setBorderRadius (ImageView image, int size){
         Rectangle clip = new Rectangle(
@@ -247,10 +264,13 @@ public class GameController extends GuiView implements Initializable {
         clip.setArcHeight(size);
         image.setClip(clip);
     }
-
-    /**********************************************************************
-     *                               GAME                                 *
-     **********************************************************************/
+    /**
+     * load the tiles images from the disk to the RAM only if is necessary, if there is an image just loaded it will be use that images
+     * @param sketch sketch number of the title
+     * @param color color of the title
+     * @param titles array  where all the title images are saved
+     * @return the title image
+     */
     public Image createImage(int sketch, CardColor color, ArrayList<Title> titles){
         Title tmp = new Title(color , sketch);
         if(titles.contains(tmp)){
@@ -261,6 +281,10 @@ public class GameController extends GuiView implements Initializable {
         titles.add(new Title(image, color, sketch));
         return image;
     }
+
+    /**
+     * print the current player name
+     */
     public void notifyNewActivePlayer() {
         String currentPlayer = player.getActivePlayer();
         if(!Objects.equals(currentPlayer, player.getPlayerID())){
@@ -272,6 +296,10 @@ public class GameController extends GuiView implements Initializable {
             this.currentPlayer.setBorder(new Border(new BorderStroke(Color.rgb(255, 255, 179), BorderStrokeStyle.SOLID, new CornerRadii(9), new BorderWidths(2))));
         }
     }
+
+    /**
+     * initialize the main board images
+     */
     public void setMainBoard(){
 
         ObservableList<Node> nodes = livingRoomBox.getChildren();
@@ -340,7 +368,8 @@ public class GameController extends GuiView implements Initializable {
     }
 
     /**
-     * @param p is the parameter for the position
+     * after the moves some tiles has to be removed from main board
+     * @param p the delta for the update
      */
     public void updateMainBoard(PositionWithColor[] p) {
         for (PositionWithColor pos : p) {
@@ -350,6 +379,9 @@ public class GameController extends GuiView implements Initializable {
         }
     }
 
+    /**
+     * initialize the player board of this client
+     */
     public void setMyPlayerBoardGrid(){
         myPlayerBoardGrid = new GridPane();
         myPlayerBoardGrid.setHgap(17.5);
@@ -376,9 +408,10 @@ public class GameController extends GuiView implements Initializable {
     }
 
     /**
+     * after all move some title has to be added to the player board
      * @param id used to identify the player
      * @param column used to identify che column used to insert the chosen tails
-     * @param c is the identifier of the card
+     * @param c delta for the update
      */
     public void updatePlayerBoard(String id, int column, Card[] c){
         if(id.equals(player.getPlayerID()))updatePlayerBoard(id,column,c,myPlayerBoardGrid,42);
@@ -386,11 +419,12 @@ public class GameController extends GuiView implements Initializable {
     }
 
     /**
+     * after all move some title has to be added to the player board
      * @param playerID used to identify the player
      * @param column identifier of the column
-     * @param c identify the ard
-     * @param gridPane
-     * @param size used to fit the cards on the gui
+     * @param c delta for the update
+     * @param gridPane the grid contains the tiles
+     * @param size used to fit the cards on the grid pane
      */
     private void updatePlayerBoard(String playerID, int column, Card[] c, GridPane gridPane, int size){
         Card[][] playerBoard = player.getPlayerBoard(playerID).getBoard();
@@ -413,6 +447,9 @@ public class GameController extends GuiView implements Initializable {
         }
     }
 
+    /**
+     * initialize the player board of all other clients
+     */
     public void setOtherPlayerBoard(){
         ArrayList<String> players = new ArrayList<>(List.of(player.getPlayersID()));
         players.remove(player.getPlayerID());
@@ -450,6 +487,7 @@ public class GameController extends GuiView implements Initializable {
 
 
     /**
+     * take a card from the main board
      * @param x parameter used to estimate if the card selected is in a valid position
      * @param y parameter used to estimate if the card selected is in a valid position
      */
@@ -487,6 +525,9 @@ public class GameController extends GuiView implements Initializable {
 
     }
 
+    /**
+     * show the move menu
+     */
     private void MoveMode(){
         othersBookshelf.addAll(bookshelfAnchor.getChildren());
 
@@ -525,6 +566,7 @@ public class GameController extends GuiView implements Initializable {
     }
 
     /**
+     * insert a tails int the move menu
      * @param x parameter used to understand which tail we had to insert
      * @param y parameter used to understand which tail we had to insert
      */
@@ -552,6 +594,10 @@ public class GameController extends GuiView implements Initializable {
         }
     }
 
+    /**
+     * when you click a tail in the move menu this will be set on top
+     * @param pose click tail number
+     */
     private void onClickReorde(int pose){
         Position tmp = positions.get(pose);
         positions.remove(pose);
@@ -561,6 +607,9 @@ public class GameController extends GuiView implements Initializable {
         this.insertAllTails();
     }
 
+    /**
+     * insert a group of tails in the game menu
+     */
     private void insertAllTails(){
         for(int i=0;i< positions.size();i++){
             insertTails(positions.get(i).getX(), positions.get(i).getY(),i);
@@ -569,8 +618,10 @@ public class GameController extends GuiView implements Initializable {
     }
 
 
+    /**
+     * send the selection to the serer, this will be checked and after the tiles will be removed from main board and added to the player board
+     */
     private void sendMove(){
-
         if(!columnMove.getText().equals("")) {
             int column = 0;
             try {
@@ -588,6 +639,11 @@ public class GameController extends GuiView implements Initializable {
         }
     }
 
+    /**
+     * remove a single taken tiles from the move by clicking on the ain board
+     * @param x coordinates of the clicked tile
+     * @param y coordinates of the clicked tile
+     */
     private void removeTakenCard(int x, int y){
         positions.removeIf(p -> p.getX() == x && p.getY() == y);
         for(Node n: mainBoardGrid.getChildren()){
@@ -600,6 +656,10 @@ public class GameController extends GuiView implements Initializable {
         this.insertAllTails();
         if(positions.size()==0)resetMove();
     }
+
+    /**
+     * remove all the tiles from the move
+     */
     private void resetMove(){
         bookshelfAnchor.getChildren().clear();
         bookshelfAnchor.getChildren().addAll(othersBookshelf);
@@ -607,6 +667,10 @@ public class GameController extends GuiView implements Initializable {
         positions = new ArrayList<>();
         resetGrey();
     }
+
+    /**
+     * reorder the move with the positions specified in the text box
+     */
     private void reorderMove(){
         String reorderText;
         ArrayList<Position> tmpPos = new ArrayList<>();
@@ -658,7 +722,9 @@ public class GameController extends GuiView implements Initializable {
     }
 
 
-
+    /**
+     * remove grey effect from all the selected tiles
+     */
     private void resetGrey(){
         for(Node n: greyNode){
             n.setEffect(new ColorAdjust(0, 0, 0, 0));
@@ -666,6 +732,9 @@ public class GameController extends GuiView implements Initializable {
     }
 
 
+    /**
+     * start up reading the clicked coordinates on main board and this player board
+     */
     public void mouseCoordinates() {
         livingRoomClickable.setOnMouseClicked(new EventHandler<MouseEvent>() {
             /**
@@ -709,6 +778,9 @@ public class GameController extends GuiView implements Initializable {
         });
     }
 
+    /**
+     * called from server when one common goal has been scored, print the point image
+     */
     public void updateLastCommonGoal(){
         commonGoalsScore.setSpacing(50);
         commonGoalsScore.setTranslateY(15);
@@ -737,12 +809,9 @@ public class GameController extends GuiView implements Initializable {
         player.quitGame();
     }
 
-
-
-    /**********************************************************************
-     *                               CHAT                                 *
-     **********************************************************************/
-
+    /**
+     * populate the drop-down menu of the chat used to send private messages
+     */
     private void chatInit(){
         chatName.getItems().add("ALL");
         for (String s: player.getPlayersID())if(!s.equals(player.getPlayerID()))chatName.getItems().add(s);
@@ -750,12 +819,17 @@ public class GameController extends GuiView implements Initializable {
     }
 
     /**
+     * called from server when a new arrived a new message
      * @param msg is the message sent to the chat that the player need to see
      */
     public void chatReceiveMsg(Message msg){
         messages.add(msg);
         this.printMsg();
     }
+
+    /**
+     * used from the client to send a new message
+     */
     @FXML
     public void sendMSG(ActionEvent actionEvent) throws IOException {
         String msg = chatMSG.getText();
@@ -779,6 +853,10 @@ public class GameController extends GuiView implements Initializable {
 
         this.printMsg();
     }
+
+    /**
+     * print messages of all type in the chat
+     */
     private void printMsg(){
         CornerRadii cornerRadii = new CornerRadii(9);
         VBox group = new VBox();
@@ -801,7 +879,8 @@ public class GameController extends GuiView implements Initializable {
     }
 
     /**
-     * @param errorMsg is a string used in the pop-up when an error message is needed
+     * this method print message error in the chat (if it's open) or in a popup
+     * @param errorMsg the message error
      */
     @Override
     public void errorMsg(String errorMsg){
@@ -815,9 +894,8 @@ public class GameController extends GuiView implements Initializable {
         }
     }
 
-    /**********************************************************************
-     *                               UX                                   *
-     **********************************************************************
+    /**
+     * method used to hide the chat menu
      */
     @FXML
     protected void hideChat(ActionEvent actionEvent) throws IOException {
@@ -838,6 +916,10 @@ public class GameController extends GuiView implements Initializable {
         rightDiv.getChildren().clear();
         rightDiv.getChildren().addAll(bookShelf, group, chat);
     }
+
+    /**
+     * method used to hide persona goal menu
+     */
     @FXML
     protected void hidePersonal(ActionEvent actionEvent) throws IOException {
         ArrayList<Node> nodes = new ArrayList<>();
@@ -867,6 +949,9 @@ public class GameController extends GuiView implements Initializable {
         leftDiv.getChildren().add(personal);
     }
 
+    /**
+     * method used to hide the common goal menu
+     */
     @FXML
     protected void hideCommon(ActionEvent actionEvent) throws IOException {
         ArrayList<Node> nodes = new ArrayList<>();
@@ -901,6 +986,9 @@ public class GameController extends GuiView implements Initializable {
         leftDiv.getChildren().add(common);
     }
 
+    /**
+     * method used to show personal goal menu when was hided
+     */
     @FXML
     protected void showPersonalButton(){
         ArrayList<Node> nodes = new ArrayList<>();
@@ -921,6 +1009,10 @@ public class GameController extends GuiView implements Initializable {
         leftDiv.getChildren().add(personal);
         for (Node node: nodes)leftDiv.getChildren().add(node);
     }
+
+    /**
+     * method used to show common goal menu when was hided
+     */
     @FXML
     protected void showCommonButton(){
         ArrayList<Node> nodes = new ArrayList<>();
@@ -950,6 +1042,10 @@ public class GameController extends GuiView implements Initializable {
         if(hidedPersonal==null) leftDiv.getChildren().add(common);
 
     }
+
+    /**
+     * method used to show chat menu when was hided
+     */
     @FXML
     protected void showChatButton(){
         chatOpen = true;
@@ -961,6 +1057,10 @@ public class GameController extends GuiView implements Initializable {
         rightDiv.getChildren().clear();
         rightDiv.getChildren().addAll(bookShelf, chat);
     }
+
+    /**
+     * method used to show the interface menu
+     */
     @FXML
     protected void showMenu(ActionEvent actionEvent){
         CornerRadii cornerRadii = new CornerRadii(0);
@@ -1003,11 +1103,16 @@ public class GameController extends GuiView implements Initializable {
 
         main.getChildren().add(menu);
     }
+
+    /**
+     * method used to hide the interface menu
+     */
     private void hideMenu(){
         main.getChildren().remove(menu);
     }
 
     /**
+     * parse button clicked with the correct method
      * @param button parameter that indicate the button clicked
      */
     private void checkID(Button button){
@@ -1026,10 +1131,8 @@ public class GameController extends GuiView implements Initializable {
     }
 
 
-
-    /**********************************************************************
-     *                               music                                *
-     **********************************************************************
+    /**
+     * start background music (first time)
      */
     private void musicInit(){
         Media music = new Media(this.getClass().getClassLoader().getResource("background.wav").toExternalForm());
@@ -1037,9 +1140,16 @@ public class GameController extends GuiView implements Initializable {
         backgroundMusic.setVolume(0.1);
         backgroundMusic.setCycleCount(MediaPlayer.INDEFINITE);
     }
+    /**
+     * start background music
+     */
     private void musicStart(){
         backgroundMusic.play();
     }
+
+    /**
+     * stop background music
+     */
     public void musicStop(){
         backgroundMusic.stop();
     }
