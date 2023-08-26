@@ -274,6 +274,11 @@ More info in the [project requirement](#project-requirements) chapter.
 | multi game                           | :green_circle: |
 | resiliency from client disconnection | :green_circle: |
 
+## Development State
+
+## License
+
+My Shelfie is property of Cranio Creations and all of the copyrighted graphical assets used in this project were supplied by Politecnico di Milano in collaboration with their rights' holders.
 
 ## Development State
 
