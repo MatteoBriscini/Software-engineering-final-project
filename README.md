@@ -1,7 +1,8 @@
 
 ![alt text](https://github.com/MatteoBriscini/is23-AM19/blob/master/Deliveries/others/Display_1.jpg)
-# ingegneria del software project
-### Politecnico of Milan [2022-2023]
+# Software engineering final project
+
+### Politecnico di Milano [2022-2023]
 
 >Members: <br>
 >  * Matteo Briscini: *matteo.briscini@mail.polimi.it*
